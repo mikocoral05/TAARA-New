@@ -1,20 +1,20 @@
 <template>
   <q-item
     clickable
-    tag="a"
-    target="_blank"
-    :href="link"
+    class="radius-10 q-my-sm position-relative"
+    :class="{ 'bg-primary text-white': title == 'Dashboard' }"
   >
-    <q-item-section
-      v-if="icon"
-      avatar
-    >
-      <q-icon :name="icon" />
+    <div
+      class="bg-primary absolute-left radius-10"
+      v-if="title == 'Dashboard'"
+      style="margin-left: -70px; width: 50px"
+    ></div>
+    <q-item-section v-if="icon" avatar>
+      <q-icon :name="icon" size="1rem" />
     </q-item-section>
 
     <q-item-section>
       <q-item-label>{{ title }}</q-item-label>
-      <q-item-label caption>{{ caption }}</q-item-label>
     </q-item-section>
   </q-item>
 </template>
@@ -27,23 +27,18 @@ export default defineComponent({
   props: {
     title: {
       type: String,
-      required: true
+      required: true,
     },
 
     caption: {
       type: String,
-      default: ''
-    },
-
-    link: {
-      type: String,
-      default: '#'
+      default: '',
     },
 
     icon: {
       type: String,
-      default: ''
-    }
-  }
+      default: '',
+    },
+  },
 })
 </script>

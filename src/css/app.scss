@@ -1,1 +1,11 @@
-// app global css in SCSS form
+body {
+  background-color: #f5f6fa;
+  font-family: 'Nunito Sans', sans-serif;
+}
+
+.radius-10 {
+  border-radius: 10px;
+}
+.bg-default {
+  background-color: #f5f6fa;
+}

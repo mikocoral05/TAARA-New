@@ -2,13 +2,15 @@
   <q-item
     clickable
     class="radius-10 q-my-sm position-relative"
-    :class="{ 'bg-primary text-white': title == 'Dashboard' }"
+    :class="{ 'bg-primary text-white': isActive }"
+    @click="updateTab()"
   >
     <div
       class="bg-primary absolute-left radius-10"
-      v-if="title == 'Dashboard'"
+      v-if="title === 'Dashboard'"
       style="margin-left: -70px; width: 50px"
     ></div>
+
     <q-item-section v-if="icon" avatar>
       <q-icon :name="icon" size="1rem" />
     </q-item-section>
@@ -20,7 +22,7 @@
 </template>
 
 <script>
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
 
 export default defineComponent({
   name: 'EssentialLink',
@@ -29,16 +31,31 @@ export default defineComponent({
       type: String,
       required: true,
     },
-
     caption: {
       type: String,
       default: '',
     },
-
     icon: {
       type: String,
       default: '',
     },
+    tab: {
+      // Accept tab as a prop
+      type: String,
+      required: true,
+    },
+  },
+  setup(props, { emit }) {
+    const isActive = computed(() => props.tab === props.title)
+
+    const updateTab = () => {
+      emit('update-tab', props.title) // Emit event to update tab in MainLayout
+    }
+
+    return {
+      isActive,
+      updateTab,
+    }
   },
 })
 </script>

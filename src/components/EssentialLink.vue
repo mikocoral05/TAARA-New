@@ -7,7 +7,7 @@
   >
     <div
       class="bg-primary absolute-left radius-10"
-      v-if="title === 'Dashboard'"
+      v-if="isActive"
       style="margin-left: -70px; width: 50px"
     ></div>
 
@@ -23,6 +23,7 @@
 
 <script>
 import { defineComponent, computed } from 'vue'
+import { useRouter } from 'vue-router'
 
 export default defineComponent({
   name: 'EssentialLink',
@@ -44,12 +45,18 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    nav: {
+      type: String,
+      default: '',
+    },
   },
   setup(props, { emit }) {
+    const router = useRouter()
     const isActive = computed(() => props.tab === props.title)
 
     const updateTab = () => {
       emit('update-tab', props.title) // Emit event to update tab in MainLayout
+      router.push(props.nav)
     }
 
     return {

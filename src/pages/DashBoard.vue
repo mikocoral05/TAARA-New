@@ -1,6 +1,6 @@
 <template>
-  <q-page class="q-pa-lg">
-    <!-- <div class="text-h5">Dashboard</div> -->
+  <q-page>
+    <div class="text-h5 q-mb-lg">Dashboard</div>
     <div class="row no-wrap justify-between">
       <q-card flat class="radius-10 col q-mr-lg">
         <q-card-section class="row no-wrap items-center justify-between">

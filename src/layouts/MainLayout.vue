@@ -97,7 +97,7 @@
     </q-drawer>
 
     <q-page-container>
-      <router-view />
+      <router-view class="q-pa-lg" />
     </q-page-container>
   </q-layout>
 </template>
@@ -111,73 +111,93 @@ const linksList = [
     title: 'Dashboard',
     caption: 'quasar.dev',
     icon: 'space_dashboard',
+    nav: '/',
   },
   {
-    title: 'Products',
+    title: 'Volunteer',
     caption: 'github.com/quasarframework',
     icon: 'code',
+    nav: 'volunteer',
   },
   {
-    title: 'Favorites',
+    title: 'Report',
     caption: 'chat.quasar.dev',
     icon: 'chat',
+    nav: '',
   },
   {
-    title: 'Inbox',
+    title: 'Pets',
     caption: 'forum.quasar.dev',
     icon: 'record_voice_over',
+    nav: '',
   },
   {
-    title: 'Order List',
+    title: 'Budget Allocation',
     caption: '@quasarframework',
     icon: 'rss_feed',
+    nav: '',
   },
   {
-    title: 'Product Stocks',
+    title: 'Daily Expenses',
     caption: '@QuasarFramework',
     icon: 'public',
+    nav: '',
+  },
+  {
+    title: 'Announcement',
+    caption: '@QuasarFramework',
+    icon: 'public',
+    nav: '',
   },
 ]
 const linksList2 = [
   {
-    title: 'Pricing',
+    title: 'Inventories',
     caption: 'quasar.dev',
     icon: 'space_dashboard',
+    nav: 'invetory',
   },
   {
-    title: 'Calendar',
+    title: 'Pending',
     caption: 'github.com/quasarframework',
     icon: 'code',
+    nav: 'pending',
   },
   {
-    title: 'To-Do',
+    title: 'Schedule',
     caption: 'chat.quasar.dev',
     icon: 'chat',
+    nav: 'schedule',
   },
   {
-    title: 'Contact',
+    title: 'Activities & Events',
     caption: 'forum.quasar.dev',
     icon: 'record_voice_over',
+    nav: '',
   },
   {
-    title: 'Invoice',
+    title: 'Supplies',
     caption: '@quasarframework',
     icon: 'rss_feed',
+    nav: 'supplies',
   },
   {
-    title: 'UI Elements',
+    title: 'Authorization',
     caption: '@QuasarFramework',
     icon: 'public',
+    nav: '',
   },
   {
     title: 'Team',
     caption: '@QuasarFramework',
     icon: 'public',
+    nav: '',
   },
   {
     title: 'Table',
     caption: '@QuasarFramework',
     icon: 'public',
+    nav: '',
   },
 ]
 const linksList3 = [
@@ -185,11 +205,13 @@ const linksList3 = [
     title: 'Settings',
     caption: 'quasar.dev',
     icon: 'space_dashboard',
+    nav: '',
   },
   {
     title: 'Logout',
     caption: 'github.com/quasarframework',
     icon: 'code',
+    nav: '',
   },
 ]
 

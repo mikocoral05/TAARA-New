@@ -1,13 +1,6 @@
 <template>
-  <div>
+  <div class="q-pa-md q-pb-lg">
     <canvas ref="chartCanvas" width="1200" height="400"></canvas>
-    <div class="actions">
-      <button @click="randomizeData">Randomize</button>
-      <button @click="addDataset">Add Dataset</button>
-      <button @click="addData">Add Data</button>
-      <button @click="removeDataset">Remove Dataset</button>
-      <button @click="removeData">Remove Data</button>
-    </div>
   </div>
 </template>
 
@@ -23,28 +16,70 @@ export default {
     const chartCanvas = ref(null)
     let chartInstance = null
 
-    // Define Data & Configuration
-    const DATA_COUNT = 12
-    // const NUMBER_CFG = { count: DATA_COUNT, min: -100, max: 100 }
+    const DATA_COUNT = 48 // 52 weeks in a year
+    const WEEKS_PER_MONTH = 4 // Approx. 4 weeks per month
 
-    const labels = Array.from({ length: DATA_COUNT }, (_, i) => `Month ${i + 1}`)
-    const generateRandomData = () =>
-      Array.from({ length: DATA_COUNT }, () => Math.floor(Math.random() * 200 - 100))
+    const monthLabels = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ]
+
+    // Create weekly labels but only display months
+    const labels = Array.from({ length: DATA_COUNT }, (_, i) => {
+      return monthLabels[Math.floor(i / WEEKS_PER_MONTH)] // Group by month
+    })
+
+    // Generate random weekly data for more fluctuations
+    const generateRandomData = () => {
+      return Array.from({ length: DATA_COUNT }, () => Math.floor(Math.random() * 90000 + 1000))
+    }
 
     const data = {
-      labels: labels,
+      labels: labels, // Still using month labels
       datasets: [
         {
           label: 'Dataset 1',
           data: generateRandomData(),
           borderColor: '#c10015',
-          backgroundColor: 'rgba(255, 0, 0, 0.5)',
+          pointRadius: (ctx) => {
+            // Show point only for the first week of each month
+            return ctx.dataIndex % WEEKS_PER_MONTH === 0 ? 5 : 0
+          },
+          backgroundColor: (ctx) => {
+            const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, ctx.chart.height)
+            gradient.addColorStop(0, 'rgba(193, 0, 21, 0.3)')
+            gradient.addColorStop(0.7, 'rgba(193, 0, 21, 0.1)')
+            gradient.addColorStop(1, 'rgba(193, 0, 21, 0)')
+            return gradient
+          },
+          fill: true,
         },
         {
           label: 'Dataset 2',
           data: generateRandomData(),
           borderColor: '#557ff7',
-          backgroundColor: 'rgba(0, 0, 255, 0.5)',
+          pointRadius: (ctx) => {
+            // Show point only for the first week of each month
+            return ctx.dataIndex % WEEKS_PER_MONTH === 0 ? 5 : 0
+          },
+          backgroundColor: (ctx) => {
+            const gradient = ctx.chart.ctx.createLinearGradient(0, 0, 0, ctx.chart.height)
+            gradient.addColorStop(0, 'rgba(85, 127, 247, 0.3)')
+            gradient.addColorStop(0.7, 'rgba(85, 127, 247, 0.1)')
+            gradient.addColorStop(1, 'rgba(85, 127, 247, 0)')
+            return gradient
+          },
+          fill: true,
         },
       ],
     }
@@ -57,6 +92,33 @@ export default {
         plugins: {
           legend: { position: 'top' },
           title: { display: true, text: 'Chart.js Line Chart' },
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false,
+            },
+            ticks: {
+              callback: (value, index) => {
+                // Show only month labels, not every week
+                return index % WEEKS_PER_MONTH === 0 ? labels[index] : ''
+              },
+              autoSkip: false, // Ensure labels are evenly spaced
+              maxRotation: 0,
+              minRotation: 0,
+            },
+          },
+          y: {
+            grid: {
+              display: true,
+            },
+            ticks: {
+              display: true,
+            },
+            border: {
+              display: true,
+            },
+          },
         },
       },
     }
@@ -75,81 +137,9 @@ export default {
       }
     })
 
-    // Actions
-    const randomizeData = () => {
-      if (chartInstance) {
-        chartInstance.data.datasets.forEach((dataset) => {
-          dataset.data = generateRandomData()
-        })
-        chartInstance.update()
-      }
-    }
-
-    const addDataset = () => {
-      if (chartInstance) {
-        const color = `hsl(${Math.random() * 360}, 70%, 50%)`
-        const newDataset = {
-          label: `Dataset ${chartInstance.data.datasets.length + 1}`,
-          backgroundColor: color,
-          borderColor: color,
-          data: generateRandomData(),
-        }
-        chartInstance.data.datasets.push(newDataset)
-        chartInstance.update()
-      }
-    }
-
-    const addData = () => {
-      if (chartInstance) {
-        const newMonth = `Month ${chartInstance.data.labels.length + 1}`
-        chartInstance.data.labels.push(newMonth)
-
-        chartInstance.data.datasets.forEach((dataset) => {
-          dataset.data.push(Math.floor(Math.random() * 200 - 100))
-        })
-
-        chartInstance.update()
-      }
-    }
-
-    const removeDataset = () => {
-      if (chartInstance && chartInstance.data.datasets.length > 0) {
-        chartInstance.data.datasets.pop()
-        chartInstance.update()
-      }
-    }
-
-    const removeData = () => {
-      if (chartInstance && chartInstance.data.labels.length > 0) {
-        chartInstance.data.labels.pop()
-
-        chartInstance.data.datasets.forEach((dataset) => {
-          dataset.data.pop()
-        })
-
-        chartInstance.update()
-      }
-    }
-
     return {
       chartCanvas,
-      randomizeData,
-      addDataset,
-      addData,
-      removeDataset,
-      removeData,
     }
   },
 }
 </script>
-
-<style scoped>
-.actions {
-  margin-top: 10px;
-}
-button {
-  margin-right: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-}
-</style>

@@ -5,10 +5,8 @@
         <div class="row no-wrap">
           <q-btn
             flat
-            dense
-            round
+            :ripple="false"
             icon="menu"
-            aria-label="Menu"
             size=".7rem"
             @click="toggleLeftDrawer"
             class="q-mr-xl"
@@ -109,108 +107,86 @@ import EssentialLink from 'components/EssentialLink.vue'
 const linksList = [
   {
     title: 'Dashboard',
-    caption: 'quasar.dev',
     icon: 'space_dashboard',
     nav: '/',
   },
   {
     title: 'Volunteer',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
+    icon: 'groups',
     nav: 'volunteer',
   },
   {
     title: 'Report',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
+    icon: 'analytics',
     nav: '',
   },
   {
     title: 'Pets',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    nav: '',
+    icon: 'pets',
+    nav: 'pets',
   },
   {
     title: 'Budget Allocation',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
+    icon: 'payments',
     nav: '',
   },
   {
     title: 'Daily Expenses',
-    caption: '@QuasarFramework',
-    icon: 'public',
+    icon: 'price_check',
     nav: '',
   },
   {
     title: 'Announcement',
-    caption: '@QuasarFramework',
-    icon: 'public',
+    icon: 'campaign',
     nav: '',
   },
 ]
 const linksList2 = [
   {
-    title: 'Inventories',
-    caption: 'quasar.dev',
-    icon: 'space_dashboard',
+    title: 'Inventory',
+    icon: 'inventory',
     nav: 'invetory',
   },
   {
     title: 'Pending',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
+    icon: 'pending_actions',
     nav: 'pending',
   },
   {
     title: 'Schedule',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
+    icon: 'schedule',
     nav: 'schedule',
   },
   {
     title: 'Activities & Events',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
+    icon: 'calendar_month',
     nav: '',
   },
   {
     title: 'Supplies',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
+    icon: 'precision_manufacturing',
     nav: 'supplies',
   },
   {
     title: 'Authorization',
-    caption: '@QuasarFramework',
-    icon: 'public',
+    icon: 'manage_accounts',
     nav: '',
   },
   {
-    title: 'Team',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    nav: '',
-  },
-  {
-    title: 'Table',
-    caption: '@QuasarFramework',
-    icon: 'public',
+    title: 'Record',
+    icon: 'assignment',
     nav: '',
   },
 ]
 const linksList3 = [
   {
     title: 'Settings',
-    caption: 'quasar.dev',
-    icon: 'space_dashboard',
+    icon: 'settings',
     nav: '',
   },
   {
     title: 'Logout',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
+    icon: 'logout',
     nav: '',
   },
 ]

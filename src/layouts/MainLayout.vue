@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header class="bg-white text-black">
+    <q-header class="bg-white text-black" v-if="showLayout">
       <q-toolbar style="height: 60px" class="q-px-lg row no-wrap justify-between items-center">
         <div class="row no-wrap">
           <q-btn
@@ -51,7 +51,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" show-if-above bordered :width="270">
+    <q-drawer v-model="leftDrawerOpen" v-if="showLayout" show-if-above bordered :width="270">
       <q-scroll-area
         :thumb-style="{ width: '0px' }"
         :bar-style="{ width: '0px' }"
@@ -101,8 +101,9 @@
 </template>
 
 <script>
-import { defineComponent, ref } from 'vue'
+import { defineComponent, ref, watchEffect } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
+import { useRoute } from 'vue-router'
 
 const linksList = [
   {
@@ -199,10 +200,19 @@ export default defineComponent({
   },
 
   setup() {
+    const route = useRoute()
+    const showLayout = ref(true)
+    const pathExclude = ref(['/user-login'])
+    watchEffect(() => {
+      if (pathExclude.value.includes(route.path)) {
+        showLayout.value = false
+      }
+    })
     const leftDrawerOpen = ref(false)
     const tab = ref('Dashboard')
     const language = ref('English')
     return {
+      showLayout,
       tab,
       language,
       linksList2,

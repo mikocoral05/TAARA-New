@@ -1,7 +1,6 @@
 import { ref, onBeforeUnmount, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { QSpinnerGears, useQuasar, QSpinnerFacebook } from 'quasar'
-// import PageFooter from '../../../components/PageFooter.vue'
 import { dateToday, timeNow, Email, sendTelerivetSms } from 'src/composable/simpleComposable'
 import {
   dearUserEmail,
@@ -17,9 +16,6 @@ import {
 } from 'src/composable/taaraComposable'
 import { expressServer } from 'src/boot/axios'
 export default {
-  // components: {
-  //   PageFooter,
-  // },
   setup() {
     const $q = useQuasar()
     const router = useRouter()

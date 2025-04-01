@@ -1,5 +1,5 @@
 <template>
-  <div class="container row no-wrap q-pa-xl">
+  <!-- <div class="container row no-wrap q-pa-xl">
     <div class="left-div">
       <div class="border relative-position" :class="fadeValue ? '' : 'fade-in-left-right'">
         <div
@@ -40,7 +40,6 @@
         :class="fadeValue ? '' : 'fade-in'"
       >
         <div class="column justify-start">
-          <!-- <q-icon name="polyline" /> -->
           <img src="TAARA_Logo.jpg" alt="" />
         </div>
         <div class="column no-wrap justify-start text-black">
@@ -82,7 +81,6 @@
             :rules="[(val) => !!val || '']"
             hide-bottom-space
           />
-          <!-- :type="isPwd ? 'password' : 'text'" -->
         </div>
         <div class="full-width q-mb-xl row justify-between items-center no-wrap">
           <p class="text-red text-caption q-ma-none">{{ wrongUserOrPass }}</p>
@@ -593,7 +591,80 @@
         </q-stepper>
       </div>
     </div>
-  </div>
+  </div> -->
+  <q-page class="relative-position overflow-hidden">
+    <div class="absolute-right circle-border1"></div>
+    <div class="absolute-right circle-border2"></div>
+    <div class="row no-wrap items-center">
+      <q-img src="TAARA_Logo.jpg" class="rad-100 q-mr-md" width="40px" />
+      <div class="text-bold text-body1">
+        <span class="text-primary">TAARA</span> <span class="text-grey-7">.Org</span>
+      </div>
+    </div>
+    <div class="row no-wrap h-100 q-pa-xl">
+      <div class="w-40 column no-wrap flex flex-center">
+        <div class="text-h5 text-bold">Welcome Back</div>
+        <div class="text-grey-7">Enter you username and password to proceed!</div>
+        <q-form
+          @submit="logInTaara(email_address, password)"
+          class="full-width q-px-xl column justify-center items-center q-mt-xl"
+          :class="fadeValue ? '' : 'fade-in'"
+          v-if="forgotPasswordStep == 0"
+        >
+          <div class="column no-wrap q-py-md full-width">
+            <p class="q-ma-none q-mb-sm">Email Address</p>
+            <q-input
+              outlined
+              label="Ex: JuanDeLaCrus98@gmail.com"
+              dense
+              v-model="email_address"
+              :rules="[(val) => /^[^@]+@[^@]+\.[^@]+$/.test(val) || '']"
+              hide-bottom-space
+            />
+          </div>
+          <div class="column no-wrap q-pt-md full-width">
+            <p class="q-ma-none q-mb-sm">Password</p>
+            <q-input
+              outlined
+              label="Password"
+              type="password"
+              dense
+              v-model="password"
+              :rules="[(val) => !!val || '']"
+              hide-bottom-space
+            />
+          </div>
+          <div class="full-width q-mb-xl row justify-between items-center no-wrap">
+            <p class="text-red text-caption q-ma-none">{{ wrongUserOrPass }}</p>
+            <q-btn
+              flat
+              type="submit"
+              class="float-right"
+              dense
+              label="Forgot Password?"
+              @click="forgotPassBtn(email_address)"
+              no-caps
+              style="width: 150px"
+              :ripple="false"
+            />
+          </div>
+          <q-btn label="Log In" no-caps class="bg-primary text-white full-width" type="submit" />
+          <q-separator class="q-mt-md"></q-separator>
+          <p @click="((fadeValue = true), resetLogInInfo())">
+            <u>Don't have an account? Sign up</u>
+          </p>
+        </q-form>
+      </div>
+      <div class="w-60 relative-position">
+        <q-img
+          src="login-image1.jpeg"
+          class="absolute-center"
+          width="120%"
+          style="margin-left: 250px"
+        />
+      </div>
+    </div>
+  </q-page>
 </template>
 <script src="../pages/script/login.js"></script>
 <style lang="scss" scoped src="../pages/css/loginPage.scss"></style>

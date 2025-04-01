@@ -10,7 +10,7 @@ import axios from 'axios'
 
 // const api = axios.create({ baseURL: 'https://api.example.com' })
 const api = axios.create({
-  baseURL: 'http://localhost/OARPAIBMS-TAARA/backend/taara_backend/API/',
+  baseURL: 'http://localhost/TAARA-Capstone/backend/taara_backend/API/',
 })
 const expressServer = axios.create({
   baseURL: 'http://localhost:3000/',

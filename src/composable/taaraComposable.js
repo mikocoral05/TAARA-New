@@ -381,7 +381,7 @@ const getPublicUser = (user_id) => {
       })
   })
 }
-logInDetails.value = JSON.parse(localStorage.getItem('logInDetails'))
+
 const updatePublicUserDetails = (payload) => {
   console.log(payload)
   return new Promise((resolve, reject) => {

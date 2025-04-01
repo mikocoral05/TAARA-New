@@ -81,6 +81,7 @@ export default {
         }
       }, 1000)
     }
+
     let resetPassMessageEmail = () => {
       return (
         'Dear [' +
@@ -90,6 +91,7 @@ export default {
         '</b><br><br> If you did not do this, please ignore this message.<br><br>Please note that this verification code does not have an expiration unless you request another one.<br><br>Best regards, Tabaco Animal Rescue and Adoption'
       )
     }
+
     let resetPassMessageSms = () => {
       return (
         'Dear [' +
@@ -99,6 +101,7 @@ export default {
         '\n\nIf you did not do this, please ignore this message. Please note that this verification code does not have an expiration unless you request another one.\n\nBest regards, Tabaco Animal Rescue and Adoption'
       )
     }
+
     let resetPassVerification = () => {
       Email.send({
         SecureToken: 'e16c5656-79fd-4b50-8411-d2cbfcff3662',
@@ -109,6 +112,7 @@ export default {
       }).then((message) => console.log(message))
       sendTelerivetSms(dearUserPhoneNumber.value, resetPassMessageSms())
     }
+
     let forgotPassBtn = () => {
       let isEmail = /^[^@]+@[^@]+\.[^@]+$/.test(email_address.value)
       if (isEmail) {
@@ -139,6 +143,7 @@ export default {
         '</b><br><br> If you did not request this, please ignore this message.<br><br>Best regards, TAARA Team'
       )
     }
+
     let registerMessageSms = () => {
       return (
         'Hello,[' +
@@ -148,6 +153,7 @@ export default {
         '\n\n If you did not request this, please ignore this message.\n\nBest regards, TAARA Team'
       )
     }
+
     let registerVerification = () => {
       Email.send({
         SecureToken: 'e16c5656-79fd-4b50-8411-d2cbfcff3662',
@@ -158,6 +164,7 @@ export default {
       }).then((message) => console.log(message))
       sendTelerivetSms(registerInfo.value.phone_number, registerMessageSms())
     }
+
     let finishUp = (email_address) => {
       checkEmail(email_address)
         .then((response) => {
@@ -176,11 +183,13 @@ export default {
           console.error(error)
         })
     }
+
     let checkResetVerificationCode = () => {
       if (code.value == referenceCode.value) {
         forgotPasswordStep.value = 2
       }
     }
+
     let changePassBtn = (email, pass) => {
       // $q.notify({
       //   spinner: QSpinnerGears,
@@ -259,6 +268,7 @@ export default {
         })
       }
     }
+
     let authenticationStep = () => {
       let hasNull = Object.values(registerInfo.value).some((v) => v === null || v === '')
       let number =
@@ -267,6 +277,7 @@ export default {
         step.value = 2
       }
     }
+
     let createAccount = (payload) => {
       if (aggree.value == true) {
         $q.loading.show({
@@ -317,15 +328,18 @@ export default {
           })
       }
     }
+
     let resetRegisterInfo = () => {
       Object.keys(registerInfo.value).forEach((key) => {
         registerInfo.value[key] == null
       })
     }
+
     let resetLogInInfo = () => {
       email_address.value = null
       password.value = null
     }
+
     onBeforeUnmount(() => {
       if (timer1 !== void 0) {
         clearTimeout(timer1)
@@ -335,6 +349,7 @@ export default {
       }
       $q.loading.hide()
     })
+
     const fetchCatFact = async () => {
       try {
         const response = await expressServer.get('restart') // Make a request to your Express route

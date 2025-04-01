@@ -609,9 +609,8 @@
           @submit="logInTaara(email_address, password)"
           class="full-width q-px-xl column justify-center items-center q-mt-xl"
           :class="fadeValue ? '' : 'fade-in'"
-          v-if="forgotPasswordStep == 0"
         >
-          <div class="column no-wrap q-py-md full-width">
+          <div class="column no-wrap full-width">
             <p class="q-ma-none q-mb-sm">Email Address</p>
             <q-input
               outlined
@@ -619,7 +618,7 @@
               dense
               v-model="email_address"
               :rules="[(val) => /^[^@]+@[^@]+\.[^@]+$/.test(val) || '']"
-              hide-bottom-space
+              :error="showLoginError"
             />
           </div>
           <div class="column no-wrap q-pt-md full-width">
@@ -631,7 +630,8 @@
               dense
               v-model="password"
               :rules="[(val) => !!val || '']"
-              hide-bottom-space
+              :error="showLoginError"
+              error-message="Username or Password is incorrect!"
             />
           </div>
           <div class="full-width q-mb-xl row justify-between items-center no-wrap">
@@ -658,7 +658,7 @@
       <div class="w-60 relative-position">
         <q-img
           src="login-image1.jpeg"
-          class="absolute-center"
+          class="absolute-center radius-10"
           width="120%"
           style="margin-left: 250px"
         />

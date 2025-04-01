@@ -9,7 +9,7 @@ import {
   logIn,
   logInDetails,
   wrongUserOrPass,
-  volunteerFormData,
+  // volunteerFormData,
   addUser,
   dearUserName,
   dearUserPhoneNumber,
@@ -38,6 +38,7 @@ export default {
     let pin = ref(null)
     let changer = ref(0)
     let errorEmail = ref('')
+    const showLoginError = ref(false)
     let referenceCode = ref(Math.floor(1000 + Math.random() * 9000))
     let registerInfo = ref({
       first_name: null,
@@ -222,13 +223,27 @@ export default {
     }
 
     let logInTaara = (pay1, pay2) => {
+      $q.loading.show({
+        message: 'Loggin in. Please wait...',
+      })
       logIn(pay1, pay2)
-        .then((logInDetails) => {
-          if (logInDetails[0].account_identifier == 'publicUser') {
-            router.push('/home')
-            volunteerFormData(logInDetails[0].user_id)
+        .then((response) => {
+          console.log(response)
+
+          if (response.status == 'success') {
+            if (response.data[0].user_type == '1') {
+              router.push('/home')
+            } else {
+              setTimeout(() => {
+                router.push('/')
+                $q.loading.hide()
+              }, 2000)
+            }
           } else {
-            router.push('/management')
+            setTimeout(() => {
+              showLoginError.value = !showLoginError.value
+              $q.loading.hide()
+            }, 2000)
           }
         })
         .catch((error) => {
@@ -347,7 +362,6 @@ export default {
       if (timer2 !== void 0) {
         clearTimeout(timer2)
       }
-      $q.loading.hide()
     })
 
     const fetchCatFact = async () => {
@@ -365,6 +379,7 @@ export default {
     })
 
     return {
+      showLoginError,
       QSpinnerGears,
       dearUserEmail,
       fetchCatFact,

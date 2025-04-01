@@ -348,15 +348,13 @@ const logIn = (email_address, password) => {
         params: { email_address: email_address, password: password },
       })
       .then((response) => {
-        if (response.data == 'Wrong Username or Password!') {
-          wrongUserOrPass.value = 'Wrong Username or Password!'
-        } else {
-          wrongUserOrPass.value = ''
-          var serializedObject = JSON.stringify(response.data.data)
-          localStorage.setItem('logInDetails', serializedObject)
-          logInDetails.value = JSON.parse(localStorage.getItem('logInDetails'))
-          resolve(logInDetails.value)
-        }
+        // if (response.data.status == 'failed') {
+        // } else {
+        // var serializedObject = JSON.stringify(response.data.data)
+        // localStorage.setItem('logInDetails', serializedObject)
+        // logInDetails.value = JSON.parse(localStorage.getItem('logInDetails'))
+        // }
+        resolve(response.data)
       })
       .catch((error) => {
         reject(error)

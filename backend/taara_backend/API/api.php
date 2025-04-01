@@ -428,18 +428,16 @@ LEFT JOIN tbl_walk_in_donations tb3 ON tb1.walk_in_id = tb3.id
     } else if (array_key_exists("password", $ref_id) && array_key_exists("email_address", $ref_id)) {
       $email = $ref_id['email_address'];
       $password = $ref_id['password'];
-      $colsPublic = array("user_id,first_name,image,account_identifier");
+
       $this->db->where('email_address', $email);
       $this->db->where('password', $password);
-      $query = $this->db->get("tbl_users", null, $colsPublic);
-      $query2 = $this->db->rawQuery("SELECT * FROM tbl_officials_account where email_address = '$email' AND password = '$password' ");
-      if (Count($query) == 1) {
+      $query = $this->db->get("tbl_users");
+
+      if (count($query) == 1) {
         echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
         return;
-      } else if (Count($query2) == 1) {
-        echo json_encode(array('status' => 'success', 'data' => $query2, 'method' => 'GET'));
       } else {
-        echo 'Wrong Username or Password!';
+        echo json_encode(array('status' => 'failed', 'data' => [], 'method' => 'GET'));
       }
     }
     //taara management get querries

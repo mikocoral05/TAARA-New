@@ -206,6 +206,8 @@ export default defineComponent({
     watchEffect(() => {
       if (pathExclude.value.includes(route.path)) {
         showLayout.value = false
+      } else {
+        showLayout.value = true
       }
     })
     const leftDrawerOpen = ref(false)

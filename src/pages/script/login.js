@@ -379,6 +379,7 @@ export default {
     })
 
     return {
+      router,
       showLoginError,
       QSpinnerGears,
       dearUserEmail,

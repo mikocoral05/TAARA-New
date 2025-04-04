@@ -20,6 +20,11 @@ const routes = [
         path: 'user-login',
         component: () => import('src/pages/UserLogin.vue'),
       },
+      {
+        name: 'user-registration',
+        path: 'user-registration',
+        component: () => import('src/pages/UserRegistration.vue'),
+      },
     ],
   },
   // {

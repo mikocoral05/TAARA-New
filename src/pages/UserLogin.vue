@@ -650,7 +650,7 @@
           </div>
           <q-btn label="Log In" no-caps class="bg-primary text-white full-width" type="submit" />
           <q-separator class="q-mt-md"></q-separator>
-          <p @click="((fadeValue = true), resetLogInInfo())">
+          <p @click="router.push('user-registration')">
             <u>Don't have an account? Sign up</u>
           </p>
         </q-form>

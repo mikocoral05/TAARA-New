@@ -202,7 +202,7 @@ export default defineComponent({
   setup() {
     const route = useRoute()
     const showLayout = ref(true)
-    const pathExclude = ref(['/user-login'])
+    const pathExclude = ref(['/user-login', '/user-registration'])
     watchEffect(() => {
       if (pathExclude.value.includes(route.path)) {
         showLayout.value = false

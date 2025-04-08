@@ -171,7 +171,7 @@ const linksList2 = [
   {
     title: 'Authorization',
     icon: 'manage_accounts',
-    nav: '',
+    nav: 'authorization',
   },
   {
     title: 'Record',

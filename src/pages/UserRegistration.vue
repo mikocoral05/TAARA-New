@@ -292,6 +292,7 @@
   </q-page>
 </template>
 <script>
+import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
 import { ref } from 'vue'
 
 export default {
@@ -301,38 +302,6 @@ export default {
     const done2 = ref(true)
     const done3 = ref(false)
     const registrationDetails = ref({ sex: 'Male', civil_status: 'Single', suffix: 'none' })
-    const nameSuffixes = [
-      'none',
-      'Jr.',
-      'Sr.',
-      'II',
-      'III',
-      'IV',
-      'V',
-      'MD',
-      'PhD',
-      'Esq.',
-      'CPA',
-      'DDS',
-      'DVM',
-      'RN',
-      'DO',
-      'JD',
-      'MBA',
-      'EdD',
-      'MS',
-      'MA',
-      'PE',
-    ]
-    const civilStatusOption = ref([
-      'Single',
-      'Married',
-      'Divorced',
-      'Widowed',
-      'Separated',
-      'Annulled',
-    ])
-    const sexOption = ref(['Male', 'Female'])
     return {
       sexOption,
       civilStatusOption,

@@ -16,4 +16,21 @@ const getUserByType = (type) => {
       })
   })
 }
-export { getUserByType }
+
+const updateUser = (data) => {
+  return new Promise((resolve, reject) => {
+    api
+      .put('authorization.php', {
+        updateUser: data,
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          resolve(response.data.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+export { getUserByType, updateUser }

@@ -30,6 +30,11 @@ const routes = [
         path: 'authorization',
         component: () => import('src/pages/AuthorizationSection.vue'),
       },
+      {
+        name: 'budget-and-expenses',
+        path: 'budget-and-expenses',
+        component: () => import('src/pages/BudgetAndExpenses.vue'),
+      },
     ],
   },
   // {

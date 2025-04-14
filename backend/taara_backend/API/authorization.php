@@ -47,11 +47,13 @@ class API
             if ($type == 3) {
                 $columns[] = 'tbl_official_position.position_title';
                 $columns[] = 'tbl_official_position.position_description';
+                $columns[] = 'page_access';
                 $this->db->join('tbl_official_position', 'tbl_users.roles = tbl_official_position.id', 'left');
             }
             if ($type == 2) {
                 $columns[] = 'tbl_volunteer_position.position_title';
                 $columns[] = 'tbl_volunteer_position.position_description';
+                $columns[] = 'page_access';
                 $this->db->join('tbl_volunteer_position', 'tbl_users.roles = tbl_volunteer_position.id', 'left');
             }
 
@@ -65,11 +67,19 @@ class API
                 'data' => $query,
                 'method' => 'GET'
             ]);
+        } else if (array_key_exists('get_page_access', $payload)) {
+            $query = $this->db->get("tbl_pages");
+            // Respond with success and the query data
+            echo json_encode([
+                'status' => 'success',
+                'data' => $query,
+                'method' => 'GET'
+            ]);
         } else {
             // Return error if 'get_user_by_type' is not provided
             echo json_encode([
-                'status' => 'error',
-                'message' => 'Missing parameter: get_user_by_type'
+                'status' => 'failed',
+                'message' => 'A error occured while performing action!'
             ]);
         }
     }
@@ -118,6 +128,7 @@ class API
                 'date_archieve',
                 'username',
                 'password',
+                'page_access',
             ];
 
             // Loop through the allowed fields and check if they exist in the user data

@@ -127,14 +127,9 @@ const linksList = [
     nav: 'pets',
   },
   {
-    title: 'Budget Allocation',
+    title: 'Budget/Expenses',
     icon: 'payments',
-    nav: '',
-  },
-  {
-    title: 'Daily Expenses',
-    icon: 'price_check',
-    nav: '',
+    nav: 'budget-and-expenses',
   },
   {
     title: 'Announcement',

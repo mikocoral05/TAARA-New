@@ -18,10 +18,12 @@ const getUserByType = (type) => {
 }
 
 const updateUser = (data) => {
+  const clone = { ...data }
+  clone.page_access = JSON.stringify(clone.page_access)
   return new Promise((resolve, reject) => {
     api
       .put('authorization.php', {
-        updateUser: data,
+        updateUser: clone,
       })
       .then((response) => {
         if (response.data.status == 'success') {
@@ -33,4 +35,22 @@ const updateUser = (data) => {
       })
   })
 }
-export { getUserByType, updateUser }
+
+const getPageAccess = () => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('authorization.php', {
+        params: { get_page_access: 'get_page_access' },
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          resolve(response.data.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
+export { getPageAccess, getUserByType, updateUser }

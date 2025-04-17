@@ -3,7 +3,7 @@ import { ref } from 'vue'
 let date = new Date()
 let dateToday = date.toISOString().slice(0, 10)
 let dayToday = ref(date.getDate())
-let monthToday = date.getMonth()
+let monthToday = date.getMonth() + 1
 let yearToday = date.getFullYear()
 
 let hours = date.getHours().toString().padStart(2, '0')
@@ -86,6 +86,7 @@ function timeAgo(date, time) {
     return secondsDifference + (secondsDifference === 1 ? ' second ago' : ' seconds ago')
   }
 }
+
 const threeWordsAbbMonth = [
   { month: 'Jan' },
   { month: 'Feb' },
@@ -100,6 +101,7 @@ const threeWordsAbbMonth = [
   { month: 'Nov' },
   { month: 'Dec' },
 ]
+
 const twoWordsAbbMonth = [
   { month: 'Jn' },
   { month: 'Fb' },
@@ -114,6 +116,7 @@ const twoWordsAbbMonth = [
   { month: 'Nv' },
   { month: 'Dc' },
 ]
+
 let monthNames = [
   { label: 'January', value: 1 },
   { label: 'February', value: 2 },
@@ -128,6 +131,7 @@ let monthNames = [
   { label: 'November', value: 11 },
   { label: 'December', value: 12 },
 ]
+
 function getAge(birthDate) {
   const today = new Date()
   const birthDateObj = new Date(birthDate)

@@ -53,4 +53,37 @@ const getPageAccess = () => {
   })
 }
 
-export { getPageAccess, getUserByType, updateUser }
+const getBudgetAllocation = () => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('budget_expenses.php', {
+        params: { get_budget_allocation: 'get_budget_allocation' },
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          resolve(response.data.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+const getExpenses = () => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('budget_expenses.php', {
+        params: { get_expenses: 'get_expenses' },
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          resolve(response.data.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
+export { getExpenses, getBudgetAllocation, getPageAccess, getUserByType, updateUser }

@@ -3,9 +3,24 @@ body {
   background-color: #f5f6fa;
   font-family: 'Nunito Sans', sans-serif;
 }
-
+.fig-tree {
+  font-family: 'Figtree', sans-serif;
+}
+.outfit {
+  font-family: 'Outfit', sans-serif;
+}
 .radius-10 {
   border-radius: 10px;
+}
+.radius-10-t-lr {
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+}
+.radius-10-t-r {
+  border-top-right-radius: 10px;
+}
+.radius-10-t-l {
+  border-top-left-radius: 10px;
 }
 .bg-default {
   background-color: #f5f6fa;

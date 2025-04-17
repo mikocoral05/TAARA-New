@@ -127,7 +127,7 @@ const linksList = [
     nav: 'pets',
   },
   {
-    title: 'Budget/Expenses',
+    title: 'Budget & Expenses',
     icon: 'payments',
     nav: 'budget-and-expenses',
   },

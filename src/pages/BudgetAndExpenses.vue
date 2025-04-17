@@ -1,38 +1,85 @@
 <template>
   <q-page>
     <div class="row no-wrap justify-between items-center">
-      <q-tabs dense v-model="tab" inline-label flat active-color="primary">
-        <q-tab name="3" icon="sym_r_manage_accounts" label="Officials" no-caps />
-        <q-tab name="2" icon="sym_r_person_raised_hand" label="Volunteer " no-caps />
-        <q-tab name="1" icon="sym_r_identity_platform" label="Public  Users" no-caps />
+      <q-tabs dense v-model="tab" inline-label flat active-color="primary" active-bg-color="white">
+        <q-tab name="1" icon="sym_r_account_balance_wallet" label="Budget Allocation" no-caps />
+        <q-tab name="2" icon="sym_r_price_check" label="Daily Expenses" no-caps />
       </q-tabs>
       <div class="row no-wrap justify-between items-center">
-        <q-btn icon="sym_r_add" dense unelevated class="q-mr-md" />
-        <q-btn icon="sym_r_upload" dense unelevated />
+        <div class="row no-wrap items-center q-mr-xl">
+          <q-select v-model="selectedMonth" :options="monthNames" dense emit-value map-options />
+          <q-icon name="sym_r_sync_alt" size="1.2rem" class="q-mx-lg" color="grey-7" />
+          <q-select v-model="selectedYear" :options="options" dense />
+        </div>
+        <!-- <div class="row no-wrap">
+          <q-btn icon="sym_r_add" dense unelevated class="q-mr-md" />
+          <q-btn icon="sym_r_upload" dense unelevated />
+        </div> -->
       </div>
     </div>
     <q-separator color="grey-3" class="q-mb-md" />
+    <div class="column no-wrap" v-if="tab == 1">
+      <div class="row q-mb-md">
+        <q-card class="q-mr-md radius-10 q-px-lg" flat>
+          <q-card-section>
+            <div class="text-grey-7 text-caption">TOTAL BALANCE</div>
+            <div class="text-h6 text-bold q-mt-lg">12,032.32</div>
+            <div class="text-grey-7 text-caption q-mt-sm">
+              <q-icon name="sym_r_trending_up" class="text-positive text-bold q-mr-xs" /><span
+                class="text-positive text-bold"
+                >25%</span
+              >
+              from last month
+            </div>
+          </q-card-section>
+        </q-card>
+        <q-card class="q-mr-md radius-10 q-px-lg" flat>
+          <q-card-section>
+            <div class="text-grey-7 text-caption">TOTAL EXPENSES</div>
+            <div class="text-h6 text-bold q-mt-lg">3,432.12</div>
+            <div class="text-grey-7 text-caption q-mt-sm">
+              <q-icon name="sym_r_trending_down" class="text-negative text-bold q-mr-xs" /><span
+                class="text-negative text-bold"
+                >-5%</span
+              >
+              from last month
+            </div>
+          </q-card-section>
+        </q-card>
+        <q-card class="q-mr-md radius-10 q-px-lg" flat>
+          <q-card-section>
+            <div class="text-grey-7 text-caption">AVAILABLE BUDGET</div>
+            <div class="text-h6 text-bold q-mt-lg">9,231.32</div>
+            <div class="text-grey-7 text-caption q-mt-sm">
+              <q-icon name="sym_r_trending_up" class="text-positive text-bold q-mr-xs" /><span
+                class="text-positive text-bold"
+                >15%</span
+              >
+              from last month
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
+    </div>
     <ReusableTable
-      :rows="userRows"
-      :columns="volunteerColumns"
+      :rows="rows"
+      :columns="columns"
       separator="vertical"
       :rows-per-page-options="[10]"
       :visible-columns="
-        ['3', '2'].includes(tab)
-          ? ['id', 'fullName', 'email', 'roles', 'age', 'profession', 'phone_number', 'btn']
-          : ['id', 'fullName', 'email', 'age', 'profession', 'phone_number', 'btn']
+        tab == 1
+          ? ['id', 'name', 'percentage_allocated', 'computed', 'btn']
+          : [
+              'id',
+              'expense_title',
+              'amount',
+              'payment_method',
+              'expense_date',
+              'attachments',
+              'btn',
+            ]
       "
     >
-      <template #cell-fullName="{ row }">
-        <q-avatar size="30px" class="q-mr-md">
-          <q-img
-            :src="row.img_path || row.sex == 1 ? 'no-profile-male.svg' : 'no-profile-female.svg'"
-          />
-        </q-avatar>
-        {{ row.first_name }}
-        {{ row.middle_name }}
-        {{ row.last_name }}
-      </template>
       <!-- Button slot with icon -->
       <template #cell-btn="{ row }">
         <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
@@ -540,23 +587,31 @@
 <script>
 import ReusableTable from 'src/components/ReusableTable.vue'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
-import { getPageAccess, getUserByType, updateUser } from 'src/composable/latestComposable'
+import {
+  getBudgetAllocation,
+  getExpenses,
+  getPageAccess,
+  updateUser,
+} from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
+import { monthNames, monthToday, yearToday } from 'src/composable/simpleComposable'
 export default {
   components: {
     ReusableTable,
   },
   setup() {
     const $q = useQuasar()
-    const tab = ref('3')
+    const tab = ref('1')
     const editTab = ref('1')
-    const userRows = ref([])
+    const rows = ref([])
     const confirm = ref(false)
     const editDialog = ref(false)
     const pages = ref([])
     const userData = ref()
     const mode = ref('')
+    const selectedMonth = ref(monthToday)
+    const selectedYear = ref(yearToday)
 
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
@@ -593,12 +648,22 @@ export default {
         }, 2000)
       })
     }
+
     watchEffect(() => {
-      getUserByType(tab.value).then((response) => {
-        userRows.value = response
-      })
+      if (tab.value == 1) {
+        getBudgetAllocation().then((response) => {
+          rows.value = response
+        })
+      } else {
+        getExpenses().then((response) => {
+          rows.value = response
+        })
+      }
     })
     return {
+      selectedMonth,
+      selectedYear,
+      monthNames,
       pages,
       saveFn,
       confirm,
@@ -611,39 +676,71 @@ export default {
       mode,
       userData,
       tableAction,
-      userRows,
+      rows,
       tab,
-      volunteerColumns: [
-        { name: 'id', label: 'ID', field: 'user_id', align: 'center' },
+      columns: [
+        { name: 'id', label: 'ID', field: 'id', align: 'center' },
         {
-          name: 'fullName',
-          label: 'Full Name',
-          field: 'first_name',
-          sortable: true,
-          align: 'left',
-        },
-        { name: 'email', label: 'Email', field: 'email_address', sortable: true, align: 'center' },
-        { name: 'roles', label: 'Role', field: 'position_title', sortable: true, align: 'center' },
-        { name: 'age', label: 'Age', field: 'birth_date', sortable: true, align: 'center' },
-        {
-          name: 'profession',
-          label: 'Profession',
-          field: 'occupation',
+          name: 'name',
+          label: 'Name',
+          field: 'name',
           sortable: true,
           align: 'center',
         },
         {
-          name: 'phone_number',
-          label: 'Phone no.',
-          field: 'phone_number',
+          name: 'percentage_allocated',
+          label: 'Allocated ( % ) ',
+          field: 'percentage_allocated',
+          sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'computed',
+          label: 'Accumulated Expenses',
+          field: 'computed',
+          sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'expense_title',
+          label: 'Expense',
+          field: 'expense_title',
+          sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'amount',
+          label: 'Amount (₱)',
+          field: 'amount',
+          sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'payment_method',
+          label: 'Payment Method',
+          field: 'payment_method',
+          sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'expense_date',
+          label: 'Date Transacted',
+          field: 'expense_date',
+          sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'attachments',
+          label: 'File',
+          field: 'attachments',
           sortable: true,
           align: 'center',
         },
         {
           name: 'btn',
-          label: '',
+          label: 'Action',
           field: 'btn',
-          sortable: true,
+          sortable: false,
           align: 'center',
         },
       ],

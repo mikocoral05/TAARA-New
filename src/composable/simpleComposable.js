@@ -224,14 +224,31 @@ let goodWith = (payload) => {
     return 'Both animals and people'
   }
 }
-let formatNumber = (number, based) => {
+
+const formatNumber = (number, based = '') => {
   number = Number(number)
-  if (number !== Math.floor(number) || based == 'noDecimal') {
+
+  if (based === 'noDecimal') {
     return '₱ ' + number.toLocaleString('en-US')
-  } else {
-    return '₱ ' + number.toLocaleString('en-US') + '.00'
   }
+
+  return (
+    '₱ ' +
+    number.toLocaleString('en-US', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    })
+  )
 }
+
+const formatOrNumber = (number) => {
+  number = Number(number)
+  return number.toLocaleString('en-US', {
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  })
+}
+
 function weekCount(year, month_number, startDayOfWeek) {
   // month_number is in the range 1..12
   // Get the first day of the week (0: Sunday, 1: Monday, ...)
@@ -342,7 +359,29 @@ let decodeAnimalId = (encoded) => {
 
   return parseInt(decoded, 10)
 }
+
+const generateYearList = () => {
+  const years = []
+  for (let year = 2016; year <= yearToday; year++) {
+    years.push(year)
+  }
+  return years
+}
+
+const isNearExpiration = (expirationDate) => {
+  const now = new Date()
+  const expiry = new Date(expirationDate)
+
+  const diffInMs = expiry - now
+  const diffInDays = diffInMs / (1000 * 60 * 60 * 24)
+
+  return diffInDays >= 0 && diffInDays <= 7
+}
+
 export {
+  isNearExpiration,
+  formatOrNumber,
+  generateYearList,
   decodeAnimalId,
   encodeAnimalId,
   sendTelerivetSms,

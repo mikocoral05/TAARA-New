@@ -14,80 +14,73 @@ class API
 
     public function httpGet($payload)
     {
-        if (isset($payload["get_expenses"])) {
-            $month = $payload['get_expenses']['month'];
-            $year = $payload['get_expenses']['year'];
-            $day = $payload['get_expenses']['day'];
+        if (array_key_exists('get_inventory_list', $payload)) {
+            $categoryData = $payload['get_inventory_list'];
+            $category = is_array($categoryData) ? $categoryData['category'] : $categoryData;
 
-            $this->db->where("DAY(`expense_date`) = ?", [$day]);
-            $this->db->where("MONTH(`expense_date`) = ?", [$month]);
-            $this->db->where("YEAR(`expense_date`) = ?", [$year]);
-            $query = $this->db->get("tbl_expenses");
+            $today = date('Y-m-d');
+
+            $this->db->where("category", $category);
+            $this->db->where("expiration_date", $today, ">="); // this is the correct way to do `>=`
+            $query = $this->db->get("tbl_inventory");
 
             echo json_encode([
                 'status' => 'success',
                 'data' => $query,
                 'method' => 'GET'
             ]);
-        } else if (array_key_exists('get_budget_allocation', $payload)) {
-            $query = $this->db->get("tbl_budget_allocation");
-            // Respond with success and the query data
-            echo json_encode([
-                'status' => 'success',
-                'data' => $query,
-                'method' => 'GET'
-            ]);
-        } else if (array_key_exists('get_expenses_summary', $payload)) {
-            $month = str_pad($payload['get_expenses_summary']['month'], 2, '0', STR_PAD_LEFT);
-            $year = $payload['get_expenses_summary']['year'];
+        } else if (array_key_exists('get_inventory_list_summary', $payload)) {
+            $category = $payload['get_inventory_list_summary'];
+            $today = date('Y-m-d');
 
-            $this->db->where('expense_date', "$year-$month%", 'LIKE');
-            $totalAmount = $this->db->getValue("tbl_expenses", "SUM(amount)");
+            // Query to count quantity and unique group_name
+            $this->db->select('SUM(quantity) as total_quantity, COUNT(DISTINCT group_name) as unique_group_count');
+            $this->db->where("category", $category);
+            $this->db->where("expiration_date >=", $today);
+            $query = $this->db->get("tbl_inventory");
 
-            echo json_encode([
-                'status' => 'success',
-                'data' => ['total' => $totalAmount],
-                'method' => 'GET'
-            ]);
-        } else if (array_key_exists('get_total_balance', $payload)) {
-            $month = str_pad($payload['get_total_balance']['month'], 2, '0', STR_PAD_LEFT);
-            $year = $payload['get_total_balance']['year'];
-            $likeDate = "$year-$month%";
+            // Fetch the result
+            $result = $query->row_array(); // Get the result as an associative array
 
-            // Get total donations
-            $this->db->join('tbl_cash_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
-            $this->db->where('tbl1.received_date', $likeDate, 'LIKE');
-            $totalCashDonations = $this->db->getValue('tbl_funds tbl1', 'SUM(tbl2.amount)');
-
-            // Get total expenses up to selected date
-            $this->db->where('expense_date', "$year-$month-31", '<=');
-            $totalExpenses = $this->db->getValue('tbl_expenses', 'SUM(amount)');
-
-            // Calculate balance
-            $finalBalance = floatval($totalCashDonations) - floatval($totalExpenses);
-
+            // Respond with the count results
             echo json_encode([
                 'status' => 'success',
                 'data' => [
-                    'donations' => $totalCashDonations ?: 0,
-                    'expenses' => $totalExpenses ?: 0,
-                    'balance' => $finalBalance
+                    'total_quantity' => $result['total_quantity'],
+                    'unique_group_count' => $result['unique_group_count']
                 ],
                 'method' => 'GET'
             ]);
-        } else if (array_key_exists("get_monthly_funds_and_expenses", $payload)) {
-            $month = $payload['get_monthly_funds_and_expenses']['month'];
-            $year = $payload['get_monthly_funds_and_expenses']['year'];
+        } else if (array_key_exists('get_inventory_group', $payload)) {
+            $category = $payload['get_inventory_group'];
+            $today = date('Y-m-d');
 
-            $this->db->where("MONTH(`expense_date`) = ?", [$month]);
-            $this->db->where("YEAR(`expense_date`) = ?", [$year]);
-            $query = $this->db->get("tbl_expenses");
+            // First get all groups for that category
+            $this->db->where("category", $category);
+            $groups = $this->db->get("tbl_inventory_group");
 
-            echo json_encode(array(
+            $result = [];
+
+            foreach ($groups as $index => $group) {
+                $this->db->where("category", $category);
+                $this->db->where("group_name", $group['id']);
+                $this->db->where("expiration_date", $today, ">=");
+
+                $count = $this->db->getValue("tbl_inventory", "COUNT(*)");
+
+                $result[] = [
+                    'id'         => $index + 1,
+                    'group_name' => $group['group_name'],
+                    'category'   => $group['category'],
+                    'count'      => $count
+                ];
+            }
+
+            echo json_encode([
                 'status' => 'success',
-                'data' => $query,
+                'data'   => $result,
                 'method' => 'GET'
-            ));
+            ]);
         } else {
             // Return error if 'get_user_by_type' is not provided
             echo json_encode([

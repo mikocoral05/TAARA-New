@@ -9,12 +9,16 @@
         <div class="row no-wrap items-center q-mr-xl">
           <q-select v-model="selectedMonth" :options="monthNames" dense emit-value map-options />
           <q-icon name="sym_r_sync_alt" size="1.2rem" class="q-mx-lg" color="grey-7" />
-          <q-select v-model="selectedYear" :options="options" dense />
+          <q-select v-model="selectedYear" :options="generateYearList()" dense />
         </div>
-        <!-- <div class="row no-wrap">
-          <q-btn icon="sym_r_add" dense unelevated class="q-mr-md" />
-          <q-btn icon="sym_r_upload" dense unelevated />
-        </div> -->
+        <div class="row no-wrap">
+          <q-btn icon="sym_r_add" dense unelevated class="q-mr-md">
+            <q-tooltip v-model="showingTooltip">Add Buget Allocation</q-tooltip>
+          </q-btn>
+          <q-btn icon="sym_r_upload" dense unelevated>
+            <!-- <q-tooltip v-model="showingTooltip">Tooltip text</q-tooltip> -->
+          </q-btn>
+        </div>
       </div>
     </div>
     <q-separator color="grey-3" class="q-mb-md" />
@@ -23,7 +27,9 @@
         <q-card class="q-mr-md radius-10 q-px-lg" flat>
           <q-card-section>
             <div class="text-grey-7 text-caption">TOTAL BALANCE</div>
-            <div class="text-h6 text-bold q-mt-lg">12,032.32</div>
+            <div class="text-h6 text-bold q-mt-lg">
+              {{ formatNumber(Number(totalBalance) + Number(totalExpense)) }}
+            </div>
             <div class="text-grey-7 text-caption q-mt-sm">
               <q-icon name="sym_r_trending_up" class="text-positive text-bold q-mr-xs" /><span
                 class="text-positive text-bold"
@@ -36,7 +42,7 @@
         <q-card class="q-mr-md radius-10 q-px-lg" flat>
           <q-card-section>
             <div class="text-grey-7 text-caption">TOTAL EXPENSES</div>
-            <div class="text-h6 text-bold q-mt-lg">3,432.12</div>
+            <div class="text-h6 text-bold q-mt-lg">{{ formatNumber(totalExpense) }}</div>
             <div class="text-grey-7 text-caption q-mt-sm">
               <q-icon name="sym_r_trending_down" class="text-negative text-bold q-mr-xs" /><span
                 class="text-negative text-bold"
@@ -49,7 +55,7 @@
         <q-card class="q-mr-md radius-10 q-px-lg" flat>
           <q-card-section>
             <div class="text-grey-7 text-caption">AVAILABLE BUDGET</div>
-            <div class="text-h6 text-bold q-mt-lg">9,231.32</div>
+            <div class="text-h6 text-bold q-mt-lg">{{ formatNumber(totalBalance) }}</div>
             <div class="text-grey-7 text-caption q-mt-sm">
               <q-icon name="sym_r_trending_up" class="text-positive text-bold q-mr-xs" /><span
                 class="text-positive text-bold"
@@ -61,60 +67,98 @@
         </q-card>
       </div>
     </div>
-    <ReusableTable
-      :rows="rows"
-      :columns="columns"
-      separator="vertical"
-      :rows-per-page-options="[10]"
-      :visible-columns="
-        tab == 1
-          ? ['id', 'name', 'percentage_allocated', 'computed', 'btn']
-          : [
-              'id',
-              'expense_title',
-              'amount',
-              'payment_method',
-              'expense_date',
-              'attachments',
-              'btn',
-            ]
-      "
-    >
-      <!-- Button slot with icon -->
-      <template #cell-btn="{ row }">
-        <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
-          <q-menu anchor="bottom left" self="top right">
-            <q-list dense style="min-width: 100px">
-              <q-item clickable v-close-popup @click="tableAction(row, 'View')">
-                <q-item-section>View</q-item-section>
-                <q-item-section side>
-                  <q-icon name="sym_r_visibility" size="1.2rem" />
+    <div class="row no-wrap">
+      <div class="bg-white q-mr-md radius-10" v-if="tab == 2" style="width: 300px">
+        <q-scroll-area
+          :thumb-style="{ width: '2px', backgroundColor: '#b157ae' }"
+          :bar-style="{ width: '2px', backgroundColor: '#b157ae' }"
+          style="height: 78vh; max-width: 300px"
+          class="q-pb-md radius-10"
+          ref="scrollAreaRef"
+        >
+          <div ref="scrollListRef">
+            <q-list bordered separator>
+              <q-item
+                v-for="(daily, index) in dailyExpenseTotal"
+                :key="index"
+                clickable
+                v-ripple
+                class="q-px-lg row no-wrap justify-between items-center font-12"
+                :class="{ 'bg-primary text-white': selectedDay == daily?.day }"
+                @click="selectedDay = daily?.day"
+              >
+                <q-item-section>
+                  <div>Day {{ daily?.day }}</div>
                 </q-item-section>
-              </q-item>
-              <q-item clickable v-close-popup @click="tableAction(row, 'Edit')">
-                <q-item-section>Edit</q-item-section>
-                <q-item-section side>
-                  <q-icon name="sym_r_edit" size="1.2rem" />
-                </q-item-section>
-              </q-item>
-              <q-separator />
-              <q-item clickable @click="tableAction(row, 'Archieve')">
-                <q-item-section>Archieve</q-item-section>
-                <q-item-section side>
-                  <q-icon name="sym_r_keyboard_arrow_right" size="1.2rem" />
-                </q-item-section>
-              </q-item>
-              <q-item clickable @click="tableAction(row, 'Page Access')">
-                <q-item-section>Access</q-item-section>
-                <q-item-section side>
-                  <q-icon name="sym_r_key" size="1.2rem" />
+                <q-item-section class="text-right">
+                  <div>{{ formatNumber(daily?.total) }}</div>
                 </q-item-section>
               </q-item>
             </q-list>
-          </q-menu>
-        </q-btn>
-      </template>
-    </ReusableTable>
+          </div>
+        </q-scroll-area>
+      </div>
+      <ReusableTable
+        style="width: 100%"
+        :rows="rows"
+        :columns="columns"
+        separator="vertical"
+        :rows-per-page-options="[10]"
+        :visible-columns="
+          tab == 1
+            ? ['id', 'name', 'percentage_allocated', 'computed', 'btn']
+            : [
+                'id',
+                'expense_title',
+                'amount',
+                'payment_method',
+                'expense_date',
+                'attachments',
+                'btn',
+              ]
+        "
+      >
+        <!-- Button slot with icon -->
+        <template #cell-btn="{ row }">
+          <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
+            <q-menu anchor="bottom left" self="top right">
+              <q-list dense style="min-width: 100px">
+                <q-item clickable v-close-popup @click="tableAction(row, 'View')">
+                  <q-item-section>View</q-item-section>
+                  <q-item-section side>
+                    <q-icon name="sym_r_visibility" size="1.2rem" />
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup @click="tableAction(row, 'Edit')">
+                  <q-item-section>Edit</q-item-section>
+                  <q-item-section side>
+                    <q-icon name="sym_r_edit" size="1.2rem" />
+                  </q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable @click="tableAction(row, 'Archieve')">
+                  <q-item-section>Archieve</q-item-section>
+                  <q-item-section side>
+                    <q-icon name="sym_r_keyboard_arrow_right" size="1.2rem" />
+                  </q-item-section>
+                </q-item>
+                <q-item clickable @click="tableAction(row, 'Page Access')">
+                  <q-item-section>Access</q-item-section>
+                  <q-item-section side>
+                    <q-icon name="sym_r_key" size="1.2rem" />
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </template>
+        <template #cell-computed="{ row }">
+          <div>
+            {{ formatNumber((Number(totalBalance) * Number(row.percentage_allocated)) / 100) }}
+          </div>
+        </template>
+      </ReusableTable>
+    </div>
     <q-dialog position="right" full-height v-model="editDialog">
       <q-card style="min-width: 750px; height: 500px" class="text-black">
         <q-card-section class="q-py-md row no-wrap justify-between items-center">
@@ -589,13 +633,24 @@ import ReusableTable from 'src/components/ReusableTable.vue'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
 import {
   getBudgetAllocation,
+  getExpensesSummary,
   getExpenses,
   getPageAccess,
   updateUser,
+  getTotalBalance,
+  getMonthlyFundAndExpenses,
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
-import { monthNames, monthToday, yearToday } from 'src/composable/simpleComposable'
+import {
+  formatNumber,
+  generateYearList,
+  monthNames,
+  monthToday,
+  yearToday,
+  dayToday,
+} from 'src/composable/simpleComposable'
+import { nextTick } from 'vue'
 export default {
   components: {
     ReusableTable,
@@ -612,7 +667,13 @@ export default {
     const mode = ref('')
     const selectedMonth = ref(monthToday)
     const selectedYear = ref(yearToday)
-
+    const selectedDay = ref(dayToday)
+    const totalExpense = ref(null)
+    const totalBalance = ref(null)
+    const dailyExpenseTotal = ref([])
+    const scrollAreaRef = ref(null)
+    const scrollListRef = ref(null)
+    // const position = ref(300)
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
       userData.value = data
@@ -649,18 +710,62 @@ export default {
       })
     }
 
+    const updateBudgetAllocationSum = () => {
+      getBudgetAllocation().then((response) => {
+        rows.value = response
+      })
+      getExpensesSummary({ month: selectedMonth.value, year: selectedYear.value }).then(
+        (response) => {
+          totalExpense.value = response?.total
+        },
+      )
+      getTotalBalance({ month: selectedMonth.value, year: selectedYear.value }).then((response) => {
+        totalBalance.value = response?.balance
+      })
+    }
+
     watchEffect(() => {
       if (tab.value == 1) {
-        getBudgetAllocation().then((response) => {
+        updateBudgetAllocationSum()
+      } else {
+        let obj = {
+          month: selectedMonth.value,
+          year: selectedYear.value,
+        }
+        getExpenses({ ...obj, day: selectedDay.value }).then((response) => {
           rows.value = response
         })
-      } else {
-        getExpenses().then((response) => {
-          rows.value = response
+        getMonthlyFundAndExpenses(obj).then((response) => {
+          dailyExpenseTotal.value = response?.dailyTotal
+
+          nextTick(() => {
+            const itemElements = scrollListRef.value?.querySelectorAll('.q-item')
+            const targetElement = Array.from(itemElements).find(
+              (el, i) => dailyExpenseTotal.value[i]?.day === selectedDay.value,
+            )
+
+            if (targetElement) {
+              const offsetTop = targetElement.offsetTop
+
+              // Only scroll if the target is not already near the top (less than 10px)
+              if (offsetTop > 10) {
+                scrollAreaRef.value.setScrollPosition('vertical', offsetTop, 300)
+              }
+            }
+          })
         })
       }
     })
     return {
+      scrollListRef,
+      scrollAreaRef,
+      selectedDay,
+      dailyExpenseTotal,
+      generateYearList,
+      updateBudgetAllocationSum,
+      totalBalance,
+      formatNumber,
+      totalExpense,
       selectedMonth,
       selectedYear,
       monthNames,
@@ -678,6 +783,7 @@ export default {
       tableAction,
       rows,
       tab,
+      showingTooltip: ref(false),
       columns: [
         { name: 'id', label: 'ID', field: 'id', align: 'center' },
         {

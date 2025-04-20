@@ -10,7 +10,6 @@
     :rows-per-page-options="rowsPerPageOptions"
     :visible-columns="visibleColumns"
   >
-    <!-- Slot for custom cell rendering -->
     <template v-for="col in columns" #[`body-cell-${col.name}`]="props" :key="col.name">
       <q-td :props="props">
         <slot :name="`cell-${col.name}`" v-bind="props">

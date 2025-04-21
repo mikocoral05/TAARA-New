@@ -177,6 +177,22 @@ const getInventoryList = (category) => {
       })
   })
 }
+const getInventoryExpiredList = (category) => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('inventory.php', {
+        params: { get_inventory_expired_list: category },
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          resolve(response.data.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 const getInventoryListSummary = (category) => {
   return new Promise((resolve, reject) => {
     api
@@ -210,6 +226,8 @@ const getInventoryGroup = (category) => {
   })
 }
 export {
+  getInventoryExpiredList,
+  getInventoryListSummary,
   getInventoryGroup,
   getInventoryList,
   getMonthlyFundAndExpenses,

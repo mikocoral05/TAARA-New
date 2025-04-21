@@ -2,23 +2,30 @@
   <q-page>
     <div class="row no-wrap justify-between items-center">
       <q-tabs dense v-model="tab" inline-label flat active-color="primary" active-bg-color="white">
-        <q-tab name="2" icon="sym_r_medical_services" label="Medecine" no-caps />
+        <q-tab name="2" icon="sym_r_medical_services" label="Medicine" no-caps />
         <q-tab name="3" icon="sym_r_vaccines" label="Vaccine" no-caps />
         <q-tab name="4" icon="sym_r_nutrition" label="Vitamin" no-caps />
       </q-tabs>
       <div class="row no-wrap justify-between items-center">
-        <div class="row no-wrap items-center q-mr-xl">
-          <q-select v-model="selectedMonth" :options="monthNames" dense emit-value map-options />
-          <q-icon name="sym_r_sync_alt" size="1.2rem" class="q-mx-lg" color="grey-7" />
-          <q-select v-model="selectedYear" :options="generateYearList()" dense />
-        </div>
         <div class="row no-wrap">
-          <q-btn icon="sym_r_add" dense unelevated class="q-mr-md">
-            <q-tooltip v-model="showingTooltip">Add Buget Allocation</q-tooltip>
-          </q-btn>
-          <q-btn icon="sym_r_upload" dense unelevated>
-            <!-- <q-tooltip v-model="showingTooltip">Tooltip text</q-tooltip> -->
-          </q-btn>
+          <div class="row no-wrap">
+            <q-icon
+              name="sym_r_check_box_outline_blank"
+              size="1rem"
+              color="warning"
+              class="bg-warning q-mr-sm radius-2"
+            />
+            <div class="text-grey-7 text-caption">Nearly expired</div>
+          </div>
+          <div class="row no-wrap q-ml-md">
+            <q-icon
+              name="sym_r_check_box_outline_blank"
+              size="1rem"
+              color="negative"
+              class="bg-negative q-mr-sm radius-2"
+            />
+            <div class="text-grey-7 text-caption">Expired</div>
+          </div>
         </div>
       </div>
     </div>
@@ -33,11 +40,12 @@
             </div>
             <div class="row no-wrap items-center justify-center">
               <div class="text-h6 text-bold q-my-md text-center">
-                {{ rows.length }} <span class="text-caption text-grey-7">Unique</span>
+                {{ elseSummary.unique_group_count }}
+                <span class="text-caption text-grey-7">Unique</span>
               </div>
               <q-separator vertical inset class="q-mx-md" />
               <div class="text-h6 text-bold q-my-md text-center">
-                {{ formatOrNumber(itemsCount) }}
+                {{ formatOrNumber(elseSummary.total_quantity) }}
                 <span class="text-caption text-grey-7"> Pieces</span>
               </div>
             </div>
@@ -61,7 +69,9 @@
               <div class="text-grey-7 text-caption q-mr-md">MEDICINE GROUPS</div>
               <q-icon name="sym_r_outpatient_med" color="positive" size="1.5rem" />
             </div>
-            <div class="text-h6 text-bold q-my-md text-center">9</div>
+            <div class="text-h6 text-bold q-my-md text-center">
+              {{ elseSummary?.unique_group_count }}
+            </div>
             <q-separator />
             <q-btn
               dense
@@ -83,7 +93,9 @@
               <div class="text-grey-7 text-caption q-mr-md">EXPIRED MEDICINE</div>
               <q-icon name="sym_r_warning" color="negative" size="1.5rem" />
             </div>
-            <div class="text-h6 text-bold q-my-md text-center">23</div>
+            <div class="text-h6 text-bold q-my-md text-center">
+              {{ elseSummary?.expired_count }}
+            </div>
             <q-separator />
             <q-btn
               dense
@@ -93,7 +105,7 @@
               class="q-mt-sm full-width"
             >
               <div class="text-negative text-caption flex flex-center">
-                <span>VIEW GROUPS</span>
+                <span>VIEW FULL LIST</span>
                 <q-icon name="sym_r_keyboard_double_arrow_right" size="1.2rem" />
               </div>
             </q-btn>
@@ -155,7 +167,10 @@
         </template>
         <template #cell-expiration_date="{ row }">
           <div
-            :class="{ 'bg-warning text-white radius-10': isNearExpiration(row.expiration_date) }"
+            :class="{
+              'bg-warning text-white radius-10': isNearExpiration(row.expiration_date),
+              'bg-negative text-white radius-10': isExpired(row.expiration_date),
+            }"
           >
             {{ row.expiration_date }}
           </div>
@@ -642,6 +657,8 @@ import {
   getTotalBalance,
   getInventoryList,
   getInventoryGroup,
+  getInventoryListSummary,
+  getInventoryExpiredList,
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -654,7 +671,8 @@ import {
   dayToday,
   formatOrNumber,
   isNearExpiration,
-  getInventoryListSummary,
+  isExpired,
+  capitalize,
 } from 'src/composable/simpleComposable'
 export default {
   components: {
@@ -670,6 +688,7 @@ export default {
     const editDialog = ref(false)
     const pages = ref([])
     const userData = ref()
+    const elseSummary = ref({})
     const mode = ref('')
     const selectedMonth = ref(monthToday)
     const selectedYear = ref(yearToday)
@@ -730,14 +749,15 @@ export default {
         totalBalance.value = response?.balance
       })
     }
+
     const filterInventory = (filterNo) => {
       if (filterNo == 1) {
         getInventoryList(obj[tab.value]).then((response) => {
-          tableConfig.value.title = 'Medicine List'
+          tableConfig.value.title = `${capitalize(obj[tab.value])} List`
           tableConfig.value.columns = [
             'id',
             'item_name',
-            'category',
+            'group_name',
             'quantity',
             'unit',
             'expiration_date',
@@ -748,38 +768,57 @@ export default {
       } else if (filterNo == 2) {
         getInventoryGroup(obj[tab.value]).then((response) => {
           rows.value = response
-          tableConfig.value.title = 'Medicine List'
+          tableConfig.value.title = 'Group List'
           tableConfig.value.columns = ['id', 'group_name', 'count', 'btn']
+          console.log(tableConfig.value.columns)
+        })
+      } else if (filterNo == 3) {
+        getInventoryExpiredList(obj[tab.value]).then((response) => {
+          rows.value = response
+          tableConfig.value.title = 'Expired List'
+          tableConfig.value.columns = [
+            'id',
+            'item_name',
+            'group_name',
+            'quantity',
+            'unit',
+            'expiration_date',
+            'btn',
+          ]
         })
       }
     }
+
     watchEffect(() => {
       if (tab.value == 1) {
         updateBudgetAllocationSum()
       } else {
-        getInventoryList('medicine').then((response) => {
-          tableConfig.value.title = 'Medicine List'
+        getInventoryList(obj[tab.value]).then((response) => {
+          tableConfig.value.title = `${capitalize(obj[tab.value])} List`
           tableConfig.value.columns = [
             'id',
             'item_name',
-            'category',
+            'group_name',
             'quantity',
             'unit',
             'expiration_date',
             'btn',
           ]
           rows.value = response
+          console.log(rows.value)
 
           itemsCount.value = rows.value.reduce((total, item) => {
             return total + item.quantity
           }, 0)
         })
         getInventoryListSummary(obj[tab.value]).then((response) => {
-          console.log(response)
+          elseSummary.value = response
         })
       }
     })
     return {
+      isExpired,
+      elseSummary,
       isNearExpiration,
       formatOrNumber,
       itemsCount,
@@ -829,9 +868,9 @@ export default {
           align: 'center',
         },
         {
-          name: 'category',
-          label: 'Category',
-          field: 'category',
+          name: 'group_name',
+          label: 'Group Name',
+          field: 'group_name',
           sortable: true,
           align: 'center',
         },
@@ -856,13 +895,7 @@ export default {
           sortable: true,
           align: 'center',
         },
-        {
-          name: 'group_name',
-          label: 'Group Name',
-          field: 'group_name',
-          sortable: true,
-          align: 'center',
-        },
+
         {
           name: 'count',
           label: `No. of ${obj[tab.value]}`,

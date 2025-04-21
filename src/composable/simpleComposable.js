@@ -377,8 +377,28 @@ const isNearExpiration = (expirationDate) => {
 
   return diffInDays >= 0 && diffInDays <= 7
 }
+const isExpired = (expirationDate) => {
+  // Normalize today's date (midnight, no time)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
 
+  // Try to parse the expiration date
+  const expiry = new Date(expirationDate)
+
+  // If invalid date, return false (or handle however you'd like)
+  if (isNaN(expiry)) return false
+
+  // Normalize expiry date
+  expiry.setHours(0, 0, 0, 0)
+
+  // Return true if the expiration date is before today
+  return expiry < today
+}
+
+const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 export {
+  isExpired,
+  capitalize,
   isNearExpiration,
   formatOrNumber,
   generateYearList,

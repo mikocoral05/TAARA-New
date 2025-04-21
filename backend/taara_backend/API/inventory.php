@@ -15,13 +15,30 @@ class API
     public function httpGet($payload)
     {
         if (array_key_exists('get_inventory_list', $payload)) {
-            $categoryData = $payload['get_inventory_list'];
-            $category = is_array($categoryData) ? $categoryData['category'] : $categoryData;
+            $category = $payload['get_inventory_list'];
+            $today = date('Y-m-d');
+
+            // Join the group name from the group table
+            $this->db->join("tbl_inventory_group ig", "ig.id = tbl_inventory.group_name", "LEFT");
+
+            $this->db->where("tbl_inventory.category", $category);
+            $this->db->where("tbl_inventory.expiration_date", $today, ">=");
+
+            // Select all inventory fields, but replace group_name with actual name from group table
+            $query = $this->db->get("tbl_inventory", null, "tbl_inventory.*, ig.group_name AS group_name");
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => $query,
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists('get_inventory_expired_list', $payload)) {
+            $category = $payload['get_inventory_expired_list'];
 
             $today = date('Y-m-d');
 
             $this->db->where("category", $category);
-            $this->db->where("expiration_date", $today, ">="); // this is the correct way to do `>=`
+            $this->db->where("expiration_date", $today, "<"); // this is the correct way to do `>=`
             $query = $this->db->get("tbl_inventory");
 
             echo json_encode([
@@ -33,21 +50,27 @@ class API
             $category = $payload['get_inventory_list_summary'];
             $today = date('Y-m-d');
 
-            // Query to count quantity and unique group_name
-            $this->db->select('SUM(quantity) as total_quantity, COUNT(DISTINCT group_name) as unique_group_count');
+            // Not expired: quantity & unique group count
             $this->db->where("category", $category);
-            $this->db->where("expiration_date >=", $today);
-            $query = $this->db->get("tbl_inventory");
+            $this->db->where("expiration_date", $today, ">=");
+            $notExpired = $this->db->getOne("tbl_inventory", "SUM(quantity) as total_quantity, COUNT(DISTINCT group_name) as unique_group_count");
 
-            // Fetch the result
-            $result = $query->row_array(); // Get the result as an associative array
+            // Expired: count of expired items
+            $this->db->where("category", $category);
+            $this->db->where("expiration_date", $today, "<");
+            $expiredCount = $this->db->getValue("tbl_inventory", "COUNT(*)");
 
-            // Respond with the count results
+            // Group count from tbl_inventory_group
+            $this->db->where("category", $category);
+            $groupCount = $this->db->getValue("tbl_inventory_group", "COUNT(DISTINCT group_name)");
+
             echo json_encode([
                 'status' => 'success',
                 'data' => [
-                    'total_quantity' => $result['total_quantity'],
-                    'unique_group_count' => $result['unique_group_count']
+                    'total_quantity' => $notExpired['total_quantity'],
+                    'unique_group_count' => $notExpired['unique_group_count'],
+                    'expired_count' => $expiredCount,
+                    'group_name_count' => $groupCount
                 ],
                 'method' => 'GET'
             ]);

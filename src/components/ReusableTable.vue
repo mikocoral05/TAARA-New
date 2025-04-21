@@ -1,9 +1,10 @@
 <template>
+  <!-- :rows="rows" -->
   <q-table
+    :rows="filteredRows"
     flat
     bordered
     class="radius-10"
-    :rows="rows"
     :columns="columns"
     row-key="id"
     :separator="separator"
@@ -28,6 +29,8 @@
               class="bg-default radius-10 q-px-md q-mr-xl"
               placeholder="Search"
               dense
+              :model-value="modelValue"
+              @update:model-value="(val) => emit('update:modelValue', val)"
             >
               <template v-slot:prepend>
                 <q-icon name="search" />
@@ -47,21 +50,50 @@
 </template>
 
 <script>
-import { ref } from 'vue'
+import { watch } from 'vue'
+import { computed, ref } from 'vue'
 
 export default {
+  name: 'ReusableTable',
   props: {
-    rows: { type: Array, required: true },
+    modelValue: {
+      type: String,
+      default: '',
+    },
+    rows: { type: Array, required: true, default: () => [] },
     columns: { type: Array, required: true },
     title: { type: String, required: true },
     separator: { type: String, default: 'horizontal' },
     rowsPerPageOptions: { type: Array, default: () => [5, 10, 15] },
     visibleColumns: { type: Array, default: () => [] },
   },
-  setup() {
+  emits: ['update:modelValue'],
+
+  setup(props, { emit }) {
+    const showingAddTooltip = ref(false)
+    const showingDeleteTooltip = ref(false)
+
+    const filteredRows = computed(() => {
+      if (!props.modelValue) return props.rows
+
+      const keyword = props.modelValue.toLowerCase().trim()
+
+      return props.rows.filter((row) =>
+        Object.values(row).some((val) => String(val).toLowerCase().includes(keyword)),
+      )
+    })
+    watch(
+      () => props.rows,
+      (val) => {
+        console.log('Rows updated:', val)
+      },
+    )
+
     return {
-      showingAddTooltip: ref(false),
-      showingDeleteTooltip: ref(false),
+      showingAddTooltip,
+      showingDeleteTooltip,
+      filteredRows,
+      emit,
     }
   },
 }

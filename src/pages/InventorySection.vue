@@ -122,8 +122,8 @@
         :title="tableConfig.title"
         :rows-per-page-options="[10]"
         :visible-columns="tableConfig.columns"
+        v-model="search"
       >
-        <!-- Button slot with icon -->
         <template #cell-btn="{ row }">
           <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
             <q-menu anchor="bottom left" self="top right">
@@ -685,6 +685,7 @@ export default {
     const editTab = ref('1')
     const rows = ref([])
     const confirm = ref(false)
+    const search = ref(null)
     const editDialog = ref(false)
     const pages = ref([])
     const userData = ref()
@@ -816,7 +817,9 @@ export default {
         })
       }
     })
+
     return {
+      search,
       isExpired,
       elseSummary,
       isNearExpiration,

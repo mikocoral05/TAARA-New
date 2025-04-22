@@ -23,9 +23,14 @@ class API
 
             $this->db->where("tbl_inventory.category", $category);
             $this->db->where("tbl_inventory.expiration_date", $today, ">=");
+            $this->db->where("tbl_inventory.is_deleted", "1");
 
             // Select all inventory fields, but replace group_name with actual name from group table
-            $query = $this->db->get("tbl_inventory", null, "tbl_inventory.*, ig.group_name AS group_name");
+            $query = $this->db->get("tbl_inventory", null, "tbl_inventory.*, CASE 
+            WHEN ig.is_deleted = '1' OR ig.is_deleted IS NULL THEN ig.group_name 
+            ELSE '' 
+            END AS group_name
+            ");
 
             echo json_encode([
                 'status' => 'success',
@@ -39,6 +44,7 @@ class API
 
             $this->db->where("category", $category);
             $this->db->where("expiration_date", $today, "<"); // this is the correct way to do `>=`
+            $this->db->where("is_deleted", "1");
             $query = $this->db->get("tbl_inventory");
 
             echo json_encode([
@@ -53,11 +59,13 @@ class API
             // Not expired: quantity & unique group count
             $this->db->where("category", $category);
             $this->db->where("expiration_date", $today, ">=");
+            $this->db->where("is_deleted", "1");
             $notExpired = $this->db->getOne("tbl_inventory", "SUM(quantity) as total_quantity, COUNT(DISTINCT group_name) as unique_group_count");
 
             // Expired: count of expired items
             $this->db->where("category", $category);
             $this->db->where("expiration_date", $today, "<");
+            $this->db->where("is_deleted", "1");
             $expiredCount = $this->db->getValue("tbl_inventory", "COUNT(*)");
 
             // Group count from tbl_inventory_group
@@ -80,6 +88,7 @@ class API
 
             // First get all groups for that category
             $this->db->where("category", $category);
+            $this->db->where("is_deleted", "1");
             $groups = $this->db->get("tbl_inventory_group");
 
             $result = [];
@@ -122,82 +131,40 @@ class API
 
     public function httpPut($payload)
     {
-        if (array_key_exists('updateUser', $payload)) {
-            // Extract the user data
-            $user_data = $payload['updateUser'];
+        if (isset($payload['soft_delete_inventory_data'])) {
+            $id = $payload['soft_delete_inventory_data'];
+            $table = $payload['table'];
 
-            // Ensure user_id is provided
-            if (!isset($user_data['user_id'])) {
-                echo json_encode(['status' => 'error', 'message' => 'Missing user_id']);
+            $ids = is_array($id) ? $id : explode(',', $id);
+
+
+            // Whitelist allowed tables for safety
+            $allowed_tables = ['tbl_inventory', 'tbl_inventory_group'];
+            if (!in_array($table, $allowed_tables)) {
+                echo json_encode(['status' => 'error', 'message' => 'Invalid table name']);
                 return;
             }
 
-            // Prepare the array to hold the fields that will be updated
-            $update_values = [];
-
-            // Define the allowed fields for update (columns that can be updated)
-            $allowed_fields = [
-                'user_type',
-                'image_path',
-                'first_name',
-                'middle_name',
-                'last_name',
-                'suffix',
-                'Bio',
-                'birth_date',
-                'email_address',
-                'phone_number',
-                'civil_status',
-                'occupation',
-                'street',
-                'brgy_name',
-                'city_municipality',
-                'province',
-                'sex',
-                'date_created',
-                'date_archieve',
-                'username',
-                'password',
-                'page_access',
+            // Set the update values here in the backend
+            $update_values = [
+                'is_deleted' => 0,
+                'deleted_at' => date('Y-m-d H:i:s')
             ];
 
-            // Loop through the allowed fields and check if they exist in the user data
-            foreach ($allowed_fields as $field) {
-                if (array_key_exists($field, $user_data) && $user_data[$field] !== null) {
-                    // Only add fields that exist in the payload and are not null
-                    $update_values[$field] = $user_data[$field];
-                }
-            }
+            // Update records matching the IDs
+            $this->db->where('id', $ids, 'IN');
+            $updated = $this->db->update($table, $update_values);
 
-            // Check if we have any fields to update
-            if (empty($update_values)) {
-                echo json_encode(['status' => 'error', 'message' => 'No valid fields to update']);
-                return;
-            }
-
-            // Perform the database update based on user_id
-            $this->db->where('user_id', $user_data['user_id']);
-            $update_success = $this->db->update('tbl_users', $update_values);
-
-            // Return a response based on whether the update was successful
-            if ($update_success) {
-                echo json_encode([
-                    'status' => 'success',
-                    'message' => 'User information updated successfully.',
-                    'method' => 'PUT',
-                ]);
+            if ($updated) {
+                echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
             } else {
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'Failed to update user information.',
-                    'method' => 'PUT',
-                ]);
+                echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
             }
         } else {
-            // Handle the case where 'updateUser' key is missing
-            echo json_encode(['status' => 'error', 'message' => 'Missing updateUser key in the payload']);
+            echo json_encode(['status' => 'error', 'message' => 'Missing soft_delete_inventory_data in the payload']);
         }
     }
+
 
     public function httpDelete($payload)
     {

@@ -142,15 +142,9 @@
                 </q-item>
                 <q-separator />
                 <q-item clickable @click="tableAction(row, 'Archieve')">
-                  <q-item-section>Archieve</q-item-section>
+                  <q-item-section>Delete</q-item-section>
                   <q-item-section side>
                     <q-icon name="sym_r_keyboard_arrow_right" size="1.2rem" />
-                  </q-item-section>
-                </q-item>
-                <q-item clickable @click="tableAction(row, 'Page Access')">
-                  <q-item-section>Access</q-item-section>
-                  <q-item-section side>
-                    <q-icon name="sym_r_key" size="1.2rem" />
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -611,11 +605,11 @@
       </q-card>
     </q-dialog>
     <q-dialog v-model="confirm" persistent>
-      <q-card class="q-pa-md">
+      <q-card class="q-pa-md" style="width: 450px; min-height: 230px">
         <q-card-section class="column items-center">
-          <q-icon name="sym_r_person_remove" color="primary" size="2.5rem" />
-          <span class="q-ml-sm text-black text-body1 q-mt-md">
-            Are you sure you want to archive this account?
+          <q-icon name="sym_r_inventory_2" color="primary" size="2.5rem" />
+          <span class="q-ml-sm text-black text-body1 q-mt-md text-center">
+            Are you sure you want to Delete this {{ obj2[tab] }} List?
           </span>
           <span class="q-ml-sm text-caption text-grey-7 q-mt-sm">
             This action is irreversible.
@@ -640,6 +634,7 @@
             dense
             v-close-popup
             style="width: 180px"
+            @click="softDeleteFn()"
           />
         </q-card-actions>
       </q-card>
@@ -659,6 +654,7 @@ import {
   getInventoryGroup,
   getInventoryListSummary,
   getInventoryExpiredList,
+  softDeleteInventoryData,
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -680,8 +676,10 @@ export default {
   },
   setup() {
     const obj = { 2: 'medicine', 3: 'vaccine', 4: 'vitamin' }
+    const obj2 = { 1: 'Medicine', 2: 'Group', 3: 'Expired' }
     const $q = useQuasar()
     const tab = ref('2')
+    const filterTab = ref('1')
     const editTab = ref('1')
     const rows = ref([])
     const confirm = ref(false)
@@ -700,12 +698,14 @@ export default {
     const itemsCount = ref([])
     const scrollAreaRef = ref(null)
     const scrollListRef = ref(null)
+    const arrayOfId = ref([])
     const tableConfig = ref({ title: '', columns: [] })
+
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
       userData.value = data
 
-      if (['Edit', 'View', 'Page Access'].includes(modeParam)) {
+      if (['Edit', 'View'].includes(modeParam)) {
         editDialog.value = !editDialog.value
         if (modeParam == 'Page Access') {
           if (userData.value.page_access == '') {
@@ -722,6 +722,7 @@ export default {
           }
         }
       } else {
+        arrayOfId.value.push(data.id)
         confirm.value = !confirm.value
       }
     }
@@ -752,6 +753,7 @@ export default {
     }
 
     const filterInventory = (filterNo) => {
+      filterTab.value = filterNo
       if (filterNo == 1) {
         getInventoryList(obj[tab.value]).then((response) => {
           tableConfig.value.title = `${capitalize(obj[tab.value])} List`
@@ -790,6 +792,16 @@ export default {
       }
     }
 
+    const softDeleteFn = () => {
+      const tableName = filterTab.value == 2 ? 'tbl_inventory_group' : 'tbl_inventory'
+      softDeleteInventoryData(arrayOfId.value, tableName).then((response) => {
+        console.log(response)
+        if (response == 'success') {
+          filterInventory(filterTab.value)
+        }
+      })
+    }
+
     watchEffect(() => {
       if (tab.value == 1) {
         updateBudgetAllocationSum()
@@ -819,6 +831,11 @@ export default {
     })
 
     return {
+      arrayOfId,
+      filterTab,
+      softDeleteFn,
+      obj2,
+      obj,
       search,
       isExpired,
       elseSummary,

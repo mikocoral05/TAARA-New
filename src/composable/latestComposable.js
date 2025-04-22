@@ -177,6 +177,7 @@ const getInventoryList = (category) => {
       })
   })
 }
+
 const getInventoryExpiredList = (category) => {
   return new Promise((resolve, reject) => {
     api
@@ -193,6 +194,7 @@ const getInventoryExpiredList = (category) => {
       })
   })
 }
+
 const getInventoryListSummary = (category) => {
   return new Promise((resolve, reject) => {
     api
@@ -209,6 +211,7 @@ const getInventoryListSummary = (category) => {
       })
   })
 }
+
 const getInventoryGroup = (category) => {
   return new Promise((resolve, reject) => {
     api
@@ -225,7 +228,24 @@ const getInventoryGroup = (category) => {
       })
   })
 }
+const softDeleteInventoryData = (arrayId, tableName) => {
+  return new Promise((resolve, reject) => {
+    api
+      .put('inventory.php', {
+        soft_delete_inventory_data: arrayId,
+        table: tableName,
+      })
+      .then((response) => {
+        resolve(response.data.status)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
 export {
+  softDeleteInventoryData,
   getInventoryExpiredList,
   getInventoryListSummary,
   getInventoryGroup,

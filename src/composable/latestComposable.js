@@ -1,4 +1,5 @@
 import { api } from 'src/boot/axios'
+import { dateToday } from 'src/composable/simpleComposable'
 
 const getUserByType = (type) => {
   return new Promise((resolve, reject) => {
@@ -228,6 +229,7 @@ const getInventoryGroup = (category) => {
       })
   })
 }
+
 const softDeleteInventoryData = (arrayId, tableName) => {
   return new Promise((resolve, reject) => {
     api
@@ -244,7 +246,40 @@ const softDeleteInventoryData = (arrayId, tableName) => {
   })
 }
 
+const addInventoryList = (obj) => {
+  obj.date_received = dateToday
+  return new Promise((resolve, reject) => {
+    api
+      .post('inventory.php', {
+        add_inventory_list: obj,
+      })
+      .then((response) => {
+        resolve(response.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
+const editInventoryList = (obj) => {
+  return new Promise((resolve, reject) => {
+    api
+      .put('inventory.php', {
+        edit_inventory_list: obj,
+      })
+      .then((response) => {
+        resolve(response.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
 export {
+  editInventoryList,
+  addInventoryList,
   softDeleteInventoryData,
   getInventoryExpiredList,
   getInventoryListSummary,

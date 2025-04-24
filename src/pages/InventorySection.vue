@@ -180,23 +180,136 @@
       </ReusableTable>
     </div>
     <q-dialog position="right" full-height v-model="showDialog">
-      <q-card style="min-width: 750px; height: 500px" class="text-black">
-        <q-card-section class="q-py-md row no-wrap justify-between items-center">
-          <div class="text-body1">{{ mode }} {{ tableConfig.title }}</div>
-          <q-icon name="close" size="1.2rem" @click="showDialog = !showDialog" />
-        </q-card-section>
-        <q-separator />
+      <q-card style="min-width: 750px; height: 500px" class="text-black column justify-between">
+        <div class="column no-wrap">
+          <q-card-section class="q-py-md row no-wrap justify-between items-center">
+            <div class="text-body1">{{ mode }} {{ tableConfig.title }}</div>
+            <q-icon name="close" size="1.2rem" @click="showDialog = !showDialog" />
+          </q-card-section>
+          <q-separator />
+          <q-card-section>
+            <div class="text-grey-7" style="font-size: 12px">
+              <span class="text-negative">*</span>All fields are mandatory, except mentioned as
+              (optional).
+            </div>
+          </q-card-section>
+          <q-card-section>
+            <div class="row no-wrap q-mt-md">
+              <div class="column no-wrap q-mr-md">
+                <div class="text-capitalize">
+                  {{ obj[tab] }} Name <span class="text-negative">*</span>
+                </div>
+                <q-input
+                  outlined
+                  v-model="inventoryListSpecificData.item_name"
+                  dense
+                  class="q-mt-sm"
+                  style="width: 300px"
+                />
+              </div>
+              <div class="column no-wrap">
+                <div class="text-capitalize">
+                  {{ obj[tab] }} Group <span class="text-negative">*</span>
+                </div>
+                <q-select
+                  outlined
+                  v-model="inventoryListSpecificData.group_name"
+                  class="q-mt-sm"
+                  :options="groupNameOptions"
+                  emit-value
+                  map-options
+                  option-label="group_name"
+                  option-value="id"
+                  dense
+                  style="width: 250px"
+                />
+              </div>
+            </div>
+            <div class="row no-wrap q-mt-md">
+              <div class="column no-wrap q-mr-md">
+                <div class="text-capitalize">Expiry Date<span class="text-negative">*</span></div>
+                <q-input
+                  dense
+                  outlined
+                  class="q-mt-sm"
+                  v-model="inventoryListSpecificData.expiration_date"
+                  mask="####-##-##"
+                  :rules="[(val) => !!val || '']"
+                  hide-bottom-space
+                >
+                  <template v-slot:append>
+                    <q-icon name="event" class="cursor-pointer">
+                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                        <q-date v-model="inventoryListSpecificData.expiration_date">
+                          <div class="row items-center justify-end">
+                            <q-btn v-close-popup label="Close" color="primary" flat />
+                          </div>
+                        </q-date>
+                      </q-popup-proxy>
+                    </q-icon>
+                  </template>
+                </q-input>
+              </div>
+              <div class="column no-wrap q-mr-md">
+                <div class="text-capitalize">Quantity<span class="text-negative">*</span></div>
+                <q-input
+                  outlined
+                  type="number"
+                  v-model="inventoryListSpecificData.quantity"
+                  dense
+                  class="q-mt-sm"
+                />
+              </div>
+              <div class="column no-wrap">
+                <div class="text-capitalize">Unit<span class="text-negative">*</span></div>
+                <q-input outlined v-model="inventoryListSpecificData.unit" dense class="q-mt-sm" />
+              </div>
+            </div>
+            <div class="column no-wrap q-mt-md">
+              <div class="text-capitalize">
+                Description <span class="text-grey-7 text-caption"> (optional)</span>
+              </div>
+              <q-input
+                outlined
+                type="textarea"
+                v-model="inventoryListSpecificData.description"
+                dense
+                class="q-mt-sm"
+              />
+            </div>
+            <div class="column no-wrap q-mt-md">
+              <div class="text-capitalize">
+                Notes <span class="text-grey-7 text-caption"> (optional)</span>
+              </div>
+              <q-input
+                outlined
+                autogrow
+                v-model="inventoryListSpecificData.notes"
+                dense
+                class="q-mt-sm"
+              />
+            </div>
+          </q-card-section>
+        </div>
         <q-card-section>
-          <div class="text-grey-7" style="font-size: 12px">
-            <span class="text-negative">*</span>All fields are mandatory, except mentioned as
-            (optional).
-          </div>
-        </q-card-section>
-        <q-card-section>
-          <div class="column no-wrap">
-            <div class="text-capitalize">{{ obj[tab] }} Name</div>
-            <q-input outlined v-model="text" dense class="q-mt-sm" />
-          </div>
+          <q-btn
+            outline
+            label="Cancel"
+            v-close-popup
+            color="primary"
+            no-caps
+            class="q-mr-md"
+            style="width: 180px"
+          />
+          <q-btn
+            label="Confirm"
+            unelevated
+            color="primary"
+            no-caps
+            v-close-popup
+            style="width: 180px"
+            @click="saveFn()"
+          />
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -243,13 +356,14 @@ import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optio
 import {
   getBudgetAllocation,
   getExpensesSummary,
-  updateUser,
   getTotalBalance,
   getInventoryList,
   getInventoryGroup,
   getInventoryListSummary,
   getInventoryExpiredList,
   softDeleteInventoryData,
+  addInventoryList,
+  editInventoryList,
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -272,6 +386,7 @@ export default {
   setup() {
     const obj = { 2: 'medicine', 3: 'vaccine', 4: 'vitamin' }
     const obj2 = { 1: 'Medicine', 2: 'Group', 3: 'Expired' }
+    const obj3 = { Add: 'Adding', Edit: 'Updating', Delete: 'Deleting' }
     const $q = useQuasar()
     const tab = ref('2')
     const filterTab = ref('1')
@@ -279,9 +394,9 @@ export default {
     const rows = ref([])
     const confirm = ref(false)
     const search = ref(null)
-    const showDialog = ref(true)
+    const showDialog = ref(false)
     const pages = ref([])
-    const inventoryListSpecificData = ref()
+    const inventoryListSpecificData = ref({})
     const elseSummary = ref({})
     const mode = ref('')
     const selectedMonth = ref(monthToday)
@@ -297,13 +412,18 @@ export default {
     const arrayOfId = ref([])
     const tableConfig = ref({ title: '', columns: [] })
 
+    const groupNameOptions = ref([])
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
-      inventoryListSpecificData.value = data
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         showDialog.value = !showDialog.value
+        getInventoryGroup(obj[tab.value]).then((response) => {
+          groupNameOptions.value = response
+        })
         if (modeParam == 'Add') {
-          //
+          inventoryListSpecificData.value = []
+        } else {
+          inventoryListSpecificData.value = data
         }
       } else {
         arrayOfId.value.push(data.id)
@@ -312,16 +432,39 @@ export default {
     }
 
     const saveFn = () => {
-      $q.loading.show({
-        message: 'Updating. Please wait...',
-      })
-      updateUser(inventoryListSpecificData.value).then(() => {
-        setTimeout(() => {
-          $q.loading.hide()
-        }, 2000)
-      })
+      if (mode.value == 'Add') {
+        $q.loading.show({
+          group: 'update',
+          message: `${obj3[mode.value]}. Please wait...`,
+        })
+        inventoryListSpecificData.value.category = obj[tab.value]
+        addInventoryList(inventoryListSpecificData.value).then((response) => {
+          console.log(response)
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+          setTimeout(() => {
+            $q.loading.hide()
+          }, 2000)
+        })
+      } else if (mode.value == 'Edit') {
+        $q.loading.show({
+          group: 'update',
+          message: `${obj3[mode.value]}. Please wait...`,
+        })
+        editInventoryList(inventoryListSpecificData.value).then((response) => {
+          console.log(response)
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+          setTimeout(() => {
+            $q.loading.hide()
+          }, 2000)
+        })
+      }
     }
-
     const updateBudgetAllocationSum = () => {
       getBudgetAllocation().then((response) => {
         rows.value = response
@@ -417,6 +560,7 @@ export default {
     })
 
     return {
+      groupNameOptions,
       arrayOfId,
       filterTab,
       softDeleteFn,

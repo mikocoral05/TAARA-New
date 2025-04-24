@@ -201,7 +201,7 @@
                 </div>
                 <q-input
                   outlined
-                  v-model="inventoryListSpecificData.item_name"
+                  v-model="dataStorage.item_name"
                   dense
                   class="q-mt-sm"
                   style="width: 300px"
@@ -213,7 +213,7 @@
                 </div>
                 <q-select
                   outlined
-                  v-model="inventoryListSpecificData.group_name"
+                  v-model="dataStorage.group_name"
                   class="q-mt-sm"
                   :options="groupNameOptions"
                   emit-value
@@ -222,6 +222,7 @@
                   option-value="id"
                   dense
                   style="width: 250px"
+                  behavior="menu"
                 />
               </div>
             </div>
@@ -232,7 +233,7 @@
                   dense
                   outlined
                   class="q-mt-sm"
-                  v-model="inventoryListSpecificData.expiration_date"
+                  v-model="dataStorage.expiration_date"
                   mask="####-##-##"
                   :rules="[(val) => !!val || '']"
                   hide-bottom-space
@@ -240,7 +241,7 @@
                   <template v-slot:append>
                     <q-icon name="event" class="cursor-pointer">
                       <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="inventoryListSpecificData.expiration_date">
+                        <q-date v-model="dataStorage.expiration_date">
                           <div class="row items-center justify-end">
                             <q-btn v-close-popup label="Close" color="primary" flat />
                           </div>
@@ -255,14 +256,14 @@
                 <q-input
                   outlined
                   type="number"
-                  v-model="inventoryListSpecificData.quantity"
+                  v-model="dataStorage.quantity"
                   dense
                   class="q-mt-sm"
                 />
               </div>
               <div class="column no-wrap">
                 <div class="text-capitalize">Unit<span class="text-negative">*</span></div>
-                <q-input outlined v-model="inventoryListSpecificData.unit" dense class="q-mt-sm" />
+                <q-input outlined v-model="dataStorage.unit" dense class="q-mt-sm" />
               </div>
             </div>
             <div class="column no-wrap q-mt-md">
@@ -272,7 +273,7 @@
               <q-input
                 outlined
                 type="textarea"
-                v-model="inventoryListSpecificData.description"
+                v-model="dataStorage.description"
                 dense
                 class="q-mt-sm"
               />
@@ -281,13 +282,7 @@
               <div class="text-capitalize">
                 Notes <span class="text-grey-7 text-caption"> (optional)</span>
               </div>
-              <q-input
-                outlined
-                autogrow
-                v-model="inventoryListSpecificData.notes"
-                dense
-                class="q-mt-sm"
-              />
+              <q-input outlined autogrow v-model="dataStorage.notes" dense class="q-mt-sm" />
             </div>
           </q-card-section>
         </div>
@@ -348,6 +343,35 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <q-dialog v-model="groupDialog" persistent>
+      <q-card class="q-pa-md" style="width: 450px; min-height: 130px">
+        <q-card-section class="column no-wrap q-px-sm">
+          <div class="text-capitalize text-body1 text0center">
+            Add {{ obj[tab] }} {{ obj2[filterTab] }}
+          </div>
+          <q-input
+            outlined
+            v-model="dataStorage.group_name"
+            placeholder="Ex: Antibiotic"
+            dense
+            class="q-mt-md full-width"
+          />
+        </q-card-section>
+
+        <q-card-actions align="center" class="row no-wrap">
+          <q-btn outline style="width: 100%" label="Cancel" v-close-popup color="primary" no-caps />
+          <q-btn
+            label="Confirm"
+            unelevated
+            color="primary"
+            no-caps
+            style="width: 100%"
+            v-close-popup
+            @click="saveFn()"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 <script>
@@ -364,6 +388,7 @@ import {
   softDeleteInventoryData,
   addInventoryList,
   editInventoryList,
+  addGroupName,
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -395,8 +420,9 @@ export default {
     const confirm = ref(false)
     const search = ref(null)
     const showDialog = ref(false)
+    const groupDialog = ref(false)
     const pages = ref([])
-    const inventoryListSpecificData = ref({})
+    const dataStorage = ref({})
     const elseSummary = ref({})
     const mode = ref('')
     const selectedMonth = ref(monthToday)
@@ -416,14 +442,16 @@ export default {
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
-        showDialog.value = !showDialog.value
+        if (filterTab.value !== 2) showDialog.value = !showDialog.value
+        else groupDialog.value = !groupDialog.value
+
         getInventoryGroup(obj[tab.value]).then((response) => {
           groupNameOptions.value = response
         })
         if (modeParam == 'Add') {
-          inventoryListSpecificData.value = []
+          dataStorage.value = {}
         } else {
-          inventoryListSpecificData.value = data
+          dataStorage.value = data
         }
       } else {
         arrayOfId.value.push(data.id)
@@ -437,23 +465,41 @@ export default {
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
-        inventoryListSpecificData.value.category = obj[tab.value]
-        addInventoryList(inventoryListSpecificData.value).then((response) => {
-          console.log(response)
-          $q.loading.show({
-            group: 'update',
-            message: response.message,
+        dataStorage.value.category = obj[tab.value]
+        if (filterTab.value !== 2) {
+          addInventoryList(dataStorage.value).then((response) => {
+            console.log(response)
+            setTimeout(() => {
+              $q.loading.show({
+                group: 'update',
+                message: response.message,
+              })
+            }, 1000)
+            setTimeout(() => {
+              $q.loading.hide()
+            }, 2000)
           })
-          setTimeout(() => {
-            $q.loading.hide()
-          }, 2000)
-        })
+        } else {
+          addGroupName(dataStorage.value).then((response) => {
+            console.log(response)
+            setTimeout(() => {
+              $q.loading.show({
+                group: 'update',
+                message: response.message,
+              })
+            }, 1000)
+            setTimeout(() => {
+              groupDialog.value = false
+              $q.loading.hide()
+            }, 2000)
+          })
+        }
       } else if (mode.value == 'Edit') {
         $q.loading.show({
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
-        editInventoryList(inventoryListSpecificData.value).then((response) => {
+        editInventoryList(dataStorage.value).then((response) => {
           console.log(response)
           $q.loading.show({
             group: 'update',
@@ -560,6 +606,7 @@ export default {
     })
 
     return {
+      groupDialog,
       groupNameOptions,
       arrayOfId,
       filterTab,
@@ -596,7 +643,7 @@ export default {
       editTab,
       showDialog,
       mode,
-      inventoryListSpecificData,
+      dataStorage,
       tableAction,
       rows,
       tab,

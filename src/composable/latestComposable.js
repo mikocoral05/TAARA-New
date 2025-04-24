@@ -261,6 +261,22 @@ const addInventoryList = (obj) => {
       })
   })
 }
+const addGroupName = (obj) => {
+  console.log(obj)
+
+  return new Promise((resolve, reject) => {
+    api
+      .post('inventory.php', {
+        add_group_name: obj,
+      })
+      .then((response) => {
+        resolve(response.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 
 const editInventoryList = (obj) => {
   return new Promise((resolve, reject) => {
@@ -278,6 +294,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  addGroupName,
   editInventoryList,
   addInventoryList,
   softDeleteInventoryData,

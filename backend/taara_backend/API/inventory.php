@@ -156,6 +156,30 @@ class API
                     'method' => 'POST'
                 ]);
             }
+        } else if (isset($payload['add_group_name'])) {
+            $data = $payload['add_group_name'];
+
+            // Required fields - adapt based on your table schema
+            $insertData = [
+                'group_name'   => $data['group_name'] ?? null,
+                'category'     => $data['category'] ?? null,
+            ];
+
+            $insert = $this->db->insert('tbl_inventory_group', $insertData);
+
+            if ($insert) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Inventory list successfully added',
+                    'method' => 'POST'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to create inventory list',
+                    'method' => 'POST'
+                ]);
+            }
         } else {
             echo json_encode([
                 'status' => 'error',

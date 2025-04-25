@@ -31,6 +31,11 @@ const routes = [
         component: () => import('src/pages/AuthorizationSection.vue'),
       },
       {
+        name: 'animal-schedule',
+        path: 'animal-schedule',
+        component: () => import('src/pages/AnimaleSchedule.vue'),
+      },
+      {
         name: 'budget-and-expenses',
         path: 'budget-and-expenses',
         component: () => import('src/pages/BudgetAndExpenses.vue'),

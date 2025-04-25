@@ -103,7 +103,14 @@
         :rows="rows"
         :columns="columns"
         separator="vertical"
+        row-key="id"
         :rows-per-page-options="[10]"
+        v-model="search"
+        :title="
+          tab == 1
+            ? 'Budget Allocation'
+            : `${dayNameFn(`${selectedYear}-${selectedMonth}-${selectedDay}`)} Expenses`
+        "
         :visible-columns="
           tab == 1
             ? ['id', 'name', 'percentage_allocated', 'computed', 'btn']
@@ -631,6 +638,8 @@
 <script>
 import ReusableTable from 'src/components/ReusableTable.vue'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
+import { nextTick, ref, watchEffect } from 'vue'
+import { date, useQuasar } from 'quasar'
 import {
   getBudgetAllocation,
   getExpensesSummary,
@@ -640,8 +649,6 @@ import {
   getTotalBalance,
   getMonthlyFundAndExpenses,
 } from 'src/composable/latestComposable'
-import { ref, watchEffect } from 'vue'
-import { useQuasar } from 'quasar'
 import {
   formatNumber,
   generateYearList,
@@ -650,7 +657,6 @@ import {
   yearToday,
   dayToday,
 } from 'src/composable/simpleComposable'
-import { nextTick } from 'vue'
 export default {
   components: {
     ReusableTable,
@@ -661,6 +667,7 @@ export default {
     const editTab = ref('1')
     const rows = ref([])
     const confirm = ref(false)
+    const search = ref(null)
     const editDialog = ref(false)
     const pages = ref([])
     const userData = ref()
@@ -673,7 +680,7 @@ export default {
     const dailyExpenseTotal = ref([])
     const scrollAreaRef = ref(null)
     const scrollListRef = ref(null)
-    // const position = ref(300)
+    const dayName = ref(null)
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
       userData.value = data
@@ -724,6 +731,9 @@ export default {
       })
     }
 
+    const dayNameFn = (rawDate) => {
+      return date.formatDate(rawDate, 'dddd')
+    }
     watchEffect(() => {
       if (tab.value == 1) {
         updateBudgetAllocationSum()
@@ -756,7 +766,11 @@ export default {
         })
       }
     })
+
     return {
+      dayNameFn,
+      dayName,
+      search,
       scrollListRef,
       scrollAreaRef,
       selectedDay,

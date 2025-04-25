@@ -151,7 +151,7 @@ const linksList2 = [
   {
     title: 'Schedule',
     icon: 'schedule',
-    nav: 'schedule',
+    nav: 'animal-schedule',
   },
   {
     title: 'Activities & Events',

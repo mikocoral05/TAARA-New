@@ -4,7 +4,7 @@
       :rows="animals"
       :columns="animalColumns"
       separator="vertical"
-      title="Pets Info"
+      title="Veterinary Schedule"
       v-model="search"
       :rows-per-page-options="[10]"
       :visible-columns="[

@@ -28,7 +28,7 @@ const updateUser = (data) => {
       })
       .then((response) => {
         if (response.data.status == 'success') {
-          resolve(response.data.data)
+          resolve(response.data)
         }
       })
       .catch((error) => {
@@ -246,6 +246,21 @@ const softDeleteInventoryData = (arrayId, tableName) => {
   })
 }
 
+const softDeleteUser = (arrayId) => {
+  return new Promise((resolve, reject) => {
+    api
+      .put('authorization.php', {
+        soft_delete_user: arrayId,
+      })
+      .then((response) => {
+        resolve(response.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
 const addInventoryList = (obj) => {
   obj.date_received = dateToday
   return new Promise((resolve, reject) => {
@@ -294,6 +309,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  softDeleteUser,
   addGroupName,
   editInventoryList,
   addInventoryList,

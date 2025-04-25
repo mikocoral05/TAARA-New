@@ -112,9 +112,9 @@ const linksList = [
     nav: '/',
   },
   {
-    title: 'Volunteer',
+    title: 'User Management',
     icon: 'groups',
-    nav: 'volunteer',
+    nav: 'users',
   },
   {
     title: 'Report',
@@ -166,7 +166,7 @@ const linksList2 = [
   {
     title: 'Authorization',
     icon: 'manage_accounts',
-    nav: 'authorization',
+    nav: 'users',
   },
   {
     title: 'Record',

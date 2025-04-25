@@ -5,7 +5,6 @@
     bordered
     class="radius-10"
     :columns="columns"
-    row-key="id"
     :selection="showSelection ? selection : 'none'"
     :separator="separator"
     :rows-per-page-options="rowsPerPageOptions"
@@ -124,12 +123,14 @@ export default {
     const tableActionFn = (row, mode) => {
       props.tableAction(row, mode)
     }
+
     watch(internalSelected, (val) => {
       emit(
         'update:selected',
-        val.map((item) => item.id),
+        val.map((item) => item?.id || item?.user_id),
       )
     })
+
     return {
       tableActionFn,
       closeSelection,

@@ -26,8 +26,8 @@ const routes = [
         component: () => import('src/pages/UserRegistration.vue'),
       },
       {
-        name: 'authorization',
-        path: 'authorization',
+        name: 'users',
+        path: 'users',
         component: () => import('src/pages/AuthorizationSection.vue'),
       },
       {

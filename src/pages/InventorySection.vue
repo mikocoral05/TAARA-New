@@ -118,9 +118,10 @@
         style="width: 100%"
         :rows="rows"
         :columns="columns"
+        row-key="id"
         separator="vertical"
-        :title="tableConfig.title"
         :rows-per-page-options="[10]"
+        :title="tableConfig.title"
         :visible-columns="tableConfig.columns"
         selection="multiple"
         v-model="search"
@@ -173,9 +174,6 @@
           >
             {{ row.expiration_date }}
           </div>
-        </template>
-        <template #cell-delete="{}">
-          <q-checkbox dense />
         </template>
       </ReusableTable>
     </div>
@@ -511,6 +509,7 @@ export default {
         })
       }
     }
+
     const updateBudgetAllocationSum = () => {
       getBudgetAllocation().then((response) => {
         rows.value = response

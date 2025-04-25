@@ -13,15 +13,18 @@
     </div>
     <q-separator color="grey-3" class="q-mb-md" />
     <ReusableTable
+      row-key="user_id"
       :rows="userRows"
       :columns="volunteerColumns"
       separator="vertical"
       :rows-per-page-options="[10]"
-      :visible-columns="
-        ['3', '2'].includes(tab)
-          ? ['id', 'fullName', 'email', 'roles', 'age', 'profession', 'phone_number', 'btn']
-          : ['id', 'fullName', 'email', 'age', 'profession', 'phone_number', 'btn']
-      "
+      :title="tableConfig.title"
+      :visible-columns="tableConfig.columns"
+      selection="multiple"
+      v-model="search"
+      v-model:selected="arrayOfId"
+      v-model:confirm="confirm"
+      :tableAction="tableAction"
     >
       <template #cell-fullName="{ row }">
         <q-avatar size="30px" class="q-mr-md">
@@ -531,6 +534,7 @@
             dense
             v-close-popup
             style="width: 180px"
+            @click="softDeleteFn()"
           />
         </q-card-actions>
       </q-card>
@@ -540,7 +544,12 @@
 <script>
 import ReusableTable from 'src/components/ReusableTable.vue'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
-import { getPageAccess, getUserByType, updateUser } from 'src/composable/latestComposable'
+import {
+  getPageAccess,
+  getUserByType,
+  softDeleteUser,
+  updateUser,
+} from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
 export default {
@@ -548,15 +557,19 @@ export default {
     ReusableTable,
   },
   setup() {
+    const obj = { 3: 'Officials', 2: 'Volunteer', 1: 'Public Users' }
     const $q = useQuasar()
     const tab = ref('3')
     const editTab = ref('1')
+    const search = ref(null)
     const userRows = ref([])
     const confirm = ref(false)
     const editDialog = ref(false)
     const pages = ref([])
     const userData = ref()
     const mode = ref('')
+    const arrayOfId = ref([])
+    const tableConfig = ref({ title: '', columns: [] })
 
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
@@ -579,26 +592,68 @@ export default {
           }
         }
       } else {
+        arrayOfId.value.push(data.user_id)
         confirm.value = !confirm.value
       }
     }
 
     const saveFn = () => {
       $q.loading.show({
+        group: 'update',
         message: 'Updating. Please wait...',
       })
-      updateUser(userData.value).then(() => {
+
+      updateUser(userData.value).then((response) => {
         setTimeout(() => {
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+        }, 1000)
+        setTimeout(() => {
+          editDialog.value = false
           $q.loading.hide()
         }, 2000)
       })
     }
+
+    const softDeleteFn = () => {
+      $q.loading.show({
+        group: 'update',
+        message: 'Archieving user. Please wait...',
+      })
+      softDeleteUser(arrayOfId.value).then((response) => {
+        if (response.status == 'success') {
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 1000)
+          setTimeout(() => {
+            $q.loading.hide()
+          }, 2000)
+          getUserByType(tab.value).then((response) => {
+            userRows.value = response
+          })
+        }
+      })
+    }
+
     watchEffect(() => {
+      tableConfig.value.title = `${obj[tab.value]} List`
+      tableConfig.value.columns = ['3', '2'].includes(tab.value)
+        ? ['id', 'fullName', 'email', 'roles', 'age', 'profession', 'phone_number', 'btn']
+        : ['id', 'fullName', 'email', 'age', 'profession', 'phone_number', 'btn']
       getUserByType(tab.value).then((response) => {
         userRows.value = response
       })
     })
     return {
+      search,
+      softDeleteFn,
+      arrayOfId,
+      tableConfig,
       pages,
       saveFn,
       confirm,

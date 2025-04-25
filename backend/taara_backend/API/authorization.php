@@ -38,7 +38,6 @@ class API
                 'tbl_users.province',
                 'tbl_users.sex',
                 'tbl_users.date_created',
-                'tbl_users.date_archieve',
                 'tbl_users.username',
                 'tbl_users.password',
             ];
@@ -59,6 +58,7 @@ class API
 
             // Perform the query with the selected columns and join
             $this->db->where('tbl_users.user_type', $type);
+            $this->db->where('tbl_users.is_deleted', 1);
             $query = $this->db->get("tbl_users", null, $columns);
 
             // Respond with success and the query data
@@ -163,6 +163,26 @@ class API
                     'method' => 'PUT',
                 ]);
             }
+        } else if (isset($payload['soft_delete_user'])) {
+            $id = $payload['soft_delete_user'];
+
+            $ids = is_array($id) ? $id : explode(',', $id);
+
+            // Set the update values here in the backend
+            $update_values = [
+                'is_deleted' => 0,
+                'deleted_at' => date('Y-m-d H:i:s')
+            ];
+
+            // Update records matching the IDs
+            $this->db->where('user_id', $ids, 'IN');
+            $updated = $this->db->update('tbl_users', $update_values);
+
+            if ($updated) {
+                echo json_encode(['status' => 'success', 'message' => 'User delete successfully', 'method' => 'PUT']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete user', 'method' => 'PUT']);
+            }
         } else {
             // Handle the case where 'updateUser' key is missing
             echo json_encode(['status' => 'error', 'message' => 'Missing updateUser key in the payload']);
@@ -170,12 +190,7 @@ class API
     }
 
 
-    public function httpDelete($payload)
-    {
-        $datas = json_encode($payload);
-        $arr = json_decode($datas, true);
-        $del = idate("U");
-    }
+    public function httpDelete($payload) {}
 }
 
 /* END OF CLASS */

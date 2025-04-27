@@ -80,13 +80,15 @@
             </q-menu>
           </q-btn>
         </template>
-        <template #cell-computed="{ row }">
-          <div>
-            {{ formatNumber((Number(totalBalance) * Number(row.percentage_allocated)) / 100) }}
-          </div>
-        </template>
+
         <template #cell-animal_id="{ rowIndex }">
           <div>{{ rowIndex + 1 }}</div>
+        </template>
+        <template #cell-name="{ row }">
+          <q-avatar size="30px" class="q-mr-md">
+            <q-img :src="row.img_path || 'animal-no-image.svg'" />
+          </q-avatar>
+          {{ row.name }}
         </template>
         <template #cell-expiration_date="{ row }">
           <div
@@ -108,106 +110,337 @@
             <q-icon name="close" size="1.2rem" @click="showDialog = !showDialog" />
           </q-card-section>
           <q-separator />
-          <q-card-section>
+          <q-card-section class="q-pb-none">
             <div class="text-grey-7" style="font-size: 12px">
-              <span class="text-negative">*</span>All fields are mandatory, except mentioned as
-              (optional).
+              All fields are mandatory, except mentioned as (optional).
             </div>
           </q-card-section>
-          <q-card-section>
-            <div class="row no-wrap q-mt-md">
-              <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">
-                  {{ obj[tab] }} Name <span class="text-negative">*</span>
+          <q-card-section
+            class="no-padding column no-wrap justify-between"
+            style="min-height: 590px"
+          >
+            <q-stepper
+              v-model="step"
+              flat
+              ref="stepper"
+              color="primary"
+              animated
+              style="min-height: 530px"
+            >
+              <q-step
+                :name="1"
+                title="Basic info"
+                icon="sym_r_pets"
+                :done="step > 1"
+                class="q-pt-none"
+              >
+                <div class="row">
+                  <div class="column no-wrap q-mr-md w-40">
+                    <div class="text-capitalize">Pet name</div>
+                    <q-input
+                      outlined
+                      v-model="dataStorage.name"
+                      dense
+                      class="q-mt-sm"
+                      placeholder="Pick best name"
+                    />
+                  </div>
+                  <div class="column no-wrap q-mr-md w-40">
+                    <div class="text-capitalize">Species</div>
+                    <q-input
+                      outlined
+                      placeholder="Species"
+                      v-model="dataStorage.species"
+                      dense
+                      class="q-mt-sm"
+                    />
+                  </div>
+                  <div class="column no-wrap q-mr-md q-mt-md">
+                    <div class="text-capitalize">Breed</div>
+                    <q-input
+                      outlined
+                      placeholder="Breed"
+                      v-model="dataStorage.breed"
+                      dense
+                      class="q-mt-sm"
+                    />
+                  </div>
+
+                  <div class="column no-wrap q-mr-md q-mt-md">
+                    <div class="text-capitalize">Birtdate</div>
+                    <q-input
+                      dense
+                      outlined
+                      class="q-mt-sm"
+                      placeholder="Date of birth"
+                      v-model="dataStorage.date_of_birth"
+                      mask="####-##-##"
+                      :rules="[(val) => !!val || '']"
+                      hide-bottom-space
+                    >
+                      <template v-slot:append>
+                        <q-icon name="event" class="cursor-pointer">
+                          <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                            <q-date v-model="dataStorage.date_of_birth">
+                              <div class="row items-center justify-end">
+                                <q-btn v-close-popup label="Close" color="primary" flat />
+                              </div>
+                            </q-date>
+                          </q-popup-proxy>
+                        </q-icon>
+                      </template>
+                    </q-input>
+                  </div>
                 </div>
-                <q-input
-                  outlined
-                  v-model="dataStorage.item_name"
-                  dense
-                  class="q-mt-sm"
-                  style="width: 300px"
-                />
-              </div>
-              <div class="column no-wrap">
-                <div class="text-capitalize">
-                  {{ obj[tab] }} Group <span class="text-negative">*</span>
+                <div class="q-mt-md text-bold">Physical Characteristics</div>
+                <div class="row">
+                  <div class="column no-wrap q-mr-md q-mt-md">
+                    <div class="text-capitalize">Fur color</div>
+                    <q-input
+                      outlined
+                      placeholder="Fur color"
+                      v-model="dataStorage.fur_color"
+                      dense
+                      class="q-mt-sm"
+                    />
+                  </div>
+                  <div class="column no-wrap q-mr-md q-mt-md">
+                    <div class="text-capitalize">Eye color</div>
+                    <q-input
+                      outlined
+                      placeholder="Eye color"
+                      v-model="dataStorage.eye_color"
+                      dense
+                      class="q-mt-sm"
+                    />
+                  </div>
+                  <div class="column no-wrap w-30 q-mr-md q-mt-md">
+                    <div class="text-capitalize">Sex</div>
+                    <q-select
+                      outlined
+                      v-model="dataStorage.sex"
+                      :options="['Male', 'Female']"
+                      dense
+                      class="q-mt-sm"
+                    />
+                  </div>
                 </div>
-                <q-select
-                  outlined
-                  v-model="dataStorage.group_name"
-                  class="q-mt-sm"
-                  :options="groupNameOptions"
-                  emit-value
-                  map-options
-                  option-label="group_name"
-                  option-value="id"
-                  dense
-                  style="width: 250px"
-                  behavior="menu"
-                />
-              </div>
-            </div>
-            <div class="row no-wrap q-mt-md">
-              <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">Expiry Date<span class="text-negative">*</span></div>
-                <q-input
-                  dense
-                  outlined
-                  class="q-mt-sm"
-                  v-model="dataStorage.expiration_date"
-                  mask="####-##-##"
-                  :rules="[(val) => !!val || '']"
-                  hide-bottom-space
-                >
-                  <template v-slot:append>
-                    <q-icon name="event" class="cursor-pointer">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="dataStorage.expiration_date">
-                          <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" flat />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                    </q-icon>
-                  </template>
-                </q-input>
-              </div>
-              <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">Quantity<span class="text-negative">*</span></div>
-                <q-input
-                  outlined
-                  type="number"
-                  v-model="dataStorage.quantity"
-                  dense
-                  class="q-mt-sm"
-                />
-              </div>
-              <div class="column no-wrap">
-                <div class="text-capitalize">Unit<span class="text-negative">*</span></div>
-                <q-input outlined v-model="dataStorage.unit" dense class="q-mt-sm" />
-              </div>
-            </div>
-            <div class="column no-wrap q-mt-md">
-              <div class="text-capitalize">
-                Description <span class="text-grey-7 text-caption"> (optional)</span>
-              </div>
-              <q-input
-                outlined
-                type="textarea"
-                v-model="dataStorage.description"
-                dense
-                class="q-mt-sm"
+                <div class="q-mt-md text-bold">Size Measurements</div>
+                <div class="row">
+                  <div class="column no-wrap q-mr-md q-mt-md">
+                    <div class="text-capitalize">
+                      Weight<span class="text-grey-7 q-ml-sm">(kg)</span>
+                    </div>
+                    <q-input
+                      outlined
+                      placeholder="Weight"
+                      v-model="dataStorage.weight"
+                      dense
+                      class="q-mt-sm"
+                    />
+                  </div>
+                  <div class="column no-wrap q-mr-md q-mt-md">
+                    <div class="text-capitalize">
+                      Height<span class="text-grey-7 q-ml-sm">(cm)</span>
+                    </div>
+                    <q-input
+                      placeholder="Height"
+                      outlined
+                      v-model="dataStorage.height"
+                      dense
+                      class="q-mt-sm"
+                    />
+                  </div>
+                </div>
+              </q-step>
+
+              <q-step :name="2" title="Medical info" icon="sym_r_healing" :done="step > 2">
+                <div class="row no-wrap justify-between items-center">
+                  <div>Is the pet spayed or neutered ?</div>
+                  <div class="row no-wrap">
+                    <q-checkbox
+                      v-model="dataStorage.spayed_neutered"
+                      label="Yes"
+                      checked-icon="task_alt"
+                      unchecked-icon="highlight_off"
+                      true-value="Yes"
+                      indeterminate-icon="highlight_off"
+                    />
+                    <q-checkbox
+                      true-value="No"
+                      v-model="dataStorage.spayed_neutered"
+                      label="No"
+                      indeterminate-icon="highlight_off"
+                      checked-icon="task_alt"
+                      unchecked-icon="highlight_off"
+                    />
+                  </div>
+                </div>
+                <div class="row no-wrap justify-between items-center">
+                  <div>Vaccination status ?</div>
+                  <div class="row no-wrap">
+                    <q-checkbox
+                      v-model="dataStorage.vaccination_status"
+                      label="Up-to-date"
+                      checked-icon="task_alt"
+                      unchecked-icon="highlight_off"
+                      true-value="Up-to-date"
+                      indeterminate-icon="highlight_off"
+                    />
+                    <q-checkbox
+                      v-model="dataStorage.vaccination_status"
+                      label="Partial"
+                      checked-icon="task_alt"
+                      unchecked-icon="highlight_off"
+                      true-value="Partial"
+                      indeterminate-icon="highlight_off"
+                    />
+                    <q-checkbox
+                      true-value="None"
+                      v-model="dataStorage.vaccination_status"
+                      label="None"
+                      indeterminate-icon="highlight_off"
+                      checked-icon="task_alt"
+                      unchecked-icon="highlight_off"
+                    />
+                  </div>
+                </div>
+                <div class="row no-wrap justify-between items-center">
+                  <div>Rescue status ?</div>
+                  <div class="row no-wrap">
+                    <q-checkbox
+                      v-model="dataStorage.rescue_status"
+                      label="Rescued"
+                      checked-icon="task_alt"
+                      unchecked-icon="highlight_off"
+                      true-value="Rescued"
+                      indeterminate-icon="highlight_off"
+                    />
+                    <q-checkbox
+                      v-model="dataStorage.rescue_status"
+                      label="Abandoned"
+                      checked-icon="task_alt"
+                      unchecked-icon="highlight_off"
+                      true-value="Abandoned"
+                      indeterminate-icon="highlight_off"
+                    />
+                    <q-checkbox
+                      true-value="Transferred"
+                      v-model="dataStorage.rescue_status"
+                      label="Transferred"
+                      indeterminate-icon="highlight_off"
+                      checked-icon="task_alt"
+                      unchecked-icon="highlight_off"
+                    />
+                    <q-checkbox
+                      true-value="Born in Care"
+                      v-model="dataStorage.rescue_status"
+                      label="Born in Care"
+                      indeterminate-icon="highlight_off"
+                      checked-icon="task_alt"
+                      unchecked-icon="highlight_off"
+                    />
+                  </div>
+                </div>
+                <div class="column no-wrap relative-position">
+                  <q-separator class="q-my-md" />
+                  <div class="absolute-center bg-white text-grey-7">Skills & Behavior</div>
+                </div>
+                <div class="row q-mt-md">
+                  <div class="column no-wrap q-mr-md w-40">
+                    <div class="text-capitalize">Temperament (Behaviour)</div>
+                    <q-input
+                      outlined
+                      v-model="dataStorage.temperament"
+                      dense
+                      class="q-mt-sm"
+                      placeholder="Ex: Friendly, shy"
+                    />
+                  </div>
+                  <div class="column no-wrap q-mr-md">
+                    <div class="text-capitalize">Skills</div>
+                    <q-input
+                      outlined
+                      placeholder="Ex: Fetching"
+                      v-model="dataStorage.skills"
+                      dense
+                      class="q-mt-sm"
+                    />
+                  </div>
+                  <div class="column no-wrap">
+                    <div class="text-capitalize">Favorite food</div>
+                    <q-input
+                      outlined
+                      placeholder="Ex: Meat"
+                      v-model="dataStorage.favorite_food"
+                      dense
+                      class="q-mt-sm"
+                    />
+                  </div>
+                </div>
+                <div class="column q-mt-md no-wrap">
+                  <div class="text-capitalize">Medical needs</div>
+                  <q-input
+                    outlined
+                    type="textarea"
+                    placeholder="Ex: Meat"
+                    v-model="dataStorage.medical_needs"
+                    dense
+                    class="q-mt-sm"
+                  />
+                </div>
+              </q-step>
+
+              <q-step :name="3" title="Story" icon="sym_r_auto_stories" :done="step > 3">
+                <div class="text-grey-7 text-caption q-mb-md">
+                  Note: A compelling animal background story should immediately capture the reader's
+                  heart by combining struggle, survival, and hope in a short, emotionally-resonant
+                  way.
+                </div>
+                <div class="column no-wrap">
+                  <div class="text-capitalize">Background Story</div>
+                  <q-input
+                    outlined
+                    type="textarea"
+                    placeholder="Create a story that touch the heart of people."
+                    v-model="dataStorage.medical_needs"
+                    dense
+                    class="q-mt-sm"
+                  />
+                </div>
+              </q-step>
+              <q-step :name="4" title="Pet Image" icon="sym_r_photo_camera">
+                <div class="text-body1 text-bold">Upload pet Image</div>
+                <div class="text-caption text-grey-7">
+                  Choose an image that will appear in public page in the specific pet
+                </div>
+                <q-card class="q-mt-md radius-10 shadow-1">
+                  <q-card-section
+                    style="height: 200px"
+                    class="column no-wrap items-center justify-center"
+                  >
+                    <q-icon name="sym_r_folder_open" size="1.5rem" />
+                    <div class="q-mt-md">Click or drag and drop to upload file</div>
+                    <div class="q-mt-sm text-caption text-grey-7">PNG,JPG,SVG</div>
+                  </q-card-section>
+                </q-card>
+              </q-step>
+            </q-stepper>
+            <div class="row no-wrap q-pa-md q-px-lg">
+              <q-btn
+                label="Back"
+                @click="step -= 1"
+                no-caps
+                v-if="step > 1"
+                class="btn q-mr-md"
+                outline
+                color="primary"
               />
-            </div>
-            <div class="column no-wrap q-mt-md">
-              <div class="text-capitalize">
-                Notes <span class="text-grey-7 text-caption"> (optional)</span>
-              </div>
-              <q-input outlined autogrow v-model="dataStorage.notes" dense class="q-mt-sm" />
+              <q-btn label="Continue" class="btn" color="primary" no-caps @click="step += 1" />
             </div>
           </q-card-section>
         </div>
-        <q-card-section>
+        <!-- <q-card-section>
           <q-btn
             outline
             label="Cancel"
@@ -226,7 +459,7 @@
             style="width: 180px"
             @click="saveFn()"
           />
-        </q-card-section>
+        </q-card-section> -->
       </q-card>
     </q-dialog>
     <q-dialog v-model="confirm" persistent>
@@ -338,10 +571,11 @@ export default {
     const tab = ref('1')
     const filterTab = ref('1')
     const editTab = ref('1')
+    const step = ref(4)
     const rows = ref([])
     const confirm = ref(false)
     const search = ref(null)
-    const showDialog = ref(false)
+    const showDialog = ref(true)
     const groupDialog = ref(false)
     const pages = ref([])
     const dataStorage = ref({})
@@ -519,6 +753,7 @@ export default {
     })
 
     return {
+      step,
       groupDialog,
       groupNameOptions,
       arrayOfId,
@@ -568,7 +803,7 @@ export default {
           label: 'Name',
           field: 'name',
           sortable: true,
-          align: 'center',
+          align: 'left',
         },
         {
           name: 'species',
@@ -579,7 +814,7 @@ export default {
         },
         {
           name: 'breed',
-          label: 'Group Name',
+          label: 'Breed',
           field: 'breed',
           sortable: true,
           align: 'center',

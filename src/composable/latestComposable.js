@@ -178,6 +178,22 @@ const getInventoryList = (category) => {
       })
   })
 }
+const getAnimalList = (healt_status) => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('pet_info.php', {
+        params: { get_animal_list: healt_status },
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          resolve(response.data.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 
 const getInventoryExpiredList = (category) => {
   return new Promise((resolve, reject) => {
@@ -309,6 +325,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  getAnimalList,
   softDeleteUser,
   addGroupName,
   editInventoryList,

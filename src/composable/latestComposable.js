@@ -218,11 +218,11 @@ const saveAnimalDetail = (obj) => {
 const uploadAnimalImages = (fileArray) => {
   const formData = new FormData()
   fileArray.forEach((fileObj) => {
-    formData.append('files[]', fileObj.file) // actual file reference
-    formData.append('__key[]', fileObj.__key) // optional if backend links it
+    formData.append('files[]', fileObj) // 👈 FIXED: the File itself
+    formData.append('__key[]', fileObj.__key || '') // optional
   })
 
-  return api.post('image_upload.php', formData, {
+  return api.post('image-upload.php', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
 }

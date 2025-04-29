@@ -1,20 +1,7 @@
 <?php
-
-
-// Tells the browser to allow code from any origin to access
-
 header("Access-Control-Allow-Origin: *");
-
-// Tells browsers whether to expose the response to the frontend JavaScript code when the request's credentials mode (Request.credentials) is include
-
 header("Access-Control-Allow-Credentials: true");
-
-// Specifies one or more methods allowed when accessing a resource in response to a preflight request
-
 header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE");
-
-// Used in response to a preflight request which includes the Access-Control-Request-Headers to indicate which HTTP headers can be used during the actual request
-
 header("Access-Control-Allow-Headers: Content-Type");
 
 
@@ -100,18 +87,15 @@ $request_method = $_SERVER['REQUEST_METHOD'];
 $api = new API;
 
 
-if ($request_method == 'GET') {
+
+if ($request_method === 'GET') {
     $api->httpGet($_GET);
-}
-
-if ($request_method == 'POST') {
-    $api->httpPost($received_data);
-}
-
-if ($request_method == 'PUT') {
+} elseif ($request_method === 'POST') {
+    $api->httpPost($_POST); // ✅ This works for normal form data
+} elseif ($request_method === 'PUT') {
+    $received_data = json_decode(file_get_contents('php://input'), true);
     $api->httpPut($received_data);
-}
-
-if ($request_method == 'DELETE') {
+} elseif ($request_method === 'DELETE') {
+    $received_data = json_decode(file_get_contents('php://input'), true);
     $api->httpDelete($received_data);
 }

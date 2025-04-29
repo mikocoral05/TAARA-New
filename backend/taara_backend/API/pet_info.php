@@ -115,69 +115,53 @@ class API
 
     public function httpPost($payload)
     {
-        if (isset($payload['add_inventory_list'])) {
-            $data = $payload['add_inventory_list'];
+        if (isset($payload['save_animal_list'])) {
+            $data = $payload['save_animal_list'];
 
-            // Required fields - adapt based on your table schema
             $insertData = [
-                'item_name'       => $data['item_name'] ?? null,
-                'category'        => $data['category'] ?? null,
-                'quantity'        => $data['quantity'] ?? null,
-                'unit'            => $data['unit'] ?? null,
-                'expiration_date' => $data['expiration_date'] ?? null,
-                'group_name'      => $data['group_name'] ?? null,
-                'date_received'   => $data['date_received'] ?? date('Y-m-d'),
-                'description'   => $data['description'] ?? '',
-                'notes'   => $data['notes'] ?? '',
+                'name'               => $data['name'] ?? null,
+                'species'            => $data['species'] ?? null,
+                'breed'              => $data['breed'] ?? null,
+                'date_of_birth'      => $data['date_of_birth'] ?? null,
+                'fur_color'          => $data['fur_color'] ?? null,
+                'eye_color'          => $data['eye_color'] ?? null,
+                'sex'                => $data['sex'] ?? null,
+                'weight'             => $data['weight'] ?? null,
+                'height'             => $data['height'] ?? null,
+                'temperament'        => $data['temperament'] ?? null,
+                'skills'             => $data['skills'] ?? null,
+                'favorite_food'      => $data['favorite_food'] ?? null,
+                'medical_needs'      => $data['medical_needs'] ?? null,
+                'spayed_neutered'    => $data['spayed_neutered'] ?? null,
+                'vaccination_status' => $data['vaccination_status'] ?? null,
+                'rescue_status'      => $data['rescue_status'] ?? null,
+                'story_background'   => $data['story_background'] ?? null,
             ];
 
-            $insert = $this->db->insert('tbl_inventory', $insertData);
+            $insert = $this->db->insert('tbl_animal_info', $insertData);
 
             if ($insert) {
                 echo json_encode([
                     'status' => 'success',
-                    'message' => 'Inventory list successfully added',
+                    'message' => 'Animal info successfully added',
                     'method' => 'POST'
                 ]);
             } else {
                 echo json_encode([
                     'status' => 'error',
-                    'message' => 'Failed to create inventory list',
-                    'method' => 'POST'
-                ]);
-            }
-        } else if (isset($payload['add_group_name'])) {
-            $data = $payload['add_group_name'];
-
-            // Required fields - adapt based on your table schema
-            $insertData = [
-                'group_name'   => $data['group_name'] ?? null,
-                'category'     => $data['category'] ?? null,
-            ];
-
-            $insert = $this->db->insert('tbl_inventory_group', $insertData);
-
-            if ($insert) {
-                echo json_encode([
-                    'status' => 'success',
-                    'message' => 'Inventory list successfully added',
-                    'method' => 'POST'
-                ]);
-            } else {
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'Failed to create inventory list',
+                    'message' => 'Failed to save animal info',
                     'method' => 'POST'
                 ]);
             }
         } else {
             echo json_encode([
                 'status' => 'error',
-                'message' => 'Missing add_inventory_list data in the payload',
+                'message' => 'Missing Data in the payload',
                 'method' => 'POST'
             ]);
         }
     }
+
 
     public function httpPut($payload)
     {
@@ -210,53 +194,13 @@ class API
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
             }
-        } else if (isset($payload['edit_inventory_list'])) {
-            $data = $payload['edit_inventory_list'];
-            $id = $data['id'];
-
-            // Sanitize and validate as needed
-            $updateData = [
-                'item_name'       => $data['item_name'] ?? null,
-                'category'        => $data['category'] ?? null,
-                'quantity'        => $data['quantity'] ?? null,
-                'unit'            => $data['unit'] ?? null,
-                'expiration_date' => $data['expiration_date'] ?? null,
-                'group_name'      => $data['group_name'] ?? null,
-                'date_received'   => $data['date_received'] ?? date('Y-m-d'),
-                'description'   => $data['description'] ?? '',
-                'notes'   => $data['notes'] ?? '',
-                'date_updated'   => date('Y-m-d'),
-            ];
-
-            $this->db->where('id', $id);
-            $update = $this->db->update('tbl_inventory', $updateData);
-
-            if ($update) {
-                echo json_encode([
-                    'status' => 'success',
-                    'message' => 'Inventory list successfully updated',
-                    'method' => 'PUT'
-                ]);
-            } else {
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'Failed to update inventory list',
-                    'method' => 'PUT'
-                ]);
-            }
-            // return;
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Missing soft_delete_inventory_data in the payload']);
         }
     }
 
 
-    public function httpDelete($payload)
-    {
-        $datas = json_encode($payload);
-        $arr = json_decode($datas, true);
-        $del = idate("U");
-    }
+    public function httpDelete($payload) {}
 }
 
 /* END OF CLASS */

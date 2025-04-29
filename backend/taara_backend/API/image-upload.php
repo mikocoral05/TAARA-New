@@ -28,57 +28,65 @@ class API
         $this->db = new MysqliDB('localhost', 'root', '', 'capstone');
     }
 
-    public function httpGet($payload)
-    {
-        $datas = json_encode($payload);
-        $ref_id = json_decode($datas, true);
-    }
+    public function httpGet($payload) {}
     public function httpPost($payload)
     {
-        $datas = json_encode($payload);
-        $arr = json_decode($datas, true);
-        var_export($payload);
-        if (array_key_exists("user_image", $arr)) {
-            $id = $arr['user_id'];
-            $query_compar = $this->db->rawQuery("SELECT * FROM tbl_user_image  WHERE user_id = $id ");
-
-            $array_of_insert = array(
-                "user_id" => $arr["user_id"],
-                "user_image" => $arr["user_image"],
-                "id" => $arr["id"],
-            );
-            if (Count($query_compar) == 0) {
-                $this->db->insert('tbl_user_image', $array_of_insert);
-                // $query = $this->db->rawQuery("SELECT * FROM tbl_users");
-                // echo json_encode(('Welcome to KA-TAARA!'));
-                // echo json_encode( "Welcome KA-TAARA!");
-            } else {
-                $data = array(
-                    // 'user_id' => $id,
-                    'user_image' => $arr['user_image'],
-
-                );
-                $this->db->where('user_id', $id);
-                if ($this->db->update('tbl_user_image', $data))
-                    echo $this->db->count . ' records were updated';
-                else
-                    echo 'update failed: ' . $this->db->getLastError();
+        if (isset($_FILES['files'])) {
+            $files = $_FILES['files'];
+            $keys = $_POST['__key'] ?? []; // optional linking keys
+            $uploadDir = '../files/';
+            if (!is_dir($uploadDir)) {
+                mkdir($uploadDir, 0777, true);
             }
+
+            $insertedIds = [];
+
+            foreach ($files['tmp_name'] as $index => $tmpName) {
+                if (!is_uploaded_file($tmpName)) continue;
+
+                $originalName = $files['name'][$index];
+                $ext = pathinfo($originalName, PATHINFO_EXTENSION);
+                $uniqueFilename = 'animal_' . time() . '_' . uniqid() . '.' . $ext;
+                $uploadPath = $uploadDir . $uniqueFilename;
+
+                if (move_uploaded_file($tmpName, $uploadPath)) {
+                    $pathForDB = $uniqueFilename; // or full path if needed
+                    $key = $keys[$index] ?? null;
+
+                    $insertData = [
+                        'image_path' => $pathForDB,
+                    ];
+
+                    $id = $this->db->insert('tbl_files', $insertData);
+                    if ($id) {
+                        $insertedIds[] = $id;
+                    }
+                }
+            }
+
+            if (!empty($insertedIds)) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Files uploaded and saved',
+                    'inserted_ids' => $insertedIds
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'No files were successfully uploaded'
+                ]);
+            }
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'No files received'
+            ]);
         }
     }
-    public function httpPut($payload)
-    {
-        // $this->db->update();
-        $datas = json_encode($payload);
-        $arr = json_decode($datas, true);
-        // update function
 
-    }
-    public function httpDelete($payload)
-    {
-        // $this->db->delete();
-        echo json_encode(array('method' => 'DFLETE'));
-    }
+
+    public function httpPut($payload) {}
+    public function httpDelete($payload) {}
 }
 
 /* END OF CLASS */

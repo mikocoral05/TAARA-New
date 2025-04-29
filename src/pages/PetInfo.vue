@@ -403,18 +403,30 @@
                     outlined
                     type="textarea"
                     placeholder="Create a story that touch the heart of people."
-                    v-model="dataStorage.medical_needs"
+                    v-model="dataStorage.story_background"
                     dense
                     class="q-mt-sm"
                   />
                 </div>
               </q-step>
+
               <q-step :name="4" title="Pet Image" icon="sym_r_photo_camera">
-                <div class="text-body1 text-bold">Upload pet Image</div>
+                <div class="text-body1">Choose Pet Image</div>
                 <div class="text-caption text-grey-7">
                   Choose an image that will appear in public page in the specific pet
                 </div>
-                <q-card class="q-mt-md radius-10 shadow-1">
+                <q-file
+                  ref="myFile"
+                  v-model="dataStorage.file"
+                  label="Upload your file"
+                  multiple
+                  append
+                  class="hidden"
+                  accept=".jpg, .jpeg, .png, .svg"
+                  @update:model-value="imageFnUpdate"
+                />
+
+                <q-card class="q-mt-md radius-10 shadow-1" @click="triggerUpload">
                   <q-card-section
                     style="height: 200px"
                     class="column no-wrap items-center justify-center"
@@ -424,6 +436,78 @@
                     <div class="q-mt-sm text-caption text-grey-7">PNG,JPG,SVG</div>
                   </q-card-section>
                 </q-card>
+                <div class="row no-wrap image-viewer-container flex flex-center">
+                  <div class="light-border-dashed image-viewer">
+                    <q-img
+                      v-if="previewImage?.[0]"
+                      :src="previewImage?.[0]"
+                      height="120px"
+                      width="120px"
+                    />
+                    <q-icon
+                      v-else
+                      name="sym_r_add_photo_alternate"
+                      size="1.2rem"
+                      class="absolute-center"
+                    />
+                  </div>
+                  <div class="light-border-dashed image-viewer">
+                    <q-img
+                      v-if="previewImage?.[1]"
+                      :src="previewImage?.[1]"
+                      height="120px"
+                      width="120px"
+                    />
+                    <q-icon
+                      v-else
+                      name="sym_r_add_photo_alternate"
+                      size="1.2rem"
+                      class="absolute-center"
+                    />
+                  </div>
+                  <div class="light-border-dashed image-viewer">
+                    <q-img
+                      v-if="previewImage?.[2]"
+                      :src="previewImage?.[2]"
+                      height="120px"
+                      width="120px"
+                    />
+                    <q-icon
+                      v-else
+                      name="sym_r_add_photo_alternate"
+                      size="1.2rem"
+                      class="absolute-center"
+                    />
+                  </div>
+                  <div class="light-border-dashed image-viewer">
+                    <q-img
+                      v-if="previewImage?.[3]"
+                      :src="previewImage?.[3]"
+                      height="120px"
+                      width="120px"
+                    />
+                    <q-icon
+                      v-else
+                      name="sym_r_add_photo_alternate"
+                      size="1.2rem"
+                      class="absolute-center"
+                    />
+                  </div>
+                  <div class="light-border-dashed image-viewer">
+                    <q-img
+                      v-if="previewImage?.[4]"
+                      :src="previewImage?.[4]"
+                      height="120px"
+                      width="120px"
+                    />
+                    <q-icon
+                      v-else
+                      name="sym_r_add_photo_alternate"
+                      size="1.2rem"
+                      class="absolute-center"
+                    />
+                  </div>
+                </div>
               </q-step>
             </q-stepper>
             <div class="row no-wrap q-pa-md q-px-lg">
@@ -436,30 +520,16 @@
                 outline
                 color="primary"
               />
-              <q-btn label="Continue" class="btn" color="primary" no-caps @click="step += 1" />
+              <q-btn
+                label="Continue"
+                class="btn"
+                color="primary"
+                no-caps
+                @click="step == 4 ? saveFn() : (step += 1)"
+              />
             </div>
           </q-card-section>
         </div>
-        <!-- <q-card-section>
-          <q-btn
-            outline
-            label="Cancel"
-            v-close-popup
-            color="primary"
-            no-caps
-            class="q-mr-md"
-            style="width: 180px"
-          />
-          <q-btn
-            label="Confirm"
-            unelevated
-            color="primary"
-            no-caps
-            v-close-popup
-            style="width: 180px"
-            @click="saveFn()"
-          />
-        </q-card-section> -->
       </q-card>
     </q-dialog>
     <q-dialog v-model="confirm" persistent>
@@ -535,15 +605,12 @@ import {
   getBudgetAllocation,
   getExpensesSummary,
   getTotalBalance,
-  getInventoryList,
   getInventoryGroup,
   getInventoryListSummary,
-  getInventoryExpiredList,
   softDeleteInventoryData,
-  addInventoryList,
   editInventoryList,
-  addGroupName,
   getAnimalList,
+  saveAnimalDetail,
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -571,14 +638,14 @@ export default {
     const tab = ref('1')
     const filterTab = ref('1')
     const editTab = ref('1')
-    const step = ref(4)
+    const step = ref(1)
     const rows = ref([])
     const confirm = ref(false)
     const search = ref(null)
-    const showDialog = ref(true)
+    const showDialog = ref(false)
     const groupDialog = ref(false)
     const pages = ref([])
-    const dataStorage = ref({})
+    const dataStorage = ref({ file: [] })
     const elseSummary = ref({})
     const mode = ref('')
     const selectedMonth = ref(monthToday)
@@ -593,6 +660,12 @@ export default {
     const scrollListRef = ref(null)
     const arrayOfId = ref([])
     const tableConfig = ref({ title: '', columns: [] })
+    const file = ref(null)
+    const myFile = ref(null)
+
+    const triggerUpload = () => {
+      myFile.value.pickFiles()
+    }
 
     const groupNameOptions = ref([])
     const tableAction = (data, modeParam) => {
@@ -621,35 +694,21 @@ export default {
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
-        dataStorage.value.category = obj[tab.value]
-        if (filterTab.value !== 2) {
-          addInventoryList(dataStorage.value).then((response) => {
-            console.log(response)
-            setTimeout(() => {
-              $q.loading.show({
-                group: 'update',
-                message: response.message,
-              })
-            }, 1000)
-            setTimeout(() => {
-              $q.loading.hide()
-            }, 2000)
-          })
-        } else {
-          addGroupName(dataStorage.value).then((response) => {
-            console.log(response)
-            setTimeout(() => {
-              $q.loading.show({
-                group: 'update',
-                message: response.message,
-              })
-            }, 1000)
-            setTimeout(() => {
-              groupDialog.value = false
-              $q.loading.hide()
-            }, 2000)
-          })
-        }
+        dataStorage.value.health_status = tab.value
+
+        saveAnimalDetail(dataStorage.value).then((response) => {
+          console.log(response)
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 1000)
+          setTimeout(() => {
+            groupDialog.value = false
+            $q.loading.hide()
+          }, 2000)
+        })
       } else if (mode.value == 'Edit') {
         $q.loading.show({
           group: 'update',
@@ -682,51 +741,10 @@ export default {
       })
     }
 
-    const filterInventory = (filterNo) => {
-      filterTab.value = filterNo
-      if (filterNo == 1) {
-        getInventoryList(obj[tab.value]).then((response) => {
-          tableConfig.value.title = `${capitalize(obj[tab.value])} List`
-          tableConfig.value.columns = [
-            'id',
-            'item_name',
-            'group_name',
-            'quantity',
-            'unit',
-            'expiration_date',
-            'btn',
-          ]
-          rows.value = response
-        })
-      } else if (filterNo == 2) {
-        getInventoryGroup(obj[tab.value]).then((response) => {
-          rows.value = response
-          tableConfig.value.title = 'Group List'
-          tableConfig.value.columns = ['id', 'group_name', 'count', 'btn']
-          console.log(tableConfig.value.columns)
-        })
-      } else if (filterNo == 3) {
-        getInventoryExpiredList(obj[tab.value]).then((response) => {
-          rows.value = response
-          tableConfig.value.title = 'Expired List'
-          tableConfig.value.columns = [
-            'id',
-            'item_name',
-            'group_name',
-            'quantity',
-            'unit',
-            'expiration_date',
-            'btn',
-          ]
-        })
-      }
-    }
-
     const softDeleteFn = () => {
       const tableName = filterTab.value == 2 ? 'tbl_inventory_group' : 'tbl_inventory'
       softDeleteInventoryData(arrayOfId.value, tableName).then((response) => {
         if (response == 'success') {
-          filterInventory(filterTab.value)
           getInventoryListSummary(obj[tab.value]).then((response) => {
             elseSummary.value = response
           })
@@ -734,9 +752,19 @@ export default {
       })
     }
 
+    const previewImage = ref([])
+    const imageFnUpdate = () => {
+      previewImage.value = [] // RESET before adding new images
+      if (dataStorage.value.file.length > 0) {
+        dataStorage.value.file.forEach((element) => {
+          previewImage.value.push(URL.createObjectURL(element))
+        })
+      }
+    }
+
     watchEffect(() => {
       getAnimalList(tab.value).then((response) => {
-        tableConfig.value.title = `${capitalize(obj[tab.value])} List`
+        tableConfig.value.title = `${capitalize(obj[tab.value])} Pet`
         tableConfig.value.columns = [
           'animal_id',
           'name',
@@ -753,7 +781,12 @@ export default {
     })
 
     return {
+      imageFnUpdate,
       step,
+      myFile,
+      file,
+      previewImage,
+      triggerUpload,
       groupDialog,
       groupNameOptions,
       arrayOfId,
@@ -767,7 +800,6 @@ export default {
       isNearExpiration,
       formatOrNumber,
       itemsCount,
-      filterInventory,
       tableConfig,
       scrollListRef,
       scrollAreaRef,
@@ -853,3 +885,17 @@ export default {
   },
 }
 </script>
+<style lang="scss" scoped>
+.image-viewer-container {
+  .image-viewer {
+    margin-top: 5px;
+    height: 125px;
+    width: 125px;
+    position: relative;
+    border-radius: 10px;
+    .q-img {
+      border-radius: 10px;
+    }
+  }
+}
+</style>

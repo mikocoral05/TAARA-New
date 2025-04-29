@@ -62,3 +62,6 @@ body {
 .btn {
   width: 200px;
 }
+.light-border-dashed {
+  border: 2px dashed $separator-color;
+}

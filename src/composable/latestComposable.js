@@ -194,6 +194,38 @@ const getAnimalList = (healt_status) => {
       })
   })
 }
+const saveAnimalDetail = (obj) => {
+  const { file, ...animalData } = obj // separate the files
+  return new Promise((resolve, reject) => {
+    api
+      .post('pet_info.php', {
+        save_animal_list: animalData,
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          console.log(file)
+          uploadAnimalImages(file).then((res) => {
+            console.log(res.data)
+          })
+          resolve(response.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+const uploadAnimalImages = (fileArray) => {
+  const formData = new FormData()
+  fileArray.forEach((fileObj) => {
+    formData.append('files[]', fileObj.file) // actual file reference
+    formData.append('__key[]', fileObj.__key) // optional if backend links it
+  })
+
+  return api.post('image_upload.php', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+}
 
 const getInventoryExpiredList = (category) => {
   return new Promise((resolve, reject) => {
@@ -325,6 +357,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  saveAnimalDetail,
   getAnimalList,
   softDeleteUser,
   addGroupName,

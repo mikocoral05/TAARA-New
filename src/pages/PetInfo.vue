@@ -631,9 +631,9 @@ import {
   getInventoryGroup,
   getInventoryListSummary,
   softDeleteInventoryData,
-  editInventoryList,
   getAnimalList,
   saveAnimalDetail,
+  editAnimalInfo,
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -647,7 +647,6 @@ import {
   formatOrNumber,
   isNearExpiration,
   isExpired,
-  capitalize,
 } from 'src/composable/simpleComposable'
 export default {
   components: {
@@ -738,7 +737,7 @@ export default {
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
-        editInventoryList(dataStorage.value).then((response) => {
+        editAnimalInfo(dataStorage.value).then((response) => {
           console.log(response)
           $q.loading.show({
             group: 'update',
@@ -788,7 +787,7 @@ export default {
 
     watchEffect(() => {
       getAnimalList(tab.value).then((response) => {
-        tableConfig.value.title = `${capitalize(obj[tab.value])} Pet`
+        tableConfig.value.title = `${obj[tab.value]} Pet`
         tableConfig.value.columns = [
           'animal_id',
           'name',

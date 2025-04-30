@@ -168,8 +168,8 @@ class API
 
     public function httpPut($payload)
     {
-        if (isset($payload['soft_delete_inventory_data'])) {
-            $id = $payload['soft_delete_inventory_data'];
+        if (isset($payload['soft_delete_animal_info'])) {
+            $id = $payload['soft_delete_animal_info'];
             $table = $payload['table'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
@@ -198,7 +198,7 @@ class API
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
             }
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Missing soft_delete_inventory_data in the payload']);
+            echo json_encode(['status' => 'error', 'message' => 'Missing Animal info in the payload']);
         }
     }
 

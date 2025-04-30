@@ -294,6 +294,21 @@ const softDeleteInventoryData = (arrayId, tableName) => {
   })
 }
 
+const editAnimalInfo = (obj) => {
+  return new Promise((resolve, reject) => {
+    api
+      .put('pet_info.php', {
+        edit_animal_info: obj,
+      })
+      .then((response) => {
+        resolve(response.data.status)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
 const softDeleteUser = (arrayId) => {
   return new Promise((resolve, reject) => {
     api
@@ -357,6 +372,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  editAnimalInfo,
   saveAnimalDetail,
   getAnimalList,
   softDeleteUser,

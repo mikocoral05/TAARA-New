@@ -131,6 +131,7 @@ class API
                 'temperament'        => $data['temperament'] ?? null,
                 'skills'             => $data['skills'] ?? null,
                 'favorite_food'      => $data['favorite_food'] ?? null,
+                'health_status'      => $data['health_status'] ?? null,
                 'medical_needs'      => $data['medical_needs'] ?? null,
                 'spayed_neutered'    => $data['spayed_neutered'] ?? null,
                 'vaccination_status' => $data['vaccination_status'] ?? null,
@@ -139,12 +140,14 @@ class API
             ];
 
             $insert = $this->db->insert('tbl_animal_info', $insertData);
+            $id = $this->db->getInsertId();
 
             if ($insert) {
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Animal info successfully added',
-                    'method' => 'POST'
+                    'method' => 'POST',
+                    'id' => $id
                 ]);
             } else {
                 echo json_encode([

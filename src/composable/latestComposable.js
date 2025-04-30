@@ -204,7 +204,7 @@ const saveAnimalDetail = (obj) => {
       .then((response) => {
         if (response.data.status == 'success') {
           console.log(file)
-          uploadAnimalImages(file).then((res) => {
+          uploadAnimalImages(file, response.data.id).then((res) => {
             console.log(res.data)
           })
           resolve(response.data)
@@ -215,13 +215,13 @@ const saveAnimalDetail = (obj) => {
       })
   })
 }
-const uploadAnimalImages = (fileArray) => {
+const uploadAnimalImages = (fileArray, animal_id) => {
   const formData = new FormData()
   fileArray.forEach((fileObj) => {
     formData.append('files[]', fileObj) // 👈 FIXED: the File itself
     formData.append('__key[]', fileObj.__key || '') // optional
   })
-
+  formData.append('animal_id', animal_id) // 👈 include animal_id
   return api.post('image-upload.php', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   })

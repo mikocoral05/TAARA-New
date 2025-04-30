@@ -20,7 +20,7 @@ class API
     {
         if (isset($_FILES['files'])) {
             $files = $_FILES['files'];
-            $keys = $_POST['__key'] ?? []; // optional linking keys
+            $animal_id = $_POST['animal_id'] ?? null; // get animal_id from the form
             $uploadDir = '../files/';
             if (!is_dir($uploadDir)) {
                 mkdir($uploadDir, 0777, true);
@@ -38,16 +38,26 @@ class API
 
                 if (move_uploaded_file($tmpName, $uploadPath)) {
                     $pathForDB = $uniqueFilename; // or full path if needed
-                    $key = $keys[$index] ?? null;
 
                     $insertData = [
                         'image_path' => $pathForDB,
                     ];
 
-                    $id = $this->db->insert('tbl_files', $insertData);
+                    $this->db->insert('tbl_files', $insertData);
+                    $id = $this->db->getInsertId();
                     if ($id) {
                         $insertedIds[] = $id;
                     }
+                }
+                // ✅ Update tbl_animal_info *once* if animal_id is set and images were uploaded
+                if ($animal_id && !empty($insertedIds)) {
+                    $update_values = [
+                        'image_gallery' => json_encode($insertedIds),
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ];
+
+                    $this->db->where('animal_id', $animal_id);
+                    $this->db->update('tbl_animal_info', $update_values);
                 }
             }
 

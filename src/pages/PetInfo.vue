@@ -138,6 +138,7 @@
                   <div class="column no-wrap q-mr-md w-40">
                     <div class="text-capitalize">Pet name</div>
                     <q-input
+                      :readonly="mode == 'View'"
                       outlined
                       v-model="dataStorage.name"
                       dense
@@ -148,6 +149,7 @@
                   <div class="column no-wrap q-mr-md w-40">
                     <div class="text-capitalize">Species</div>
                     <q-input
+                      :readonly="mode == 'View'"
                       outlined
                       placeholder="Species"
                       v-model="dataStorage.species"
@@ -158,6 +160,7 @@
                   <div class="column no-wrap q-mr-md q-mt-md">
                     <div class="text-capitalize">Breed</div>
                     <q-input
+                      :readonly="mode == 'View'"
                       outlined
                       placeholder="Breed"
                       v-model="dataStorage.breed"
@@ -169,6 +172,7 @@
                   <div class="column no-wrap q-mr-md q-mt-md">
                     <div class="text-capitalize">Birtdate</div>
                     <q-input
+                      :readonly="mode == 'View'"
                       dense
                       outlined
                       class="q-mt-sm"
@@ -197,6 +201,7 @@
                   <div class="column no-wrap q-mr-md q-mt-md">
                     <div class="text-capitalize">Fur color</div>
                     <q-input
+                      :readonly="mode == 'View'"
                       outlined
                       placeholder="Fur color"
                       v-model="dataStorage.fur_color"
@@ -207,6 +212,7 @@
                   <div class="column no-wrap q-mr-md q-mt-md">
                     <div class="text-capitalize">Eye color</div>
                     <q-input
+                      :readonly="mode == 'View'"
                       outlined
                       placeholder="Eye color"
                       v-model="dataStorage.eye_color"
@@ -217,6 +223,7 @@
                   <div class="column no-wrap w-30 q-mr-md q-mt-md">
                     <div class="text-capitalize">Sex</div>
                     <q-select
+                      :readonly="mode == 'View'"
                       outlined
                       v-model="dataStorage.sex"
                       :options="['Male', 'Female']"
@@ -232,6 +239,7 @@
                       Weight<span class="text-grey-7 q-ml-sm">(kg)</span>
                     </div>
                     <q-input
+                      :readonly="mode == 'View'"
                       outlined
                       placeholder="Weight"
                       v-model="dataStorage.weight"
@@ -244,6 +252,7 @@
                       Height<span class="text-grey-7 q-ml-sm">(cm)</span>
                     </div>
                     <q-input
+                      :readonly="mode == 'View'"
                       placeholder="Height"
                       outlined
                       v-model="dataStorage.height"
@@ -265,6 +274,7 @@
                       unchecked-icon="highlight_off"
                       true-value="Yes"
                       indeterminate-icon="highlight_off"
+                      :disable="mode == 'View'"
                     />
                     <q-checkbox
                       true-value="No"
@@ -281,6 +291,7 @@
                   <div class="row no-wrap">
                     <q-checkbox
                       v-model="dataStorage.vaccination_status"
+                      :disable="mode == 'View'"
                       label="Up-to-date"
                       checked-icon="task_alt"
                       unchecked-icon="highlight_off"
@@ -293,12 +304,14 @@
                       checked-icon="task_alt"
                       unchecked-icon="highlight_off"
                       true-value="Partial"
+                      :disable="mode == 'View'"
                       indeterminate-icon="highlight_off"
                     />
                     <q-checkbox
                       true-value="None"
                       v-model="dataStorage.vaccination_status"
                       label="None"
+                      :disable="mode == 'View'"
                       indeterminate-icon="highlight_off"
                       checked-icon="task_alt"
                       unchecked-icon="highlight_off"
@@ -311,6 +324,7 @@
                     <q-checkbox
                       v-model="dataStorage.rescue_status"
                       label="Rescued"
+                      :disable="mode == 'View'"
                       checked-icon="task_alt"
                       unchecked-icon="highlight_off"
                       true-value="Rescued"
@@ -320,6 +334,7 @@
                       v-model="dataStorage.rescue_status"
                       label="Abandoned"
                       checked-icon="task_alt"
+                      :disable="mode == 'View'"
                       unchecked-icon="highlight_off"
                       true-value="Abandoned"
                       indeterminate-icon="highlight_off"
@@ -330,10 +345,12 @@
                       label="Transferred"
                       indeterminate-icon="highlight_off"
                       checked-icon="task_alt"
+                      :disable="mode == 'View'"
                       unchecked-icon="highlight_off"
                     />
                     <q-checkbox
                       true-value="Born in Care"
+                      :disable="mode == 'View'"
                       v-model="dataStorage.rescue_status"
                       label="Born in Care"
                       indeterminate-icon="highlight_off"
@@ -355,11 +372,13 @@
                       dense
                       class="q-mt-sm"
                       placeholder="Ex: Friendly, shy"
+                      :readonly="mode == 'View'"
                     />
                   </div>
                   <div class="column no-wrap q-mr-md">
                     <div class="text-capitalize">Skills</div>
                     <q-input
+                      :readonly="mode == 'View'"
                       outlined
                       placeholder="Ex: Fetching"
                       v-model="dataStorage.skills"
@@ -371,6 +390,7 @@
                     <div class="text-capitalize">Favorite food</div>
                     <q-input
                       outlined
+                      :readonly="mode == 'View'"
                       placeholder="Ex: Meat"
                       v-model="dataStorage.favorite_food"
                       dense
@@ -381,6 +401,7 @@
                 <div class="column q-mt-md no-wrap">
                   <div class="text-capitalize">Medical needs</div>
                   <q-input
+                    :readonly="mode == 'View'"
                     outlined
                     type="textarea"
                     placeholder="Ex: Meat"
@@ -400,6 +421,7 @@
                 <div class="column no-wrap">
                   <div class="text-capitalize">Background Story</div>
                   <q-input
+                    :readonly="mode == 'View'"
                     outlined
                     type="textarea"
                     placeholder="Create a story that touch the heart of people."
@@ -420,6 +442,7 @@
                   v-model="dataStorage.file"
                   label="Upload your file"
                   multiple
+                  :readonly="mode == 'View'"
                   append
                   class="hidden"
                   accept=".jpg, .jpeg, .png, .svg"
@@ -680,6 +703,7 @@ export default {
         if (modeParam == 'Add') {
           dataStorage.value = {}
         } else {
+          console.log(dataStorage.value)
           dataStorage.value = data
         }
       } else {
@@ -694,7 +718,7 @@ export default {
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
-        dataStorage.value.health_status = tab.value
+        dataStorage.value.health_status = Number(tab.value)
 
         saveAnimalDetail(dataStorage.value).then((response) => {
           console.log(response)

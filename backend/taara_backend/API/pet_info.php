@@ -95,17 +95,8 @@ class API
     {
         if (isset($payload['soft_delete_animal_info'])) {
             $id = $payload['soft_delete_animal_info'];
-            $table = $payload['table'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
-
-
-            // Whitelist allowed tables for safety
-            $allowed_tables = ['tbl_inventory', 'tbl_inventory_group'];
-            if (!in_array($table, $allowed_tables)) {
-                echo json_encode(['status' => 'error', 'message' => 'Invalid table name']);
-                return;
-            }
 
             // Set the update values here in the backend
             $update_values = [
@@ -114,8 +105,8 @@ class API
             ];
 
             // Update records matching the IDs
-            $this->db->where('id', $ids, 'IN');
-            $updated = $this->db->update($table, $update_values);
+            $this->db->where('animal_id', $ids, 'IN');
+            $updated = $this->db->update('tbl_animal_info', $update_values);
 
             if ($updated) {
                 echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);

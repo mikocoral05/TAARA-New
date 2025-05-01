@@ -560,7 +560,7 @@
         <q-card-section class="column items-center">
           <q-icon name="sym_r_inventory_2" color="primary" size="2.5rem" />
           <span class="q-ml-sm text-black text-body1 q-mt-md text-center">
-            Are you sure you want to Delete this {{ obj2[tab] }} List?
+            Are you sure you want to Delete this Pet Record List?
           </span>
           <span class="q-ml-sm text-caption text-grey-7 q-mt-sm">
             This action is irreversible.
@@ -629,8 +629,7 @@ import {
   getExpensesSummary,
   getTotalBalance,
   getInventoryGroup,
-  getInventoryListSummary,
-  softDeleteInventoryData,
+  softDeleteAnimal,
   getAnimalList,
   saveAnimalDetail,
   editAnimalInfo,
@@ -706,7 +705,7 @@ export default {
           dataStorage.value = data
         }
       } else {
-        arrayOfId.value.push(data.id)
+        arrayOfId.value.push(data.animal_id)
         confirm.value = !confirm.value
       }
     }
@@ -718,7 +717,6 @@ export default {
           message: `${obj3[mode.value]}. Please wait...`,
         })
         dataStorage.value.health_status = Number(tab.value)
-
         saveAnimalDetail(dataStorage.value).then((response) => {
           console.log(response)
           setTimeout(() => {
@@ -765,13 +763,23 @@ export default {
     }
 
     const softDeleteFn = () => {
-      const tableName = filterTab.value == 2 ? 'tbl_inventory_group' : 'tbl_inventory'
-      softDeleteInventoryData(arrayOfId.value, tableName).then((response) => {
-        if (response == 'success') {
-          getInventoryListSummary(obj[tab.value]).then((response) => {
-            elseSummary.value = response
-          })
-        }
+      $q.loading.show({
+        group: 'update',
+        message: 'Deleting Pet info. Please wait...',
+      })
+      softDeleteAnimal(arrayOfId.value).then((response) => {
+        $q.loading.show({
+          group: 'update',
+          message: response.message,
+        })
+        setTimeout(() => {
+          $q.loading.hide()
+          if (response.status == 'success') {
+            getAnimalList(tab.value).then((response) => {
+              rows.value = response
+            })
+          }
+        }, 2000)
       })
     }
 

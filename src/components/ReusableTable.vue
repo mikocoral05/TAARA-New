@@ -127,7 +127,7 @@ export default {
     watch(internalSelected, (val) => {
       emit(
         'update:selected',
-        val.map((item) => item?.id || item?.user_id),
+        val.map((item) => item?.id || item?.user_id || item?.animal_id),
       )
     })
 

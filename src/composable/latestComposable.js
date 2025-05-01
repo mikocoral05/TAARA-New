@@ -327,6 +327,20 @@ const softDeleteUser = (arrayId) => {
       })
   })
 }
+const softDeleteAnimal = (arrayId) => {
+  return new Promise((resolve, reject) => {
+    api
+      .put('pet_info.php', {
+        soft_delete_animal_info: arrayId,
+      })
+      .then((response) => {
+        resolve(response.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 
 const addInventoryList = (obj) => {
   obj.date_received = dateToday
@@ -387,6 +401,7 @@ export {
   getInventoryExpiredList,
   getInventoryListSummary,
   getInventoryGroup,
+  softDeleteAnimal,
   getInventoryList,
   getMonthlyFundAndExpenses,
   getTotalBalance,

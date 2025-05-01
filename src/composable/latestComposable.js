@@ -295,12 +295,16 @@ const softDeleteInventoryData = (arrayId, tableName) => {
 }
 
 const editAnimalInfo = (obj) => {
+  const { image_gallery, ...animal_data } = obj
   return new Promise((resolve, reject) => {
     api
       .put('pet_info.php', {
-        edit_animal_info: obj,
+        edit_animal_info: animal_data,
       })
       .then((response) => {
+        if (response.data.status == 'success') {
+          console.log(image_gallery)
+        }
         resolve(response.data.status)
       })
       .catch((error) => {

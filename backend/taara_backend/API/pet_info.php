@@ -18,6 +18,7 @@ class API
             $category = $payload['get_animal_list'];
 
             $this->db->where("health_status", $category);
+            $this->db->where("is_deleted", 1);
 
             // Select all inventory fields, but replace group_name with actual name from group table
             $query = $this->db->get("tbl_animal_info");
@@ -25,82 +26,6 @@ class API
             echo json_encode([
                 'status' => 'success',
                 'data' => $query,
-                'method' => 'GET'
-            ]);
-        } else if (array_key_exists('get_inventory_expired_list', $payload)) {
-            $category = $payload['get_inventory_expired_list'];
-
-            $today = date('Y-m-d');
-
-            $this->db->where("category", $category);
-            $this->db->where("expiration_date", $today, "<"); // this is the correct way to do `>=`
-            $this->db->where("is_deleted", "1");
-            $query = $this->db->get("tbl_inventory");
-
-            echo json_encode([
-                'status' => 'success',
-                'data' => $query,
-                'method' => 'GET'
-            ]);
-        } else if (array_key_exists('get_inventory_list_summary', $payload)) {
-            $category = $payload['get_inventory_list_summary'];
-            $today = date('Y-m-d');
-
-            // Not expired: quantity & unique group count
-            $this->db->where("category", $category);
-            $this->db->where("expiration_date", $today, ">=");
-            $this->db->where("is_deleted", "1");
-            $notExpired = $this->db->getOne("tbl_inventory", "SUM(quantity) as total_quantity, COUNT(DISTINCT group_name) as unique_group_count");
-
-            // Expired: count of expired items
-            $this->db->where("category", $category);
-            $this->db->where("expiration_date", $today, "<");
-            $this->db->where("is_deleted", "1");
-            $expiredCount = $this->db->getValue("tbl_inventory", "COUNT(*)");
-
-            // Group count from tbl_inventory_group
-            $this->db->where("category", $category);
-            $groupCount = $this->db->getValue("tbl_inventory_group", "COUNT(DISTINCT group_name)");
-
-            echo json_encode([
-                'status' => 'success',
-                'data' => [
-                    'total_quantity' => $notExpired['total_quantity'],
-                    'unique_group_count' => $notExpired['unique_group_count'],
-                    'expired_count' => $expiredCount,
-                    'group_name_count' => $groupCount
-                ],
-                'method' => 'GET'
-            ]);
-        } else if (array_key_exists('get_inventory_group', $payload)) {
-            $category = $payload['get_inventory_group'];
-            $today = date('Y-m-d');
-
-            // First get all groups for that category
-            $this->db->where("category", $category);
-            $this->db->where("is_deleted", "1");
-            $groups = $this->db->get("tbl_inventory_group");
-
-            $result = [];
-
-            foreach ($groups as $index => $group) {
-                $this->db->where("category", $category);
-                $this->db->where("group_name", $group['id']);
-                $this->db->where("expiration_date", $today, ">=");
-
-                $count = $this->db->getValue("tbl_inventory", "COUNT(*)");
-
-                $result[] = [
-                    'id'         => $index + 1,
-                    'group_name' => $group['group_name'],
-                    'category'   => $group['category'],
-                    'count'      => $count
-                ];
-            }
-
-            echo json_encode([
-                'status' => 'success',
-                'data'   => $result,
                 'method' => 'GET'
             ]);
         } else {
@@ -196,6 +121,51 @@ class API
                 echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
+            }
+        } else if (isset($payload['edit_animal_info'])) {
+            $obj = $payload['edit_animal_info'];
+
+            $update_values = [
+                'name' => $obj['name'] ?? null,
+                'species' => $obj['species'] ?? null,
+                'breed' => $obj['breed'] ?? null,
+                'fur_color' => $obj['fur_color'] ?? null,
+                'eye_color' => $obj['eye_color'] ?? null,
+                'date_of_birth' => $obj['date_of_birth'] ?? null,
+                'weight' => $obj['weight'] ?? null,
+                'height' => $obj['height'] ?? null,
+                'sex' => $obj['sex'] ?? null,
+                'spayed_neutered' => $obj['spayed_neutered'] ?? null,
+                'vaccination_status' => $obj['vaccination_status'] ?? null,
+                'temperament' => $obj['temperament'] ?? null, // stored as JSON string
+                'skills' => $obj['skills'] ?? null,           // stored as JSON string
+                'favorite_food' => $obj['favorite_food'] ?? null,
+                'story_background' => $obj['story_background'] ?? null,
+                'rescue_status' => $obj['rescue_status'] ?? null,
+                'health_status' => $obj['health_status'] ?? null,
+                'medical_needs' => $obj['medical_needs'] ?? null,
+                'date_rescued' => $obj['date_rescued'] ?? null,
+                'primary_image' => $obj['primary_image'] ?? 0,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+
+            $animal_id = $obj['animal_id'];
+
+            $this->db->where('animal_id', $animal_id);
+            $updated = $this->db->update('tbl_animal_info', $update_values);
+
+            if ($updated) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Animal info updated successfully',
+                    'method' => 'PUT'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to update animal info',
+                    'method' => 'PUT'
+                ]);
             }
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Missing Animal info in the payload']);

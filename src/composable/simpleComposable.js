@@ -397,7 +397,12 @@ const isExpired = (expirationDate) => {
 }
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+const getImageLink = (img) => {
+  return `http://localhost/TAARA-Capstone/backend/taara_backend/files/${img}`
+}
+
 export {
+  getImageLink,
   isExpired,
   capitalize,
   isNearExpiration,

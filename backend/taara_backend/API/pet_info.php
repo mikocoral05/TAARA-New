@@ -14,18 +14,31 @@ class API
 
     public function httpGet($payload)
     {
+
         if (array_key_exists('get_animal_list', $payload)) {
             $category = $payload['get_animal_list'];
 
             $this->db->where("health_status", $category);
             $this->db->where("is_deleted", 1);
+            $animalRows = $this->db->get("tbl_animal_info");
 
-            // Select all inventory fields, but replace group_name with actual name from group table
-            $query = $this->db->get("tbl_animal_info");
+            foreach ($animalRows as &$animal) {
+                $galleryIds = json_decode($animal['image_gallery'], true);
+
+                if (is_array($galleryIds) && count($galleryIds)) {
+                    $this->db->where('id', $galleryIds, 'IN');
+                    $files = $this->db->get('tbl_files');
+
+                    $paths = array_column($files, 'image_path');
+                    $animal['image_gallery'] = $paths;
+                } else {
+                    $animal['image_gallery'] = [];
+                }
+            }
 
             echo json_encode([
                 'status' => 'success',
-                'data' => $query,
+                'data' => $animalRows,
                 'method' => 'GET'
             ]);
         } else {

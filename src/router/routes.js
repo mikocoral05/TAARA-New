@@ -40,6 +40,11 @@ const routes = [
         path: 'budget-and-expenses',
         component: () => import('src/pages/BudgetAndExpenses.vue'),
       },
+      {
+        name: 'report',
+        path: 'report',
+        component: () => import('src/pages/ReportPage.vue'),
+      },
     ],
   },
   // {

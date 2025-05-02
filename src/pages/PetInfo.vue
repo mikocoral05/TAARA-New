@@ -698,6 +698,21 @@ export default {
             })
           }, 1000)
           setTimeout(() => {
+            getAnimalList(tab.value).then((response) => {
+              tableConfig.value.title = `${obj[tab.value]} Pet`
+              tableConfig.value.columns = [
+                'animal_id',
+                'name',
+                'species',
+                'breed',
+                'date_of_birth',
+                'sex',
+                'rescue_status',
+                'btn',
+              ]
+              rows.value = response
+              console.log(rows.value)
+            })
             showDialog.value = false
             $q.loading.hide()
           }, 2000)

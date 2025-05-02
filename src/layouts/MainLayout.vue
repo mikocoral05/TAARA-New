@@ -119,7 +119,7 @@ const linksList = [
   {
     title: 'Report',
     icon: 'analytics',
-    nav: '',
+    nav: 'report',
   },
   {
     title: 'Pets',

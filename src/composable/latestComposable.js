@@ -194,6 +194,23 @@ const getAnimalList = (healt_status) => {
       })
   })
 }
+const getSchedule = () => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('schedule.php', {
+        params: { get_schedule: 'get_schedule' },
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          resolve(response.data.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
 const saveAnimalDetail = (obj) => {
   const { file, ...animalData } = obj // separate the files
   return new Promise((resolve, reject) => {
@@ -327,6 +344,7 @@ const softDeleteUser = (arrayId) => {
       })
   })
 }
+
 const softDeleteAnimal = (arrayId) => {
   return new Promise((resolve, reject) => {
     api
@@ -390,6 +408,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  getSchedule,
   editAnimalInfo,
   saveAnimalDetail,
   getAnimalList,

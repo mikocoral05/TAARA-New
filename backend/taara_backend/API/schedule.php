@@ -26,6 +26,16 @@ class API
                 'data' => $data,
                 'method' => 'GET'
             ]);
+        } else  if (array_key_exists('get_animal_option', $payload)) {
+
+            $this->db->where("is_deleted", 1);
+            $data = $this->db->get("tbl_animal_info", null, "animal_id,name");
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => $data,
+                'method' => 'GET'
+            ]);
         } else {
             // Return error if 'get_user_by_type' is not provided
             echo json_encode([
@@ -38,44 +48,35 @@ class API
 
     public function httpPost($payload)
     {
-        if (isset($payload['save_animal_list'])) {
-            $data = $payload['save_animal_list'];
+        if (isset($payload['add_schedule'])) {
+            $data = $payload['add_schedule'];
 
             $insertData = [
-                'name'               => $data['name'] ?? null,
-                'species'            => $data['species'] ?? null,
-                'breed'              => $data['breed'] ?? null,
-                'date_of_birth'      => $data['date_of_birth'] ?? null,
-                'fur_color'          => $data['fur_color'] ?? null,
-                'eye_color'          => $data['eye_color'] ?? null,
-                'sex'                => $data['sex'] ?? null,
-                'weight'             => $data['weight'] ?? null,
-                'height'             => $data['height'] ?? null,
-                'temperament'        => $data['temperament'] ?? null,
-                'skills'             => $data['skills'] ?? null,
-                'favorite_food'      => $data['favorite_food'] ?? null,
-                'health_status'      => $data['health_status'] ?? null,
-                'medical_needs'      => $data['medical_needs'] ?? null,
-                'spayed_neutered'    => $data['spayed_neutered'] ?? null,
-                'vaccination_status' => $data['vaccination_status'] ?? null,
-                'rescue_status'      => $data['rescue_status'] ?? null,
+                'animal_id'            => $data['animal_id'] ?? null,
+                'schedule_name'               => $data['schedule_name'] ?? null,
+                'dose_number'              => $data['dose_number'] ?? null,
+                'dose_taken'      => $data['dose_taken'] ?? null,
+                'schedule_date'          => $data['schedule_date'] ?? null,
+                'next_due_interval'          => $data['next_due_interval'] ?? null,
+                'next_due_date'                => $data['next_due_date'] ?? null,
+                'amount'             => $data['amount'] ?? null,
+                'notes'             => $data['notes'] ?? null,
                 'story_background'   => $data['story_background'] ?? null,
+                'added_by'   => $data['added_by'] ?? null,
             ];
 
-            $insert = $this->db->insert('tbl_animal_info', $insertData);
-            $id = $this->db->getInsertId();
+            $insert = $this->db->insert('tbl_animal_schedule', $insertData);
 
             if ($insert) {
                 echo json_encode([
                     'status' => 'success',
-                    'message' => 'Animal info successfully added',
+                    'message' => 'New Schedule successfully added',
                     'method' => 'POST',
-                    'id' => $id
                 ]);
             } else {
                 echo json_encode([
                     'status' => 'error',
-                    'message' => 'Failed to save animal info',
+                    'message' => 'Failed to new schedule',
                     'method' => 'POST'
                 ]);
             }

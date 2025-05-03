@@ -210,6 +210,22 @@ const getSchedule = () => {
       })
   })
 }
+const getAnimalOption = () => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('schedule.php', {
+        params: { get_animal_option: 'get_animal_option' },
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          resolve(response.data.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 
 const saveAnimalDetail = (obj) => {
   const { file, ...animalData } = obj // separate the files
@@ -375,6 +391,21 @@ const addInventoryList = (obj) => {
       })
   })
 }
+const addSchedule = (obj) => {
+  return new Promise((resolve, reject) => {
+    api
+      .post('schedule.php', {
+        add_schedule: obj,
+      })
+      .then((response) => {
+        resolve(response.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
 const addGroupName = (obj) => {
   console.log(obj)
 
@@ -408,7 +439,9 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  addSchedule,
   getSchedule,
+  getAnimalOption,
   editAnimalInfo,
   saveAnimalDetail,
   getAnimalList,

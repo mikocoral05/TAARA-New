@@ -423,8 +423,30 @@ const convertDaysToInterval = (days) => {
 
   return `Every ${days} days`
 }
+const intervalOptions = [
+  { label: 'Every Day', value: 1 },
+  { label: 'Every 2 Days', value: 2 },
+  { label: 'Every 3 Days', value: 3 },
+  { label: 'Every 5 Days', value: 5 },
+  { label: 'Every Week', value: 7 },
+  { label: 'Every 10 Days', value: 10 },
+  { label: 'Every 2 Weeks', value: 14 },
+  { label: 'Every 3 Weeks', value: 21 },
+  { label: 'Every Month', value: 30 },
+  { label: 'Every 6 Weeks', value: 42 },
+  { label: 'Every 2 Months', value: 60 },
+  { label: 'Every 3 Months', value: 90 },
+  { label: 'Every 4 Months', value: 120 },
+  { label: 'Every 6 Months', value: 180 },
+  { label: 'Every 9 Months', value: 270 },
+  { label: 'Every Year', value: 365 },
+  { label: 'Every 18 Months', value: 540 },
+  { label: 'Every 2 Years', value: 730 },
+  { label: 'Every 3 Years', value: 1095 },
+]
 
 export {
+  intervalOptions,
   convertDaysToInterval,
   getImageLink,
   isExpired,

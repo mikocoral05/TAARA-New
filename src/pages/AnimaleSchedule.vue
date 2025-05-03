@@ -68,133 +68,226 @@
         </q-btn>
       </template>
     </ReusableTable>
-    <q-dialog position="right" full-height v-model="showDialog">
-      <q-card style="min-width: 750px; height: 500px" class="text-black column justify-between">
-        <div class="column no-wrap">
-          <q-card-section class="q-py-md row no-wrap justify-between items-center">
-            <div class="text-body1">{{ mode }} {{ tableConfig.title }}</div>
-            <q-icon name="close" size="1.2rem" @click="showDialog = !showDialog" />
-          </q-card-section>
-          <q-separator />
-          <q-card-section>
-            <div class="text-grey-7" style="font-size: 12px">
-              <span class="text-negative">*</span>All fields are mandatory, except mentioned as
-              (optional).
-            </div>
-          </q-card-section>
-          <q-card-section>
-            <div class="row no-wrap q-mt-md">
-              <div class="column no-wrap q-mr-md">
+    <q-dialog position="right" maximized full-height v-model="showDialog">
+      <q-card style="min-width: 750px; height: 500px" class="text-black">
+        <q-form @submit="saveFn()" class="full-height column justify-between">
+          <div class="column no-wrap">
+            <q-card-section class="q-py-md row no-wrap justify-between items-center">
+              <div class="text-body1">{{ mode }} Pet Schedule</div>
+              <q-icon name="close" size="1.2rem" @click="showDialog = !showDialog" />
+            </q-card-section>
+            <q-separator />
+            <q-card-section>
+              <div class="text-grey-7" style="font-size: 12px">
+                <span class="text-negative">*</span>All fields are mandatory, except mentioned as
+                (optional).
+              </div>
+            </q-card-section>
+            <q-card-section>
+              <div class="row no-wrap">
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Schedule Name <span class="text-negative">*</span>
+                  </div>
+                  <q-input
+                    outlined
+                    v-model="dataStorage.schedule_name"
+                    dense
+                    class="q-mt-sm"
+                    placeholder="Schedule name"
+                    style="width: 300px"
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                  />
+                </div>
+                <div class="column no-wrap">
+                  <div class="text-capitalize">
+                    Schedule For <span class="text-negative">*</span>
+                  </div>
+                  <q-select
+                    outlined
+                    v-model="dataStorage.animal_id"
+                    class="q-mt-sm"
+                    :options="animalOption"
+                    emit-value
+                    map-options
+                    option-label="name"
+                    option-value="animal_id"
+                    dense
+                    style="width: 250px"
+                    behavior="menu"
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                  />
+                </div>
+              </div>
+              <div class="row no-wrap q-mt-md">
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Dose No.<span class="text-negative">*</span></div>
+                  <q-input
+                    outlined
+                    type="number"
+                    v-model="dataStorage.dose_number"
+                    dense
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                    class="q-mt-sm"
+                  />
+                </div>
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Dose Taken<span class="text-negative">*</span></div>
+                  <q-input
+                    outlined
+                    v-model="dataStorage.dose_taken"
+                    type="number"
+                    dense
+                    class="q-mt-sm"
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                  />
+                </div>
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Schedule Date<span class="text-negative">*</span>
+                  </div>
+                  <q-input
+                    dense
+                    outlined
+                    class="q-mt-sm"
+                    v-model="dataStorage.schedule_date"
+                    mask="####-##-##"
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                  >
+                    <template v-slot:append>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-date v-model="dataStorage.schedule_date">
+                            <div class="row items-center justify-end">
+                              <q-btn v-close-popup label="Close" color="primary" flat />
+                            </div>
+                          </q-date>
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input>
+                </div>
+              </div>
+              <div class="row no-wrap q-mt-md">
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Next Due Interval<span class="text-negative">*</span>
+                  </div>
+
+                  <q-select
+                    outlined
+                    v-model="dataStorage.next_due_interval"
+                    class="q-mt-sm"
+                    :options="intervalOptions"
+                    emit-value
+                    map-options
+                    dense
+                    style="width: 280px"
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                    behavior="menu"
+                    hint="if interval is not present please click the icon"
+                    v-if="!showInputInterval"
+                  >
+                    <template v-slot:after>
+                      <q-icon
+                        name="sym_r_change_circle"
+                        @click="((showInputInterval = true), (dataStorage.next_due_inteval = null))"
+                      />
+                    </template>
+                  </q-select>
+                  <q-input
+                    v-else
+                    style="width: 280px"
+                    outlined
+                    v-model="dataStorage.next_due_inteval"
+                    dense
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                    type="number"
+                    class="q-mt-sm"
+                    hint="Please input a number by days"
+                  >
+                    <template v-slot:after>
+                      <q-icon
+                        name="sym_r_change_circle"
+                        @click="
+                          ((showInputInterval = false), (dataStorage.next_due_inteval = null))
+                        "
+                      />
+                    </template>
+                  </q-input>
+                </div>
+
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Next Due Date<span class="text-negative">*</span>
+                  </div>
+                  <q-input
+                    dense
+                    outlined
+                    class="q-mt-sm"
+                    v-model="dataStorage.next_due_date"
+                    mask="####-##-##"
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                    disable
+                    hint="Automatically generated"
+                  />
+                </div>
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Amount<span class="text-negative">*</span></div>
+                  <q-input
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                    outlined
+                    type="number"
+                    v-model="dataStorage.amount"
+                    dense
+                    class="q-mt-sm"
+                    prefix="₱"
+                  />
+                </div>
+              </div>
+              <div class="column no-wrap q-mt-md">
                 <div class="text-capitalize">
-                  {{ obj[tab] }} Name <span class="text-negative">*</span>
+                  Notes <span class="text-grey-7 text-caption"> (optional)</span>
                 </div>
                 <q-input
                   outlined
-                  v-model="dataStorage.item_name"
-                  dense
-                  class="q-mt-sm"
-                  style="width: 300px"
-                />
-              </div>
-              <div class="column no-wrap">
-                <div class="text-capitalize">
-                  {{ obj[tab] }} Group <span class="text-negative">*</span>
-                </div>
-                <q-select
-                  outlined
-                  v-model="dataStorage.group_name"
-                  class="q-mt-sm"
-                  :options="groupNameOptions"
-                  emit-value
-                  map-options
-                  option-label="group_name"
-                  option-value="id"
-                  dense
-                  style="width: 250px"
-                  behavior="menu"
-                />
-              </div>
-            </div>
-            <div class="row no-wrap q-mt-md">
-              <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">Expiry Date<span class="text-negative">*</span></div>
-                <q-input
-                  dense
-                  outlined
-                  class="q-mt-sm"
-                  v-model="dataStorage.expiration_date"
-                  mask="####-##-##"
-                  :rules="[(val) => !!val || '']"
-                  hide-bottom-space
-                >
-                  <template v-slot:append>
-                    <q-icon name="event" class="cursor-pointer">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="dataStorage.expiration_date">
-                          <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" flat />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                    </q-icon>
-                  </template>
-                </q-input>
-              </div>
-              <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">Quantity<span class="text-negative">*</span></div>
-                <q-input
-                  outlined
-                  type="number"
-                  v-model="dataStorage.quantity"
+                  type="textarea"
+                  v-model="dataStorage.notes"
                   dense
                   class="q-mt-sm"
                 />
               </div>
-              <div class="column no-wrap">
-                <div class="text-capitalize">Unit<span class="text-negative">*</span></div>
-                <q-input outlined v-model="dataStorage.unit" dense class="q-mt-sm" />
-              </div>
-            </div>
-            <div class="column no-wrap q-mt-md">
-              <div class="text-capitalize">
-                Description <span class="text-grey-7 text-caption"> (optional)</span>
-              </div>
-              <q-input
-                outlined
-                type="textarea"
-                v-model="dataStorage.description"
-                dense
-                class="q-mt-sm"
-              />
-            </div>
-            <div class="column no-wrap q-mt-md">
-              <div class="text-capitalize">
-                Notes <span class="text-grey-7 text-caption"> (optional)</span>
-              </div>
-              <q-input outlined autogrow v-model="dataStorage.notes" dense class="q-mt-sm" />
-            </div>
+            </q-card-section>
+          </div>
+          <q-card-section>
+            <q-btn
+              outline
+              label="Cancel"
+              v-close-popup
+              color="primary"
+              no-caps
+              class="q-mr-md"
+              style="width: 180px"
+            />
+            <q-btn
+              label="Confirm"
+              unelevated
+              color="primary"
+              no-caps
+              style="width: 180px"
+              type="submit"
+            />
           </q-card-section>
-        </div>
-        <q-card-section>
-          <q-btn
-            outline
-            label="Cancel"
-            v-close-popup
-            color="primary"
-            no-caps
-            class="q-mr-md"
-            style="width: 180px"
-          />
-          <q-btn
-            label="Confirm"
-            unelevated
-            color="primary"
-            no-caps
-            v-close-popup
-            style="width: 180px"
-            @click="saveFn()"
-          />
-        </q-card-section>
+        </q-form>
       </q-card>
     </q-dialog>
     <q-dialog v-model="confirm" persistent>
@@ -236,29 +329,38 @@
 </template>
 
 <script>
+import { useQuasar } from 'quasar'
 import ReusableTable from 'src/components/ReusableTable.vue'
-import { getSchedule } from 'src/composable/latestComposable'
-import { convertDaysToInterval } from 'src/composable/simpleComposable'
-import { onMounted } from 'vue'
+import { addSchedule, getAnimalOption, getSchedule } from 'src/composable/latestComposable'
+import { convertDaysToInterval, intervalOptions } from 'src/composable/simpleComposable'
+import { globalStore } from 'src/stores/global-store'
+import { onMounted, watchEffect } from 'vue'
 import { ref } from 'vue'
 export default {
   components: { ReusableTable },
   setup() {
     const rows = ref([])
-    // const $q = useQuasar()
+    const $q = useQuasar()
     const confirm = ref(false)
-    const showDialog = ref(false)
+    const showDialog = ref(true)
+    const showInputInterval = ref(false)
     const dataStorage = ref({ file: [] })
     const mode = ref('')
     const itemsCount = ref([])
     const arrayOfId = ref([])
     const search = ref(null)
-
+    const animalOption = ref([])
+    const store = globalStore
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
       showDialog.value = !showDialog.value
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         if (modeParam == 'Add') {
+          getAnimalOption().then((response) => {
+            animalOption.value = response
+            console.log(animalOption.value)
+          })
+
           dataStorage.value = {}
         } else {
           dataStorage.value = data
@@ -270,6 +372,47 @@ export default {
       }
     }
 
+    const saveFn = () => {
+      if (mode.value == 'Add') {
+        $q.loading.show({
+          group: 'update',
+          message: `Adding new Schedule. Please wait...`,
+        })
+        dataStorage.value.added_by = store.userData?.user_id ?? 84
+        addSchedule(dataStorage.value).then((response) => {
+          console.log(response)
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 1000)
+          setTimeout(() => {
+            getSchedule().then((response) => {
+              rows.value = response
+            })
+            showDialog.value = false
+            $q.loading.hide()
+          }, 2000)
+        })
+      } else if (mode.value == 'Edit') {
+        $q.loading.show({
+          group: 'update',
+          message: `Updating Schedule. Please wait...`,
+        })
+        // editAnimalInfo(dataStorage.value).then((response) => {
+        //   console.log(response)
+        //   $q.loading.show({
+        //     group: 'update',
+        //     message: response.message,
+        //   })
+        //   setTimeout(() => {
+        //     $q.loading.hide()
+        //   }, 2000)
+        // })
+      }
+    }
+
     const doseChecker = (x, y, z) => {
       if (x == y) {
         return 'Finish'
@@ -278,12 +421,35 @@ export default {
       }
       return z
     }
+    watchEffect(() => {
+      let dateVar = dataStorage.value.schedule_date // format: "YYYY-MM-DD"
+      let interVar = dataStorage.value.next_due_interval // number of days (e.g. 365)
+      console.log(dataStorage.value.next_due_interval)
+
+      if (dateVar && interVar) {
+        const startDate = new Date(dateVar)
+        const nextDueDate = new Date(startDate)
+        nextDueDate.setDate(startDate.getDate() + Number(interVar))
+
+        // Format to YYYY-MM-DD if needed
+        const formatted = nextDueDate.toISOString().split('T')[0]
+        console.log('Next due date:', formatted)
+
+        // Optional: store it back
+        dataStorage.value.next_due_date = formatted
+      }
+    })
+
     onMounted(() => {
       getSchedule().then((response) => {
         rows.value = response
       })
     })
     return {
+      saveFn,
+      showInputInterval,
+      intervalOptions,
+      animalOption,
       tableAction,
       showDialog,
       mode,

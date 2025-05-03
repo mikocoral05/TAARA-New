@@ -401,7 +401,31 @@ const getImageLink = (img) => {
   return `http://localhost/TAARA-Capstone/backend/taara_backend/files/${img}`
 }
 
+const convertDaysToInterval = (days) => {
+  if (!days) return ''
+  days = parseInt(days)
+  if (isNaN(days) || days < 1) return 'Invalid interval'
+
+  const units = {
+    year: 365,
+    month: 30,
+    week: 7,
+    day: 1,
+  }
+
+  for (const [label, unitDays] of Object.entries(units)) {
+    if (days % unitDays === 0) {
+      const multiplier = days / unitDays
+      const plural = multiplier > 1 ? 's' : ''
+      return `Every ${multiplier} ${label}${plural}`
+    }
+  }
+
+  return `Every ${days} days`
+}
+
 export {
+  convertDaysToInterval,
   getImageLink,
   isExpired,
   capitalize,

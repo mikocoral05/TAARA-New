@@ -359,8 +359,8 @@ export default {
     const store = globalStore
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
-      showDialog.value = !showDialog.value
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
+        showDialog.value = !showDialog.value
         if (modeParam == 'Add') {
           getAnimalOption().then((response) => {
             animalOption.value = response
@@ -373,7 +373,7 @@ export default {
           console.log(dataStorage.value)
         }
       } else {
-        arrayOfId.value.push(data.animal_id)
+        arrayOfId.value.push(data.id)
         confirm.value = !confirm.value
       }
     }

@@ -333,7 +333,7 @@ const softDeleteSchedule = (arrayId) => {
         soft_delete_schedule: arrayId,
       })
       .then((response) => {
-        resolve(response.data.status)
+        resolve(response.data)
       })
       .catch((error) => {
         reject(error)

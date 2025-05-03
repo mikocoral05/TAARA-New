@@ -5,6 +5,7 @@
       :columns="columns"
       separator="vertical"
       title="Veterinary Schedule"
+      row-key="id"
       v-model="search"
       :rows-per-page-options="[10]"
       selection="multiple"
@@ -154,7 +155,7 @@
                     dense
                     outlined
                     class="q-mt-sm"
-                    v-model="dataStorage.schedule_date"
+                    v-model="dataStorage.scheduled_date"
                     mask="####-##-##"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
@@ -162,7 +163,7 @@
                     <template v-slot:append>
                       <q-icon name="event" class="cursor-pointer">
                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="dataStorage.schedule_date">
+                          <q-date v-model="dataStorage.scheduled_date">
                             <div class="row items-center justify-end">
                               <q-btn v-close-popup label="Close" color="primary" flat />
                             </div>
@@ -331,7 +332,12 @@
 <script>
 import { useQuasar } from 'quasar'
 import ReusableTable from 'src/components/ReusableTable.vue'
-import { addSchedule, getAnimalOption, getSchedule } from 'src/composable/latestComposable'
+import {
+  addSchedule,
+  getAnimalOption,
+  getSchedule,
+  softDeleteSchedule,
+} from 'src/composable/latestComposable'
 import { convertDaysToInterval, intervalOptions } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 import { onMounted, watchEffect } from 'vue'
@@ -342,7 +348,7 @@ export default {
     const rows = ref([])
     const $q = useQuasar()
     const confirm = ref(false)
-    const showDialog = ref(true)
+    const showDialog = ref(false)
     const showInputInterval = ref(false)
     const dataStorage = ref({ file: [] })
     const mode = ref('')
@@ -422,7 +428,7 @@ export default {
       return z
     }
     watchEffect(() => {
-      let dateVar = dataStorage.value.schedule_date // format: "YYYY-MM-DD"
+      let dateVar = dataStorage.value.scheduled_date // format: "YYYY-MM-DD"
       let interVar = dataStorage.value.next_due_interval // number of days (e.g. 365)
       console.log(dataStorage.value.next_due_interval)
 
@@ -440,12 +446,34 @@ export default {
       }
     })
 
+    const softDeleteFn = () => {
+      $q.loading.show({
+        group: 'update',
+        message: 'Deleting Schedule info. Please wait...',
+      })
+      softDeleteSchedule(arrayOfId.value).then((response) => {
+        $q.loading.show({
+          group: 'update',
+          message: response.message,
+        })
+        setTimeout(() => {
+          $q.loading.hide()
+          if (response.status == 'success') {
+            getSchedule().then((response) => {
+              rows.value = response
+            })
+          }
+        }, 2000)
+      })
+    }
+
     onMounted(() => {
       getSchedule().then((response) => {
         rows.value = response
       })
     })
     return {
+      softDeleteFn,
       saveFn,
       showInputInterval,
       intervalOptions,

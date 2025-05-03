@@ -326,6 +326,20 @@ const softDeleteInventoryData = (arrayId, tableName) => {
       })
   })
 }
+const softDeleteSchedule = (arrayId) => {
+  return new Promise((resolve, reject) => {
+    api
+      .put('schedule.php', {
+        soft_delete_schedule: arrayId,
+      })
+      .then((response) => {
+        resolve(response.data.status)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 
 const editAnimalInfo = (obj) => {
   const { image_gallery, ...animal_data } = obj
@@ -439,6 +453,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  softDeleteSchedule,
   addSchedule,
   getSchedule,
   getAnimalOption,

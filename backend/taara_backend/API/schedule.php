@@ -56,12 +56,11 @@ class API
                 'schedule_name'               => $data['schedule_name'] ?? null,
                 'dose_number'              => $data['dose_number'] ?? null,
                 'dose_taken'      => $data['dose_taken'] ?? null,
-                'schedule_date'          => $data['schedule_date'] ?? null,
+                'scheduled_date'          => $data['scheduled_date'] ?? null,
                 'next_due_interval'          => $data['next_due_interval'] ?? null,
                 'next_due_date'                => $data['next_due_date'] ?? null,
                 'amount'             => $data['amount'] ?? null,
                 'notes'             => $data['notes'] ?? null,
-                'story_background'   => $data['story_background'] ?? null,
                 'added_by'   => $data['added_by'] ?? null,
             ];
 
@@ -92,20 +91,20 @@ class API
 
     public function httpPut($payload)
     {
-        if (isset($payload['soft_delete_animal_info'])) {
-            $id = $payload['soft_delete_animal_info'];
+        if (isset($payload['soft_delete_schedule'])) {
+            $id = $payload['soft_delete_schedule'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
             // Set the update values here in the backend
             $update_values = [
-                'is_deleted' => 0,
+                'is_deleted' => 1,
                 'deleted_at' => date('Y-m-d H:i:s')
             ];
 
             // Update records matching the IDs
-            $this->db->where('animal_id', $ids, 'IN');
-            $updated = $this->db->update('tbl_animal_info', $update_values);
+            $this->db->where('id', $ids, 'IN');
+            $updated = $this->db->update('tbl_animal_schedule', $update_values);
 
             if ($updated) {
                 echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);

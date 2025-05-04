@@ -2,37 +2,9 @@
   <q-page>
     <div class="row no-wrap justify-between items-center">
       <q-tabs dense v-model="tab" inline-label flat active-color="primary" active-bg-color="white">
-        <q-tab name="1" icon="sym_r_pets" label="Ready for Adoption" no-caps />
-        <q-tab
-          name="2"
-          icon="sym_r_sound_detection_dog_barking"
-          label="Under Rehabilitation"
-          no-caps
-        />
-        <q-tab name="3" icon="sym_r_monitor_heart" label="Under Medication" no-caps />
+        <q-tab name="1" icon="sym_r_payments" label="Cash Donation" no-caps />
+        <q-tab name="2" icon="sym_r_handyman" label="Material Donation" no-caps />
       </q-tabs>
-      <div class="row no-wrap justify-between items-center">
-        <div class="row no-wrap">
-          <div class="row no-wrap">
-            <q-icon
-              name="sym_r_check_box_outline_blank"
-              size="1rem"
-              color="warning"
-              class="bg-warning q-mr-sm radius-2"
-            />
-            <div class="text-grey-7 text-caption">Nearly expired</div>
-          </div>
-          <div class="row no-wrap q-ml-md">
-            <q-icon
-              name="sym_r_check_box_outline_blank"
-              size="1rem"
-              color="negative"
-              class="bg-negative q-mr-sm radius-2"
-            />
-            <div class="text-grey-7 text-caption">Expired</div>
-          </div>
-        </div>
-      </div>
     </div>
     <q-separator color="grey-3" class="q-mb-md" />
 
@@ -81,14 +53,21 @@
           </q-btn>
         </template>
 
-        <template #cell-animal_id="{ rowIndex }">
+        <template #cell-fund_id="{ rowIndex }">
           <div>{{ rowIndex + 1 }}</div>
         </template>
-        <template #cell-name="{ row }">
-          <q-avatar size="30px" class="q-mr-md">
-            <q-img :src="row.img_path || 'animal-no-image.svg'" />
-          </q-avatar>
-          {{ row.name }}
+        <template #cell-donor_name="{ row }">
+          <span :class="row?.donor_name ? 'text-black' : 'text-grey-5'">
+            {{ row?.donor_name || 'N/a' }}
+          </span>
+        </template>
+        <template #cell-reference_code="{ row }">
+          <span :class="row?.reference_code ? 'text-black' : 'text-grey-5'">
+            {{ row?.reference_code || 'N/a' }}
+          </span>
+        </template>
+        <template #cell-item_condition="{ row }">
+          {{ row.item_condition == 1 ? 'New' : 'Used' }}
         </template>
         <template #cell-expiration_date="{ row }">
           <div
@@ -603,6 +582,7 @@ import {
   getAnimalList,
   saveAnimalDetail,
   editAnimalInfo,
+  getDonation,
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -623,7 +603,7 @@ export default {
     ReusableTable,
   },
   setup() {
-    const obj = { 1: 'Ready for Adoption', 2: 'Under Rehabilitation', 3: 'Under Medication' }
+    const obj = { 1: 'Cash Donation List', 2: 'Material Donation List' }
     const obj2 = { 1: 'Medicine', 2: 'Group', 3: 'Expired' }
     const obj3 = { Add: 'Adding', Edit: 'Updating', Delete: 'Deleting' }
     const $q = useQuasar()
@@ -781,18 +761,40 @@ export default {
     }
 
     watchEffect(() => {
-      getAnimalList(tab.value).then((response) => {
-        tableConfig.value.title = `${obj[tab.value]} Pet`
-        tableConfig.value.columns = [
-          'animal_id',
-          'name',
-          'species',
-          'breed',
-          'date_of_birth',
-          'sex',
-          'rescue_status',
-          'btn',
-        ]
+      const objW = { 1: 'cash', 2: 'material' }
+      getDonation(objW[tab.value]).then((response) => {
+        tableConfig.value.title = `${obj[tab.value]}`
+        if (tab.value == 1) {
+          tableConfig.value.columns = [
+            'id',
+            'fund_id',
+            'allocated_for',
+            'donor_name',
+            'received_date',
+            'remarks',
+            'amount',
+            'method',
+            'notes',
+            'reference_code',
+            'btn',
+          ]
+        } else {
+          tableConfig.value.columns = [
+            'id',
+            'fund_id',
+            'allocated_for',
+            'donor_name',
+            'received_date',
+            'remarks',
+            'notes',
+            'item_name',
+            'quantity',
+            'unit',
+            'estimate_value',
+            'item_condition',
+            'btn',
+          ]
+        }
         rows.value = response
         console.log(rows.value)
       })
@@ -847,46 +849,81 @@ export default {
       tab,
       showingTooltip: ref(false),
       columns: [
-        { name: 'animal_id', label: 'ID', field: 'animal_id', align: 'center' },
+        { name: 'fund_id', label: 'ID', field: 'fund_id', align: 'center' },
         {
-          name: 'name',
-          label: 'Name',
-          field: 'name',
-          sortable: true,
-          align: 'left',
-        },
-        {
-          name: 'species',
-          label: 'Species',
-          field: 'species',
+          name: 'donor_name',
+          label: 'Donor Name',
+          field: 'donor_name',
           sortable: true,
           align: 'center',
         },
         {
-          name: 'breed',
-          label: 'Breed',
-          field: 'breed',
+          name: 'allocated_for',
+          label: 'Alocated For',
+          field: 'allocated_for',
           sortable: true,
           align: 'center',
         },
         {
-          name: 'date_of_birth',
-          label: 'Age',
-          field: 'date_of_birth',
+          name: 'method',
+          label: 'Method',
+          field: 'method',
           sortable: true,
           align: 'center',
         },
         {
-          name: 'sex',
-          label: 'Sex',
-          field: 'sex',
+          name: 'amount',
+          label: 'Amount',
+          field: 'amount',
           sortable: true,
           align: 'center',
         },
         {
-          name: 'rescue_status',
-          label: 'Rescue Status',
-          field: 'rescue_status',
+          name: 'notes',
+          label: 'Notes',
+          field: 'notes',
+          sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'reference_code',
+          label: 'Reference Code',
+          field: 'reference_code',
+          sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'item_name',
+          label: 'Item Name',
+          field: 'item_name',
+          sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'quantity',
+          label: 'Quantity',
+          field: 'quantity',
+          sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'unit',
+          label: 'Unit',
+          field: 'unit',
+          sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'estimated_value',
+          label: 'Estimated Value',
+          field: 'estimated_value',
+          sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'item_condition',
+          label: 'Item Condition',
+          field: 'item_condition',
           sortable: true,
           align: 'center',
         },

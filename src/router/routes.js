@@ -50,6 +50,16 @@ const routes = [
         path: 'donation',
         component: () => import('src/pages/DonationPage.vue'),
       },
+      {
+        name: 'pending-application',
+        path: 'pending-application',
+        component: () => import('src/pages/PendingApplication.vue'),
+      },
+      {
+        name: 'activities-and-events',
+        path: 'activities-and-events',
+        component: () => import('src/pages/ActivitiesAndEvents.vue'),
+      },
     ],
   },
   // {

@@ -151,7 +151,7 @@ const linksList2 = [
   {
     title: 'Pending',
     icon: 'pending_actions',
-    nav: 'pending',
+    nav: 'pending-application',
   },
   {
     title: 'Schedule',
@@ -161,7 +161,7 @@ const linksList2 = [
   {
     title: 'Activities & Events',
     icon: 'calendar_month',
-    nav: '',
+    nav: 'activities-and-events',
   },
   {
     title: 'Supplies',
@@ -218,9 +218,10 @@ export default defineComponent({
       '/budget-and-expenses': 'Budget & Expenses',
       '/donation': 'Donation',
       '/invetory': 'Inventory',
-      '/pending': 'Pending',
+      '/pending-application': 'Pending',
       '/animal-schedule': 'Schedule',
       '/supplies': 'Supplies',
+      '/activities-and-events': 'Activities And Events',
     }
 
     const tab = ref(routeToTabMap[route.path] || 'Dashboard')

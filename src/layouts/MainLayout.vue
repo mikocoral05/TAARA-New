@@ -203,15 +203,28 @@ export default defineComponent({
     const route = useRoute()
     const showLayout = ref(true)
     const pathExclude = ref(['/user-login', '/user-registration'])
+
     watchEffect(() => {
-      if (pathExclude.value.includes(route.path)) {
-        showLayout.value = false
-      } else {
-        showLayout.value = true
-      }
+      showLayout.value = !pathExclude.value.includes(route.path)
     })
     const leftDrawerOpen = ref(false)
-    const tab = ref('Dashboard')
+    console.log(route.name)
+
+    const routeToTabMap = {
+      '/': 'Dashboard',
+      '/users': 'User Management',
+      '/report': 'Report',
+      '/pets': 'Pets',
+      '/budget-and-expenses': 'Budget & Expenses',
+      '/donation': 'Donation',
+      '/invetory': 'Inventory',
+      '/pending': 'Pending',
+      '/animal-schedule': 'Schedule',
+      '/supplies': 'Supplies',
+    }
+
+    const tab = ref(routeToTabMap[route.path] || 'Dashboard')
+
     const language = ref('English')
     return {
       showLayout,

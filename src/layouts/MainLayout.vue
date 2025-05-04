@@ -136,6 +136,11 @@ const linksList = [
     icon: 'campaign',
     nav: '',
   },
+  {
+    title: 'Donation',
+    icon: 'volunteer_activism',
+    nav: 'donation',
+  },
 ]
 const linksList2 = [
   {

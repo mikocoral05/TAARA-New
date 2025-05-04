@@ -45,6 +45,11 @@ const routes = [
         path: 'report',
         component: () => import('src/pages/ReportPage.vue'),
       },
+      {
+        name: 'donation',
+        path: 'donation',
+        component: () => import('src/pages/DonationPage.vue'),
+      },
     ],
   },
   // {

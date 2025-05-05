@@ -15,30 +15,29 @@ class API
     public function httpGet($payload)
     {
 
-        if (array_key_exists('get_animal_list', $payload)) {
-            $category = $payload['get_animal_list'];
+        if (array_key_exists('get_announcement', $payload)) {
 
-            $this->db->where("health_status", $category);
-            $this->db->where("is_deleted", 1);
-            $animalRows = $this->db->get("tbl_animal_info");
+            $this->db->where("a.is_deleted", 0);
 
-            foreach ($animalRows as &$animal) {
-                $galleryIds = json_decode($animal['image_gallery'], true);
+            $select = "
+                a.*,
+                u.user_id,
+                u.user_type,
+                u.first_name,
+                u.last_name,
+                CASE 
+                    WHEN u.user_type = 3 THEN (SELECT position_title FROM tbl_official_position op WHERE op.id = u.roles)
+                    WHEN u.user_type = 2 THEN (SELECT position_title FROM tbl_volunteer_position vp WHERE vp.id = u.roles)
+                    ELSE NULL
+                END AS position_title
+            ";
 
-                if (is_array($galleryIds) && count($galleryIds)) {
-                    $this->db->where('id', $galleryIds, 'IN');
-                    $files = $this->db->get('tbl_files');
-
-                    $paths = array_column($files, 'image_path');
-                    $animal['image_gallery'] = $paths;
-                } else {
-                    $animal['image_gallery'] = [];
-                }
-            }
+            $this->db->join('tbl_users u', 'u.user_id = a.created_by', 'LEFT');
+            $result = $this->db->get('tbl_announcements a', null, $select);
 
             echo json_encode([
                 'status' => 'success',
-                'data' => $animalRows,
+                'data' => $result,
                 'method' => 'GET'
             ]);
         } else {

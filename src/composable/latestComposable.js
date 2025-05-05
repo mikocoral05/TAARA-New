@@ -33,11 +33,11 @@ const getDonation = (type) => {
       })
   })
 }
-const getAnnouncement = (type) => {
+const getAnnouncement = () => {
   return new Promise((resolve, reject) => {
     api
       .get('announcement.php', {
-        params: { get_announcement: type },
+        params: { get_announcement: 'get_announcement' },
       })
       .then((response) => {
         if (response.data.status == 'success') {

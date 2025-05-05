@@ -15,31 +15,33 @@
       :tableAction="tableAction"
       :visible-columns="[
         'id',
-        'schedule_name',
-        'dose_number',
-        'dose_taken',
-        'name',
-        'scheduled_date',
-        'next_due_interval',
-        'next_due_date',
-        'amount',
-        'color',
-        'behavior',
-        'adoptedStatus',
+        'title',
+        'content',
+        'first_name',
+        'created_at',
+        'start_date',
+        'position_title',
         'btn',
       ]"
     >
-      <template #cell-name="{ row }">
-        <q-avatar size="30px" class="q-mr-md">
-          <img :src="row.image || defaultImage" />
-        </q-avatar>
-        {{ row.name }}
+      <template #cell-start_date="{ row }">
+        <div class="column no-wrap">
+          <div class="row no-wrap">
+            <span class="text-grey-7 q-mr-md" style="width: 30px"> Start:</span>
+            {{ row.start_date }}
+          </div>
+          <div class="row no-wrap">
+            <span class="text-grey-7 q-mr-md" style="min-width: 30px"> End:</span>{{ row.end_date }}
+          </div>
+        </div>
       </template>
       <template #cell-next_due_interval="{ row }">
         {{ row.dose_taken == 1 ? 'Last Dose' : convertDaysToInterval(row.next_due_interval) }}
       </template>
-      <template #cell-next_due_date="{ row }">
-        {{ doseChecker(row.dose_number, row.dose_taken, row.next_due_date) }}
+      <template #cell-content="{ row }">
+        <div class="text-wrap ellipsis-3-lines">
+          {{ row.content }}
+        </div>
       </template>
       <template #cell-btn="{ row }">
         <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
@@ -332,12 +334,7 @@
 <script>
 import { useQuasar } from 'quasar'
 import ReusableTable from 'src/components/ReusableTable.vue'
-import {
-  addSchedule,
-  getAnimalOption,
-  getSchedule,
-  softDeleteSchedule,
-} from 'src/composable/latestComposable'
+import { addSchedule, getAnnouncement, softDeleteSchedule } from 'src/composable/latestComposable'
 import { convertDaysToInterval, intervalOptions } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 import { onMounted, watchEffect } from 'vue'
@@ -362,7 +359,7 @@ export default {
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         showDialog.value = !showDialog.value
         if (modeParam == 'Add') {
-          getAnimalOption().then((response) => {
+          getAnnouncement().then((response) => {
             animalOption.value = response
             console.log(animalOption.value)
           })
@@ -394,7 +391,7 @@ export default {
             })
           }, 1000)
           setTimeout(() => {
-            getSchedule().then((response) => {
+            getAnnouncement().then((response) => {
               rows.value = response
             })
             showDialog.value = false
@@ -427,6 +424,7 @@ export default {
       }
       return z
     }
+
     watchEffect(() => {
       let dateVar = dataStorage.value.scheduled_date // format: "YYYY-MM-DD"
       let interVar = dataStorage.value.next_due_interval // number of days (e.g. 365)
@@ -459,7 +457,7 @@ export default {
         setTimeout(() => {
           $q.loading.hide()
           if (response.status == 'success') {
-            getSchedule().then((response) => {
+            getAnnouncement().then((response) => {
               rows.value = response
             })
           }
@@ -468,8 +466,9 @@ export default {
     }
 
     onMounted(() => {
-      getSchedule().then((response) => {
+      getAnnouncement().then((response) => {
         rows.value = response
+        console.log(rows.value)
       })
     })
     return {
@@ -499,48 +498,49 @@ export default {
           align: 'left',
         },
         {
-          name: 'schedule_name',
-          label: 'Schedule Name',
-          field: 'schedule_name',
+          name: 'title',
+          label: 'Title',
+          field: 'title',
+          sortable: true,
+          style: 'min-width:200px;word-wrap: break-word; white-space: pre-wrap;',
+          align: 'left',
+        },
+        {
+          name: 'content',
+          label: 'Content',
+          field: 'content',
+          sortable: true,
+          style: 'min-width:250px;word-wrap: break-word; white-space: pre-wrap;',
+          align: 'left',
+        },
+        {
+          name: 'first_name',
+          label: 'Created By',
+          field: 'first_name',
           sortable: true,
           align: 'center',
         },
         {
-          name: 'dose_number',
-          label: 'Dose No.',
-          field: 'dose_number',
+          name: 'created_at',
+          label: 'Created At',
+          field: 'created_at',
           sortable: true,
           align: 'center',
         },
         {
-          name: 'dose_taken',
-          label: 'Dose Taken.',
-          field: 'dose_taken',
+          name: 'start_date',
+          label: 'Start-End date',
+          field: 'start_date',
           sortable: true,
-          align: 'center',
+          align: 'left',
         },
+
         {
-          name: 'scheduled_date',
-          label: 'Schedule Date',
-          field: 'scheduled_date',
-          sortable: true,
+          name: 'position_title',
+          label: 'Position Title',
+          field: 'position_title',
           align: 'center',
         },
-        {
-          name: 'next_due_interval',
-          label: 'Next Due Interval',
-          field: 'next_due_interval',
-          sortable: true,
-          align: 'center',
-        },
-        {
-          name: 'next_due_date',
-          label: 'Next Dose',
-          field: 'next_due_date',
-          sortable: true,
-          align: 'center',
-        },
-        { name: 'amount', label: 'Amount', field: 'amount', align: 'center' },
         { name: 'btn', label: 'Action', field: 'btn', align: 'center' },
       ],
     }

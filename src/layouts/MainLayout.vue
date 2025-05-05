@@ -134,7 +134,7 @@ const linksList = [
   {
     title: 'Announcement',
     icon: 'campaign',
-    nav: '',
+    nav: 'announcement',
   },
   {
     title: 'Donation',
@@ -222,6 +222,7 @@ export default defineComponent({
       '/animal-schedule': 'Schedule',
       '/supplies': 'Supplies',
       '/activities-and-events': 'Activities & Events',
+      '/announcement': 'Announcement',
     }
 
     const tab = ref(routeToTabMap[route.path] || 'Dashboard')

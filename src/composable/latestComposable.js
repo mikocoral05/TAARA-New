@@ -33,6 +33,22 @@ const getDonation = (type) => {
       })
   })
 }
+const getAnnouncement = (type) => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('announcement.php', {
+        params: { get_announcement: type },
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          resolve(response.data.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 
 const updateUser = (data) => {
   const clone = { ...data }
@@ -469,6 +485,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  getAnnouncement,
   getDonation,
   softDeleteSchedule,
   addSchedule,

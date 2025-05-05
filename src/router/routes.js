@@ -60,6 +60,11 @@ const routes = [
         path: 'activities-and-events',
         component: () => import('src/pages/ActivitiesAndEvents.vue'),
       },
+      {
+        name: 'announcement',
+        path: 'announcement',
+        component: () => import('src/pages/AnnouncementPage.vue'),
+      },
     ],
   },
   // {

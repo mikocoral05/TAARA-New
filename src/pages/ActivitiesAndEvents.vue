@@ -1,549 +1,323 @@
 <template>
-  <q-page>
-    <ReusableTable
-      :rows="rows"
-      :columns="columns"
-      separator="vertical"
-      title="Veterinary Schedule"
-      row-key="id"
-      v-model="search"
-      :rows-per-page-options="[10]"
-      selection="multiple"
-      v-model:selected="arrayOfId"
-      v-model:confirm="confirm"
-      v-model:dialog="showDialog"
-      :tableAction="tableAction"
-      :visible-columns="[
-        'id',
-        'schedule_name',
-        'dose_number',
-        'dose_taken',
-        'name',
-        'scheduled_date',
-        'next_due_interval',
-        'next_due_date',
-        'amount',
-        'color',
-        'behavior',
-        'adoptedStatus',
-        'btn',
-      ]"
-    >
-      <template #cell-name="{ row }">
-        <q-avatar size="30px" class="q-mr-md">
-          <img :src="row.image || defaultImage" />
-        </q-avatar>
-        {{ row.name }}
-      </template>
-      <template #cell-next_due_interval="{ row }">
-        {{ row.dose_taken == 1 ? 'Last Dose' : convertDaysToInterval(row.next_due_interval) }}
-      </template>
-      <template #cell-next_due_date="{ row }">
-        {{ doseChecker(row.dose_number, row.dose_taken, row.next_due_date) }}
-      </template>
-      <template #cell-btn="{ row }">
-        <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
-          <q-menu anchor="bottom left" self="top right">
-            <q-list dense style="min-width: 100px">
-              <q-item clickable v-close-popup @click="tableAction(row, 'View')">
-                <q-item-section>View</q-item-section>
-                <q-item-section side>
-                  <q-icon name="sym_r_visibility" size="1.2rem" />
-                </q-item-section>
-              </q-item>
-              <q-item clickable v-close-popup @click="tableAction(row, 'Edit')">
-                <q-item-section>Edit</q-item-section>
-                <q-item-section side>
-                  <q-icon name="sym_r_edit" size="1.2rem" />
-                </q-item-section>
-              </q-item>
-              <q-separator />
-              <q-item clickable @click="tableAction(row, 'Archieve')">
-                <q-item-section>Delete</q-item-section>
-                <q-item-section side>
-                  <q-icon name="sym_r_keyboard_arrow_right" size="1.2rem" />
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-menu>
-        </q-btn>
-      </template>
-    </ReusableTable>
-    <q-dialog position="right" maximized full-height v-model="showDialog">
-      <q-card style="min-width: 750px; height: 500px" class="text-black">
-        <q-form @submit="saveFn()" class="full-height column justify-between">
-          <div class="column no-wrap">
-            <q-card-section class="q-py-md row no-wrap justify-between items-center">
-              <div class="text-body1">{{ mode }} Pet Schedule</div>
-              <q-icon name="close" size="1.2rem" @click="showDialog = !showDialog" />
-            </q-card-section>
-            <q-separator />
-            <q-card-section>
-              <div class="text-grey-7" style="font-size: 12px">
-                <span class="text-negative">*</span>All fields are mandatory, except mentioned as
-                (optional).
-              </div>
-            </q-card-section>
-            <q-card-section>
-              <div class="row no-wrap">
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">
-                    Schedule Name <span class="text-negative">*</span>
-                  </div>
-                  <q-input
-                    outlined
-                    v-model="dataStorage.schedule_name"
-                    dense
-                    class="q-mt-sm"
-                    placeholder="Schedule name"
-                    style="width: 300px"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                  />
-                </div>
-                <div class="column no-wrap">
-                  <div class="text-capitalize">
-                    Schedule For <span class="text-negative">*</span>
-                  </div>
-                  <q-select
-                    outlined
-                    v-model="dataStorage.animal_id"
-                    class="q-mt-sm"
-                    :options="animalOption"
-                    emit-value
-                    map-options
-                    option-label="name"
-                    option-value="animal_id"
-                    dense
-                    style="width: 250px"
-                    behavior="menu"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                  />
-                </div>
-              </div>
-              <div class="row no-wrap q-mt-md">
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">Dose No.<span class="text-negative">*</span></div>
-                  <q-input
-                    outlined
-                    type="number"
-                    v-model="dataStorage.dose_number"
-                    dense
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                    class="q-mt-sm"
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">Dose Taken<span class="text-negative">*</span></div>
-                  <q-input
-                    outlined
-                    v-model="dataStorage.dose_taken"
-                    type="number"
-                    dense
-                    class="q-mt-sm"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">
-                    Schedule Date<span class="text-negative">*</span>
-                  </div>
-                  <q-input
-                    dense
-                    outlined
-                    class="q-mt-sm"
-                    v-model="dataStorage.scheduled_date"
-                    mask="####-##-##"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                  >
-                    <template v-slot:append>
-                      <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="dataStorage.scheduled_date">
-                            <div class="row items-center justify-end">
-                              <q-btn v-close-popup label="Close" color="primary" flat />
-                            </div>
-                          </q-date>
-                        </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                  </q-input>
-                </div>
-              </div>
-              <div class="row no-wrap q-mt-md">
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">
-                    Next Due Interval<span class="text-negative">*</span>
-                  </div>
+  <div class="subcontent">
+    <navigation-bar @today="onToday" @prev="onPrev" @next="onNext" />
 
-                  <q-select
-                    outlined
-                    v-model="dataStorage.next_due_interval"
-                    class="q-mt-sm"
-                    :options="intervalOptions"
-                    emit-value
-                    map-options
-                    dense
-                    style="width: 280px"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                    behavior="menu"
-                    hint="if interval is not present please click the icon"
-                    v-if="!showInputInterval"
-                  >
-                    <template v-slot:after>
-                      <q-icon
-                        name="sym_r_change_circle"
-                        @click="((showInputInterval = true), (dataStorage.next_due_inteval = null))"
-                      />
-                    </template>
-                  </q-select>
-                  <q-input
-                    v-else
-                    style="width: 280px"
-                    outlined
-                    v-model="dataStorage.next_due_inteval"
-                    dense
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                    type="number"
-                    class="q-mt-sm"
-                    hint="Please input a number by days"
-                  >
-                    <template v-slot:after>
-                      <q-icon
-                        name="sym_r_change_circle"
-                        @click="
-                          ((showInputInterval = false), (dataStorage.next_due_inteval = null))
-                        "
-                      />
-                    </template>
-                  </q-input>
-                </div>
-
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">
-                    Next Due Date<span class="text-negative">*</span>
-                  </div>
-                  <q-input
-                    dense
-                    outlined
-                    class="q-mt-sm"
-                    v-model="dataStorage.next_due_date"
-                    mask="####-##-##"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                    disable
-                    hint="Automatically generated"
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">Amount<span class="text-negative">*</span></div>
-                  <q-input
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                    outlined
-                    type="number"
-                    v-model="dataStorage.amount"
-                    dense
-                    class="q-mt-sm"
-                    prefix="₱"
-                  />
+    <div class="row justify-center">
+      <div style="display: flex; max-width: 100%; width: 100%">
+        <q-calendar-month
+          ref="calendar"
+          v-model="selectedDate"
+          animated
+          bordered
+          focusable
+          hoverable
+          no-active-date
+          :day-min-height="60"
+          :day-height="120"
+          @change="onChange"
+          @moved="onMoved"
+          @click-date="onClickDate"
+          @click-day="onClickDay"
+          @click-workweek="onClickWorkweek"
+          @click-head-workweek="onClickHeadWorkweek"
+          @click-head-day="onClickHeadDay"
+        >
+          <template #day="{ scope: { timestamp } }">
+            <template v-for="event in eventsMap[timestamp.date]" :key="event.id">
+              <div
+                :class="badgeClasses(event, 'day')"
+                :style="badgeStyles(event, 'day')"
+                class="row justify-start items-center no-wrap my-event"
+              >
+                <q-icon v-if="event?.icon" :name="event.icon" class="q-mr-xs"></q-icon>
+                <div class="title q-calendar__ellipsis">
+                  {{ event.title + (event.time ? ' - ' + event.time : '') }}
+                  <q-tooltip>{{ event.details }}</q-tooltip>
                 </div>
               </div>
-              <div class="column no-wrap q-mt-md">
-                <div class="text-capitalize">
-                  Notes <span class="text-grey-7 text-caption"> (optional)</span>
-                </div>
-                <q-input
-                  outlined
-                  type="textarea"
-                  v-model="dataStorage.notes"
-                  dense
-                  class="q-mt-sm"
-                />
-              </div>
-            </q-card-section>
-          </div>
-          <q-card-section>
-            <q-btn
-              outline
-              label="Cancel"
-              v-close-popup
-              color="primary"
-              no-caps
-              class="q-mr-md"
-              style="width: 180px"
-            />
-            <q-btn
-              label="Confirm"
-              unelevated
-              color="primary"
-              no-caps
-              style="width: 180px"
-              type="submit"
-            />
-          </q-card-section>
-        </q-form>
-      </q-card>
-    </q-dialog>
-    <q-dialog v-model="confirm" persistent>
-      <q-card class="q-pa-md" style="width: 450px; min-height: 230px">
-        <q-card-section class="column items-center">
-          <q-icon name="sym_r_inventory_2" color="primary" size="2.5rem" />
-          <span class="q-ml-sm text-black text-body1 q-mt-md text-center">
-            Are you sure you want to Delete this Pet Record List?
-          </span>
-          <span class="q-ml-sm text-caption text-grey-7 q-mt-sm">
-            This action is irreversible.
-          </span>
-        </q-card-section>
-
-        <q-card-actions align="center">
-          <q-btn
-            outline
-            label="Cancel"
-            v-close-popup
-            color="primary"
-            no-caps
-            style="width: 180px"
-            dense
-          />
-          <q-btn
-            label="Confirm"
-            unelevated
-            color="primary"
-            no-caps
-            dense
-            v-close-popup
-            style="width: 180px"
-            @click="softDeleteFn()"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
-  </q-page>
+            </template>
+          </template>
+        </q-calendar-month>
+      </div>
+    </div>
+  </div>
 </template>
-
 <script>
-import { useQuasar } from 'quasar'
-import ReusableTable from 'src/components/ReusableTable.vue'
 import {
-  addSchedule,
-  getAnimalOption,
-  getSchedule,
-  softDeleteSchedule,
-} from 'src/composable/latestComposable'
-import { convertDaysToInterval, intervalOptions } from 'src/composable/simpleComposable'
-import { globalStore } from 'src/stores/global-store'
-import { onMounted, watchEffect } from 'vue'
-import { ref } from 'vue'
+  QCalendarMonth,
+  addToDate,
+  parseDate,
+  parseTimestamp,
+  today,
+} from '@quasar/quasar-ui-qcalendar'
+import '@quasar/quasar-ui-qcalendar/index.css'
+
+import { ref, reactive, computed } from 'vue'
+
 export default {
-  components: { ReusableTable },
+  components: {
+    QCalendarMonth,
+  },
   setup() {
-    const rows = ref([])
-    const $q = useQuasar()
-    const confirm = ref(false)
-    const showDialog = ref(false)
-    const showInputInterval = ref(false)
-    const dataStorage = ref({ file: [] })
-    const mode = ref('')
-    const itemsCount = ref([])
-    const arrayOfId = ref([])
-    const search = ref(null)
-    const animalOption = ref([])
-    const store = globalStore
-    const tableAction = (data, modeParam) => {
-      mode.value = modeParam
-      if (['Add', 'Edit', 'View'].includes(modeParam)) {
-        showDialog.value = !showDialog.value
-        if (modeParam == 'Add') {
-          getAnimalOption().then((response) => {
-            animalOption.value = response
-            console.log(animalOption.value)
-          })
+    const CURRENT_DAY = new Date()
 
-          dataStorage.value = {}
-        } else {
-          dataStorage.value = data
-          console.log(dataStorage.value)
+    function getCurrentDay(day) {
+      const newDay = new Date(CURRENT_DAY)
+      newDay.setDate(day)
+      const tm = parseDate(newDay)
+      return tm && tm.date
+    }
+
+    const calendar = ref(null)
+    const selectedDate = ref(today())
+
+    const events = reactive([
+      {
+        id: 1,
+        title: '1st of the Month',
+        details: 'Everything is funny as long as it is happening to someone else',
+        date: getCurrentDay(1),
+        bgcolor: 'orange',
+      },
+      {
+        id: 2,
+        title: 'Sisters Birthday',
+        details: 'Buy a nice present',
+        date: getCurrentDay(4),
+        bgcolor: 'green',
+        icon: 'fas fa-birthday-cake',
+      },
+      {
+        id: 3,
+        title: 'Meeting',
+        details: 'Time to pitch my idea to the company',
+        date: getCurrentDay(10),
+        time: '10:00',
+        duration: 120,
+        bgcolor: 'red',
+        icon: 'fas fa-handshake',
+      },
+      {
+        id: 4,
+        title: 'Lunch',
+        details: 'Company is paying!',
+        date: getCurrentDay(10),
+        time: '11:30',
+        duration: 90,
+        bgcolor: 'teal',
+        icon: 'fas fa-hamburger',
+      },
+      {
+        id: 5,
+        title: 'Visit mom',
+        details: 'Always a nice chat with mom',
+        date: getCurrentDay(20),
+        time: '17:00',
+        duration: 90,
+        bgcolor: 'grey',
+        icon: 'fas fa-car',
+      },
+      {
+        id: 6,
+        title: 'Conference',
+        details: 'Teaching Javascript 101',
+        date: getCurrentDay(22),
+        time: '08:00',
+        duration: 540,
+        bgcolor: 'blue',
+        icon: 'fas fa-chalkboard-teacher',
+      },
+      {
+        id: 7,
+        title: 'Girlfriend',
+        details: 'Meet GF for dinner at Swanky Restaurant',
+        date: getCurrentDay(22),
+        time: '19:00',
+        duration: 180,
+        bgcolor: 'teal',
+        icon: 'fas fa-utensils',
+      },
+      {
+        id: 8,
+        title: 'Rowing',
+        details: 'Stay in shape!',
+        date: getCurrentDay(27),
+        bgcolor: 'purple',
+        icon: 'rowing',
+        days: 2,
+      },
+      {
+        id: 9,
+        title: 'Fishing',
+        details: 'Time for some weekend R&R',
+        date: getCurrentDay(27),
+        bgcolor: 'purple',
+        icon: 'fas fa-fish',
+        days: 2,
+      },
+      {
+        id: 10,
+        title: 'Vacation',
+        details: "Trails and hikes, going camping! Don't forget to bring bear spray!",
+        date: getCurrentDay(29),
+        bgcolor: 'purple',
+        icon: 'fas fa-plane',
+        days: 5,
+      },
+    ])
+
+    const eventsMap = computed(() => {
+      const map = {}
+      events.forEach((event) => {
+        if (!map[event.date]) {
+          map[event.date] = []
         }
-      } else {
-        arrayOfId.value.push(data.id)
-        confirm.value = !confirm.value
-      }
-    }
+        map[event.date].push(event)
 
-    const saveFn = () => {
-      if (mode.value == 'Add') {
-        $q.loading.show({
-          group: 'update',
-          message: `Adding new Schedule. Please wait...`,
-        })
-        dataStorage.value.added_by = store.userData?.user_id ?? 84
-        addSchedule(dataStorage.value).then((response) => {
-          console.log(response)
-          setTimeout(() => {
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-          }, 1000)
-          setTimeout(() => {
-            getSchedule().then((response) => {
-              rows.value = response
-            })
-            showDialog.value = false
-            $q.loading.hide()
-          }, 2000)
-        })
-      } else if (mode.value == 'Edit') {
-        $q.loading.show({
-          group: 'update',
-          message: `Updating Schedule. Please wait...`,
-        })
-        // editAnimalInfo(dataStorage.value).then((response) => {
-        //   console.log(response)
-        //   $q.loading.show({
-        //     group: 'update',
-        //     message: response.message,
-        //   })
-        //   setTimeout(() => {
-        //     $q.loading.hide()
-        //   }, 2000)
-        // })
-      }
-    }
-
-    const doseChecker = (x, y, z) => {
-      if (x == y) {
-        return 'Finish'
-      } else if (x - y == 1) {
-        return 'Last Dose'
-      }
-      return z
-    }
-    watchEffect(() => {
-      let dateVar = dataStorage.value.scheduled_date // format: "YYYY-MM-DD"
-      let interVar = dataStorage.value.next_due_interval // number of days (e.g. 365)
-      console.log(dataStorage.value.next_due_interval)
-
-      if (dateVar && interVar) {
-        const startDate = new Date(dateVar)
-        const nextDueDate = new Date(startDate)
-        nextDueDate.setDate(startDate.getDate() + Number(interVar))
-
-        // Format to YYYY-MM-DD if needed
-        const formatted = nextDueDate.toISOString().split('T')[0]
-        console.log('Next due date:', formatted)
-
-        // Optional: store it back
-        dataStorage.value.next_due_date = formatted
-      }
-    })
-
-    const softDeleteFn = () => {
-      $q.loading.show({
-        group: 'update',
-        message: 'Deleting Schedule info. Please wait...',
-      })
-      softDeleteSchedule(arrayOfId.value).then((response) => {
-        $q.loading.show({
-          group: 'update',
-          message: response.message,
-        })
-        setTimeout(() => {
-          $q.loading.hide()
-          if (response.status == 'success') {
-            getSchedule().then((response) => {
-              rows.value = response
-            })
+        if (event.days) {
+          let timestamp = parseTimestamp(event.date)
+          let daysLeft = event.days
+          while (--daysLeft > 0) {
+            timestamp = addToDate(timestamp, { day: 1 })
+            if (!map[timestamp.date]) {
+              map[timestamp.date] = []
+            }
+            map[timestamp.date].push(event)
           }
-        }, 2000)
+        }
       })
+      return map
+    })
+
+    function badgeClasses(event) {
+      return {
+        'text-white': true,
+        [`bg-${event.bgcolor}`]: true,
+        'q-calendar__ellipsis': true,
+      }
     }
 
-    onMounted(() => {
-      getSchedule().then((response) => {
-        rows.value = response
-      })
-    })
+    function badgeStyles() {
+      return {}
+    }
+
+    function onToday() {
+      calendar.value && calendar.value.moveToToday()
+    }
+
+    function onPrev() {
+      calendar.value && calendar.value.prev()
+    }
+
+    function onNext() {
+      calendar.value && calendar.value.next()
+    }
+
+    function onMoved(data) {
+      console.info('onMoved', data)
+    }
+
+    function onChange(data) {
+      console.info('onChange', data)
+    }
+
+    function onClickDate(data) {
+      console.info('onClickDate', data)
+    }
+
+    function onClickDay(data) {
+      console.info('onClickDay', data)
+    }
+
+    function onClickWorkweek(data) {
+      console.info('onClickWorkweek', data)
+    }
+
+    function onClickHeadDay(data) {
+      console.info('onClickHeadDay', data)
+    }
+
+    function onClickHeadWorkweek(data) {
+      console.info('onClickHeadWorkweek', data)
+    }
+
     return {
-      softDeleteFn,
-      saveFn,
-      showInputInterval,
-      intervalOptions,
-      animalOption,
-      tableAction,
-      showDialog,
-      mode,
-      itemsCount,
-      arrayOfId,
-      confirm,
-      dataStorage,
-      doseChecker,
-      convertDaysToInterval,
-      rows,
-      search,
-      columns: [
-        { name: 'id', label: 'ID', field: 'id', align: 'center' },
-        {
-          name: 'name',
-          label: 'Schedule For',
-          field: 'name',
-          sortable: true,
-          align: 'left',
-        },
-        {
-          name: 'schedule_name',
-          label: 'Schedule Name',
-          field: 'schedule_name',
-          sortable: true,
-          align: 'center',
-        },
-        {
-          name: 'dose_number',
-          label: 'Dose No.',
-          field: 'dose_number',
-          sortable: true,
-          align: 'center',
-        },
-        {
-          name: 'dose_taken',
-          label: 'Dose Taken.',
-          field: 'dose_taken',
-          sortable: true,
-          align: 'center',
-        },
-        {
-          name: 'scheduled_date',
-          label: 'Schedule Date',
-          field: 'scheduled_date',
-          sortable: true,
-          align: 'center',
-        },
-        {
-          name: 'next_due_interval',
-          label: 'Next Due Interval',
-          field: 'next_due_interval',
-          sortable: true,
-          align: 'center',
-        },
-        {
-          name: 'next_due_date',
-          label: 'Next Dose',
-          field: 'next_due_date',
-          sortable: true,
-          align: 'center',
-        },
-        { name: 'amount', label: 'Amount', field: 'amount', align: 'center' },
-        { name: 'btn', label: 'Action', field: 'btn', align: 'center' },
-      ],
+      calendar,
+      selectedDate,
+      eventsMap,
+      badgeClasses,
+      badgeStyles,
+      onToday,
+      onPrev,
+      onNext,
+      onMoved,
+      onChange,
+      onClickDate,
+      onClickDay,
+      onClickWorkweek,
+      onClickHeadDay,
+      onClickHeadWorkweek,
     }
   },
 }
 </script>
+<style lang="scss" scoped>
+.my-event {
+  position: relative;
+  font-size: 12px;
+  width: 100%;
+  max-width: 100%;
+  margin: 1px 0 0 0;
+  padding: 0 2px;
+  justify-content: start;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.title {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  max-width: 100%;
+}
+
+.text-white {
+  color: white;
+}
+
+.bg-blue {
+  background: blue;
+}
+
+.bg-green {
+  background: green;
+}
+
+.bg-orange {
+  background: orange;
+}
+
+.bg-red {
+  background: red;
+}
+
+.bg-teal {
+  background: teal;
+}
+
+.bg-grey {
+  background: grey;
+}
+
+.bg-purple {
+  background: purple;
+}
+
+.rounded-border {
+  border-radius: 2px;
+}
+</style>

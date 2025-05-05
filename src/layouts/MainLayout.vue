@@ -221,7 +221,7 @@ export default defineComponent({
       '/pending-application': 'Pending',
       '/animal-schedule': 'Schedule',
       '/supplies': 'Supplies',
-      '/activities-and-events': 'Activities And Events',
+      '/activities-and-events': 'Activities & Events',
     }
 
     const tab = ref(routeToTabMap[route.path] || 'Dashboard')

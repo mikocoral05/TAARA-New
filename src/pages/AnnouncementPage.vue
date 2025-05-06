@@ -19,7 +19,6 @@
         'content',
         'first_name',
         'created_at',
-        'start_date',
         'position_title',
         'btn',
       ]"
@@ -71,12 +70,13 @@
         </q-btn>
       </template>
     </ReusableTable>
-    <q-dialog position="right" maximized full-height v-model="showDialog">
-      <q-card style="min-width: 750px; height: 500px" class="text-black">
-        <q-form @submit="saveFn()" class="full-height column justify-between">
+
+    <q-dialog position="right" maximized full-height class="column no-wrap" v-model="showDialog">
+      <q-card style="min-width: 750px; height: 500px" class="text-black column no-wrap">
+        <q-form @submit="saveFn()" class="full-height column justify-between no-wrap">
           <div class="column no-wrap">
             <q-card-section class="q-py-md row no-wrap justify-between items-center">
-              <div class="text-body1">{{ mode }} Pet Schedule</div>
+              <div class="text-body1">{{ mode }} Announcement</div>
               <q-icon name="close" size="1.2rem" @click="showDialog = !showDialog" />
             </q-card-section>
             <q-separator />
@@ -87,187 +87,45 @@
               </div>
             </q-card-section>
             <q-card-section>
+              <q-file
+                ref="myFile"
+                v-model="dataStorage.file"
+                label="Upload your file"
+                :readonly="mode == 'View'"
+                class="hidden"
+                accept=".jpg, .jpeg, .png, .svg"
+                @update:model-value="imageFnUpdate"
+              />
+              <q-card-section
+                @click="triggerUpload"
+                style="height: 200px"
+                class="column no-wrap items-center justify-center"
+              >
+                <q-icon name="sym_r_folder_open" size="1.5rem" />
+                <div class="q-mt-md">Click or drag and drop to upload file</div>
+                <div class="q-mt-sm text-caption text-grey-7">PNG,JPG,SVG</div>
+              </q-card-section>
               <div class="row no-wrap">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">
-                    Schedule Name <span class="text-negative">*</span>
+                    Announcement Title <span class="text-negative">*</span>
                   </div>
                   <q-input
                     outlined
-                    v-model="dataStorage.schedule_name"
+                    v-model="dataStorage.title"
                     dense
                     class="q-mt-sm"
                     placeholder="Schedule name"
-                    style="width: 300px"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                  />
-                </div>
-                <div class="column no-wrap">
-                  <div class="text-capitalize">
-                    Schedule For <span class="text-negative">*</span>
-                  </div>
-                  <q-select
-                    outlined
-                    v-model="dataStorage.animal_id"
-                    class="q-mt-sm"
-                    :options="animalOption"
-                    emit-value
-                    map-options
-                    option-label="name"
-                    option-value="animal_id"
-                    dense
-                    style="width: 250px"
-                    behavior="menu"
+                    style="width: 5000px; max-width: 500px"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
                   />
                 </div>
               </div>
-              <div class="row no-wrap q-mt-md">
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">Dose No.<span class="text-negative">*</span></div>
-                  <q-input
-                    outlined
-                    type="number"
-                    v-model="dataStorage.dose_number"
-                    dense
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                    class="q-mt-sm"
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">Dose Taken<span class="text-negative">*</span></div>
-                  <q-input
-                    outlined
-                    v-model="dataStorage.dose_taken"
-                    type="number"
-                    dense
-                    class="q-mt-sm"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">
-                    Schedule Date<span class="text-negative">*</span>
-                  </div>
-                  <q-input
-                    dense
-                    outlined
-                    class="q-mt-sm"
-                    v-model="dataStorage.scheduled_date"
-                    mask="####-##-##"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                  >
-                    <template v-slot:append>
-                      <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="dataStorage.scheduled_date">
-                            <div class="row items-center justify-end">
-                              <q-btn v-close-popup label="Close" color="primary" flat />
-                            </div>
-                          </q-date>
-                        </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                  </q-input>
-                </div>
-              </div>
-              <div class="row no-wrap q-mt-md">
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">
-                    Next Due Interval<span class="text-negative">*</span>
-                  </div>
 
-                  <q-select
-                    outlined
-                    v-model="dataStorage.next_due_interval"
-                    class="q-mt-sm"
-                    :options="intervalOptions"
-                    emit-value
-                    map-options
-                    dense
-                    style="width: 280px"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                    behavior="menu"
-                    hint="if interval is not present please click the icon"
-                    v-if="!showInputInterval"
-                  >
-                    <template v-slot:after>
-                      <q-icon
-                        name="sym_r_change_circle"
-                        @click="((showInputInterval = true), (dataStorage.next_due_inteval = null))"
-                      />
-                    </template>
-                  </q-select>
-                  <q-input
-                    v-else
-                    style="width: 280px"
-                    outlined
-                    v-model="dataStorage.next_due_inteval"
-                    dense
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                    type="number"
-                    class="q-mt-sm"
-                    hint="Please input a number by days"
-                  >
-                    <template v-slot:after>
-                      <q-icon
-                        name="sym_r_change_circle"
-                        @click="
-                          ((showInputInterval = false), (dataStorage.next_due_inteval = null))
-                        "
-                      />
-                    </template>
-                  </q-input>
-                </div>
-
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">
-                    Next Due Date<span class="text-negative">*</span>
-                  </div>
-                  <q-input
-                    dense
-                    outlined
-                    class="q-mt-sm"
-                    v-model="dataStorage.next_due_date"
-                    mask="####-##-##"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                    disable
-                    hint="Automatically generated"
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">Amount<span class="text-negative">*</span></div>
-                  <q-input
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                    outlined
-                    type="number"
-                    v-model="dataStorage.amount"
-                    dense
-                    class="q-mt-sm"
-                    prefix="₱"
-                  />
-                </div>
-              </div>
               <div class="column no-wrap q-mt-md">
-                <div class="text-capitalize">
-                  Notes <span class="text-grey-7 text-caption"> (optional)</span>
-                </div>
-                <q-input
-                  outlined
-                  type="textarea"
-                  v-model="dataStorage.notes"
-                  dense
-                  class="q-mt-sm"
-                />
+                <div class="text-capitalize">Description</div>
+                <q-editor class="q-mt-sm" v-model="dataStorage.content" min-height="20rem" />
               </div>
             </q-card-section>
           </div>
@@ -345,7 +203,7 @@ export default {
     const rows = ref([])
     const $q = useQuasar()
     const confirm = ref(false)
-    const showDialog = ref(false)
+    const showDialog = ref(true)
     const showInputInterval = ref(false)
     const dataStorage = ref({ file: [] })
     const mode = ref('')
@@ -353,7 +211,13 @@ export default {
     const arrayOfId = ref([])
     const search = ref(null)
     const animalOption = ref([])
-    const store = globalStore
+    const store = globalStore()
+
+    const myFile = ref(null)
+    const triggerUpload = () => {
+      myFile.value.pickFiles()
+    }
+
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
@@ -364,7 +228,7 @@ export default {
             console.log(animalOption.value)
           })
 
-          dataStorage.value = {}
+          dataStorage.value = { content: '' }
         } else {
           dataStorage.value = data
           console.log(dataStorage.value)
@@ -426,7 +290,7 @@ export default {
     }
 
     watchEffect(() => {
-      let dateVar = dataStorage.value.scheduled_date // format: "YYYY-MM-DD"
+      let dateVar = dataStorage.value.start_date // format: "YYYY-MM-DD"
       let interVar = dataStorage.value.next_due_interval // number of days (e.g. 365)
       console.log(dataStorage.value.next_due_interval)
 
@@ -464,6 +328,10 @@ export default {
         }, 2000)
       })
     }
+    const previewImage = ref(null)
+    const imageFnUpdate = () => {
+      previewImage.value.push(URL.createObjectURL(dataStorage.value.file))
+    }
 
     onMounted(() => {
       getAnnouncement().then((response) => {
@@ -472,6 +340,9 @@ export default {
       })
     })
     return {
+      myFile,
+      imageFnUpdate,
+      triggerUpload,
       softDeleteFn,
       saveFn,
       showInputInterval,
@@ -526,13 +397,6 @@ export default {
           field: 'created_at',
           sortable: true,
           align: 'center',
-        },
-        {
-          name: 'start_date',
-          label: 'Start-End date',
-          field: 'start_date',
-          sortable: true,
-          align: 'left',
         },
 
         {

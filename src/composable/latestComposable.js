@@ -451,6 +451,20 @@ const addSchedule = (obj) => {
       })
   })
 }
+const addAnnouncement = (obj) => {
+  return new Promise((resolve, reject) => {
+    api
+      .post('announcement.php', {
+        add_announcement: obj,
+      })
+      .then((response) => {
+        resolve(response.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 
 const addGroupName = (obj) => {
   console.log(obj)
@@ -485,6 +499,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  addAnnouncement,
   getAnnouncement,
   getDonation,
   softDeleteSchedule,

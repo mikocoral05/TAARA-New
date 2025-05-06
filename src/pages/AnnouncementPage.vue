@@ -87,25 +87,38 @@
               </div>
             </q-card-section>
             <q-card-section>
-              <q-file
-                ref="myFile"
-                v-model="dataStorage.file"
-                label="Upload your file"
-                :readonly="mode == 'View'"
-                class="hidden"
-                accept=".jpg, .jpeg, .png, .svg"
-                @update:model-value="imageFnUpdate"
-              />
-              <q-card-section
-                @click="triggerUpload"
-                style="height: 200px"
-                class="column no-wrap items-center justify-center"
-              >
-                <q-icon name="sym_r_folder_open" size="1.5rem" />
-                <div class="q-mt-md">Click or drag and drop to upload file</div>
-                <div class="q-mt-sm text-caption text-grey-7">PNG,JPG,SVG</div>
-              </q-card-section>
-              <div class="row no-wrap">
+              <div class="row no-wrap justify-between items-start">
+                <q-img
+                  :src="previewImage"
+                  width="400px"
+                  height="300px"
+                  class="radius-10 light-border relative-position"
+                >
+                  <div v-if="!previewImage" class="absolute-center bg-white">
+                    <q-icon name="sym_r_wallpaper" color="grey-7" size="3rem" /></div
+                ></q-img>
+                <q-btn
+                  icon="sym_r_upload"
+                  label="Upload Image"
+                  borderless
+                  class="light-border q-px-md"
+                  dense
+                  no-caps
+                  unelevated
+                  @click="triggerUpload"
+                />
+                <q-file
+                  ref="myFile"
+                  v-model="dataStorage.file"
+                  label="Upload your file"
+                  :readonly="mode == 'View'"
+                  class="hidden"
+                  accept=".jpg, .jpeg, .png, .svg"
+                  @update:model-value="imageFnUpdate"
+                />
+              </div>
+
+              <div class="row no-wrap q-mt-md">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">
                     Announcement Title <span class="text-negative">*</span>
@@ -115,7 +128,7 @@
                     v-model="dataStorage.title"
                     dense
                     class="q-mt-sm"
-                    placeholder="Schedule name"
+                    placeholder="Type here your announcement title"
                     style="width: 5000px; max-width: 500px"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
@@ -192,7 +205,11 @@
 <script>
 import { useQuasar } from 'quasar'
 import ReusableTable from 'src/components/ReusableTable.vue'
-import { addSchedule, getAnnouncement, softDeleteSchedule } from 'src/composable/latestComposable'
+import {
+  addAnnouncement,
+  getAnnouncement,
+  softDeleteSchedule,
+} from 'src/composable/latestComposable'
 import { convertDaysToInterval, intervalOptions } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 import { onMounted, watchEffect } from 'vue'
@@ -245,8 +262,8 @@ export default {
           group: 'update',
           message: `Adding new Schedule. Please wait...`,
         })
-        dataStorage.value.added_by = store.userData?.user_id ?? 84
-        addSchedule(dataStorage.value).then((response) => {
+        dataStorage.value.created_by = store.userData?.user_id ?? 84
+        addAnnouncement(dataStorage.value).then((response) => {
           console.log(response)
           setTimeout(() => {
             $q.loading.show({
@@ -330,7 +347,7 @@ export default {
     }
     const previewImage = ref(null)
     const imageFnUpdate = () => {
-      previewImage.value.push(URL.createObjectURL(dataStorage.value.file))
+      previewImage.value = URL.createObjectURL(dataStorage.value.file)
     }
 
     onMounted(() => {
@@ -340,6 +357,7 @@ export default {
       })
     })
     return {
+      previewImage,
       myFile,
       imageFnUpdate,
       triggerUpload,

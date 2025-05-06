@@ -52,31 +52,17 @@ class API
 
     public function httpPost($payload)
     {
-        if (isset($payload['save_animal_list'])) {
-            $data = $payload['save_animal_list'];
+        if (isset($payload['add_announcement'])) {
+            $data = $payload['add_announcement'];
 
             $insertData = [
-                'name'               => $data['name'] ?? null,
-                'species'            => $data['species'] ?? null,
-                'breed'              => $data['breed'] ?? null,
-                'date_of_birth'      => $data['date_of_birth'] ?? null,
-                'fur_color'          => $data['fur_color'] ?? null,
-                'eye_color'          => $data['eye_color'] ?? null,
-                'sex'                => $data['sex'] ?? null,
-                'weight'             => $data['weight'] ?? null,
-                'height'             => $data['height'] ?? null,
-                'temperament'        => $data['temperament'] ?? null,
-                'skills'             => $data['skills'] ?? null,
-                'favorite_food'      => $data['favorite_food'] ?? null,
-                'health_status'      => $data['health_status'] ?? null,
-                'medical_needs'      => $data['medical_needs'] ?? null,
-                'spayed_neutered'    => $data['spayed_neutered'] ?? null,
-                'vaccination_status' => $data['vaccination_status'] ?? null,
-                'rescue_status'      => $data['rescue_status'] ?? null,
-                'story_background'   => $data['story_background'] ?? null,
+                'title'               => $data['title'] ?? null,
+                'content'            => $data['content'] ?? null,
+                'is_pinned'              => $data['is_pinned'] ?? null,
+                'created_by'              => $data['created_by'] ?? null,
             ];
 
-            $insert = $this->db->insert('tbl_animal_info', $insertData);
+            $insert = $this->db->insert('tbl_announcement', $insertData);
             $id = $this->db->getInsertId();
 
             if ($insert) {

@@ -68,7 +68,7 @@ class API
             if ($insert) {
                 echo json_encode([
                     'status' => 'success',
-                    'message' => 'Animal info successfully added',
+                    'message' => 'Announcement info successfully added',
                     'method' => 'POST',
                     'id' => $id
                 ]);

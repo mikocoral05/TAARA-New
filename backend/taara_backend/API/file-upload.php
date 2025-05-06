@@ -84,7 +84,6 @@ class API
 /* END OF CLASS */
 
 
-$received_data = json_decode(file_get_contents('php://input'), true);
 
 $request_method = $_SERVER['REQUEST_METHOD'];
 
@@ -92,15 +91,4 @@ $request_method = $_SERVER['REQUEST_METHOD'];
 $api = new API;
 
 
-
-if ($request_method === 'GET') {
-    $api->httpGet($_GET);
-} elseif ($request_method === 'POST') {
-    $api->httpPost($_POST); // ✅ This works for normal form data
-} elseif ($request_method === 'PUT') {
-    $received_data = json_decode(file_get_contents('php://input'), true);
-    $api->httpPut($received_data);
-} elseif ($request_method === 'DELETE') {
-    $received_data = json_decode(file_get_contents('php://input'), true);
-    $api->httpDelete($received_data);
-}
+$api->httpPost($_POST); // ✅ This works for normal form data

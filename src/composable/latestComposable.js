@@ -41,6 +41,9 @@ const getAnnouncement = () => {
       })
       .then((response) => {
         if (response.data.status == 'success') {
+          uploadFiles().then((response) => {
+            console.log(response)
+          })
           resolve(response.data.data)
         }
       })
@@ -281,6 +284,17 @@ const saveAnimalDetail = (obj) => {
   })
 }
 const uploadAnimalImages = (fileArray, animal_id) => {
+  const formData = new FormData()
+  fileArray.forEach((fileObj) => {
+    formData.append('files[]', fileObj) // 👈 FIXED: the File itself
+    formData.append('__key[]', fileObj.__key || '') // optional
+  })
+  formData.append('animal_id', animal_id) // 👈 include animal_id
+  return api.post('image-upload.php', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+}
+const uploadFiles = (fileArray, animal_id) => {
   const formData = new FormData()
   fileArray.forEach((fileObj) => {
     formData.append('files[]', fileObj) // 👈 FIXED: the File itself

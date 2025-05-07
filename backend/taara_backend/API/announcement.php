@@ -25,6 +25,7 @@ class API
                 u.user_type,
                 u.first_name,
                 u.last_name,
+                f.image_path,
                 CASE 
                     WHEN u.user_type = 3 THEN (SELECT position_title FROM tbl_official_position op WHERE op.id = u.roles)
                     WHEN u.user_type = 2 THEN (SELECT position_title FROM tbl_volunteer_position vp WHERE vp.id = u.roles)
@@ -33,6 +34,7 @@ class API
             ";
 
             $this->db->join('tbl_users u', 'u.user_id = a.created_by', 'LEFT');
+            $this->db->join('tbl_files f', 'a.img_id = f.id', 'LEFT');
             $result = $this->db->get('tbl_announcements a', null, $select);
 
             echo json_encode([
@@ -91,57 +93,40 @@ class API
 
     public function httpPut($payload)
     {
-        if (isset($payload['soft_delete_animal_info'])) {
-            $id = $payload['soft_delete_animal_info'];
+        if (isset($payload['soft_delete_announcement'])) {
+            $id = $payload['soft_delete_announcement'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
             // Set the update values here in the backend
             $update_values = [
-                'is_deleted' => 0,
+                'is_deleted' => 1,
                 'deleted_at' => date('Y-m-d H:i:s')
             ];
 
             // Update records matching the IDs
-            $this->db->where('animal_id', $ids, 'IN');
-            $updated = $this->db->update('tbl_animal_info', $update_values);
+            $this->db->where('id', $ids, 'IN');
+            $updated = $this->db->update('tbl_announcements', $update_values);
 
             if ($updated) {
                 echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
             }
-        } else if (isset($payload['edit_animal_info'])) {
-            $obj = $payload['edit_animal_info'];
+        } else if (isset($payload['edit_announcement'])) {
+            $obj = $payload['edit_announcement'];
 
             $update_values = [
-                'name' => $obj['name'] ?? null,
-                'species' => $obj['species'] ?? null,
-                'breed' => $obj['breed'] ?? null,
-                'fur_color' => $obj['fur_color'] ?? null,
-                'eye_color' => $obj['eye_color'] ?? null,
-                'date_of_birth' => $obj['date_of_birth'] ?? null,
-                'weight' => $obj['weight'] ?? null,
-                'height' => $obj['height'] ?? null,
-                'sex' => $obj['sex'] ?? null,
-                'spayed_neutered' => $obj['spayed_neutered'] ?? null,
-                'vaccination_status' => $obj['vaccination_status'] ?? null,
-                'temperament' => $obj['temperament'] ?? null, // stored as JSON string
-                'skills' => $obj['skills'] ?? null,           // stored as JSON string
-                'favorite_food' => $obj['favorite_food'] ?? null,
-                'story_background' => $obj['story_background'] ?? null,
-                'rescue_status' => $obj['rescue_status'] ?? null,
-                'health_status' => $obj['health_status'] ?? null,
-                'medical_needs' => $obj['medical_needs'] ?? null,
-                'date_rescued' => $obj['date_rescued'] ?? null,
-                'primary_image' => $obj['primary_image'] ?? 0,
+                'title' => $obj['title'] ?? '',
+                'content' => $obj['content'] ?? '',
+                'is_pinned' => $obj['is_pinned'] ?? null,
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
 
-            $animal_id = $obj['animal_id'];
+            $id = $obj['id'];
 
-            $this->db->where('animal_id', $animal_id);
-            $updated = $this->db->update('tbl_animal_info', $update_values);
+            $this->db->where('id', $id);
+            $updated = $this->db->update('tbl_announcements', $update_values);
 
             if ($updated) {
                 echo json_encode([

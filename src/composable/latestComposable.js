@@ -458,6 +458,7 @@ const addInventoryList = (obj) => {
       })
   })
 }
+
 const addSchedule = (obj) => {
   return new Promise((resolve, reject) => {
     api
@@ -472,6 +473,7 @@ const addSchedule = (obj) => {
       })
   })
 }
+
 const addAnnouncement = (obj) => {
   const { file, ...data } = obj
   return new Promise((resolve, reject) => {
@@ -490,6 +492,44 @@ const addAnnouncement = (obj) => {
           }
           resolve(response.data)
         }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
+const editAnnouncement = (obj) => {
+  const { file, ...data } = obj
+  return new Promise((resolve, reject) => {
+    api
+      .put('announcement.php', {
+        edit_announcement: data,
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          if (file) {
+            uploadFiles([file], data.id, 'tbl_announcements', 'id', 'img_id').then((response) => {
+              console.log(response)
+            })
+          }
+        }
+        resolve(response.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
+const softDeleteAnnouncement = (arrayId) => {
+  return new Promise((resolve, reject) => {
+    api
+      .put('announcement.php', {
+        soft_delete_announcement: arrayId,
+      })
+      .then((response) => {
+        resolve(response.data)
       })
       .catch((error) => {
         reject(error)
@@ -530,6 +570,8 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  softDeleteAnnouncement,
+  editAnnouncement,
   addAnnouncement,
   getAnnouncement,
   getDonation,

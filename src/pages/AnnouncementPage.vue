@@ -23,6 +23,9 @@
         'btn',
       ]"
     >
+      <template #cell-id="{ rowIndex }">
+        {{ rowIndex + 1 }}
+      </template>
       <template #cell-content="{ row }">
         <div class="text-wrap ellipsis-3-lines" v-html="row.content"></div>
       </template>
@@ -90,6 +93,7 @@
                     no-caps
                     unelevated
                     @click="triggerUpload"
+                    :readonly="mode == 'View'"
                   />
                   <q-select
                     v-model="dataStorage.is_pinned"
@@ -106,6 +110,7 @@
                     outlined
                     class="q-mt-md"
                     behavior="menu"
+                    :readonly="mode == 'View'"
                   />
                 </div>
                 <q-file
@@ -133,13 +138,19 @@
                     style="width: 5000px; max-width: 500px"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
+                    :readonly="mode == 'View'"
                   />
                 </div>
               </div>
 
               <div class="column no-wrap q-mt-md">
                 <div class="text-capitalize">Description</div>
-                <q-editor class="q-mt-sm" v-model="dataStorage.content" min-height="20rem" />
+                <q-editor
+                  class="q-mt-sm"
+                  v-model="dataStorage.content"
+                  :readonly="mode == 'View'"
+                  min-height="20rem"
+                />
               </div>
             </q-card-section>
           </div>
@@ -208,10 +219,15 @@ import { useQuasar } from 'quasar'
 import ReusableTable from 'src/components/ReusableTable.vue'
 import {
   addAnnouncement,
+  editAnnouncement,
   getAnnouncement,
-  softDeleteSchedule,
+  softDeleteAnnouncement,
 } from 'src/composable/latestComposable'
-import { convertDaysToInterval, intervalOptions } from 'src/composable/simpleComposable'
+import {
+  convertDaysToInterval,
+  getImageLink,
+  intervalOptions,
+} from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 import { onMounted, watchEffect } from 'vue'
 import { ref } from 'vue'
@@ -241,9 +257,11 @@ export default {
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         showDialog.value = !showDialog.value
         if (modeParam == 'Add') {
+          previewImage.value = null
           dataStorage.value = { content: '' }
         } else {
           dataStorage.value = data
+          previewImage.value = data?.image_path ? getImageLink(data.image_path) : null
           console.log(dataStorage.value)
         }
       } else {
@@ -256,7 +274,7 @@ export default {
       if (mode.value == 'Add') {
         $q.loading.show({
           group: 'update',
-          message: `Adding new Schedule. Please wait...`,
+          message: 'Adding new Announcement. Please wait...',
         })
         dataStorage.value.created_by = store.userData?.user_id ?? 84
         addAnnouncement(dataStorage.value).then((response) => {
@@ -278,18 +296,19 @@ export default {
       } else if (mode.value == 'Edit') {
         $q.loading.show({
           group: 'update',
-          message: `Updating Schedule. Please wait...`,
+          message: 'Updating Announcement. Please wait...',
         })
-        // editAnimalInfo(dataStorage.value).then((response) => {
-        //   console.log(response)
-        //   $q.loading.show({
-        //     group: 'update',
-        //     message: response.message,
-        //   })
-        //   setTimeout(() => {
-        //     $q.loading.hide()
-        //   }, 2000)
-        // })
+        editAnnouncement(dataStorage.value).then((response) => {
+          console.log(response)
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+          setTimeout(() => {
+            showDialog.value = false
+            $q.loading.hide()
+          }, 2000)
+        })
       }
     }
 
@@ -326,7 +345,7 @@ export default {
         group: 'update',
         message: 'Deleting Schedule info. Please wait...',
       })
-      softDeleteSchedule(arrayOfId.value).then((response) => {
+      softDeleteAnnouncement(arrayOfId.value).then((response) => {
         $q.loading.show({
           group: 'update',
           message: response.message,
@@ -375,7 +394,7 @@ export default {
       rows,
       search,
       columns: [
-        { name: 'id', label: 'ID', field: 'id', align: 'center' },
+        { name: 'id', label: 'ID', sortable: true, field: 'id', align: 'center' },
         {
           name: 'name',
           label: 'Schedule For',

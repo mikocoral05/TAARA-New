@@ -149,8 +149,8 @@ const linksList2 = [
     nav: 'invetory',
   },
   {
-    title: 'Pending',
-    icon: 'pending_actions',
+    title: 'Rescue Report',
+    icon: 'fire_truck',
     nav: 'pending-application',
   },
   {

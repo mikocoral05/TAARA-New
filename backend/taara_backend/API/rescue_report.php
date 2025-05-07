@@ -17,7 +17,7 @@ class API
 
         if (array_key_exists('get_rescue_report', $payload)) {
 
-            $this->db->where("a.is_deleted", 0);
+            $this->db->where("rr.is_deleted", 0);
 
             $select = "
                 rr.*,
@@ -32,7 +32,7 @@ class API
                 END AS position_title
             ";
 
-            $this->db->join('tbl_users u', 'u.user_id = rr.reported_by', 'LEFT');
+            $this->db->join('tbl_users u', 'u.user_id = rr.reporter_id', 'LEFT');
             $this->db->join('tbl_files f', 'rr.img_id = f.id', 'LEFT');
             $result = $this->db->get('tbl_rescue_report rr', null, $select);
 
@@ -92,8 +92,8 @@ class API
 
     public function httpPut($payload)
     {
-        if (isset($payload['soft_delete_announcement'])) {
-            $id = $payload['soft_delete_announcement'];
+        if (isset($payload['soft_delete_rescue_report'])) {
+            $id = $payload['soft_delete_rescue_report'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -105,7 +105,7 @@ class API
 
             // Update records matching the IDs
             $this->db->where('id', $ids, 'IN');
-            $updated = $this->db->update('tbl_announcements', $update_values);
+            $updated = $this->db->update('tbl_rescue_report', $update_values);
 
             if ($updated) {
                 echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);

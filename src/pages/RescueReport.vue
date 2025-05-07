@@ -15,19 +15,21 @@
       :tableAction="tableAction"
       :visible-columns="[
         'id',
-        'title',
-        'content',
         'first_name',
-        'created_at',
-        'position_title',
+        'location',
+        'description',
+        'report_date',
+        'status',
         'btn',
       ]"
     >
       <template #cell-id="{ rowIndex }">
         {{ rowIndex + 1 }}
       </template>
-      <template #cell-content="{ row }">
-        <div class="text-wrap ellipsis-3-lines" v-html="row.content"></div>
+      <template #cell-description="{ row }">
+        <div class="text-wrap ellipsis-3-lines text-center">
+          {{ row.description }}
+        </div>
       </template>
       <template #cell-btn="{ row }">
         <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
@@ -58,12 +60,12 @@
       </template>
     </ReusableTable>
 
-    <q-dialog position="right" maximized full-height class="column no-wrap" v-model="showDialog">
-      <q-card style="min-width: 750px; height: 500px" class="text-black column no-wrap">
-        <q-form @submit="saveFn()" class="full-height column justify-between no-wrap">
+    <q-dialog position="right" maximized full-height v-model="showDialog">
+      <q-card style="min-width: 750px; height: 500px" class="text-black">
+        <q-form @submit="saveFn()" class="full-height column justify-between">
           <div class="column no-wrap">
             <q-card-section class="q-py-md row no-wrap justify-between items-center">
-              <div class="text-body1">{{ mode }} Announcement</div>
+              <div class="text-body1">{{ mode }} Rescue Report Schedule</div>
               <q-icon name="close" size="1.2rem" @click="showDialog = !showDialog" />
             </q-card-section>
             <q-separator />
@@ -74,82 +76,164 @@
               </div>
             </q-card-section>
             <q-card-section>
-              <div class="row no-wrap justify-between items-start">
-                <q-img
-                  :src="previewImage"
-                  width="400px"
-                  height="300px"
-                  class="radius-10 light-border relative-position"
-                >
-                  <div v-if="!previewImage" class="absolute-center bg-white">
-                    <q-icon name="sym_r_wallpaper" color="grey-7" size="3rem" /></div
-                ></q-img>
-                <div class="column no-wrap">
-                  <q-btn
-                    icon="sym_r_upload"
-                    label="Upload Image"
-                    borderless
-                    class="light-border q-px-md"
-                    no-caps
-                    unelevated
-                    @click="triggerUpload"
-                    :readonly="mode == 'View'"
-                  />
-                  <q-select
-                    v-model="dataStorage.is_pinned"
-                    :options="[
-                      { label: 'Yes', value: 1 },
-                      { label: 'No', value: 0 },
-                    ]"
-                    option-label="label"
-                    option-value="value"
-                    dense
-                    emit-value
-                    map-options
-                    hint="Pin this post to the top?"
+              <div class="row no-wrap">
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Reporter <span class="text-negative">*</span></div>
+                  <q-input
                     outlined
-                    class="q-mt-md"
-                    behavior="menu"
-                    :readonly="mode == 'View'"
+                    v-model="dataStorage.first_name"
+                    dense
+                    class="q-mt-sm"
+                    placeholder="Schedule name"
+                    style="width: 300px"
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
                   />
                 </div>
-                <q-file
-                  ref="myFile"
-                  v-model="dataStorage.file"
-                  label="Upload your file"
-                  :readonly="mode == 'View'"
-                  class="hidden"
-                  accept=".jpg, .jpeg, .png, .svg"
-                  @update:model-value="imageFnUpdate"
-                />
               </div>
-
+              <div class="row no-wrap q-mt-md">
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Location.<span class="text-negative">*</span></div>
+                  <q-input
+                    outlined
+                    type="number"
+                    v-model="dataStorage.location"
+                    dense
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                    class="q-mt-sm"
+                  />
+                </div>
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Dose Taken<span class="text-negative">*</span></div>
+                  <q-input
+                    outlined
+                    v-model="dataStorage.dose_taken"
+                    type="number"
+                    dense
+                    class="q-mt-sm"
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                  />
+                </div>
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Schedule Date<span class="text-negative">*</span>
+                  </div>
+                  <q-input
+                    dense
+                    outlined
+                    class="q-mt-sm"
+                    v-model="dataStorage.scheduled_date"
+                    mask="####-##-##"
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                  >
+                    <template v-slot:append>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-date v-model="dataStorage.scheduled_date">
+                            <div class="row items-center justify-end">
+                              <q-btn v-close-popup label="Close" color="primary" flat />
+                            </div>
+                          </q-date>
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input>
+                </div>
+              </div>
               <div class="row no-wrap q-mt-md">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">
-                    Announcement Title <span class="text-negative">*</span>
+                    Next Due Interval<span class="text-negative">*</span>
                   </div>
-                  <q-input
+
+                  <q-select
                     outlined
-                    v-model="dataStorage.title"
-                    dense
+                    v-model="dataStorage.next_due_interval"
                     class="q-mt-sm"
-                    placeholder="Type here your announcement title"
-                    style="width: 5000px; max-width: 500px"
+                    :options="intervalOptions"
+                    emit-value
+                    map-options
+                    dense
+                    style="width: 280px"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
-                    :readonly="mode == 'View'"
+                    behavior="menu"
+                    hint="if interval is not present please click the icon"
+                    v-if="!showInputInterval"
+                  >
+                    <template v-slot:after>
+                      <q-icon
+                        name="sym_r_change_circle"
+                        @click="((showInputInterval = true), (dataStorage.next_due_inteval = null))"
+                      />
+                    </template>
+                  </q-select>
+                  <q-input
+                    v-else
+                    style="width: 280px"
+                    outlined
+                    v-model="dataStorage.next_due_inteval"
+                    dense
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                    type="number"
+                    class="q-mt-sm"
+                    hint="Please input a number by days"
+                  >
+                    <template v-slot:after>
+                      <q-icon
+                        name="sym_r_change_circle"
+                        @click="
+                          ((showInputInterval = false), (dataStorage.next_due_inteval = null))
+                        "
+                      />
+                    </template>
+                  </q-input>
+                </div>
+
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Next Due Date<span class="text-negative">*</span>
+                  </div>
+                  <q-input
+                    dense
+                    outlined
+                    class="q-mt-sm"
+                    v-model="dataStorage.next_due_date"
+                    mask="####-##-##"
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                    disable
+                    hint="Automatically generated"
+                  />
+                </div>
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Amount<span class="text-negative">*</span></div>
+                  <q-input
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                    outlined
+                    type="number"
+                    v-model="dataStorage.amount"
+                    dense
+                    class="q-mt-sm"
+                    prefix="₱"
                   />
                 </div>
               </div>
-
               <div class="column no-wrap q-mt-md">
-                <div class="text-capitalize">Description</div>
-                <q-editor
+                <div class="text-capitalize">
+                  Notes <span class="text-grey-7 text-caption"> (optional)</span>
+                </div>
+                <q-input
+                  outlined
+                  type="textarea"
+                  v-model="dataStorage.notes"
+                  dense
                   class="q-mt-sm"
-                  v-model="dataStorage.content"
-                  :readonly="mode == 'View'"
-                  min-height="20rem"
                 />
               </div>
             </q-card-section>
@@ -222,7 +306,7 @@ import {
   addAnnouncement,
   editAnnouncement,
   getRescueReport,
-  softDeleteAnnouncement,
+  softDeleteRescueReport,
 } from 'src/composable/latestComposable'
 import {
   convertDaysToInterval,
@@ -344,9 +428,9 @@ export default {
     const softDeleteFn = () => {
       $q.loading.show({
         group: 'update',
-        message: 'Deleting Schedule info. Please wait...',
+        message: 'Deleting Report info. Please wait...',
       })
-      softDeleteAnnouncement(arrayOfId.value).then((response) => {
+      softDeleteRescueReport(arrayOfId.value).then((response) => {
         $q.loading.show({
           group: 'update',
           message: response.message,
@@ -398,46 +482,40 @@ export default {
         { name: 'id', label: 'ID', sortable: true, field: 'id', align: 'center' },
         {
           name: 'first_name',
-          label: 'Reported Name',
+          label: 'Reporter',
           field: 'first_name',
           sortable: true,
           align: 'left',
         },
+
         {
-          name: 'title',
-          label: 'Title',
-          field: 'title',
+          name: 'location',
+          label: 'Location',
+          field: 'location',
           sortable: true,
-          style: 'min-width:200px;word-wrap: break-word; white-space: pre-wrap;',
           align: 'left',
+          style: 'width:200px;max-width:200px;word-wrap: break-word; white-space: pre-wrap',
         },
         {
-          name: 'content',
-          label: 'Content',
-          field: 'content',
-          sortable: true,
-          style: 'min-width:250px;word-wrap: break-word; white-space: pre-wrap;',
-          align: 'left',
-        },
-        {
-          name: 'first_name',
-          label: 'Created By',
-          field: 'first_name',
+          name: 'description',
+          label: 'Details',
+          field: 'description',
           sortable: true,
           align: 'center',
+          style: 'width: 400px; word-wrap: break-word; white-space: pre-wrap',
         },
         {
-          name: 'created_at',
-          label: 'Created At',
-          field: 'created_at',
+          name: 'report_date',
+          label: 'Report Date',
+          field: 'report_date',
           sortable: true,
           align: 'center',
         },
 
         {
-          name: 'position_title',
-          label: 'Position Title',
-          field: 'position_title',
+          name: 'status',
+          label: 'Status',
+          field: 'status',
           align: 'center',
         },
         { name: 'btn', label: 'Action', field: 'btn', align: 'center' },

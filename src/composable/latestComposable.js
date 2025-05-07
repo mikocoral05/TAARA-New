@@ -554,6 +554,21 @@ const softDeleteAnnouncement = (arrayId) => {
   })
 }
 
+const softDeleteRescueReport = (arrayId) => {
+  return new Promise((resolve, reject) => {
+    api
+      .put('rescue_report.php', {
+        soft_delete_rescue_report: arrayId,
+      })
+      .then((response) => {
+        resolve(response.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
 const addGroupName = (obj) => {
   console.log(obj)
 
@@ -587,6 +602,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  softDeleteRescueReport,
   getRescueReport,
   softDeleteAnnouncement,
   editAnnouncement,

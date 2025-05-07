@@ -119,7 +119,7 @@ const linksList = [
   {
     title: 'Report',
     icon: 'analytics',
-    nav: 'report',
+    nav: 'analytic-report',
   },
   {
     title: 'Pets',
@@ -151,7 +151,7 @@ const linksList2 = [
   {
     title: 'Rescue Report',
     icon: 'fire_truck',
-    nav: 'pending-application',
+    nav: 'rescue-report',
   },
   {
     title: 'Schedule',
@@ -223,6 +223,8 @@ export default defineComponent({
       '/supplies': 'Supplies',
       '/activities-and-events': 'Activities & Events',
       '/announcement': 'Announcement',
+      '/rescue-report': 'Rescue Report',
+      '/analytic-report': 'Report',
     }
 
     const tab = ref(routeToTabMap[route.path] || 'Dashboard')

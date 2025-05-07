@@ -41,9 +41,14 @@ const routes = [
         component: () => import('src/pages/BudgetAndExpenses.vue'),
       },
       {
-        name: 'report',
-        path: 'report',
-        component: () => import('src/pages/ReportPage.vue'),
+        name: 'rescue-report',
+        path: 'rescue-report',
+        component: () => import('src/pages/RescueReport.vue'),
+      },
+      {
+        name: 'analytic-report',
+        path: 'analytic-report',
+        component: () => import('src/pages/AnalyticReport.vue'),
       },
       {
         name: 'donation',

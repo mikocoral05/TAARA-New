@@ -50,6 +50,23 @@ const getAnnouncement = () => {
   })
 }
 
+const getRescueReport = () => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('rescue_report.php', {
+        params: { get_rescue_report: 'rescue_report' },
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          resolve(response.data.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
 const updateUser = (data) => {
   const clone = { ...data }
   clone.page_access = JSON.stringify(clone.page_access)
@@ -570,6 +587,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  getRescueReport,
   softDeleteAnnouncement,
   editAnnouncement,
   addAnnouncement,

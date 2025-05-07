@@ -58,11 +58,11 @@ class API
             $insertData = [
                 'title'               => $data['title'] ?? null,
                 'content'            => $data['content'] ?? null,
-                'is_pinned'              => $data['is_pinned'] ?? null,
-                'created_by'              => $data['created_by'] ?? null,
+                'is_pinned'              => $data['is_pinned'] ?? 0,
+                'created_by'              => $data['created_by'] ?? 84,
             ];
 
-            $insert = $this->db->insert('tbl_announcement', $insertData);
+            $insert = $this->db->insert('tbl_announcements', $insertData);
             $id = $this->db->getInsertId();
 
             if ($insert) {

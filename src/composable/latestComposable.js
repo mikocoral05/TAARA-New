@@ -41,9 +41,6 @@ const getAnnouncement = () => {
       })
       .then((response) => {
         if (response.data.status == 'success') {
-          uploadFiles().then((response) => {
-            console.log(response)
-          })
           resolve(response.data.data)
         }
       })
@@ -283,6 +280,7 @@ const saveAnimalDetail = (obj) => {
       })
   })
 }
+
 const uploadAnimalImages = (fileArray, animal_id) => {
   const formData = new FormData()
   fileArray.forEach((fileObj) => {
@@ -294,14 +292,22 @@ const uploadAnimalImages = (fileArray, animal_id) => {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
 }
-const uploadFiles = (fileArray, animal_id) => {
+
+const uploadFiles = (fileArray, record_id, table, id_column, column_name) => {
   const formData = new FormData()
+
+  // Append files
   fileArray.forEach((fileObj) => {
-    formData.append('files[]', fileObj) // 👈 FIXED: the File itself
-    formData.append('__key[]', fileObj.__key || '') // optional
+    formData.append('files[]', fileObj) // 📌 The actual File
   })
-  formData.append('animal_id', animal_id) // 👈 include animal_id
-  return api.post('image-upload.php', formData, {
+
+  // Append necessary data for server processing
+  formData.append('record_id', record_id)
+  formData.append('table', table)
+  formData.append('id_column', id_column)
+  formData.append('column_to_update', column_name)
+
+  return api.post('file-upload.php', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
 }
@@ -372,6 +378,7 @@ const softDeleteInventoryData = (arrayId, tableName) => {
       })
   })
 }
+
 const softDeleteSchedule = (arrayId) => {
   return new Promise((resolve, reject) => {
     api
@@ -466,13 +473,23 @@ const addSchedule = (obj) => {
   })
 }
 const addAnnouncement = (obj) => {
+  const { file, ...data } = obj
   return new Promise((resolve, reject) => {
     api
       .post('announcement.php', {
-        add_announcement: obj,
+        add_announcement: data,
       })
       .then((response) => {
-        resolve(response.data)
+        if (response.data.status == 'success') {
+          if (file) {
+            uploadFiles([file], response.data.id, 'tbl_announcements', 'id', 'img_id').then(
+              (response) => {
+                console.log(response)
+              },
+            )
+          }
+          resolve(response.data)
+        }
       })
       .catch((error) => {
         reject(error)

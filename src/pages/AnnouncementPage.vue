@@ -23,24 +23,8 @@
         'btn',
       ]"
     >
-      <template #cell-start_date="{ row }">
-        <div class="column no-wrap">
-          <div class="row no-wrap">
-            <span class="text-grey-7 q-mr-md" style="width: 30px"> Start:</span>
-            {{ row.start_date }}
-          </div>
-          <div class="row no-wrap">
-            <span class="text-grey-7 q-mr-md" style="min-width: 30px"> End:</span>{{ row.end_date }}
-          </div>
-        </div>
-      </template>
-      <template #cell-next_due_interval="{ row }">
-        {{ row.dose_taken == 1 ? 'Last Dose' : convertDaysToInterval(row.next_due_interval) }}
-      </template>
       <template #cell-content="{ row }">
-        <div class="text-wrap ellipsis-3-lines">
-          {{ row.content }}
-        </div>
+        <div class="text-wrap ellipsis-3-lines" v-html="row.content"></div>
       </template>
       <template #cell-btn="{ row }">
         <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
@@ -97,16 +81,33 @@
                   <div v-if="!previewImage" class="absolute-center bg-white">
                     <q-icon name="sym_r_wallpaper" color="grey-7" size="3rem" /></div
                 ></q-img>
-                <q-btn
-                  icon="sym_r_upload"
-                  label="Upload Image"
-                  borderless
-                  class="light-border q-px-md"
-                  dense
-                  no-caps
-                  unelevated
-                  @click="triggerUpload"
-                />
+                <div class="column no-wrap">
+                  <q-btn
+                    icon="sym_r_upload"
+                    label="Upload Image"
+                    borderless
+                    class="light-border q-px-md"
+                    no-caps
+                    unelevated
+                    @click="triggerUpload"
+                  />
+                  <q-select
+                    v-model="dataStorage.is_pinned"
+                    :options="[
+                      { label: 'Yes', value: 1 },
+                      { label: 'No', value: 0 },
+                    ]"
+                    option-label="label"
+                    option-value="value"
+                    dense
+                    emit-value
+                    map-options
+                    hint="Pin this post to the top?"
+                    outlined
+                    class="q-mt-md"
+                    behavior="menu"
+                  />
+                </div>
                 <q-file
                   ref="myFile"
                   v-model="dataStorage.file"
@@ -220,7 +221,7 @@ export default {
     const rows = ref([])
     const $q = useQuasar()
     const confirm = ref(false)
-    const showDialog = ref(true)
+    const showDialog = ref(false)
     const showInputInterval = ref(false)
     const dataStorage = ref({ file: [] })
     const mode = ref('')
@@ -240,11 +241,6 @@ export default {
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         showDialog.value = !showDialog.value
         if (modeParam == 'Add') {
-          getAnnouncement().then((response) => {
-            animalOption.value = response
-            console.log(animalOption.value)
-          })
-
           dataStorage.value = { content: '' }
         } else {
           dataStorage.value = data
@@ -345,6 +341,7 @@ export default {
         }, 2000)
       })
     }
+
     const previewImage = ref(null)
     const imageFnUpdate = () => {
       previewImage.value = URL.createObjectURL(dataStorage.value.file)

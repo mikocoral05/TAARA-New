@@ -106,7 +106,7 @@
               <div class="row no-wrap">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">
-                    Reporter Name <span class="text-negative">*</span>
+                    Reporter Name <span class="text-grey-7 text-caption">(optional)</span>
                   </div>
                   <q-input
                     outlined
@@ -115,8 +115,6 @@
                     class="q-mt-sm"
                     placeholder="Reporter Name"
                     style="width: 300px"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
                   />
                 </div>
                 <div class="column no-wrap q-mr-md">
@@ -130,22 +128,24 @@
                     placeholder="920783562"
                     style="width: 300px"
                     prefix="+63"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
+                    :rules="[
+                      (val) => !!val || 'Phone number is required',
+                      (val) => /^\d{10}$/.test(val) || 'Phone number must be exactly 10 digits',
+                    ]"
                   />
                 </div>
               </div>
-              <div class="row no-wrap q-mt-md">
+              <div class="row no-wrap">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">Location.<span class="text-negative">*</span></div>
                   <q-input
                     outlined
                     v-model="dataStorage.location"
                     dense
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
+                    :rules="[(val) => !!val || 'Location is required!']"
                     class="q-mt-sm"
-                    style="width: 400px"
+                    style="min-width: 500px"
+                    hint="Location of the reported animal"
                   />
                 </div>
               </div>
@@ -159,7 +159,7 @@
                     outlined
                     v-model="dataStorage.status"
                     class="q-mt-sm"
-                    :options="intervalOptions"
+                    :options="reportStatusOption"
                     emit-value
                     map-options
                     dense
@@ -167,7 +167,7 @@
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
                     behavior="menu"
-                    hint="if interval is not present please click the icon"
+                    hint="Default to Pending"
                   />
                 </div>
 
@@ -179,21 +179,21 @@
                     outlined
                     v-model="dataStorage.rescue_status"
                     class="q-mt-sm"
-                    :options="intervalOptions"
+                    :options="rescueStatusOptions"
                     emit-value
                     map-options
                     dense
                     style="width: 280px"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
+                    :rules="[(val) => !!val || 'Status is required!']"
                     behavior="menu"
-                    hint="if interval is not present please click the icon"
+                    hint="Adjust rescue status accordingly"
                   />
                 </div>
               </div>
               <div class="column no-wrap q-mt-md">
                 <div class="text-capitalize">Details</div>
                 <q-input
+                  :rules="[(val) => !!val || 'Details is required!']"
                   outlined
                   type="textarea"
                   v-model="dataStorage.description"
@@ -268,16 +268,12 @@
 import { useQuasar } from 'quasar'
 import ReusableTable from 'src/components/ReusableTable.vue'
 import {
-  addAnnouncement,
+  addRescueRerport,
   editAnnouncement,
   getRescueReport,
   softDeleteRescueReport,
 } from 'src/composable/latestComposable'
-import {
-  convertDaysToInterval,
-  getImageLink,
-  intervalOptions,
-} from 'src/composable/simpleComposable'
+import { convertDaysToInterval, getImageLink } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 import { onMounted, watchEffect } from 'vue'
 import { ref } from 'vue'
@@ -308,7 +304,7 @@ export default {
         showDialog.value = !showDialog.value
         if (modeParam == 'Add') {
           previewImage.value = null
-          dataStorage.value = { content: '' }
+          dataStorage.value = { content: '', rescue_status: 1, status: 'pending', reporter_type: 2 }
         } else {
           dataStorage.value = data
           previewImage.value = data?.image_path ? getImageLink(data.image_path) : null
@@ -327,7 +323,7 @@ export default {
           message: 'Adding new Announcement. Please wait...',
         })
         dataStorage.value.created_by = store.userData?.user_id ?? 84
-        addAnnouncement(dataStorage.value).then((response) => {
+        addRescueRerport(dataStorage.value).then((response) => {
           console.log(response)
           setTimeout(() => {
             $q.loading.show({
@@ -463,6 +459,23 @@ export default {
       previewImage.value = URL.createObjectURL(dataStorage.value.file)
     }
 
+    const reportStatusOption = ref([
+      { label: 'Pending', value: 'pending' },
+      { label: 'Approve', value: 'approved' },
+      { label: 'Disapprove', value: 'disapproved' },
+    ])
+
+    const rescueStatusOptions = [
+      { value: 1, label: 'Reported' },
+      { value: 2, label: 'Acknowledged' },
+      { value: 3, label: 'Rescue In Progress' },
+      { value: 4, label: 'Reached Vet Clinic' },
+      { value: 5, label: 'Deceased (as declared by vet)' },
+      { value: 6, label: 'Released (to environment or public)' },
+      { value: 7, label: 'Now Under Organization’s Care' },
+      { value: 8, label: 'Returned to Owner' },
+    ]
+
     onMounted(() => {
       getRescueReport().then((response) => {
         rows.value = response
@@ -470,6 +483,8 @@ export default {
       })
     })
     return {
+      rescueStatusOptions,
+      reportStatusOption,
       rescueStatusText,
       statusIcon,
       rescueStatusIcon,
@@ -481,7 +496,6 @@ export default {
       softDeleteFn,
       saveFn,
       showInputInterval,
-      intervalOptions,
       animalOption,
       tableAction,
       showDialog,

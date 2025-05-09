@@ -573,7 +573,7 @@ const editRescueReport = (obj) => {
       .then((response) => {
         if (response.data.status == 'success') {
           if (file) {
-            uploadFiles([file], data.id, 'tbl_announcements', 'id', 'img_id').then((response) => {
+            uploadFiles([file], data.id, 'tbl_rescue_report', 'id', 'img_id').then((response) => {
               console.log(response)
             })
           }

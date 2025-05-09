@@ -27,7 +27,11 @@ class API
                     WHEN rr.reporter_type = 2 THEN rr.name
                     ELSE NULL
                 END AS name,
-                u.phone_number,
+                CASE 
+                    WHEN rr.reporter_type = 1 THEN u.phone_number 
+                    WHEN rr.reporter_type = 2 THEN rr.phone_number
+                    ELSE NULL
+                END AS phone_number,
                 u.last_name,
                 f.image_path,
                 CASE 

@@ -58,30 +58,37 @@ class API
 
     public function httpPost($payload)
     {
-        if (isset($payload['add_announcement'])) {
-            $data = $payload['add_announcement'];
+        if (isset($payload['add_rescue_report'])) {
+            $data = $payload['add_rescue_report'];
 
             $insertData = [
-                'title'               => $data['title'] ?? null,
-                'content'            => $data['content'] ?? null,
-                'is_pinned'              => $data['is_pinned'] ?? 0,
-                'created_by'              => $data['created_by'] ?? 84,
+                'reporter_type'               => $data['reporter_type'] ?? 2,
+                'phone_number'            => $data['phone_number'] ?? null,
+                'name'              => $data['name'] ?? 0,
+                'reporter_id'              => $data['reporter_id'] ?? null,
+                'animal_type'              => $data['animal_type'] ?? 'Dog',
+                'description'              => $data['description'] ?? 'Dog',
+                'location'              => $data['location'] ?? 'Dog',
+                'latitide'              => $data['latitide'] ?? 'Dog',
+                'longitude'              => $data['longitude'] ?? 'Dog',
+                'status'              => $data['status'] ?? 'pending',
+                'rescue_status'              => $data['rescue_status'] ?? 1,
             ];
 
-            $insert = $this->db->insert('tbl_announcements', $insertData);
+            $insert = $this->db->insert('tbl_rescue_report', $insertData);
             $id = $this->db->getInsertId();
 
             if ($insert) {
                 echo json_encode([
                     'status' => 'success',
-                    'message' => 'Announcement info successfully added',
+                    'message' => 'Rescue Report info successfully added',
                     'method' => 'POST',
                     'id' => $id
                 ]);
             } else {
                 echo json_encode([
                     'status' => 'error',
-                    'message' => 'Failed to save animal info',
+                    'message' => 'Failed to save Rescue Report info',
                     'method' => 'POST'
                 ]);
             }

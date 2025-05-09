@@ -146,7 +146,7 @@ class API
             $id = $obj['id'];
 
             $this->db->where('id', $id);
-            $updated = $this->db->update('tbl_announcements', $update_values);
+            $updated = $this->db->update('tbl_rescue_report', $update_values);
 
             if ($updated) {
                 echo json_encode([

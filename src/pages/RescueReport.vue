@@ -34,7 +34,7 @@
       </template>
       <template #cell-status="{ row }">
         <div
-          class="row no-wrap q-px-sm radius-2 items-center text-white"
+          class="row no-wrap q-px-sm radius-5 items-center text-white"
           :class="statusColor(row.status)"
         >
           <q-icon :name="statusIcon(row.status)" size="1rem" class="q-mr-sm" />
@@ -115,6 +115,7 @@
                     class="q-mt-sm"
                     placeholder="Reporter Name"
                     style="width: 300px"
+                    :readonly="mode == 'View'"
                   />
                 </div>
                 <div class="column no-wrap q-mr-md">
@@ -127,6 +128,7 @@
                     class="q-mt-sm"
                     placeholder="920783562"
                     style="width: 300px"
+                    :readonly="mode == 'View'"
                     prefix="+63"
                     :rules="[
                       (val) => !!val || 'Phone number is required',
@@ -142,9 +144,10 @@
                     outlined
                     v-model="dataStorage.location"
                     dense
+                    :readonly="mode == 'View'"
                     :rules="[(val) => !!val || 'Location is required!']"
                     class="q-mt-sm"
-                    style="min-width: 500px"
+                    style="min-width: 450px"
                     hint="Location of the reported animal"
                   />
                 </div>
@@ -152,12 +155,19 @@
                   v-model="dataStorage.file"
                   dense
                   outlined
-                  hint="Upload one image"
+                  :readonly="mode == 'View'"
+                  hint="Upload one image (click the other icon to view image)"
                   class="q-mt-md"
-                  style="max-width: 300px"
+                  :label="dataStorage.image_path"
+                  style="min-width: 200px"
+                  @update:model-value="imageFnUpdate"
                 >
-                  <template v-slot:prepend> <q-icon name="sym_r_upload_file" /></template
-                ></q-file>
+                  <template v-slot:prepend> <q-icon name="sym_r_add_photo_alternate" /></template>
+                  <template v-slot:after>
+                    <q-icon name="sym_r_photo_library" @click="showImage = !showImage"
+                  /></template>
+                </q-file>
+                <ImageViewer v-model="showImage" :imageUrl="previewImage" />
               </div>
               <div class="row no-wrap q-mt-md">
                 <div class="column no-wrap q-mr-md">
@@ -173,6 +183,7 @@
                     emit-value
                     map-options
                     dense
+                    :readonly="mode == 'View'"
                     style="width: 280px"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
@@ -187,6 +198,7 @@
                   </div>
                   <q-select
                     outlined
+                    :readonly="mode == 'View'"
                     v-model="dataStorage.rescue_status"
                     class="q-mt-sm"
                     :options="rescueStatusOptions"
@@ -205,6 +217,7 @@
                 <q-input
                   :rules="[(val) => !!val || 'Details is required!']"
                   outlined
+                  :readonly="mode == 'View'"
                   type="textarea"
                   v-model="dataStorage.description"
                   dense
@@ -276,6 +289,7 @@
 
 <script>
 import { useQuasar } from 'quasar'
+import ImageViewer from 'src/components/ImageViewer.vue'
 import ReusableTable from 'src/components/ReusableTable.vue'
 import {
   addRescueRerport,
@@ -288,12 +302,13 @@ import { globalStore } from 'src/stores/global-store'
 import { onMounted, watchEffect } from 'vue'
 import { ref } from 'vue'
 export default {
-  components: { ReusableTable },
+  components: { ReusableTable, ImageViewer },
   setup() {
     const rows = ref([])
     const $q = useQuasar()
     const confirm = ref(false)
     const showDialog = ref(false)
+    const showImage = ref(false)
     const showInputInterval = ref(false)
     const dataStorage = ref({ file: [] })
     const mode = ref('')
@@ -493,6 +508,7 @@ export default {
       })
     })
     return {
+      showImage,
       rescueStatusOptions,
       reportStatusOption,
       rescueStatusText,

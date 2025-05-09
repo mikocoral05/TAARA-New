@@ -20,6 +20,7 @@
         'description',
         'report_date',
         'status',
+        'rescue_status',
         'btn',
       ]"
     >
@@ -29,6 +30,32 @@
       <template #cell-description="{ row }">
         <div class="text-wrap ellipsis-3-lines text-center">
           {{ row.description }}
+        </div>
+      </template>
+      <template #cell-status="{ row }">
+        <div
+          class="row no-wrap q-px-sm radius-2 items-center text-white"
+          :class="statusColor(row.status)"
+        >
+          <q-icon :name="statusIcon(row.status)" size="1rem" class="q-mr-sm" />
+          {{ row.status }}
+        </div>
+      </template>
+      <template #cell-rescue_status="{ row }">
+        <div class="row no-wrap q-px-sm radius-2 items-center">
+          <q-icon :name="rescueStatusIcon(row.rescue_status)" size="1rem" class="q-mr-sm" />
+          {{ rescueStatusText(row.rescue_status) }}
+        </div>
+      </template>
+      <template #cell-report_date="{ row }">
+        <div class="column no-wrap items-center">
+          <div>
+            {{ row.report_date }}
+          </div>
+          <div class="q-mt-xs row no-wrap items-center">
+            <q-icon name="sym_r_call" class="q-mr-xs" />
+            <div>+{{ row.phone_number }}</div>
+          </div>
         </div>
       </template>
       <template #cell-btn="{ row }">
@@ -78,14 +105,31 @@
             <q-card-section>
               <div class="row no-wrap">
                 <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">Reporter <span class="text-negative">*</span></div>
+                  <div class="text-capitalize">
+                    Reporter Name <span class="text-negative">*</span>
+                  </div>
                   <q-input
                     outlined
-                    v-model="dataStorage.first_name"
+                    v-model="dataStorage.name"
                     dense
                     class="q-mt-sm"
-                    placeholder="Schedule name"
+                    placeholder="Reporter Name"
                     style="width: 300px"
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                  />
+                </div>
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Phone No. <span class="text-negative">*</span></div>
+                  <q-input
+                    outlined
+                    v-model="dataStorage.phone_number"
+                    dense
+                    type="number"
+                    class="q-mt-sm"
+                    placeholder="920783562"
+                    style="width: 300px"
+                    prefix="+63"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
                   />
@@ -96,62 +140,24 @@
                   <div class="text-capitalize">Location.<span class="text-negative">*</span></div>
                   <q-input
                     outlined
-                    type="number"
                     v-model="dataStorage.location"
                     dense
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
                     class="q-mt-sm"
+                    style="width: 400px"
                   />
-                </div>
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">Dose Taken<span class="text-negative">*</span></div>
-                  <q-input
-                    outlined
-                    v-model="dataStorage.dose_taken"
-                    type="number"
-                    dense
-                    class="q-mt-sm"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">
-                    Schedule Date<span class="text-negative">*</span>
-                  </div>
-                  <q-input
-                    dense
-                    outlined
-                    class="q-mt-sm"
-                    v-model="dataStorage.scheduled_date"
-                    mask="####-##-##"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                  >
-                    <template v-slot:append>
-                      <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="dataStorage.scheduled_date">
-                            <div class="row items-center justify-end">
-                              <q-btn v-close-popup label="Close" color="primary" flat />
-                            </div>
-                          </q-date>
-                        </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                  </q-input>
                 </div>
               </div>
               <div class="row no-wrap q-mt-md">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">
-                    Next Due Interval<span class="text-negative">*</span>
+                    Report Status<span class="text-negative">*</span>
                   </div>
 
                   <q-select
                     outlined
-                    v-model="dataStorage.next_due_interval"
+                    v-model="dataStorage.status"
                     class="q-mt-sm"
                     :options="intervalOptions"
                     emit-value
@@ -162,76 +168,35 @@
                     hide-bottom-space
                     behavior="menu"
                     hint="if interval is not present please click the icon"
-                    v-if="!showInputInterval"
-                  >
-                    <template v-slot:after>
-                      <q-icon
-                        name="sym_r_change_circle"
-                        @click="((showInputInterval = true), (dataStorage.next_due_inteval = null))"
-                      />
-                    </template>
-                  </q-select>
-                  <q-input
-                    v-else
-                    style="width: 280px"
-                    outlined
-                    v-model="dataStorage.next_due_inteval"
-                    dense
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                    type="number"
-                    class="q-mt-sm"
-                    hint="Please input a number by days"
-                  >
-                    <template v-slot:after>
-                      <q-icon
-                        name="sym_r_change_circle"
-                        @click="
-                          ((showInputInterval = false), (dataStorage.next_due_inteval = null))
-                        "
-                      />
-                    </template>
-                  </q-input>
+                  />
                 </div>
 
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">
-                    Next Due Date<span class="text-negative">*</span>
+                    Rescue Status<span class="text-negative">*</span>
                   </div>
-                  <q-input
-                    dense
+                  <q-select
                     outlined
+                    v-model="dataStorage.rescue_status"
                     class="q-mt-sm"
-                    v-model="dataStorage.next_due_date"
-                    mask="####-##-##"
+                    :options="intervalOptions"
+                    emit-value
+                    map-options
+                    dense
+                    style="width: 280px"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
-                    disable
-                    hint="Automatically generated"
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">Amount<span class="text-negative">*</span></div>
-                  <q-input
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                    outlined
-                    type="number"
-                    v-model="dataStorage.amount"
-                    dense
-                    class="q-mt-sm"
-                    prefix="₱"
+                    behavior="menu"
+                    hint="if interval is not present please click the icon"
                   />
                 </div>
               </div>
               <div class="column no-wrap q-mt-md">
-                <div class="text-capitalize">
-                  Notes <span class="text-grey-7 text-caption"> (optional)</span>
-                </div>
+                <div class="text-capitalize">Details</div>
                 <q-input
                   outlined
                   type="textarea"
-                  v-model="dataStorage.notes"
+                  v-model="dataStorage.description"
                   dense
                   class="q-mt-sm"
                 />
@@ -322,7 +287,7 @@ export default {
     const rows = ref([])
     const $q = useQuasar()
     const confirm = ref(false)
-    const showDialog = ref(false)
+    const showDialog = ref(true)
     const showInputInterval = ref(false)
     const dataStorage = ref({ file: [] })
     const mode = ref('')
@@ -406,6 +371,53 @@ export default {
       return z
     }
 
+    const statusColor = (status) => {
+      const obj = {
+        pending: 'bg-orange  ',
+        approved: 'bg-positive q-px-sm',
+        disapproved: 'bg-negative q-px-sm',
+      }
+      return obj[status]
+    }
+
+    const statusIcon = (status) => {
+      const obj = {
+        pending: 'sym_r_assignment',
+        approved: 'sym_r_thumb_up',
+        disapproved: 'sym_r_thumb_down',
+      }
+      return obj[status]
+    }
+
+    const rescueStatusIcon = (status) => {
+      const obj = {
+        1: 'sym_r_fact_check',
+        2: 'sym_r_notification_multiple',
+        3: 'sym_r_fire_truck',
+        4: 'sym_r_vaccines',
+        5: 'sym_r_deceased',
+        6: 'sym_r_outpatient_med',
+        7: 'sym_r_real_estate_agent',
+        8: 'sym_r_diversity_3',
+      }
+      return obj[status]
+    }
+
+    const rescueStatusText = (r_status) => {
+      const map = {
+        1: 'Reported',
+        2: 'Acknowledged',
+        3: 'Rescue In Progress',
+        4: 'Reached Vet Clinic',
+        5: 'Deceased (as declared by vet)',
+        6: 'Released (to environment or public)',
+        7: 'Now Under Organization’s Care',
+        8: 'Returned to Owner',
+      }
+
+      return map[r_status]
+    }
+
     watchEffect(() => {
       let dateVar = dataStorage.value.start_date // format: "YYYY-MM-DD"
       let interVar = dataStorage.value.next_due_interval // number of days (e.g. 365)
@@ -458,6 +470,10 @@ export default {
       })
     })
     return {
+      rescueStatusText,
+      statusIcon,
+      rescueStatusIcon,
+      statusColor,
       previewImage,
       myFile,
       imageFnUpdate,
@@ -502,7 +518,7 @@ export default {
           field: 'description',
           sortable: true,
           align: 'center',
-          style: 'width: 400px; word-wrap: break-word; white-space: pre-wrap',
+          style: 'width: 300px; word-wrap: break-word; white-space: pre-wrap',
         },
         {
           name: 'report_date',
@@ -516,6 +532,12 @@ export default {
           name: 'status',
           label: 'Status',
           field: 'status',
+          align: 'center',
+        },
+        {
+          name: 'rescue_status',
+          label: 'Rescue Status',
+          field: 'rescue_status',
           align: 'center',
         },
         { name: 'btn', label: 'Action', field: 'btn', align: 'center' },

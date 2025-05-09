@@ -27,7 +27,7 @@ class API
             $column_to_update = $_POST['column_to_update'] ?? null;
 
             // Basic validation (🛡️ prevent SQL injection with a whitelist or strict rules)
-            $allowedTables = ['tbl_animal_info', 'tbl_user', 'tbl_announcements']; // Add as needed
+            $allowedTables = ['tbl_animal_info', 'tbl_user', 'tbl_announcements', 'tbl_rescue_report']; // Add as needed
             if (!in_array($table, $allowedTables) || !$record_id || !$id_column) {
                 echo json_encode([
                     'status' => 'error',
@@ -39,7 +39,8 @@ class API
             $allowedColumns = [
                 // 'tbl_animal_info' => ['image_id'],
                 // 'tbl_user' => ['profile_picture_id'],
-                'tbl_announcements' => ['img_id']
+                'tbl_announcements' => ['img_id'],
+                'tbl_rescue_report' => ['img_id']
             ];
 
             if (!isset($allowedColumns[$table]) || !in_array($column_to_update, $allowedColumns[$table])) {

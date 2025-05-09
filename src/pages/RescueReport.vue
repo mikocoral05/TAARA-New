@@ -88,8 +88,8 @@
     </ReusableTable>
 
     <q-dialog position="right" maximized full-height v-model="showDialog">
-      <q-card style="min-width: 750px; height: 500px" class="text-black">
-        <q-form @submit="saveFn()" class="full-height column justify-between">
+      <q-card style="min-width: 750px; height: 500px" class="text-black column no-wrap">
+        <q-form @submit="saveFn()" class="full-height column justify-between no-wrap">
           <div class="column no-wrap">
             <q-card-section class="q-py-md row no-wrap justify-between items-center">
               <div class="text-body1">{{ mode }} Rescue Report Schedule</div>
@@ -135,7 +135,7 @@
                   />
                 </div>
               </div>
-              <div class="row no-wrap">
+              <div class="row no-wrap items-end">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">Location.<span class="text-negative">*</span></div>
                   <q-input
@@ -148,6 +148,16 @@
                     hint="Location of the reported animal"
                   />
                 </div>
+                <q-file
+                  v-model="dataStorage.file"
+                  dense
+                  outlined
+                  hint="Upload one image"
+                  class="q-mt-md"
+                  style="max-width: 300px"
+                >
+                  <template v-slot:prepend> <q-icon name="sym_r_upload_file" /></template
+                ></q-file>
               </div>
               <div class="row no-wrap q-mt-md">
                 <div class="column no-wrap q-mr-md">
@@ -283,7 +293,7 @@ export default {
     const rows = ref([])
     const $q = useQuasar()
     const confirm = ref(false)
-    const showDialog = ref(true)
+    const showDialog = ref(false)
     const showInputInterval = ref(false)
     const dataStorage = ref({ file: [] })
     const mode = ref('')
@@ -320,7 +330,7 @@ export default {
       if (mode.value == 'Add') {
         $q.loading.show({
           group: 'update',
-          message: 'Adding new Announcement. Please wait...',
+          message: 'Adding new Rescue report. Please wait...',
         })
         dataStorage.value.created_by = store.userData?.user_id ?? 84
         addRescueRerport(dataStorage.value).then((response) => {

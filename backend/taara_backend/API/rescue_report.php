@@ -24,7 +24,7 @@ class API
                 u.user_id,
                 CASE 
                     WHEN rr.reporter_type = 1 THEN CONCAT(u.first_name,' ',u.last_name) 
-                    WHEN rr.reporter_type = 1 THEN rr.name
+                    WHEN rr.reporter_type = 2 THEN rr.name
                     ELSE NULL
                 END AS first_name,
                 u.phone_number,
@@ -64,13 +64,13 @@ class API
             $insertData = [
                 'reporter_type'               => $data['reporter_type'] ?? 2,
                 'phone_number'            => $data['phone_number'] ?? null,
-                'name'              => $data['name'] ?? 0,
+                'name'              => $data['name'] ?? '',
                 'reporter_id'              => $data['reporter_id'] ?? null,
                 'animal_type'              => $data['animal_type'] ?? 'Dog',
-                'description'              => $data['description'] ?? 'Dog',
-                'location'              => $data['location'] ?? 'Dog',
-                'latitide'              => $data['latitide'] ?? 'Dog',
-                'longitude'              => $data['longitude'] ?? 'Dog',
+                'description'              => $data['description'] ?? '',
+                'location'              => $data['location'] ?? '',
+                'latitude'              => $data['latitude'] ?? null,
+                'longitude'              => $data['longitude'] ?? null,
                 'status'              => $data['status'] ?? 'pending',
                 'rescue_status'              => $data['rescue_status'] ?? 1,
             ];

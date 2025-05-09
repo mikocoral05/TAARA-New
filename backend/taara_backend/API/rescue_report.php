@@ -22,7 +22,12 @@ class API
             $select = "
                 rr.*,
                 u.user_id,
-                u.first_name,
+                CASE 
+                    WHEN rr.reporter_type = 1 THEN CONCAT(u.first_name,' ',u.last_name) 
+                    WHEN rr.reporter_type = 1 THEN rr.name
+                    ELSE NULL
+                END AS first_name,
+                u.phone_number,
                 u.last_name,
                 f.image_path,
                 CASE 

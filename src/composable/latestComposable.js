@@ -515,6 +515,30 @@ const addAnnouncement = (obj) => {
       })
   })
 }
+const addRescueRerport = (obj) => {
+  const { file, ...data } = obj
+  return new Promise((resolve, reject) => {
+    api
+      .post('rescue_report.php', {
+        add_rescue_report: data,
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          if (file) {
+            uploadFiles([file], response.data.id, 'tbl_rescue_report', 'id', 'img_id').then(
+              (response) => {
+                console.log(response)
+              },
+            )
+          }
+          resolve(response.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 
 const editAnnouncement = (obj) => {
   const { file, ...data } = obj
@@ -602,6 +626,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  addRescueRerport,
   softDeleteRescueReport,
   getRescueReport,
   softDeleteAnnouncement,

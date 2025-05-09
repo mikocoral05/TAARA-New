@@ -563,6 +563,29 @@ const editAnnouncement = (obj) => {
   })
 }
 
+const editRescueReport = (obj) => {
+  const { file, ...data } = obj
+  return new Promise((resolve, reject) => {
+    api
+      .put('rescue_report.php', {
+        edit_rescue_report: data,
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          if (file) {
+            uploadFiles([file], data.id, 'tbl_announcements', 'id', 'img_id').then((response) => {
+              console.log(response)
+            })
+          }
+        }
+        resolve(response.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
 const softDeleteAnnouncement = (arrayId) => {
   return new Promise((resolve, reject) => {
     api
@@ -626,6 +649,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  editRescueReport,
   addRescueRerport,
   softDeleteRescueReport,
   getRescueReport,

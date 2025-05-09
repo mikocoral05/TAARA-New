@@ -26,7 +26,7 @@ class API
                     WHEN rr.reporter_type = 1 THEN CONCAT(u.first_name,' ',u.last_name) 
                     WHEN rr.reporter_type = 2 THEN rr.name
                     ELSE NULL
-                END AS first_name,
+                END AS name,
                 u.phone_number,
                 u.last_name,
                 f.image_path,
@@ -124,14 +124,19 @@ class API
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
             }
-        } else if (isset($payload['edit_announcement'])) {
-            $obj = $payload['edit_announcement'];
+        } else if (isset($payload['edit_rescue_report'])) {
+            $obj = $payload['edit_rescue_report'];
 
             $update_values = [
-                'title' => $obj['title'] ?? '',
-                'content' => $obj['content'] ?? '',
-                'is_pinned' => $obj['is_pinned'] ?? null,
-                'updated_at' => date('Y-m-d H:i:s'),
+                'phone_number'            => $obj['phone_number'] ?? null,
+                'name'              => $obj['name'] ?? '',
+                'animal_type'              => $obj['animal_type'] ?? 'Dog',
+                'description'              => $obj['description'] ?? '',
+                'location'              => $obj['location'] ?? '',
+                'latitude'              => $obj['latitude'] ?? null,
+                'longitude'              => $obj['longitude'] ?? null,
+                'status'              => $obj['status'] ?? 'pending',
+                'rescue_status'              => $obj['rescue_status'] ?? 1,
             ];
 
             $id = $obj['id'];

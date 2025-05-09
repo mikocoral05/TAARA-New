@@ -15,7 +15,7 @@
       :tableAction="tableAction"
       :visible-columns="[
         'id',
-        'first_name',
+        'name',
         'location',
         'description',
         'report_date',
@@ -279,7 +279,7 @@ import { useQuasar } from 'quasar'
 import ReusableTable from 'src/components/ReusableTable.vue'
 import {
   addRescueRerport,
-  editAnnouncement,
+  editRescueReport,
   getRescueReport,
   softDeleteRescueReport,
 } from 'src/composable/latestComposable'
@@ -354,7 +354,7 @@ export default {
           group: 'update',
           message: 'Updating Announcement. Please wait...',
         })
-        editAnnouncement(dataStorage.value).then((response) => {
+        editRescueReport(dataStorage.value).then((response) => {
           console.log(response)
           $q.loading.show({
             group: 'update',
@@ -521,9 +521,9 @@ export default {
       columns: [
         { name: 'id', label: 'ID', sortable: true, field: 'id', align: 'center' },
         {
-          name: 'first_name',
+          name: 'name',
           label: 'Reporter',
-          field: 'first_name',
+          field: 'name',
           sortable: true,
           align: 'left',
         },

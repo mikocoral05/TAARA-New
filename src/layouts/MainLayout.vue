@@ -228,7 +228,7 @@ export default defineComponent({
 
     const scrollFn = (event) => {
       scrollPosition.value = event.verticalPosition
-      localStorage.setItem('myScrollPos', scrollPosition.value)
+      sessionStorage.setItem('myScrollPos', scrollPosition.value)
     }
 
     watchEffect(() => {
@@ -236,7 +236,7 @@ export default defineComponent({
     })
 
     onMounted(() => {
-      const savedPosition = parseFloat(localStorage.getItem('myScrollPos') || '0')
+      const savedPosition = parseFloat(sessionStorage.getItem('myScrollPos') || '0')
       myScrollArea.value?.setScrollPosition('vertical', savedPosition)
     })
 

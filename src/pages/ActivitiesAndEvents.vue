@@ -1,18 +1,40 @@
 <template>
   <q-page>
     <div class="subcontent">
-      <div class="row q-gutter-sm items-center q-mb-md">
-        <q-btn
-          class="q-px-md"
-          label="Today"
-          color="primary"
-          dense
-          @click="onToday"
-          no-caps
-          unelevated
-        />
-        <q-btn icon="chevron_left" @click="onPrev" dense unelevated />
-        <q-btn icon="chevron_right" @click="onNext" dense unelevated />
+      <div class="row no-wrap justify-between items-center">
+        <div class="row q-gutter-sm items-center q-mb-md">
+          <q-btn
+            class="q-px-md"
+            label="Today"
+            color="primary"
+            dense
+            @click="onToday"
+            no-caps
+            unelevated
+          />
+          <q-btn icon="chevron_left" @click="onPrev" dense unelevated class="bg-white" />
+          <q-btn icon="chevron_right" @click="onNext" dense unelevated class="bg-white" />
+        </div>
+        <div class="row no-wrap items-center">
+          <q-btn
+            icon="sym_r_add"
+            @click="showDialog = !showDialog"
+            dense
+            unelevated
+            class="bg-white q-mr-md q-pr-md"
+            label="Add"
+            no-caps
+          />
+          <q-btn
+            icon="sym_r_edit_note"
+            label="Edit"
+            no-caps
+            @click="onNext"
+            dense
+            unelevated
+            class="bg-white q-pr-md"
+          />
+        </div>
       </div>
       <div class="row justify-center">
         <div style="display: flex; max-width: 100%; width: 100%">
@@ -82,22 +104,54 @@
                     placeholder="Reporter Name"
                     style="width: 600px"
                     :readonly="mode == 'View'"
+                    :rules="[(val) => !!val || 'Title is requried!']"
                   />
                 </div>
               </div>
-              <div class="row no-wrap items-end q-mt-md">
+              <div class="row no-wrap items-end">
                 <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">Location.<span class="text-negative">*</span></div>
+                  <div class="text-capitalize">Date.<span class="text-negative">*</span></div>
                   <q-input
-                    outlined
-                    v-model="dataStorage.location"
                     dense
-                    :readonly="mode == 'View'"
-                    :rules="[(val) => !!val || 'Location is required!']"
+                    v-model="dataStorage.date"
                     class="q-mt-sm"
-                    style="min-width: 450px"
-                    hint="Location of the reported animal"
-                  />
+                    outlined
+                    :rules="[(val) => !!val || 'Date is requried!']"
+                  >
+                    <template v-slot:append>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-date v-model="dataStorage.date" mask="YYYY-MM-DD HH:mm">
+                            <div class="row items-center justify-end">
+                              <q-btn v-close-popup label="Close" color="primary" flat />
+                            </div>
+                          </q-date>
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input>
+                </div>
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Time.<span class="text-negative">*</span></div>
+                  <q-input
+                    dense
+                    v-model="dataStorage.time"
+                    class="q-mt-sm"
+                    outlined
+                    :rules="[(val) => !!val || 'Time is requried!']"
+                  >
+                    <template v-slot:append>
+                      <q-icon name="access_time" class="cursor-pointer">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-time v-model="dataStorage.time" mask="HH:mm:ss" format24h>
+                            <div class="row items-center justify-end">
+                              <q-btn v-close-popup label="Close" color="primary" flat />
+                            </div>
+                          </q-time>
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input>
                 </div>
                 <q-file
                   v-model="dataStorage.file"
@@ -105,7 +159,6 @@
                   outlined
                   :readonly="mode == 'View'"
                   hint="Upload one image (click the other icon to view image)"
-                  class="q-mt-md"
                   :label="dataStorage.image_path"
                   style="min-width: 200px"
                   @update:model-value="imageFnUpdate"
@@ -117,11 +170,9 @@
                 </q-file>
                 <ImageViewer v-model="showImage" :imageUrl="previewImage" />
               </div>
-              <div class="row no-wrap q-mt-md">
+              <div class="row no-wrap">
                 <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">
-                    Report Status<span class="text-negative">*</span>
-                  </div>
+                  <div class="text-capitalize">Duration<span class="text-negative">*</span></div>
 
                   <q-select
                     outlined
@@ -207,12 +258,14 @@ import {
   today,
 } from '@quasar/quasar-ui-qcalendar'
 import '@quasar/quasar-ui-qcalendar/index.css'
+import ImageViewer from 'src/components/ImageViewer.vue'
 import { getActivitiesAndEvents } from 'src/composable/latestComposable'
 import { ref, reactive, computed, onMounted } from 'vue'
 
 export default {
   components: {
     QCalendarMonth,
+    ImageViewer,
   },
   setup() {
     const CURRENT_DAY = new Date()
@@ -290,7 +343,6 @@ export default {
 
     const onClickDay = (data) => {
       console.info('onClickDay', data)
-      showDialog.value = !showDialog.value
     }
 
     const onClickWorkweek = (data) => {

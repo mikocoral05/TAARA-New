@@ -1,7 +1,18 @@
 <template>
   <div class="subcontent">
-    <navigation-bar @today="onToday" @prev="onPrev" @next="onNext" />
-
+    <div class="row q-gutter-sm items-center q-mb-md">
+      <q-btn
+        class="q-px-md"
+        label="Today"
+        color="primary"
+        dense
+        @click="onToday"
+        no-caps
+        unelevated
+      />
+      <q-btn icon="chevron_left" @click="onPrev" dense unelevated />
+      <q-btn icon="chevron_right" @click="onNext" dense unelevated />
+    </div>
     <div class="row justify-center">
       <div style="display: flex; max-width: 100%; width: 100%">
         <q-calendar-month
@@ -13,7 +24,7 @@
           hoverable
           no-active-date
           :day-min-height="60"
-          :day-height="120"
+          :day-height="110"
           @change="onChange"
           @moved="onMoved"
           @click-date="onClickDate"
@@ -51,7 +62,6 @@ import {
   today,
 } from '@quasar/quasar-ui-qcalendar'
 import '@quasar/quasar-ui-qcalendar/index.css'
-
 import { ref, reactive, computed } from 'vue'
 
 export default {
@@ -61,7 +71,7 @@ export default {
   setup() {
     const CURRENT_DAY = new Date()
 
-    function getCurrentDay(day) {
+    const getCurrentDay = (day) => {
       const newDay = new Date(CURRENT_DAY)
       newDay.setDate(day)
       const tm = parseDate(newDay)
@@ -189,7 +199,7 @@ export default {
       return map
     })
 
-    function badgeClasses(event) {
+    const badgeClasses = (event) => {
       return {
         'text-white': true,
         [`bg-${event.bgcolor}`]: true,
@@ -197,47 +207,47 @@ export default {
       }
     }
 
-    function badgeStyles() {
+    const badgeStyles = () => {
       return {}
     }
 
-    function onToday() {
+    const onToday = () => {
       calendar.value && calendar.value.moveToToday()
     }
 
-    function onPrev() {
+    const onPrev = () => {
       calendar.value && calendar.value.prev()
     }
 
-    function onNext() {
+    const onNext = () => {
       calendar.value && calendar.value.next()
     }
 
-    function onMoved(data) {
+    const onMoved = (data) => {
       console.info('onMoved', data)
     }
 
-    function onChange(data) {
+    const onChange = (data) => {
       console.info('onChange', data)
     }
 
-    function onClickDate(data) {
+    const onClickDate = (data) => {
       console.info('onClickDate', data)
     }
 
-    function onClickDay(data) {
+    const onClickDay = (data) => {
       console.info('onClickDay', data)
     }
 
-    function onClickWorkweek(data) {
+    const onClickWorkweek = (data) => {
       console.info('onClickWorkweek', data)
     }
 
-    function onClickHeadDay(data) {
+    const onClickHeadDay = (data) => {
       console.info('onClickHeadDay', data)
     }
 
-    function onClickHeadWorkweek(data) {
+    const onClickHeadWorkweek = (data) => {
       console.info('onClickHeadWorkweek', data)
     }
 

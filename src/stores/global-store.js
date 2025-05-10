@@ -4,6 +4,7 @@ export const globalStore = defineStore('store', {
   state: () => ({
     counter: 0,
     userData: {},
+    pendingRescueReport: 0,
   }),
   getters: {
     doubleCount: (state) => state.counter * 2,

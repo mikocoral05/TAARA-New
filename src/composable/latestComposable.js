@@ -1,6 +1,7 @@
 import { api } from 'src/boot/axios'
 import { dateToday } from 'src/composable/simpleComposable'
-
+import { globalStore } from 'src/stores/global-store'
+const store = globalStore()
 const getUserByType = (type) => {
   return new Promise((resolve, reject) => {
     api
@@ -10,6 +11,24 @@ const getUserByType = (type) => {
       .then((response) => {
         if (response.data.status == 'success') {
           resolve(response.data.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
+const getPendingRescueReport = () => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('rescue_report.php', {
+        params: { get_pending_rescue_report: 'get_pending_rescue_report' },
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          store.pendingRescueReport = response.data.count
+          resolve(response.data.count)
         }
       })
       .catch((error) => {
@@ -531,6 +550,7 @@ const addRescueRerport = (obj) => {
               },
             )
           }
+          getPendingRescueReport()
           resolve(response.data)
         }
       })
@@ -578,6 +598,7 @@ const editRescueReport = (obj) => {
             })
           }
         }
+        getPendingRescueReport()
         resolve(response.data)
       })
       .catch((error) => {
@@ -649,6 +670,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  getPendingRescueReport,
   editRescueReport,
   addRescueRerport,
   softDeleteRescueReport,

@@ -36,6 +36,23 @@ const getPendingRescueReport = () => {
       })
   })
 }
+const getActivitiesAndEvents = () => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('activities_and_events.php', {
+        params: { get_activities_and_events: 'get_activities_and_events' },
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          store.pendingRescueReport = response.data.count
+          resolve(response.data.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 const getDonation = (type) => {
   return new Promise((resolve, reject) => {
     api
@@ -670,6 +687,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  getActivitiesAndEvents,
   getPendingRescueReport,
   editRescueReport,
   addRescueRerport,

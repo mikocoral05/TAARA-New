@@ -15,30 +15,28 @@ class API
     public function httpGet($payload)
     {
 
-        if (array_key_exists('get_animal_list', $payload)) {
-            $category = $payload['get_animal_list'];
+        if (array_key_exists('get_activities_and_events', $payload)) {
 
-            $this->db->where("health_status", $category);
-            $this->db->where("is_deleted", 1);
-            $animalRows = $this->db->get("tbl_animal_info");
+            $this->db->where("is_deleted", 0);
+            $data = $this->db->get("tbl_activities_and_events");
 
-            foreach ($animalRows as &$animal) {
-                $galleryIds = json_decode($animal['image_gallery'], true);
+            // foreach ($animalRows as &$animal) {
+            //     $galleryIds = json_decode($animal['image_gallery'], true);
 
-                if (is_array($galleryIds) && count($galleryIds)) {
-                    $this->db->where('id', $galleryIds, 'IN');
-                    $files = $this->db->get('tbl_files');
+            //     if (is_array($galleryIds) && count($galleryIds)) {
+            //         $this->db->where('id', $galleryIds, 'IN');
+            //         $files = $this->db->get('tbl_files');
 
-                    $paths = array_column($files, 'image_path');
-                    $animal['image_gallery'] = $paths;
-                } else {
-                    $animal['image_gallery'] = [];
-                }
-            }
+            //         $paths = array_column($files, 'image_path');
+            //         $animal['image_gallery'] = $paths;
+            //     } else {
+            //         $animal['image_gallery'] = [];
+            //     }
+            // }
 
             echo json_encode([
                 'status' => 'success',
-                'data' => $animalRows,
+                'data' => $data,
                 'method' => 'GET'
             ]);
         } else {

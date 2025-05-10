@@ -58,7 +58,7 @@
         <q-form @submit="saveFn()" class="full-height column justify-between no-wrap">
           <div class="column no-wrap">
             <q-card-section class="q-py-md row no-wrap justify-between items-center">
-              <div class="text-body1">{{ mode }} Rescue Report Schedule</div>
+              <div class="text-body1">{{ mode }} Activities And Events</div>
               <q-icon name="close" size="1.2rem" @click="showDialog = !showDialog" />
             </q-card-section>
             <q-separator />
@@ -72,38 +72,20 @@
               <div class="row no-wrap">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">
-                    Reporter Name <span class="text-grey-7 text-caption">(optional)</span>
+                    Title<span class="text-grey-7 text-caption">(optional)</span>
                   </div>
                   <q-input
                     outlined
-                    v-model="dataStorage.name"
+                    v-model="dataStorage.title"
                     dense
                     class="q-mt-sm"
                     placeholder="Reporter Name"
-                    style="width: 300px"
+                    style="width: 600px"
                     :readonly="mode == 'View'"
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">Phone No. <span class="text-negative">*</span></div>
-                  <q-input
-                    outlined
-                    v-model="dataStorage.phone_number"
-                    dense
-                    type="number"
-                    class="q-mt-sm"
-                    placeholder="920783562"
-                    style="width: 300px"
-                    :readonly="mode == 'View'"
-                    prefix="+63"
-                    :rules="[
-                      (val) => !!val || 'Phone number is required',
-                      (val) => /^\d{10}$/.test(val) || 'Phone number must be exactly 10 digits',
-                    ]"
                   />
                 </div>
               </div>
-              <div class="row no-wrap items-end">
+              <div class="row no-wrap items-end q-mt-md">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">Location.<span class="text-negative">*</span></div>
                   <q-input
@@ -225,7 +207,8 @@ import {
   today,
 } from '@quasar/quasar-ui-qcalendar'
 import '@quasar/quasar-ui-qcalendar/index.css'
-import { ref, reactive, computed } from 'vue'
+import { getActivitiesAndEvents } from 'src/composable/latestComposable'
+import { ref, reactive, computed, onMounted } from 'vue'
 
 export default {
   components: {
@@ -233,7 +216,8 @@ export default {
   },
   setup() {
     const CURRENT_DAY = new Date()
-    const showDialog = ref(false)
+    const showDialog = ref(true)
+    const mode = ref('Add')
     const dataStorage = ref({})
     const getCurrentDay = (day) => {
       const newDay = new Date(CURRENT_DAY)
@@ -244,101 +228,6 @@ export default {
 
     const calendar = ref(null)
     const selectedDate = ref(today())
-
-    const events = reactive([
-      {
-        id: 1,
-        title: '1st of the Month',
-        details: 'Everything is funny as long as it is happening to someone else',
-        date: getCurrentDay(1),
-        bgcolor: 'orange',
-      },
-      {
-        id: 2,
-        title: 'Sisters Birthday',
-        details: 'Buy a nice present',
-        date: getCurrentDay(4),
-        bgcolor: 'green',
-        icon: 'fas fa-birthday-cake',
-      },
-      {
-        id: 3,
-        title: 'Meeting',
-        details: 'Time to pitch my idea to the company',
-        date: getCurrentDay(10),
-        time: '10:00',
-        duration: 120,
-        bgcolor: 'red',
-        icon: 'fas fa-handshake',
-      },
-      {
-        id: 4,
-        title: 'Lunch',
-        details: 'Company is paying!',
-        date: getCurrentDay(10),
-        time: '11:30',
-        duration: 90,
-        bgcolor: 'teal',
-        icon: 'fas fa-hamburger',
-      },
-      {
-        id: 5,
-        title: 'Visit mom',
-        details: 'Always a nice chat with mom',
-        date: getCurrentDay(20),
-        time: '17:00',
-        duration: 90,
-        bgcolor: 'grey',
-        icon: 'fas fa-car',
-      },
-      {
-        id: 6,
-        title: 'Conference',
-        details: 'Teaching Javascript 101',
-        date: getCurrentDay(22),
-        time: '08:00',
-        duration: 540,
-        bgcolor: 'blue',
-        icon: 'fas fa-chalkboard-teacher',
-      },
-      {
-        id: 7,
-        title: 'Girlfriend',
-        details: 'Meet GF for dinner at Swanky Restaurant',
-        date: getCurrentDay(22),
-        time: '19:00',
-        duration: 180,
-        bgcolor: 'teal',
-        icon: 'fas fa-utensils',
-      },
-      {
-        id: 8,
-        title: 'Rowing',
-        details: 'Stay in shape!',
-        date: getCurrentDay(27),
-        bgcolor: 'purple',
-        icon: 'rowing',
-        days: 2,
-      },
-      {
-        id: 9,
-        title: 'Fishing',
-        details: 'Time for some weekend R&R',
-        date: getCurrentDay(27),
-        bgcolor: 'purple',
-        icon: 'fas fa-fish',
-        days: 2,
-      },
-      {
-        id: 10,
-        title: 'Vacation',
-        details: "Trails and hikes, going camping! Don't forget to bring bear spray!",
-        date: getCurrentDay(29),
-        bgcolor: 'purple',
-        icon: 'fas fa-plane',
-        days: 5,
-      },
-    ])
 
     const eventsMap = computed(() => {
       const map = {}
@@ -416,7 +305,15 @@ export default {
       console.info('onClickHeadWorkweek', data)
     }
 
+    const events = reactive([])
+    onMounted(() => {
+      getActivitiesAndEvents().then((response) => {
+        events.splice(0, events.length, ...response) // replaces the contents
+      })
+    })
     return {
+      mode,
+      getCurrentDay,
       dataStorage,
       showDialog,
       calendar,

@@ -78,6 +78,7 @@
             :key="link.title"
             v-bind="link"
             :tab="tab"
+            :pending="link.pending"
             @update-tab="tab = $event"
           />
         </q-list>
@@ -104,93 +105,8 @@
 import { defineComponent, ref, watchEffect } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
 import { useRoute } from 'vue-router'
-
-const linksList = [
-  {
-    title: 'Dashboard',
-    icon: 'space_dashboard',
-    nav: '/',
-  },
-  {
-    title: 'User Management',
-    icon: 'groups',
-    nav: 'users',
-  },
-  {
-    title: 'Report',
-    icon: 'analytics',
-    nav: 'analytic-report',
-  },
-  {
-    title: 'Pets',
-    icon: 'pets',
-    nav: 'pets',
-  },
-  {
-    title: 'Budget & Expenses',
-    icon: 'payments',
-    nav: 'budget-and-expenses',
-  },
-  {
-    title: 'Announcement',
-    icon: 'campaign',
-    nav: 'announcement',
-  },
-  {
-    title: 'Donation',
-    icon: 'volunteer_activism',
-    nav: 'donation',
-  },
-]
-const linksList2 = [
-  {
-    title: 'Inventory',
-    icon: 'inventory',
-    nav: 'invetory',
-  },
-  {
-    title: 'Rescue Report',
-    icon: 'fire_truck',
-    nav: 'rescue-report',
-  },
-  {
-    title: 'Schedule',
-    icon: 'schedule',
-    nav: 'animal-schedule',
-  },
-  {
-    title: 'Activities & Events',
-    icon: 'calendar_month',
-    nav: 'activities-and-events',
-  },
-  {
-    title: 'Supplies',
-    icon: 'precision_manufacturing',
-    nav: 'supplies',
-  },
-  {
-    title: 'Authorization',
-    icon: 'manage_accounts',
-    nav: 'users',
-  },
-  {
-    title: 'Record',
-    icon: 'assignment',
-    nav: '',
-  },
-]
-const linksList3 = [
-  {
-    title: 'Settings',
-    icon: 'settings',
-    nav: '',
-  },
-  {
-    title: 'Logout',
-    icon: 'logout',
-    nav: '',
-  },
-]
+import { globalStore } from 'src/stores/global-store'
+import { computed } from 'vue'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -200,10 +116,88 @@ export default defineComponent({
   },
 
   setup() {
+    const store = globalStore()
     const route = useRoute()
     const showLayout = ref(true)
     const pathExclude = ref(['/user-login', '/user-registration'])
+    const linksList = computed(() => [
+      {
+        title: 'Dashboard',
+        icon: 'space_dashboard',
+        nav: '/',
+      },
+      {
+        title: 'User Management',
+        icon: 'groups',
+        nav: 'users',
+      },
+      {
+        title: 'Report',
+        icon: 'analytics',
+        nav: 'analytic-report',
+      },
+      {
+        title: 'Pets',
+        icon: 'pets',
+        nav: 'pets',
+      },
+      {
+        title: 'Budget & Expenses',
+        icon: 'payments',
+        nav: 'budget-and-expenses',
+      },
+      {
+        title: 'Announcement',
+        icon: 'campaign',
+        nav: 'announcement',
+      },
+      {
+        title: 'Donation',
+        icon: 'volunteer_activism',
+        nav: 'donation',
+      },
+    ])
+    const linksList2 = computed(() => [
+      {
+        title: 'Inventory',
+        icon: 'inventory',
+        nav: 'invetory',
+      },
+      {
+        title: 'Rescue Report',
+        icon: 'fire_truck',
+        nav: 'rescue-report',
+        pending: store.pendingRescueReport,
+      },
+      {
+        title: 'Schedule',
+        icon: 'schedule',
+        nav: 'animal-schedule',
+      },
+      {
+        title: 'Activities & Events',
+        icon: 'calendar_month',
+        nav: 'activities-and-events',
+      },
 
+      {
+        title: 'Authorization',
+        icon: 'manage_accounts',
+        nav: 'users',
+      },
+    ])
+    const linksList3 = computed(() => [
+      {
+        title: 'Settings',
+        icon: 'settings',
+        nav: '',
+      },
+      {
+        title: 'Logout',
+        icon: 'logout',
+        nav: '',
+      },
+    ])
     watchEffect(() => {
       showLayout.value = !pathExclude.value.includes(route.path)
     })

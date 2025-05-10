@@ -50,6 +50,18 @@ class API
                 'data' => $result,
                 'method' => 'GET'
             ]);
+        } else if (array_key_exists('get_pending_rescue_report', $payload)) {
+            $this->db->where("is_deleted", 0);
+            $this->db->where("status", 'pending');
+
+            $result = $this->db->get('tbl_rescue_report');
+            $count = count($result); // 👈 Count the number of records
+
+            echo json_encode([
+                'status' => 'success',
+                'count' => $count,        // ✅ Include the count here
+                'method' => 'GET'
+            ]);
         } else {
             // Return error if 'get_user_by_type' is not provided
             echo json_encode([

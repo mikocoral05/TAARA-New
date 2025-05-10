@@ -1,7 +1,7 @@
 <template>
   <q-item
     clickable
-    class="radius-10 q-my-sm position-relative"
+    class="radius-10 q-my-sm relative-position"
     :class="{ 'bg-primary text-white': isActive }"
     @click="updateTab()"
   >
@@ -18,6 +18,17 @@
     <q-item-section>
       <q-item-label>{{ title }}</q-item-label>
     </q-item-section>
+    <q-badge
+      v-if="pending"
+      color="red"
+      align="middle"
+      class="absolute-right relative-position"
+      style="height: 20px; width: 20px"
+    >
+      <div class="absolute-center text-caption">
+        {{ pending }}
+      </div>
+    </q-badge>
   </q-item>
 </template>
 
@@ -48,6 +59,10 @@ export default defineComponent({
     nav: {
       type: String,
       default: '',
+    },
+    pending: {
+      type: Number,
+      default: 0,
     },
   },
   setup(props, { emit }) {

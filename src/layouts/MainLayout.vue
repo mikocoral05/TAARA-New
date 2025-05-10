@@ -56,6 +56,8 @@
         :thumb-style="{ width: '0px' }"
         :bar-style="{ width: '0px' }"
         style="height: 100%; max-width: 270px"
+        @scroll="scrollFn"
+        ref="myScrollArea"
       >
         <q-list class="q-px-lg">
           <q-item-label header class="text-h6 flex flex-center text-bold">
@@ -102,7 +104,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, watchEffect } from 'vue'
+import { defineComponent, onMounted, ref, watchEffect } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
 import { useRoute } from 'vue-router'
 import { globalStore } from 'src/stores/global-store'
@@ -119,7 +121,13 @@ export default defineComponent({
     const store = globalStore()
     const route = useRoute()
     const showLayout = ref(true)
+    const tab = ref(routeToTabMap[route.path] || 'Dashboard')
+    const myScrollArea = ref(null)
+    const scrollPosition = ref(null)
+    const language = ref('English')
     const pathExclude = ref(['/user-login', '/user-registration'])
+    const leftDrawerOpen = ref(false)
+
     const linksList = computed(() => [
       {
         title: 'Dashboard',
@@ -157,6 +165,7 @@ export default defineComponent({
         nav: 'donation',
       },
     ])
+
     const linksList2 = computed(() => [
       {
         title: 'Inventory',
@@ -186,6 +195,7 @@ export default defineComponent({
         nav: 'users',
       },
     ])
+
     const linksList3 = computed(() => [
       {
         title: 'Settings',
@@ -198,11 +208,6 @@ export default defineComponent({
         nav: '',
       },
     ])
-    watchEffect(() => {
-      showLayout.value = !pathExclude.value.includes(route.path)
-    })
-    const leftDrawerOpen = ref(false)
-    console.log(route.name)
 
     const routeToTabMap = {
       '/': 'Dashboard',
@@ -221,10 +226,24 @@ export default defineComponent({
       '/analytic-report': 'Report',
     }
 
-    const tab = ref(routeToTabMap[route.path] || 'Dashboard')
+    const scrollFn = (event) => {
+      scrollPosition.value = event.verticalPosition
+      localStorage.setItem('myScrollPos', scrollPosition.value)
+    }
 
-    const language = ref('English')
+    watchEffect(() => {
+      showLayout.value = !pathExclude.value.includes(route.path)
+    })
+
+    onMounted(() => {
+      const savedPosition = parseFloat(localStorage.getItem('myScrollPos') || '0')
+      myScrollArea.value?.setScrollPosition('vertical', savedPosition)
+    })
+
     return {
+      scrollPosition,
+      myScrollArea,
+      scrollFn,
       showLayout,
       tab,
       language,

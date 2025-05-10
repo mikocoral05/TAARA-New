@@ -121,9 +121,8 @@ export default defineComponent({
     const store = globalStore()
     const route = useRoute()
     const showLayout = ref(true)
-    const tab = ref(routeToTabMap[route.path] || 'Dashboard')
     const myScrollArea = ref(null)
-    const scrollPosition = ref(null)
+    const scrollPosition = ref(0)
     const language = ref('English')
     const pathExclude = ref(['/user-login', '/user-registration'])
     const leftDrawerOpen = ref(false)
@@ -225,6 +224,7 @@ export default defineComponent({
       '/rescue-report': 'Rescue Report',
       '/analytic-report': 'Report',
     }
+    const tab = ref(routeToTabMap[route.path] || 'Dashboard')
 
     const scrollFn = (event) => {
       scrollPosition.value = event.verticalPosition

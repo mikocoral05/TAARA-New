@@ -1,57 +1,220 @@
 <template>
-  <div class="subcontent">
-    <div class="row q-gutter-sm items-center q-mb-md">
-      <q-btn
-        class="q-px-md"
-        label="Today"
-        color="primary"
-        dense
-        @click="onToday"
-        no-caps
-        unelevated
-      />
-      <q-btn icon="chevron_left" @click="onPrev" dense unelevated />
-      <q-btn icon="chevron_right" @click="onNext" dense unelevated />
-    </div>
-    <div class="row justify-center">
-      <div style="display: flex; max-width: 100%; width: 100%">
-        <q-calendar-month
-          ref="calendar"
-          v-model="selectedDate"
-          animated
-          bordered
-          focusable
-          hoverable
-          no-active-date
-          :day-min-height="60"
-          :day-height="110"
-          @change="onChange"
-          @moved="onMoved"
-          @click-date="onClickDate"
-          @click-day="onClickDay"
-          @click-workweek="onClickWorkweek"
-          @click-head-workweek="onClickHeadWorkweek"
-          @click-head-day="onClickHeadDay"
-        >
-          <template #day="{ scope: { timestamp } }">
-            <template v-for="event in eventsMap[timestamp.date]" :key="event.id">
-              <div
-                :class="badgeClasses(event, 'day')"
-                :style="badgeStyles(event, 'day')"
-                class="row justify-start items-center no-wrap my-event"
-              >
-                <q-icon v-if="event?.icon" :name="event.icon" class="q-mr-xs"></q-icon>
-                <div class="title q-calendar__ellipsis">
-                  {{ event.title + (event.time ? ' - ' + event.time : '') }}
-                  <q-tooltip>{{ event.details }}</q-tooltip>
+  <q-page>
+    <div class="subcontent">
+      <div class="row q-gutter-sm items-center q-mb-md">
+        <q-btn
+          class="q-px-md"
+          label="Today"
+          color="primary"
+          dense
+          @click="onToday"
+          no-caps
+          unelevated
+        />
+        <q-btn icon="chevron_left" @click="onPrev" dense unelevated />
+        <q-btn icon="chevron_right" @click="onNext" dense unelevated />
+      </div>
+      <div class="row justify-center">
+        <div style="display: flex; max-width: 100%; width: 100%">
+          <q-calendar-month
+            ref="calendar"
+            v-model="selectedDate"
+            animated
+            bordered
+            focusable
+            hoverable
+            no-active-date
+            :day-min-height="60"
+            :day-height="110"
+            @change="onChange"
+            @moved="onMoved"
+            @click-date="onClickDate"
+            @click-day="onClickDay"
+            @click-workweek="onClickWorkweek"
+            @click-head-workweek="onClickHeadWorkweek"
+            @click-head-day="onClickHeadDay"
+          >
+            <template #day="{ scope: { timestamp } }">
+              <template v-for="event in eventsMap[timestamp.date]" :key="event.id">
+                <div
+                  :class="badgeClasses(event, 'day')"
+                  :style="badgeStyles(event, 'day')"
+                  class="row justify-start items-center no-wrap my-event"
+                >
+                  <q-icon v-if="event?.icon" :name="event.icon" class="q-mr-xs"></q-icon>
+                  <div class="title q-calendar__ellipsis">
+                    {{ event.title + (event.time ? ' - ' + event.time : '') }}
+                    <q-tooltip>{{ event.details }}</q-tooltip>
+                  </div>
                 </div>
-              </div>
+              </template>
             </template>
-          </template>
-        </q-calendar-month>
+          </q-calendar-month>
+        </div>
       </div>
     </div>
-  </div>
+    <q-dialog position="right" maximized full-height v-model="showDialog">
+      <q-card style="min-width: 750px; height: 500px" class="text-black column no-wrap">
+        <q-form @submit="saveFn()" class="full-height column justify-between no-wrap">
+          <div class="column no-wrap">
+            <q-card-section class="q-py-md row no-wrap justify-between items-center">
+              <div class="text-body1">{{ mode }} Rescue Report Schedule</div>
+              <q-icon name="close" size="1.2rem" @click="showDialog = !showDialog" />
+            </q-card-section>
+            <q-separator />
+            <q-card-section>
+              <div class="text-grey-7" style="font-size: 12px">
+                <span class="text-negative">*</span>All fields are mandatory, except mentioned as
+                (optional).
+              </div>
+            </q-card-section>
+            <q-card-section>
+              <div class="row no-wrap">
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Reporter Name <span class="text-grey-7 text-caption">(optional)</span>
+                  </div>
+                  <q-input
+                    outlined
+                    v-model="dataStorage.name"
+                    dense
+                    class="q-mt-sm"
+                    placeholder="Reporter Name"
+                    style="width: 300px"
+                    :readonly="mode == 'View'"
+                  />
+                </div>
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Phone No. <span class="text-negative">*</span></div>
+                  <q-input
+                    outlined
+                    v-model="dataStorage.phone_number"
+                    dense
+                    type="number"
+                    class="q-mt-sm"
+                    placeholder="920783562"
+                    style="width: 300px"
+                    :readonly="mode == 'View'"
+                    prefix="+63"
+                    :rules="[
+                      (val) => !!val || 'Phone number is required',
+                      (val) => /^\d{10}$/.test(val) || 'Phone number must be exactly 10 digits',
+                    ]"
+                  />
+                </div>
+              </div>
+              <div class="row no-wrap items-end">
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Location.<span class="text-negative">*</span></div>
+                  <q-input
+                    outlined
+                    v-model="dataStorage.location"
+                    dense
+                    :readonly="mode == 'View'"
+                    :rules="[(val) => !!val || 'Location is required!']"
+                    class="q-mt-sm"
+                    style="min-width: 450px"
+                    hint="Location of the reported animal"
+                  />
+                </div>
+                <q-file
+                  v-model="dataStorage.file"
+                  dense
+                  outlined
+                  :readonly="mode == 'View'"
+                  hint="Upload one image (click the other icon to view image)"
+                  class="q-mt-md"
+                  :label="dataStorage.image_path"
+                  style="min-width: 200px"
+                  @update:model-value="imageFnUpdate"
+                >
+                  <template v-slot:prepend> <q-icon name="sym_r_add_photo_alternate" /></template>
+                  <template v-slot:after>
+                    <q-icon name="sym_r_photo_library" @click="showImage = !showImage"
+                  /></template>
+                </q-file>
+                <ImageViewer v-model="showImage" :imageUrl="previewImage" />
+              </div>
+              <div class="row no-wrap q-mt-md">
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Report Status<span class="text-negative">*</span>
+                  </div>
+
+                  <q-select
+                    outlined
+                    v-model="dataStorage.status"
+                    class="q-mt-sm"
+                    :options="reportStatusOption"
+                    emit-value
+                    map-options
+                    dense
+                    :readonly="mode == 'View'"
+                    style="width: 280px"
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                    behavior="menu"
+                    hint="Default to Pending"
+                  />
+                </div>
+
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Rescue Status<span class="text-negative">*</span>
+                  </div>
+                  <q-select
+                    outlined
+                    :readonly="mode == 'View'"
+                    v-model="dataStorage.rescue_status"
+                    class="q-mt-sm"
+                    :options="rescueStatusOptions"
+                    emit-value
+                    map-options
+                    dense
+                    style="width: 280px"
+                    :rules="[(val) => !!val || 'Status is required!']"
+                    behavior="menu"
+                    hint="Adjust rescue status accordingly"
+                  />
+                </div>
+              </div>
+              <div class="column no-wrap q-mt-md">
+                <div class="text-capitalize">Details</div>
+                <q-input
+                  :rules="[(val) => !!val || 'Details is required!']"
+                  outlined
+                  :readonly="mode == 'View'"
+                  type="textarea"
+                  v-model="dataStorage.description"
+                  dense
+                  class="q-mt-sm"
+                />
+              </div>
+            </q-card-section>
+          </div>
+          <q-card-section>
+            <q-btn
+              outline
+              label="Cancel"
+              v-close-popup
+              color="primary"
+              no-caps
+              class="q-mr-md"
+              style="width: 180px"
+            />
+            <q-btn
+              label="Confirm"
+              unelevated
+              color="primary"
+              no-caps
+              style="width: 180px"
+              type="submit"
+            />
+          </q-card-section>
+        </q-form>
+      </q-card>
+    </q-dialog>
+  </q-page>
 </template>
 <script>
 import {
@@ -70,7 +233,8 @@ export default {
   },
   setup() {
     const CURRENT_DAY = new Date()
-
+    const showDialog = ref(false)
+    const dataStorage = ref({})
     const getCurrentDay = (day) => {
       const newDay = new Date(CURRENT_DAY)
       newDay.setDate(day)
@@ -237,6 +401,7 @@ export default {
 
     const onClickDay = (data) => {
       console.info('onClickDay', data)
+      showDialog.value = !showDialog.value
     }
 
     const onClickWorkweek = (data) => {
@@ -252,6 +417,8 @@ export default {
     }
 
     return {
+      dataStorage,
+      showDialog,
       calendar,
       selectedDate,
       eventsMap,

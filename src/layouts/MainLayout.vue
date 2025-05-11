@@ -124,7 +124,7 @@ export default defineComponent({
     const myScrollArea = ref(null)
     const scrollPosition = ref(0)
     const language = ref('English')
-    const pathExclude = ref(['/user-login', '/user-registration'])
+    const pathExclude = ref(['/management/user-login', '/management/user-registration'])
     const leftDrawerOpen = ref(false)
 
     const linksList = computed(() => [

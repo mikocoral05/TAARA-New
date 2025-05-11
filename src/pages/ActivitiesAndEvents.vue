@@ -138,6 +138,7 @@
                     v-model="dataStorage.time"
                     class="q-mt-sm"
                     outlined
+                    hint="what time it will start?"
                     :rules="[(val) => !!val || 'Time is requried!']"
                   >
                     <template v-slot:append>
@@ -170,7 +171,7 @@
                 </q-file>
                 <ImageViewer v-model="showImage" :imageUrl="previewImage" />
               </div>
-              <div class="row no-wrap">
+              <div class="row no-wrap q-mt-sm">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">Duration<span class="text-negative">*</span></div>
 
@@ -193,21 +194,18 @@
 
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">
-                    Rescue Status<span class="text-negative">*</span>
+                    Days<span class="text-grey-7 text-caption q-ml-sm">(optional)</span>
                   </div>
-                  <q-select
+                  <q-input
                     outlined
-                    :readonly="mode == 'View'"
-                    v-model="dataStorage.rescue_status"
-                    class="q-mt-sm"
-                    :options="rescueStatusOptions"
-                    emit-value
-                    map-options
+                    v-model="dataStorage.days"
                     dense
-                    style="width: 280px"
-                    :rules="[(val) => !!val || 'Status is required!']"
-                    behavior="menu"
-                    hint="Adjust rescue status accordingly"
+                    type="number"
+                    class="q-mt-sm"
+                    placeholder="Days"
+                    style="width: 300px"
+                    :readonly="mode == 'View'"
+                    hint="Only input days if event or activities is more than 1 day?"
                   />
                 </div>
               </div>

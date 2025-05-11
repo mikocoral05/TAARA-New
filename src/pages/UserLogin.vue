@@ -593,8 +593,8 @@
     </div>
   </div> -->
   <q-page class="relative-position overflow-hidden">
-    <div class="absolute-right circle-border1"></div>
-    <div class="absolute-right circle-border2"></div>
+    <!-- <div class="absolute-right circle-border1"></div>
+    <div class="absolute-right circle-border2"></div> -->
     <div class="row no-wrap items-center">
       <q-img src="TAARA_Logo.jpg" class="rad-100 q-mr-md" width="40px" />
       <div class="text-bold text-body1">
@@ -655,13 +655,14 @@
           </p>
         </q-form>
       </div>
-      <div class="w-60 relative-position">
-        <q-img
+      <div class="w-60 flex flex-center">
+        <!-- <q-img
           src="login-image1.jpeg"
           class="absolute-center radius-10"
           width="120%"
           style="margin-left: 250px"
-        />
+        /> -->
+        <BubbleChart />
       </div>
     </div>
   </q-page>

@@ -15,7 +15,9 @@ import {
   dearUserPhoneNumber,
 } from 'src/composable/taaraComposable'
 import { expressServer } from 'src/boot/axios'
+import BubbleChart from 'src/components/BubbleChart.vue'
 export default {
+  components: { BubbleChart },
   setup() {
     const $q = useQuasar()
     const router = useRouter()

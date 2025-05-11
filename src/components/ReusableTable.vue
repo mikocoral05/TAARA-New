@@ -21,8 +21,8 @@
     <template v-slot:top>
       <slot name="top">
         <div class="row no-wrap full-width justify-between items-center">
-          <div class="q-table__title q-ml-md">{{ title }}</div>
-          <div class="row no-wrap">
+          <div class="q-table__title q-ml-md" v-if="title">{{ title }}</div>
+          <div class="row no-wrap justify-between" :class="{ 'w-100': title == null }">
             <q-input
               borderless
               style="width: 300px"
@@ -36,29 +36,37 @@
                 <q-icon name="search" />
               </template>
             </q-input>
-            <q-btn icon="sym_r_add" dense flat class="q-mr-md" @click="tableActionFn(null, 'Add')">
-              <q-tooltip v-model="showingAddTooltip">Add {{ title }}</q-tooltip>
-            </q-btn>
-            <q-btn
-              icon="sym_r_delete"
-              dense
-              flat
-              color="negative"
-              class="q-mr-md"
-              @click="toggleSelection"
-            >
-              <q-tooltip v-model="showingDeleteTooltip">Delete {{ title }}</q-tooltip>
-            </q-btn>
-            <q-btn
-              icon="sym_r_close"
-              dense
-              flat
-              color="negative"
-              v-if="showSelection"
-              @click="closeSelection"
-            >
-              <q-tooltip v-model="showingCancelTooltip">Cancel</q-tooltip>
-            </q-btn>
+            <div class="row no-wrap">
+              <q-btn
+                icon="sym_r_add"
+                dense
+                flat
+                class="q-mr-md"
+                @click="tableActionFn(null, 'Add')"
+              >
+                <q-tooltip v-model="showingAddTooltip">Add {{ title }}</q-tooltip>
+              </q-btn>
+              <q-btn
+                icon="sym_r_delete"
+                dense
+                flat
+                color="negative"
+                class="q-mr-md"
+                @click="toggleSelection"
+              >
+                <q-tooltip v-model="showingDeleteTooltip">Delete {{ title }}</q-tooltip>
+              </q-btn>
+              <q-btn
+                icon="sym_r_close"
+                dense
+                flat
+                color="negative"
+                v-if="showSelection"
+                @click="closeSelection"
+              >
+                <q-tooltip v-model="showingCancelTooltip">Cancel</q-tooltip>
+              </q-btn>
+            </div>
           </div>
         </div>
       </slot>

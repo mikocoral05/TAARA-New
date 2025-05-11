@@ -333,6 +333,28 @@ const saveAnimalDetail = (obj) => {
       })
   })
 }
+const saveActivitiesAndEvents = (obj) => {
+  const { file, ...data } = obj // separate the files
+  return new Promise((resolve, reject) => {
+    api
+      .post('activities_and_events.php', {
+        save_activities_and_events: data,
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          if (file) {
+            // uploadAnimalImages(file, response.data.id).then((res) => {
+            //   console.log(res.data)
+            // })
+          }
+          resolve(response.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 
 const uploadAnimalImages = (fileArray, animal_id) => {
   const formData = new FormData()
@@ -687,6 +709,7 @@ const editInventoryList = (obj) => {
 }
 
 export {
+  saveActivitiesAndEvents,
   getActivitiesAndEvents,
   getPendingRescueReport,
   editRescueReport,

@@ -51,37 +51,27 @@ class API
 
     public function httpPost($payload)
     {
-        if (isset($payload['save_animal_list'])) {
-            $data = $payload['save_animal_list'];
+        if (isset($payload['save_activities_and_events'])) {
+            $data = $payload['save_activities_and_events'];
 
             $insertData = [
-                'name'               => $data['name'] ?? null,
-                'species'            => $data['species'] ?? null,
-                'breed'              => $data['breed'] ?? null,
-                'date_of_birth'      => $data['date_of_birth'] ?? null,
-                'fur_color'          => $data['fur_color'] ?? null,
-                'eye_color'          => $data['eye_color'] ?? null,
-                'sex'                => $data['sex'] ?? null,
-                'weight'             => $data['weight'] ?? null,
-                'height'             => $data['height'] ?? null,
-                'temperament'        => $data['temperament'] ?? null,
-                'skills'             => $data['skills'] ?? null,
-                'favorite_food'      => $data['favorite_food'] ?? null,
-                'health_status'      => $data['health_status'] ?? null,
-                'medical_needs'      => $data['medical_needs'] ?? null,
-                'spayed_neutered'    => $data['spayed_neutered'] ?? null,
-                'vaccination_status' => $data['vaccination_status'] ?? null,
-                'rescue_status'      => $data['rescue_status'] ?? null,
-                'story_background'   => $data['story_background'] ?? null,
+                'title'               => $data['title'] ?? null,
+                'details'            => $data['details'] ?? null,
+                'date'              => $data['date'] ?? null,
+                'time'      => $data['time'] ?? null,
+                'duration'          => $data['duration'] ?? null,
+                'days'          => $data['days'] ?? null,
+                'bgcolor'                => $data['bgcolor'] ?? null,
+                'icon'             => $data['icon'] ?? null,
             ];
 
-            $insert = $this->db->insert('tbl_animal_info', $insertData);
+            $insert = $this->db->insert('tbl_activities_and_events', $insertData);
             $id = $this->db->getInsertId();
 
             if ($insert) {
                 echo json_encode([
                     'status' => 'success',
-                    'message' => 'Animal info successfully added',
+                    'message' => 'Activities and Events successfully added',
                     'method' => 'POST',
                     'id' => $id
                 ]);

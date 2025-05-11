@@ -18,7 +18,7 @@
         <div class="row no-wrap items-center">
           <q-btn
             icon="sym_r_add"
-            @click="showDialog = !showDialog"
+            @click="tableAction(null, 'Add')"
             dense
             unelevated
             class="bg-white q-mr-md q-pr-md"
@@ -94,21 +94,39 @@
               <div class="row no-wrap">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">
-                    Title<span class="text-grey-7 text-caption">(optional)</span>
+                    Title<span class="text-negative text-caption">*</span>
                   </div>
                   <q-input
                     outlined
                     v-model="dataStorage.title"
                     dense
                     class="q-mt-sm"
-                    placeholder="Reporter Name"
-                    style="width: 600px"
+                    placeholder="Title of the events or activities"
+                    style="width: 500px"
                     :readonly="mode == 'View'"
                     :rules="[(val) => !!val || 'Title is requried!']"
                   />
                 </div>
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Color in calendar<span class="text-negative text-caption">*</span>
+                  </div>
+                  <q-select
+                    outlined
+                    v-model="dataStorage.bgcolor"
+                    class="q-mt-sm"
+                    :options="eventColors"
+                    dense
+                    :readonly="mode == 'View'"
+                    style="width: 200px"
+                    :rules="[(val) => !!val || 'Need to specify color']"
+                    hide-bottom-space
+                    behavior="menu"
+                    hint="Background color in calendar"
+                  />
+                </div>
               </div>
-              <div class="row no-wrap items-end">
+              <div class="row no-wrap items-end q-mt-sm">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">Date.<span class="text-negative">*</span></div>
                   <q-input
@@ -116,12 +134,13 @@
                     v-model="dataStorage.date"
                     class="q-mt-sm"
                     outlined
+                    hint="Date of events or activities"
                     :rules="[(val) => !!val || 'Date is requried!']"
                   >
                     <template v-slot:append>
                       <q-icon name="event" class="cursor-pointer">
                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="dataStorage.date" mask="YYYY-MM-DD HH:mm">
+                          <q-date v-model="dataStorage.date" mask="YYYY-MM-DD">
                             <div class="row items-center justify-end">
                               <q-btn v-close-popup label="Close" color="primary" flat />
                             </div>
@@ -171,24 +190,21 @@
                 </q-file>
                 <ImageViewer v-model="showImage" :imageUrl="previewImage" />
               </div>
-              <div class="row no-wrap q-mt-sm">
+              <div class="row no-wrap q-mt-md">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">Duration<span class="text-negative">*</span></div>
 
-                  <q-select
+                  <q-input
                     outlined
-                    v-model="dataStorage.status"
-                    class="q-mt-sm"
-                    :options="reportStatusOption"
-                    emit-value
-                    map-options
+                    v-model="dataStorage.duration"
                     dense
+                    type="number"
+                    class="q-mt-sm"
+                    placeholder="Duration"
+                    style="width: 300px"
                     :readonly="mode == 'View'"
-                    style="width: 280px"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                    behavior="menu"
-                    hint="Default to Pending"
+                    :rules="[(val) => !!val || ' Duration is required!']"
+                    hint="Input duration by minutes!"
                   />
                 </div>
 
@@ -216,7 +232,7 @@
                   outlined
                   :readonly="mode == 'View'"
                   type="textarea"
-                  v-model="dataStorage.description"
+                  v-model="dataStorage.details"
                   dense
                   class="q-mt-sm"
                 />
@@ -256,8 +272,11 @@ import {
   today,
 } from '@quasar/quasar-ui-qcalendar'
 import '@quasar/quasar-ui-qcalendar/index.css'
+import { useQuasar } from 'quasar'
 import ImageViewer from 'src/components/ImageViewer.vue'
-import { getActivitiesAndEvents } from 'src/composable/latestComposable'
+import { getActivitiesAndEvents, saveActivitiesAndEvents } from 'src/composable/latestComposable'
+import { getImageLink } from 'src/composable/simpleComposable'
+import { globalStore } from 'src/stores/global-store'
 import { ref, reactive, computed, onMounted } from 'vue'
 
 export default {
@@ -267,7 +286,7 @@ export default {
   },
   setup() {
     const CURRENT_DAY = new Date()
-    const showDialog = ref(true)
+    const showDialog = ref(false)
     const mode = ref('Add')
     const dataStorage = ref({})
     const getCurrentDay = (day) => {
@@ -276,7 +295,8 @@ export default {
       const tm = parseDate(newDay)
       return tm && tm.date
     }
-
+    const $q = useQuasar()
+    const store = globalStore()
     const calendar = ref(null)
     const selectedDate = ref(today())
 
@@ -356,12 +376,101 @@ export default {
     }
 
     const events = reactive([])
+    const arrayOfId = ref([])
+    const previewImage = ref(null)
+    const tableAction = (data, modeParam) => {
+      mode.value = modeParam
+      if (['Add', 'Edit', 'View'].includes(modeParam)) {
+        showDialog.value = !showDialog.value
+        if (modeParam == 'Add') {
+          previewImage.value = null
+          dataStorage.value = {}
+        } else {
+          dataStorage.value = data
+          previewImage.value = data?.image_path ? getImageLink(data.image_path) : null
+          console.log(dataStorage.value)
+        }
+      } else {
+        arrayOfId.value.push(data.id)
+        confirm.value = !confirm.value
+      }
+    }
+
+    const saveFn = () => {
+      if (mode.value == 'Add') {
+        $q.loading.show({
+          group: 'update',
+          message: 'Adding Activities and Events. Please wait...',
+        })
+        dataStorage.value.created_by = store.userData?.user_id ?? 84
+        saveActivitiesAndEvents(dataStorage.value).then((response) => {
+          console.log(response)
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 1000)
+          setTimeout(() => {
+            getActivitiesAndEvents().then((response) => {
+              events.splice(0, events.length, ...response) // replaces the contents
+            })
+            showDialog.value = false
+            $q.loading.hide()
+          }, 2000)
+        })
+      } else if (mode.value == 'Edit') {
+        // $q.loading.show({
+        //   group: 'update',
+        //   message: 'Updating Announcement. Please wait...',
+        // })
+        // editRescueReport(dataStorage.value).then((response) => {
+        //   console.log(response)
+        //   $q.loading.show({
+        //     group: 'update',
+        //     message: response.message,
+        //   })
+        //   setTimeout(() => {
+        //     showDialog.value = false
+        //     $q.loading.hide()
+        //   }, 2000)
+        // })
+      }
+    }
+
     onMounted(() => {
       getActivitiesAndEvents().then((response) => {
         events.splice(0, events.length, ...response) // replaces the contents
       })
     })
+    const eventColors = [
+      'red',
+      'pink',
+      'purple',
+      'deep-purple',
+      'indigo',
+      'blue',
+      'light-blue',
+      'cyan',
+      'teal',
+      'green',
+      'light-green',
+      'lime',
+      'yellow',
+      'amber',
+      'orange',
+      'deep-orange',
+      'brown',
+      'grey',
+      'blue-grey',
+    ]
+
     return {
+      saveFn,
+      previewImage,
+      arrayOfId,
+      tableAction,
+      eventColors,
       mode,
       getCurrentDay,
       dataStorage,

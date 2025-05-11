@@ -131,37 +131,37 @@ export default defineComponent({
       {
         title: 'Dashboard',
         icon: 'space_dashboard',
-        nav: '/',
+        nav: '/management',
       },
       {
         title: 'User Management',
         icon: 'groups',
-        nav: 'users',
+        nav: '/management/users',
       },
       {
         title: 'Report',
         icon: 'analytics',
-        nav: 'analytic-report',
+        nav: '/management/analytic-report',
       },
       {
         title: 'Pets',
         icon: 'pets',
-        nav: 'pets',
+        nav: '/management/pets',
       },
       {
         title: 'Budget & Expenses',
         icon: 'payments',
-        nav: 'budget-and-expenses',
+        nav: '/management/budget-and-expenses',
       },
       {
         title: 'Announcement',
         icon: 'campaign',
-        nav: 'announcement',
+        nav: '/management/announcement',
       },
       {
         title: 'Donation',
         icon: 'volunteer_activism',
-        nav: 'donation',
+        nav: '/management/donation',
       },
     ])
 
@@ -169,29 +169,29 @@ export default defineComponent({
       {
         title: 'Inventory',
         icon: 'inventory',
-        nav: 'invetory',
+        nav: '/management/invetory',
       },
       {
         title: 'Rescue Report',
         icon: 'fire_truck',
-        nav: 'rescue-report',
+        nav: '/management/rescue-report',
         pending: store.pendingRescueReport,
       },
       {
         title: 'Schedule',
         icon: 'schedule',
-        nav: 'animal-schedule',
+        nav: '/management/animal-schedule',
       },
       {
         title: 'Activities & Events',
         icon: 'calendar_month',
-        nav: 'activities-and-events',
+        nav: '/management/activities-and-events',
       },
 
       {
         title: 'Authorization',
         icon: 'manage_accounts',
-        nav: 'users',
+        nav: '/management/users',
       },
     ])
 

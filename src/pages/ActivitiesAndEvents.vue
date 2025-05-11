@@ -12,8 +12,24 @@
             no-caps
             unelevated
           />
-          <q-btn icon="chevron_left" @click="onPrev" dense unelevated class="bg-white" />
-          <q-btn icon="chevron_right" @click="onNext" dense unelevated class="bg-white" />
+          <q-btn
+            icon="chevron_left"
+            @click="onPrev"
+            dense
+            unelevated
+            class="bg-white"
+            label="Prev"
+            no-caps
+          />
+          <q-btn
+            icon-right="chevron_right"
+            @click="onNext"
+            label="Next"
+            no-caps
+            dense
+            unelevated
+            class="bg-white"
+          />
         </div>
         <div class="row no-wrap items-center">
           <q-btn
@@ -26,10 +42,10 @@
             no-caps
           />
           <q-btn
-            icon="sym_r_edit_note"
-            label="Edit"
+            icon="sym_r_calendar_month"
+            label="View"
             no-caps
-            @click="onNext"
+            @click="tableAction(null, 'Summary')"
             dense
             unelevated
             class="bg-white q-pr-md"
@@ -261,6 +277,69 @@
         </q-form>
       </q-card>
     </q-dialog>
+    <q-dialog position="right" maximized full-height v-model="showSummaryDialog">
+      <ReusableTable
+        :rows="events"
+        :columns="columns"
+        separator="vertical"
+        row-key="id"
+        v-model="search"
+        :rows-per-page-options="[13]"
+        selection="multiple"
+        v-model:selected="arrayOfId"
+        v-model:confirm="confirm"
+        v-model:dialog="showDialog"
+        :tableAction="tableAction"
+        :visible-columns="['id', 'title', 'date', 'btn']"
+      >
+        <template #cell-id="{ rowIndex }">
+          {{ rowIndex + 1 }}
+        </template>
+        <template #cell-description="{ row }">
+          <div class="text-wrap ellipsis-3-lines text-center">
+            {{ row.description }}
+          </div>
+        </template>
+        <template #cell-report_date="{ row }">
+          <div class="column no-wrap items-center">
+            <div>
+              {{ row.report_date }}
+            </div>
+            <div class="q-mt-xs row no-wrap items-center">
+              <q-icon name="sym_r_call" class="q-mr-xs" />
+              <div>+{{ row.phone_number }}</div>
+            </div>
+          </div>
+        </template>
+        <template #cell-btn="{ row }">
+          <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
+            <q-menu anchor="bottom left" self="top right">
+              <q-list dense style="min-width: 100px">
+                <q-item clickable v-close-popup @click="tableAction(row, 'View')">
+                  <q-item-section>View</q-item-section>
+                  <q-item-section side>
+                    <q-icon name="sym_r_visibility" size="1.2rem" />
+                  </q-item-section>
+                </q-item>
+                <q-item clickable v-close-popup @click="tableAction(row, 'Edit')">
+                  <q-item-section>Edit</q-item-section>
+                  <q-item-section side>
+                    <q-icon name="sym_r_edit" size="1.2rem" />
+                  </q-item-section>
+                </q-item>
+                <q-separator />
+                <q-item clickable @click="tableAction(row, 'Archieve')">
+                  <q-item-section>Delete</q-item-section>
+                  <q-item-section side>
+                    <q-icon name="sym_r_keyboard_arrow_right" size="1.2rem" />
+                  </q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
+        </template>
+      </ReusableTable>
+    </q-dialog>
   </q-page>
 </template>
 <script>
@@ -274,6 +353,7 @@ import {
 import '@quasar/quasar-ui-qcalendar/index.css'
 import { useQuasar } from 'quasar'
 import ImageViewer from 'src/components/ImageViewer.vue'
+import ReusableTable from 'src/components/ReusableTable.vue'
 import { getActivitiesAndEvents, saveActivitiesAndEvents } from 'src/composable/latestComposable'
 import { getImageLink } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
@@ -283,10 +363,14 @@ export default {
   components: {
     QCalendarMonth,
     ImageViewer,
+    ReusableTable,
   },
   setup() {
     const CURRENT_DAY = new Date()
     const showDialog = ref(false)
+    const showSummaryDialog = ref(false)
+    const search = ref(null)
+    const confirm = ref(false)
     const mode = ref('Add')
     const dataStorage = ref({})
     const getCurrentDay = (day) => {
@@ -390,6 +474,8 @@ export default {
           previewImage.value = data?.image_path ? getImageLink(data.image_path) : null
           console.log(dataStorage.value)
         }
+      } else if (modeParam == 'Summary') {
+        showSummaryDialog.value = !showSummaryDialog.value
       } else {
         arrayOfId.value.push(data.id)
         confirm.value = !confirm.value
@@ -466,6 +552,28 @@ export default {
     ]
 
     return {
+      search,
+      confirm,
+      events,
+      columns: [
+        {
+          name: 'id',
+          required: true,
+          label: '#',
+          align: 'center',
+          field: 'id',
+          sortable: true,
+        },
+        { name: 'title', align: 'center', label: 'Title', field: 'title', sortable: true },
+        { name: 'date', align: 'center', label: 'Date', field: 'date', sortable: true },
+        {
+          name: 'btn',
+          label: 'Action',
+          field: 'btn',
+          align: 'center',
+        },
+      ],
+      showSummaryDialog,
       saveFn,
       previewImage,
       arrayOfId,

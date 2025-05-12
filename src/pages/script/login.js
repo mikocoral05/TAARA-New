@@ -1,4 +1,4 @@
-import { ref, onBeforeUnmount, onMounted } from 'vue'
+import { ref, onBeforeUnmount, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { QSpinnerGears, useQuasar, QSpinnerFacebook } from 'quasar'
 import { dateToday, timeNow, Email, sendTelerivetSms } from 'src/composable/simpleComposable'
@@ -13,7 +13,6 @@ import {
   dearUserName,
   dearUserPhoneNumber,
 } from 'src/composable/taaraComposable'
-import { expressServer } from 'src/boot/axios'
 import BubbleChart from 'src/components/BubbleChart.vue'
 export default {
   components: { BubbleChart },
@@ -23,9 +22,12 @@ export default {
     let fadeValue = ref(false)
     let step = ref(1)
     let code = ref(null)
+    const includeNumber = ref(false)
+    const minSixLenght = ref(false)
     let forgotPasswordStep = ref(0)
     let timer1, timer2
     let miniStep1 = ref(true)
+    const userInfo = ref({})
     let miniStep2 = ref(true)
     let miniStep3 = ref(true)
     let miniStep4 = ref(true)
@@ -365,26 +367,20 @@ export default {
       }
     })
 
-    const fetchCatFact = async () => {
-      try {
-        const response = await expressServer.get('restart') // Make a request to your Express route
-        console.log(response.data) // Assuming you want to log the response data
-      } catch (error) {
-        console.error('Error restarter:', error.message)
-      }
-    }
-
-    onMounted(() => {
-      // sendTelerivetSms();
-      // fetchCatFact();
+    watchEffect(() => {
+      minSixLenght.value = userInfo.value.password?.length > 5
+      includeNumber.value = /\d/.test(userInfo.value.password)
     })
-
     return {
+      slide: ref(1),
+      autoplay: ref(true),
+      userInfo,
+      includeNumber,
+      minSixLenght,
       router,
       showLoginError,
       QSpinnerGears,
       dearUserEmail,
-      fetchCatFact,
       resetLogInInfo,
       resetRegisterInfo,
       finishUp,

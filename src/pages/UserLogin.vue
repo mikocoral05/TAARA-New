@@ -1,29 +1,34 @@
 <template>
-  <q-page class="full-height no-padding">
+  <q-page class="full-height no-padding fig-tree relative-position">
+    <!-- <div class="row no-wrap items-center absolute-top q-pa-md">
+      <q-img src="TAARA_Logo.jpg" class="rad-100 q-mr-md" width="40px" />
+      <div class="text-bold text-body1">
+        <span class="text-primary">TAARA</span> <span class="text-grey-7">.Org</span>
+      </div>
+    </div> -->
     <div class="row no-wrap q-pa-md" style="height: 100vh">
-      <div class="column no-wrap items-center" style="height: 100%; width: 45%">
-        <div class="row no-wrap items-center full-width">
-          <q-img src="TAARA_Logo.jpg" class="rad-100 q-mr-md" width="40px" />
-          <div class="text-bold text-body1">
-            <span class="text-primary">TAARA</span> <span class="text-grey-7">.Org</span>
+      <div class="column no-wrap items-center justify-center" style="height: 100%; width: 45%">
+        <div class="column no-wrap q-mr-md justify-center" style="width: 70%">
+          <div class="text-h5 text-bold fig-tree">
+            Join Us in Our Mission to Help Animals in Need
           </div>
-        </div>
-        <div class="column no-wrap q-mr-md justify-center q-mt-xl" style="width: 70%">
-          <div class="text-h5 text-bold fig-tree">Join Our Loving Community</div>
-          <div class="text-grey-7 fig-tree">Cherishing the life of animals!</div>
+          <div class="text-grey-7 fig-tree">
+            Dedicated to rescuing, caring for, and cherishing every animal's life.
+          </div>
+
           <q-form
             @submit="logInTaara(email_address, password)"
-            class="full-width column justify-center items-center q-mt-xl"
+            class="full-width column justify-center items-center q-mt-lg"
             :class="fadeValue ? '' : 'fade-in'"
           >
             <div class="column no-wrap full-width">
               <p class="q-ma-none q-mb-sm">Username<span class="q-ml-sm text-negative">*</span></p>
               <q-input
                 outlined
-                label="Username"
+                placeholder="Username"
                 dense
-                v-model="Username"
-                :rules="[(val) => /^[^@]+@[^@]+\.[^@]+$/.test(val) || 'Username is required!']"
+                v-model="userInfo.username"
+                :rules="[(val) => !!val || 'Username is required!']"
                 :error="showLoginError"
                 hint="This will appear ini you public profile"
               />
@@ -34,11 +39,14 @@
               </p>
               <q-input
                 outlined
-                label="Ex: JuanDeLaCrus98@gmail.com"
+                placeholder="Email address"
                 dense
-                v-model="email_address"
-                :rules="[(val) => /^[^@]+@[^@]+\.[^@]+$/.test(val) || 'Email address is required!']"
-                :error="showLoginError"
+                v-model="userInfo.email_address"
+                :rules="[
+                  (val) => !!val || 'Email is required!',
+                  (val) => /^[^@]+@[^@]+\.[^@]+$/.test(val) || 'Email is invalid!',
+                ]"
+                hint="We will send confirmation to this email!"
               />
             </div>
             <div class="column no-wrap q-pt-md full-width">
@@ -48,35 +56,58 @@
                 label="Password"
                 type="password"
                 dense
-                v-model="password"
-                :rules="[(val) => !!val || '']"
-                :error="showLoginError"
-                error-message="Username or Password is incorrect!"
+                v-model="userInfo.password"
+                :rules="[(val) => !!val || 'Password is required!']"
               />
             </div>
-            <div class="full-width q-mb-xl row justify-between items-center no-wrap">
-              <p class="text-red text-caption q-ma-none">{{ wrongUserOrPass }}</p>
-              <q-btn
-                flat
-                type="submit"
-                class="float-right"
-                dense
-                label="Forgot Password?"
-                @click="forgotPassBtn(email_address)"
-                no-caps
-                style="width: 150px"
-                :ripple="false"
-              />
+            <div class="column no-wrap full-width q-mb-xl q-mt-sm">
+              <div class="q-mb-md">Your password needs to include:</div>
+              <div class="row no-wrap items-center">
+                <q-icon
+                  name="check_circle"
+                  :color="includeNumber ? 'positive' : 'black'"
+                  class="q-mr-sm"
+                />
+                <div>Must include one number</div>
+              </div>
+              <div class="row no-wrap items-center">
+                <q-icon
+                  name="check_circle"
+                  :color="minSixLenght ? 'positive' : 'black'"
+                  class="q-mr-sm"
+                />
+                <div>Min 6 characters</div>
+              </div>
             </div>
-            <q-btn label="Log In" no-caps class="bg-primary text-white full-width" type="submit" />
+            <q-btn label="Sign In" no-caps class="bg-primary text-white full-width" type="submit" />
             <q-separator class="q-mt-md"></q-separator>
             <p @click="router.push('user-registration')">
-              <u>Don't have an account? Sign up</u>
+              <u>Already have an account? Login</u>
             </p>
           </q-form>
         </div>
       </div>
-      <div class="q-pa-md bg-white radius-10" style="width: 55%"></div>
+      <div class="bg-white radius-10" style="width: 55%">
+        <q-carousel
+          animated
+          class="radius-10"
+          v-model="slide"
+          navigation
+          infinite
+          :autoplay="autoplay"
+          arrows
+          transition-prev="slide-right"
+          transition-next="slide-left"
+          @mouseenter="autoplay = false"
+          @mouseleave="autoplay = true"
+          height="100%"
+        >
+          <q-carousel-slide :name="1" img-src="login/1.jpg" />
+          <q-carousel-slide :name="2" img-src="login/6.jpg" />
+          <q-carousel-slide :name="3" img-src="login/7.jpg" />
+          <q-carousel-slide :name="5" img-src="login/5.jpg" />
+        </q-carousel>
+      </div>
     </div>
   </q-page>
 </template>

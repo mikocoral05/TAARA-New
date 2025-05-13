@@ -333,6 +333,7 @@ const saveAnimalDetail = (obj) => {
       })
   })
 }
+
 const saveActivitiesAndEvents = (obj) => {
   const { file, ...data } = obj // separate the files
   return new Promise((resolve, reject) => {
@@ -573,6 +574,7 @@ const addAnnouncement = (obj) => {
       })
   })
 }
+
 const addRescueRerport = (obj) => {
   const { file, ...data } = obj
   return new Promise((resolve, reject) => {
@@ -708,7 +710,22 @@ const editInventoryList = (obj) => {
   })
 }
 
+const logIn = (obj) => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('login.php', {
+        params: { login: obj },
+      })
+      .then((response) => {
+        resolve(response.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 export {
+  logIn,
   saveActivitiesAndEvents,
   getActivitiesAndEvents,
   getPendingRescueReport,

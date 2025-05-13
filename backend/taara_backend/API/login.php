@@ -14,12 +14,17 @@ class API
 
     public function httpGet($payload)
     {
-        if (array_key_exists('get_schedule', $payload)) {
+        if (array_key_exists('login', $payload)) {
+            $username_or_email = $payload['login']['username'];
+            $password = $payload['login']['password'];
 
-            $this->db->where("p.is_deleted", 0);
-            $this->db->join("tbl_users u", "p.added_by = u.user_id", "LEFT");
-            $this->db->join("tbl_animal_info a", "a.animal_id = p.animal_id", "LEFT");
-            $data = $this->db->get("tbl_animal_schedule p", null, "p.*, u.first_name, a.name");
+            $this->db->where("u.is_deleted", 1);
+            $this->db->where("u.is_activated", 1);
+            $this->db->where("u.password", $password);
+            $this->db->where("u.username", $username_or_email);
+            $this->db->orwhere("u.email_address", $username_or_email);
+            $this->db->join("tbl_files f", "f.id = u.image_id", "LEFT");
+            $data = $this->db->getOne("tbl_users u", null, "u.*, f.image_path");
 
             echo json_encode([
                 'status' => 'success',

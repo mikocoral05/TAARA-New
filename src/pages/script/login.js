@@ -22,6 +22,7 @@ export default {
     let fadeValue = ref(false)
     let step = ref(1)
     let code = ref(null)
+    const tab = ref('login')
     const includeNumber = ref(false)
     const minSixLenght = ref(false)
     let forgotPasswordStep = ref(0)
@@ -372,6 +373,7 @@ export default {
       includeNumber.value = /\d/.test(userInfo.value.password)
     })
     return {
+      tab,
       slide: ref(1),
       autoplay: ref(true),
       userInfo,

@@ -110,40 +110,24 @@
               </div>
 
               <q-form
-                @submit="logInTaara(email_address, password)"
+                @submit="logInTaara"
                 class="full-width column justify-center items-center q-mt-lg"
                 :class="fadeValue ? '' : 'fade-in'"
               >
                 <div class="column no-wrap full-width">
                   <p class="q-ma-none q-mb-sm">
-                    Username<span class="q-ml-sm text-negative">*</span>
+                    Username or Email address<span class="q-ml-sm text-negative">*</span>
                   </p>
                   <q-input
                     outlined
-                    placeholder="Username"
+                    placeholder="Username or Email address"
                     dense
                     v-model="userInfo.username"
                     :rules="[(val) => !!val || 'Username is required!']"
-                    :error="showLoginError"
                     hint="This will appear ini you public profile"
                   />
                 </div>
-                <div class="column no-wrap full-width q-mt-md">
-                  <p class="q-ma-none q-mb-sm">
-                    Email Address<span class="text-negative q-ml-sm">*</span>
-                  </p>
-                  <q-input
-                    outlined
-                    placeholder="Email address"
-                    dense
-                    v-model="userInfo.email_address"
-                    :rules="[
-                      (val) => !!val || 'Email is required!',
-                      (val) => /^[^@]+@[^@]+\.[^@]+$/.test(val) || 'Email is invalid!',
-                    ]"
-                    hint="We will send confirmation to this email!"
-                  />
-                </div>
+
                 <div class="column no-wrap q-pt-md full-width">
                   <p class="q-ma-none q-mb-sm">
                     Password<span class="q-ml-sm text-negative">*</span>
@@ -157,34 +141,16 @@
                     :rules="[(val) => !!val || 'Password is required!']"
                   />
                 </div>
-                <div class="column no-wrap full-width q-mb-xl q-mt-sm">
-                  <div class="q-mb-md">Your password needs to include:</div>
-                  <div class="row no-wrap items-center">
-                    <q-icon
-                      name="check_circle"
-                      :color="includeNumber ? 'positive' : 'black'"
-                      class="q-mr-sm"
-                    />
-                    <div>Must include one number</div>
-                  </div>
-                  <div class="row no-wrap items-center">
-                    <q-icon
-                      name="check_circle"
-                      :color="minSixLenght ? 'positive' : 'black'"
-                      class="q-mr-sm"
-                    />
-                    <div>Min 6 characters</div>
-                  </div>
-                </div>
+
                 <q-btn
-                  label="Sign In"
+                  label="Login"
                   no-caps
-                  class="bg-primary text-white full-width"
+                  class="bg-primary text-white full-width q-mt-xl"
                   type="submit"
                 />
                 <q-separator class="q-mt-md"></q-separator>
                 <p @click="router.push('user-registration')">
-                  <u>Already have an account? Login</u>
+                  <u>Don't have an account yet? Crete now</u>
                 </p>
               </q-form>
             </div>

@@ -77,7 +77,7 @@ const routes = [
   },
   {
     path: '/',
-    component: () => import('../layouts/ManagementLayout.vue'),
+    component: () => import('../layouts/PublicMainLayout.vue'),
 
     children: [
       {

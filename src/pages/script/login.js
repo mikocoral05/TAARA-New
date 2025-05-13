@@ -6,7 +6,6 @@ import {
   dearUserEmail,
   changePass,
   checkEmail,
-  logIn,
   logInDetails,
   wrongUserOrPass,
   addUser,
@@ -14,6 +13,7 @@ import {
   dearUserPhoneNumber,
 } from 'src/composable/taaraComposable'
 import BubbleChart from 'src/components/BubbleChart.vue'
+import { logIn } from 'src/composable/latestComposable'
 export default {
   components: { BubbleChart },
   setup() {
@@ -226,26 +226,26 @@ export default {
       startCountdown()
     }
 
-    let logInTaara = (pay1, pay2) => {
+    let logInTaara = () => {
       $q.loading.show({
-        message: 'Loggin in. Please wait...',
+        message: 'Logging in. Please wait...',
       })
-      logIn(pay1, pay2)
+      logIn(userInfo.value)
         .then((response) => {
-          console.log(response)
+          console.log(response.data)
 
           if (response.status == 'success') {
-            if (response.data[0].user_type == '1') {
-              router.push('/home')
+            if (response.data.user_type == '1') {
+              // router.push('/home')
             } else {
               setTimeout(() => {
-                router.push('/')
+                // router.push('/')
                 $q.loading.hide()
               }, 2000)
             }
           } else {
             setTimeout(() => {
-              showLoginError.value = !showLoginError.value
+              // showLoginError.value = !showLoginError.value
               $q.loading.hide()
             }, 2000)
           }

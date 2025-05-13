@@ -1,0 +1,263 @@
+.all-container {
+  height: 83vh;
+}
+.Register_container {
+  border-radius: 20px;
+  width: 100%;
+  max-width: 548px;
+  height: 100%;
+  max-height: 400px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.6);
+  margin-top: -10px;
+  p {
+    font-size: 13px;
+  }
+  .q-input {
+    font-size: 13px;
+    border-radius: 5px;
+    border: 2px solid #b157ae;
+    margin: 3px 0px;
+    height: 40px;
+    width: 100%;
+  }
+  .q-select {
+    font-size: 13px;
+    border-radius: 5px;
+    border: 2px solid #b157ae;
+    margin: 3px 0px;
+    width: 100%;
+    height: 40px;
+  }
+
+  .submit {
+    width: 200px;
+    max-width: 200px;
+  }
+  .final-submit {
+    margin-top: 41px;
+  }
+}
+.profile-text {
+  font-size: 13px;
+  margin-left: 10px;
+}
+.input {
+  border-radius: 5px;
+  border: 2px solid #b157ae;
+  margin: 3px 0px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.signup {
+  border-radius: 10px;
+  background: #b157ae;
+  color: white;
+  height: 30px;
+  width: 150px;
+}
+.login {
+  color: #b157ae;
+}
+
+.signup-title {
+  letter-spacing: 2px;
+  font-size: 35px;
+}
+
+.sex-container {
+  width: 30%;
+}
+.birthdate-container {
+  width: auto;
+}
+.occupation-container {
+  width: auto;
+}
+.civil-status-container {
+  width: 100%;
+}
+.phone-number-container {
+  width: 100%;
+}
+
+.email-password-container {
+  width: 100%;
+  max-width: 50%;
+}
+.profile-valid-id-container {
+  .profile {
+    width: 100%;
+  }
+  .valid_id {
+    width: 100%;
+  }
+  .upload {
+    border: 2px solid #b157ae;
+    height: 42px;
+    border-radius: 5px;
+    .img-icon {
+      font-size: 2rem;
+    }
+    .image-text {
+      font-size: 12px;
+      width: 90px;
+    }
+  }
+}
+.purok {
+  width: 100%;
+  max-width: 50%;
+}
+.brgy {
+  width: 100%;
+  max-width: 50%;
+}
+.city-province-container {
+  .city {
+    width: 50%;
+  }
+  .province {
+    width: 50%;
+  }
+}
+@media only screen and (max-width: 933px) {
+  .all-container {
+    height: 86vh;
+  }
+}
+
+@media only screen and (max-width: 701px) {
+  .all-container {
+    height: 91vh;
+  }
+}
+
+@media only screen and (max-width: 501px) {
+  .all-container {
+    height: 93.5vh;
+  }
+}
+@media only screen and (max-width: 584px) {
+  .sex-container {
+    width: 32%;
+  }
+
+  .occupation-container {
+    width: 34%;
+  }
+  .Register_container {
+    max-width: 95%;
+  }
+}
+@media only screen and (max-width: 579px) {
+  .birthdate-container {
+    width: 180px;
+  }
+}
+@media only screen and (max-width: 500px) {
+  .purok {
+    max-width: 60%;
+  }
+  .brgy {
+    max-width: 40%;
+  }
+  .profile-valid-id-container {
+    .upload {
+      .img-icon {
+        font-size: 1.5rem;
+      }
+      .image-text {
+        font-size: 12px;
+        width: 50px;
+      }
+    }
+  }
+
+  .Register_container {
+    h6 {
+      font-size: 17px;
+    }
+    .signup-title {
+      font-size: 28px;
+    }
+  }
+}
+@media only screen and (max-width: 438px) {
+  .sex-container {
+    width: 45%;
+  }
+
+  .occupation-container {
+    margin-top: 5px;
+    width: 60%;
+  }
+  .Register_container {
+    max-height: 465px;
+  }
+
+  .mssb-container {
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: start;
+    align-items: start;
+    .sex-container {
+      width: 50%;
+    }
+    .birthdate-container {
+      width: 50%;
+    }
+  }
+  .purok {
+    width: 100%;
+    max-width: 60%;
+  }
+  .brgy {
+    width: 100%;
+    max-width: 40%;
+  }
+  .city-province-container {
+    flex-wrap: wrap;
+    justify-content: start;
+    .city {
+      width: 60%;
+    }
+    .province {
+      width: 80%;
+    }
+  }
+  .Register_container {
+    .submit {
+      width: 200px;
+      max-width: 150px;
+    }
+    .final-submit {
+      margin-top: 21px;
+    }
+    .email-label {
+      margin-top: 60px;
+    }
+  }
+  .profile-valid-id-container {
+    margin-top: 3px;
+  }
+}
+@media only screen and (max-width: 400px) {
+  .profile-valid-id-container {
+    .upload {
+      .image-text {
+        width: 30px;
+      }
+    }
+  }
+
+  .Register_container {
+    padding: 15px 5px 0px 5px;
+    .submit {
+      font-size: 12px;
+    }
+  }
+}

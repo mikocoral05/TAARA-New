@@ -1,0 +1,140 @@
+.all-container {
+  background: rgba(240, 242, 245, 255);
+}
+.container {
+  border: 1px solid black;
+  background: #ffffff;
+  width: 100%;
+  max-width: 900px;
+  border: 1px solid white;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.containeree {
+  border: 1px solid gray;
+  border-radius: 10px;
+  /* //  max-height: 900px; */
+}
+.back {
+  border: 1px solid #b157ae;
+  background: white;
+  color: #b157ae;
+}
+.submit {
+  color: white;
+  background: #b157ae;
+}
+ul li {
+  color: black;
+  font-weight: normal;
+}
+.image {
+  height: 90px;
+  width: 90px;
+}
+.long-div {
+  width: 100%;
+  max-width: 650px;
+}
+.div-details {
+  width: 100%;
+  border: 1px solid#B157AE;
+  border-radius: 5px;
+}
+
+.name-container {
+  width: 100%;
+}
+.q-input {
+  border: 1px solid#B157AE;
+  border-radius: 5px;
+}
+.q-select {
+  border: 1px solid#B157AE;
+  border-radius: 5px;
+}
+.input-autgrow {
+  width: 100%;
+  border: 1px solid #b157ae;
+  border-radius: 5px;
+  margin: 0px;
+  padding: 0px;
+}
+.my-card {
+  width: 100%;
+  max-width: 500px;
+}
+@media only screen and (max-width: 933px) {
+  .title {
+    font-size: 30px;
+  }
+}
+
+@media only screen and (max-width: 710px) {
+  .long-div {
+    width: 90%;
+  }
+  .div-details {
+    width: 100%;
+  }
+  .title {
+    font-size: 28px;
+  }
+}
+@media only screen and (max-width: 553px) {
+  .title {
+    font-size: 20px;
+    margin-top: 0px;
+    margin-bottom: 10px;
+  }
+  .image {
+    height: 70px;
+    width: 70px;
+  }
+  .all-container {
+    background: white;
+    margin-top: 10px;
+  }
+  .container {
+    border: none;
+    box-shadow: none;
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 0px;
+  }
+  .long-div {
+    margin: 5px 0px 5px 0px;
+    p {
+      font-size: 13px;
+    }
+    div {
+      margin: 0px;
+    }
+  }
+  .input {
+    font-size: 12px;
+  }
+  .input-autgrow {
+    font-size: 12px;
+  }
+  .long-div-cantainer {
+    margin-top: 20px;
+  }
+  .q-btn {
+    font-size: 12px;
+  }
+
+  .container {
+    height: auto;
+    min-height: 83vh;
+  }
+}
+@media only screen and (max-width: 376px) {
+  .image {
+    height: 60px;
+    width: 60px;
+  }
+  .container {
+    min-height: 85vh;
+  }
+}

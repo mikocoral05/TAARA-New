@@ -1,0 +1,147 @@
+.card {
+  border-radius: 10px;
+}
+
+.q-scroll-area {
+  height: 310px;
+}
+.budget-title {
+  font-size: 40px;
+}
+.budget-total-container {
+  min-width: 295px;
+  .first-child {
+    height: 450px;
+  }
+}
+.table {
+  height: 100%;
+  min-height: 450px;
+}
+.update-add-dialog {
+  .below-label-container {
+    label:nth-child(2) {
+      margin-right: 90px;
+    }
+  }
+  .add-icon-container {
+    .q-btn {
+      color: #b157ae;
+      background: white;
+      border: 1px solid #b157ae;
+    }
+  }
+}
+@media only screen and (max-width: 933px) {
+  .budget-title {
+    font-size: 25px;
+    margin: 0;
+  }
+}
+@media only screen and (max-width: 701px) {
+  .budget-table-container {
+    flex-direction: column;
+    .budget-total-container {
+      width: 100%;
+      margin: 0px 0px 10px 0px;
+    }
+  }
+}
+@media only screen and (max-width: 501px) {
+  .all-container {
+    padding: 13px;
+  }
+  .budget-table-container {
+    .budget-total-container {
+      .first-child {
+        height: auto;
+        width: 100%;
+        .q-select {
+          font-size: 12px;
+        }
+        h5 {
+          font-size: 20px;
+        }
+        p {
+          font-size: 15px;
+        }
+      }
+    }
+    .table {
+      tr {
+        th {
+          font-size: 13px;
+        }
+      }
+      .q-tr {
+        .q-td {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+  .download-add-btn-container {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    margin-right: 0px;
+    justify-content: space-between;
+    .q-btn {
+      font-size: 12px;
+      width: 200px;
+      max-width: 200px;
+    }
+  }
+
+  .budget-title {
+    font-size: 22px;
+    padding: 10px 0px 10px 0px;
+  }
+  .update-add-dialog {
+    .label-container {
+      label:nth-child(2) {
+        font-size: 12px;
+      }
+    }
+    .q-input {
+      font-size: 12px;
+    }
+    .below-label-container {
+      label:nth-child(2) {
+        margin-right: 0px;
+      }
+    }
+    .lower-button-container {
+      div {
+        .q-btn {
+          font-size: 12px;
+        }
+      }
+    }
+    .add-icon-container {
+      .q-btn {
+        font-size: 12px;
+        margin-top: -90px;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 430px) {
+}
+@media only screen and (max-width: 385px) {
+  .budget-table-container {
+    flex-direction: column;
+    .budget-total-container {
+      .first-child {
+        h5 {
+          font-size: 18px;
+        }
+        p {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+}
+
+@media only screen and (max-width: 385px) {
+}

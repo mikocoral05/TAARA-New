@@ -1,0 +1,589 @@
+.drop-list:hover {
+  background-color: #b157ae;
+  color: #fff;
+  transition: all 0.15s;
+}
+.q-scroll-area {
+  height: 500px;
+}
+.my-div-mobile {
+  display: none;
+  .q-form {
+    .cancelbtn {
+      width: 230px;
+      border: 2px solid rgba(208, 213, 221, 1);
+      border-width: 2px;
+      border-radius: 4px;
+      color: #1d242e;
+    }
+    .savebtn {
+      width: 230px;
+      border: 2px solid #b157ae;
+      background: #b157ae;
+      border-width: 2px;
+      border-radius: 4px;
+      color: white;
+      // font-size: 17px;
+    }
+  }
+}
+.mobile-viewdetails {
+  display: none;
+}
+.days-container,
+.mobile-days-container {
+  border: 2px solid #b157ae;
+  border-radius: 5px;
+  padding: 14px 7px;
+}
+.left-today-expense {
+  height: auto;
+  border: 2px solid #b157ae;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  div {
+    height: 100%;
+    border-radius: 10px;
+    .day {
+      font-size: 28px;
+      font-weight: 700;
+    }
+    p {
+      font-size: 18px;
+    }
+  }
+}
+.right-funds-compute {
+  border-radius: 10px;
+  .container {
+    height: auto;
+    border: 2px solid #b157ae;
+    border-radius: 10px;
+    .first-div {
+      div {
+        p {
+          font-size: 17px;
+        }
+      }
+    }
+    div {
+      p {
+        font-size: 18px;
+      }
+    }
+  }
+}
+.button-container {
+  margin-bottom: 10px;
+  .q-btn {
+    border: 2px solid #b157ae;
+  }
+
+  .add {
+    background: #b157ae;
+    color: white;
+  }
+}
+.table {
+  border-radius: 10px;
+  height: 410px;
+}
+.action-btn {
+  width: 100px;
+}
+.q-card {
+  width: 100%;
+  max-width: 800px;
+  .q-card-section {
+    .icon-container {
+      border-radius: 100%;
+      background: rgb(253, 217, 253);
+      width: 55px;
+      .icon {
+        border-radius: 100%;
+        background: rgb(254, 201, 254);
+        font-size: 1.5rem;
+      }
+    }
+    .second-row {
+      div {
+        border: 2px solid #b157ae;
+        padding: 5px 15px;
+        border-radius: 5px;
+        .q-icon {
+          font-size: 1.3rem;
+          color: white;
+          background: #b157ae;
+          border-radius: 100%;
+          margin-right: 10px;
+        }
+        p {
+          font-size: 16px;
+        }
+      }
+    }
+    p {
+      color: rgba(102, 112, 133, 1);
+    }
+  }
+  .q-card-section2 {
+    div {
+      margin: 0px 8px;
+      margin-top: 10px;
+      width: 100%;
+      p {
+        margin: 0px;
+        padding-bottom: 5px;
+      }
+      .q-input {
+        border: 1px solid #b157ae;
+        border-radius: 5px;
+      }
+      .q-select {
+        border: 1px solid #b157ae;
+        border-radius: 5px;
+      }
+    }
+    .amount-quantity-container {
+      margin: 0px 8px;
+      margin-top: 0px;
+      width: 100%;
+      div {
+        p {
+          margin: 0px;
+          padding-bottom: 5px;
+        }
+        .q-input {
+          border: 1px solid #b157ae;
+          border-radius: 5px;
+          text-transform: capitalize;
+        }
+      }
+    }
+  }
+  .q-card-action {
+    .cancel {
+      color: #b157ae;
+      background: white;
+      border: 2px solid #b157ae;
+      width: 150px;
+    }
+    .save {
+      width: 150px;
+      border: 2px solid #b157ae;
+      color: white;
+      background: #b157ae;
+    }
+  }
+}
+
+@media only screen and (max-width: 1186px) {
+  .first-left-right-div-container {
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+  .select-date-container {
+    width: 260px;
+  }
+  .q-scroll-area {
+    height: 100vh;
+    max-height: 68vh;
+  }
+  .days-index {
+    height: 100%;
+  }
+  .left-today-expense {
+    max-width: 250px;
+  }
+  .button-container {
+    margin-bottom: 10px;
+    .q-btn {
+      border: 2px solid #b157ae;
+    }
+
+    .add {
+      background: #b157ae;
+      color: white;
+    }
+  }
+}
+.mobile-days-container {
+  display: none;
+}
+@media only screen and (max-width: 917px) {
+  .left-today-expense {
+    max-width: 240px;
+  }
+}
+@media only screen and (max-width: 883px) {
+  .first-left-right-div-container-container {
+    padding-top: 20px;
+  }
+  .left-today-expense {
+    max-width: 100%;
+    margin-bottom: 5px;
+  }
+  .right-div {
+    flex-direction: column;
+    margin-bottom: 5px;
+  }
+  .right-funds-compute {
+    margin-left: 0px;
+  }
+  .button-container {
+    margin-bottom: 5px;
+    margin-top: 5px;
+  }
+  .table {
+    border-radius: 10px;
+    height: 360px;
+  }
+}
+
+@media only screen and (max-width: 779px) {
+  .button-container {
+    flex-wrap: wrap;
+    margin-bottom: 0px;
+    .q-btn {
+      margin-right: 0px;
+      margin-bottom: 5px;
+    }
+
+    .add {
+      margin-bottom: 5px;
+    }
+  }
+}
+@media only screen and (max-width: 609px) {
+  .first-left-right-div-container {
+    flex-direction: column;
+    justify-content: start;
+  }
+  .second-left-right-div-container {
+    margin-left: 0px;
+  }
+  .select-date-container {
+    order: 2;
+    width: 100%;
+  }
+  .table {
+    display: none;
+  }
+  .button-container {
+    display: none;
+  }
+  .card__input {
+    width: 100%;
+    margin-left: 15px;
+    margin-right: 15px;
+  }
+}
+@media only screen and (max-width: 500px) {
+  .mobile-days-container {
+    display: flex;
+  }
+
+  .days-container {
+    display: none;
+  }
+  .my-div-mobile {
+    display: flex;
+    .q-form {
+      div {
+        margin: 10px 0px;
+      }
+      .remove-margin {
+        margin: 0px;
+      }
+    }
+  }
+  .mobile-viewdetails {
+    display: block;
+  }
+  .header {
+    .q-icon {
+      color: #b157ae;
+      font-size: 2rem;
+    }
+    p {
+      font-size: 16px;
+    }
+  }
+  .details-container {
+    border: 2px solid #b157ae;
+    border-radius: 10px;
+    label {
+      font-weight: BOLD;
+    }
+    p {
+      text-transform: capitalize;
+      margin: 5px;
+    }
+  }
+  .view-details {
+    label {
+      font-weight: BOLD;
+    }
+    p {
+      text-transform: capitalize;
+      margin: 5px;
+    }
+  }
+  .q-card {
+    width: 100%;
+    max-width: 800px;
+    .q-card-section {
+      .icon-container {
+        margin: 0px;
+        .icon {
+          border-radius: 100%;
+          background: rgb(254, 201, 254);
+          font-size: 1.5rem;
+        }
+      }
+      .second-row {
+        div {
+          display: none;
+        }
+      }
+    }
+    .q-card-section2 {
+      flex-wrap: wrap;
+      div {
+        margin: 0px 8px;
+        margin-top: 5px;
+        width: 100%;
+        p {
+          margin: 0px;
+          padding-bottom: 5px;
+        }
+      }
+
+      .amount-quantity-container {
+        width: 100%;
+        div {
+          margin: 0px;
+          margin-top: 5px;
+          padding: 0px;
+          width: 100%;
+          p {
+            margin: 0px;
+            padding-bottom: 5px;
+          }
+          .q-input {
+            border: 1px solid #b157ae;
+            border-radius: 5px;
+            text-transform: capitalize;
+          }
+        }
+        div:nth-child(1) {
+          margin-right: 5px;
+        }
+      }
+    }
+    .q-card-action {
+      display: flex;
+      flex-wrap: nowrap;
+      justify-content: space-around;
+      .cancel {
+        margin: 0px;
+        width: 130px;
+      }
+      .save {
+        width: 130px;
+        margin: 0px;
+      }
+    }
+  }
+}
+@media only screen and (max-width: 402px) {
+  .header {
+    .q-icon {
+      font-size: 1.5rem;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+  .details-container {
+    border: 2px solid #b157ae;
+    border-radius: 10px;
+    label {
+      font-weight: BOLD;
+      font-size: 12px;
+    }
+    p {
+      text-transform: capitalize;
+      margin: 5px;
+    }
+  }
+  .view-details {
+    h6 {
+      font-size: 16px;
+    }
+    label {
+      font-weight: BOLD;
+      font-size: 12px;
+    }
+    p {
+      text-transform: capitalize;
+      margin: 5px;
+    }
+  }
+  .my-div-mobile {
+    .small-label {
+      font-size: 12px;
+    }
+    .q-form {
+      div {
+        label {
+          font-size: 12px;
+        }
+      }
+      .cancelbtn,
+      .savebtn {
+        font-size: 12px;
+      }
+    }
+  }
+  .left-today-expense {
+    div {
+      .day {
+        font-size: 20px;
+        font-weight: 700;
+      }
+      p:nth-child(2),
+      p:nth-child(3) {
+        font-size: 15px;
+      }
+    }
+  }
+  .right-funds-compute {
+    .container {
+      .first-div {
+        div {
+          p {
+            font-size: 15px;
+          }
+        }
+      }
+      div {
+        p {
+          font-size: 15px;
+        }
+      }
+    }
+  }
+  .mobile-days-container {
+    label {
+      font-size: 13px;
+    }
+  }
+}
+
+@media only screen and (max-width: 376px) {
+  .left-today-expense {
+    div {
+      .day {
+        font-size: 15px;
+        font-weight: 700;
+      }
+      p:nth-child(2),
+      p:nth-child(3) {
+        font-size: 12px;
+      }
+    }
+  }
+  .right-funds-compute {
+    .container {
+      .first-div {
+        div {
+          p {
+            font-size: 12px;
+          }
+        }
+      }
+      div {
+        p {
+          font-size: 12px;
+        }
+      }
+    }
+  }
+  .mobile-days-container {
+    label {
+      font-size: 12px;
+    }
+  }
+
+  .q-select-container {
+    .q-select {
+      font-size: 12px;
+    }
+  }
+  .view-details {
+    label {
+      font-size: 12px;
+    }
+    p {
+      font-size: 12px;
+    }
+  }
+  .details-container {
+    label {
+      font-size: 12px;
+    }
+    p {
+      font-size: 12px;
+    }
+  }
+  .q-card {
+    .q-card-section {
+      .second-row {
+        h6 {
+          font-size: 18px;
+        }
+      }
+      p {
+        font-size: 12px;
+      }
+    }
+    .q-card-section2 {
+      div {
+        p {
+          font-size: 12px;
+        }
+        .q-input {
+          font-size: 12px;
+        }
+      }
+      .amount-quantity-container {
+        div {
+          p {
+            font-size: 12px;
+          }
+          .q-input {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+    .q-card-action {
+      .cancel,
+      .save {
+        font-size: 12px;
+      }
+    }
+  }
+  .my-div-mobile {
+    .q-form {
+      div {
+        div {
+          margin: 0px 0px;
+        }
+      }
+    }
+  }
+}

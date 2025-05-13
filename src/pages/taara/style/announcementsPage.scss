@@ -1,0 +1,167 @@
+.animal_image {
+  height: 400px;
+  width: auto;
+  display: inline-block;
+}
+.splitter {
+  white-space: pre-line;
+}
+.announcements-container {
+  width: 100%;
+  max-width: 1070px;
+  border: 2px white black;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 255);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.announcement-details {
+  white-space: pre-line;
+  word-wrap: break-word;
+  // font-size: 16px;
+}
+.announcement-title {
+  margin-top: -40px;
+}
+.image-container {
+  overflow-x: hidden;
+  height: auto;
+  overflow-x: scroll;
+  width: 98%;
+}
+.showLessMoreButton {
+  color: #b157ae;
+  font-size: 13px;
+}
+.close-dialog {
+  font-size: 2rem;
+}
+@media only screen and (max-width: 933px) {
+  .announcement-title {
+    font-size: 25px;
+    margin: 0;
+  }
+  .announcement-title-container {
+    margin-top: 0;
+    padding: 0;
+  }
+  .big-announcement-title-container {
+    margin-top: -30px;
+  }
+  .date-and-time-container {
+    margin: 0;
+    padding: 0;
+  }
+  .date-and-time-container p {
+    margin: 0;
+    padding: 0;
+  }
+  .date-and-time-container p:first-child {
+    margin-right: 10px;
+  }
+}
+@media only screen and (max-width: 701px) {
+  .announcement-title {
+    font-size: 25px;
+  }
+  .announcement-details {
+    font-size: 15px;
+  }
+  .image-container {
+    margin: auto;
+    margin-top: 10px;
+  }
+  .animal_image {
+    margin: 5px;
+  }
+  .announcements-container {
+    margin-bottom: 15px;
+  }
+}
+@media only screen and (max-width: 530px) {
+  .announcement-details {
+    font-size: 14px;
+  }
+
+  .announcements-container {
+    margin-bottom: 13px;
+    padding: 10px;
+    margin-top: 0;
+  }
+  .big-announcement-title-container {
+    margin-top: 10px;
+  }
+}
+@media only screen and (max-width: 430px) {
+  .announcement-title {
+    margin-top: -5px;
+    font-size: 18px;
+    margin-left: -10px;
+  }
+  .date-and-time-container p {
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+  }
+  .announcement-details {
+    font-size: 12px;
+  }
+  .announcements-container {
+    margin-bottom: 12px;
+  }
+  .showLessMoreButton {
+    font-size: 12px;
+  }
+  .image-container {
+    overflow: hidden;
+    width: 98%;
+    display: grid;
+    display: flex;
+    flex-wrap: wrap;
+    background: #e4e6eb;
+    padding: 3px;
+    height: auto;
+  }
+  .image-container > div {
+    max-width: 200px;
+    height: 130px;
+    flex: 1 0 calc(33.33% - 20px); /* Subtract twice the gap size */
+    background: rgba(255, 255, 255, 0.8);
+    margin: 1px; /* Half of the gap size */
+    .animal_image {
+      height: 100%;
+      width: 100%;
+      margin: auto;
+      object-fit: cover;
+    }
+  }
+  .image-container:nth-child(4),
+  .image-container:nth-child(5) {
+    flex-grow: 2;
+  }
+
+  .showLessMoreButton {
+    font-size: 11px;
+  }
+}
+@media only screen and (max-width: 385px) {
+  .announcement-title-container {
+    margin: 0;
+    padding: 0;
+  }
+  .date-and-time-container {
+    margin: 0;
+    padding: 0;
+  }
+  .date-and-time-container p {
+    font-size: 11px;
+  }
+  .announcements-container {
+    margin-bottom: 8px;
+  }
+}
+
+@media only screen and (max-width: 385px) {
+  .close-dialog {
+    font-size: 1.5rem;
+  }
+}

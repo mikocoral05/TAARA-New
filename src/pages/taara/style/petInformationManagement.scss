@@ -1,0 +1,274 @@
+img {
+  max-width: 100%;
+  height: 150px;
+  width: 100%;
+  object-fit: cover;
+}
+.drawer {
+  min-width: 230px;
+  height: 100vh;
+  max-height: 90vh;
+  .q-input {
+    font-size: 13px;
+  }
+  .q-select {
+    font-size: 13px;
+  }
+}
+
+.my-card {
+  width: 200px;
+  border-radius: 10px;
+}
+.q-btn {
+  width: 100%;
+}
+.display-image {
+  height: 90px;
+  width: 90px;
+  border-radius: 100%;
+  object-fit: cover;
+}
+.animal-name {
+  padding: 5px;
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: #b157ae;
+}
+.advancesearch-dropdown {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  // background: rgb(0, 0, 0, 0.7);
+  background: white;
+  color: black;
+  height: auto;
+  // width: 100%;
+  z-index: 3;
+}
+.advance-button-responsive {
+  border: 1px solid #b157ae;
+  font-weight: 300;
+}
+.advance-button-responsive-select {
+  border: 1px solid #b157ae;
+  width: 100%;
+  padding-left: 15px;
+  height: 30px;
+}
+
+.responsive-advance-search-input {
+  height: 30px;
+}
+
+.advancesearch-button-responsive {
+  display: none;
+}
+.search-icon {
+  position: absolute;
+  right: 0;
+  margin-top: -30px;
+}
+.add-new-animal-button {
+  width: 200px;
+  background: #b157ae;
+  color: white;
+}
+.cancel {
+  width: 250px;
+  color: #b157ae;
+  border: 1px solid #b157ae;
+  background: white;
+}
+.save-details {
+  width: 250px;
+  color: white;
+  background: #b157ae;
+}
+.add-image {
+  background: lightgray;
+  width: 150px;
+  height: 60px;
+  font-size: 13px;
+}
+.header {
+  display: none;
+}
+.add-new-animal-container {
+  height: 81vh;
+  width: 100vw;
+  min-width: 30vw;
+  p {
+    font-size: 13px;
+    font-weight: normal;
+  }
+  .q-input {
+    font-size: 12px;
+    text-transform: capitalize;
+  }
+  .q-select {
+    font-size: 12px;
+    text-transform: capitalize;
+  }
+  .autogrow-input {
+    font-size: 12px;
+  }
+  .add-button-container {
+    .q-btn {
+      font-size: 13px;
+    }
+  }
+}
+.mobile-adjuster {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+
+@media only screen and (max-width: 933px) {
+  .my-card {
+    width: 150px;
+  }
+  .animal-name {
+    font-size: 13px;
+    padding: 2px;
+  }
+}
+@media only screen and (max-width: 764px) {
+  .my-card {
+    width: 130px;
+  }
+  .animal-name {
+    font-size: 13px;
+    padding: 2px;
+  }
+  img {
+    height: 120px;
+  }
+  .animal-name {
+    font-size: 12px;
+    padding: 1px;
+  }
+}
+@media only screen and (max-width: 581px) {
+  .advancesearch-button-responsive {
+    display: flex;
+  }
+  .drawer {
+    display: none;
+  }
+  .add-new-animal-button {
+    margin-right: 10px;
+  }
+}
+@media only screen and (max-width: 501px) {
+  .header {
+    display: flex;
+    .q-icon {
+      color: #b157ae;
+      font-size: 2rem;
+    }
+    p {
+      font-size: 16px;
+    }
+  }
+  .my-div-mobile {
+    .first-child {
+      border: 1px solid rgb(179, 183, 192);
+      border-radius: 10px;
+    }
+    div {
+      .q-form {
+        div {
+          margin-bottom: 10px;
+        }
+      }
+    }
+  }
+
+  .add-new-animal {
+    display: none;
+  }
+  .add-new-animal-container {
+    margin-top: 4.3vh;
+    min-height: 92vh;
+    min-width: 100vw;
+  }
+  .adjuster-container {
+    flex-direction: column;
+  }
+  .mobile-adjuster {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    div {
+      margin: 0px;
+    }
+    .adjust-margin {
+      margin-right: 10px;
+    }
+    .adjust-margin-width {
+      margin-right: 10px;
+      width: 90%;
+    }
+  }
+  .mobile-adjuster:nth-child(1) {
+    margin-bottom: 8px;
+  }
+}
+@media only screen and (max-width: 400px) {
+  .my-card {
+    width: 130px;
+  }
+  .animal-name {
+    font-size: 13px;
+    padding: 2px;
+  }
+  img {
+    height: 120px;
+  }
+  .animal-name {
+    font-size: 11px;
+    padding: 1px;
+  }
+  .header {
+    .q-icon {
+      font-size: 1.5rem;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+}
+
+@media only screen and (max-width: 376px) {
+  .my-div-mobile {
+    div {
+      .q-form {
+        h5 {
+          font-size: 23px;
+        }
+        div {
+          margin-bottom: 10px;
+          p {
+            font-size: 12px;
+          }
+          .q-input {
+            font-size: 12px;
+          }
+          .q-select {
+            font-size: 12px;
+          }
+          .q-btn {
+            font-size: 12px;
+          }
+        }
+      }
+    }
+  }
+  .advancesearch-dropdown {
+    margin: 0px;
+  }
+}

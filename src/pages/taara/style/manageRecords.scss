@@ -1,0 +1,147 @@
+.animals-navi {
+  border-radius: 10px;
+  background: white;
+  .first-child {
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+    div {
+      border: 1px solid rgb(230, 233, 233);
+      padding: 10px 30px 10px 20px;
+      width: 100%;
+      max-width: auto;
+      h6 {
+        margin: 0px;
+      }
+      p {
+        margin: 0px;
+        color: grey;
+      }
+    }
+    div:nth-child(7) {
+      border: 1px solid rgb(230, 233, 233);
+      border-top: 1px solid white;
+      border-right: 1px solid white;
+      width: 100%;
+      max-width: auto;
+    }
+  }
+  .second-child {
+    border: 1px solid rgb(230, 233, 233);
+    border-top: 1px solid white;
+    .second-first-child {
+      .name-search {
+        width: 400px;
+        max-width: 400px;
+      }
+    }
+    .second-second-child {
+      font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+        "Lucida Sans", Arial, sans-serif;
+
+      .q-table {
+        height: 70vh;
+        text-transform: capitalize;
+        .q-img {
+          border-radius: 100%;
+          height: 40px;
+          width: 40px;
+          object-fit: cover;
+          object-position: center;
+        }
+      }
+    }
+  }
+}
+.my-div {
+  width: 450px;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  .container-update-icon {
+    background: rgb(255, 225, 225);
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 7px;
+    div {
+      border-radius: 100%;
+      background: rgb(253, 191, 191);
+      .update-icon {
+        margin: 6px;
+        border-radius: 100%;
+      }
+    }
+  }
+  .edit-title {
+    font-size: 25px;
+  }
+  .input-label-container {
+    width: 100%;
+    margin-top: 4px;
+    label {
+      margin-bottom: 2px;
+    }
+    .input {
+      // border: 1px solid #b157ae;
+      border-radius: 5px;
+    }
+  }
+  .cancelbtn {
+    width: 230px;
+    border: 2px solid rgba(208, 213, 221, 1);
+    border-width: 2px;
+    border-radius: 4px;
+    color: #1d242e;
+  }
+  .savebtn {
+    width: 230px;
+    border: 2px solid #b157ae;
+    background: #b157ae;
+    border-width: 2px;
+    border-radius: 4px;
+    color: white;
+  }
+}
+.delete-dialog {
+  font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+    "Lucida Sans", Arial, sans-serif;
+  .container-alert-icon {
+    background: rgb(255, 225, 225);
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 7px;
+    div {
+      border-radius: 100%;
+      background: rgb(253, 191, 191);
+      .delete-icon {
+        margin: 6px;
+        border-radius: 100%;
+      }
+    }
+  }
+  .q-card-action {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    .cancel {
+      // border: 2px solid gray;
+      border: 2px solid rgba(208, 213, 221, 1);
+      background: white;
+      color: #3d3d3d;
+      padding: 0px 50px;
+      font-size: 13px;
+    }
+    .delete {
+      font-size: 13px;
+      background: rgba(217, 45, 32, 1);
+      color: white;
+      padding: 0px 50px;
+    }
+  }
+}

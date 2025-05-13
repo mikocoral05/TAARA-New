@@ -1,0 +1,51 @@
+.animal-description {
+  border: 1px solid lightgray;
+  width: 1220px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  img {
+    border-radius: 100%;
+    object-fit: cover;
+    object-position: center;
+    height: 250px;
+    width: 250px;
+  }
+  .name-div {
+    border: 1px solid #b157ae;
+    border-radius: 20px;
+    width: 150px;
+  }
+  .details-container {
+    p {
+      font-size: 13px;
+    }
+  }
+}
+.aggreement {
+  font-size: 15px;
+}
+
+.image {
+  height: 20px;
+  width: 20px;
+
+  z-index: 1;
+}
+
+.divider {
+  border-bottom: 1px solid gray;
+  position: relative;
+  top: 50px;
+}
+.back {
+  border: 1px solid #b157ae;
+  background: white;
+  color: #b157ae;
+}
+.submit {
+  color: white;
+  background: #b157ae;
+}
+ul li {
+  margin-bottom: 20px;
+}

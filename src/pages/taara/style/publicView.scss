@@ -1,0 +1,1005 @@
+.first-layer {
+  .first-child {
+    width: 1150px;
+    .intro-layer {
+      width: 50%;
+      .heading-1 {
+        font-size: 50px;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .paragraph-1 {
+        font-size: 20px;
+        font-family: "Proxima Nova", sans-serif;
+      }
+      .q-btn {
+        width: 150px;
+      }
+      .paragraph-3 {
+        div {
+          font-size: 14px;
+          font-family: "Proxima Nova", sans-serif;
+          .q-icon {
+            background: black;
+            color: white;
+            font-size: 24px;
+            padding: 5px;
+            border-radius: 5px;
+          }
+        }
+      }
+    }
+
+    .image-layer {
+      width: 50%;
+      img {
+        // height: 100%;
+        width: 100%;
+        border-radius: 100%;
+      }
+    }
+  }
+}
+.second-layer {
+  height: 90vh;
+  background-image: url("../../../image/second-layer-background.png");
+  .mission-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 38px;
+    width: 35%;
+    height: 35%;
+  }
+  .mission-text {
+    font-family: "Proxima Nova", sans-serif;
+    font-size: 16px;
+    width: 35%;
+    height: 35%;
+    margin-top: 100px;
+  }
+}
+.third-layer {
+  margin-top: 200px;
+  .first-child {
+    width: 1150px;
+    .f-c-container {
+      width: 50%;
+      .heading-2 {
+        font-size: 38px;
+        font-family: "Space Grotesk", sans-serif;
+      }
+      .paragraph-2 {
+        font-family: "Proxima Nova", sans-serif;
+        font-size: 16px;
+      }
+    }
+  }
+  .second-child {
+    width: 1155px;
+    div {
+      width: 230px;
+      img {
+        border: 2px solid black;
+        border-radius: 5px;
+        height: 280px;
+        object-fit: cover;
+        object-position: center;
+      }
+      h6 {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 22px;
+        font-weight: bold;
+      }
+      p {
+        font-family: "Proxima Nova", sans-serif;
+        font-size: 16px;
+        font-weight: lighter;
+      }
+    }
+  }
+}
+.fourth-layer {
+  padding: 200px 0px;
+  .left-image {
+    .blue-circle {
+      height: 200px;
+      width: 200px;
+      border-radius: 100%;
+      background: lightblue;
+      z-index: -1;
+      top: -60px;
+    }
+    width: 50%;
+    img {
+      width: 600px;
+      border-bottom-right-radius: 20%;
+      // border-top-left-radius: 20%;
+    }
+    .square {
+      height: 200px;
+      width: 200px;
+      border-radius: 10px;
+      background: rgb(246, 175, 146);
+      z-index: -1;
+      right: -10px;
+      bottom: -60px;
+    }
+  }
+  .right-description {
+    width: 50%;
+
+    h2 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 38px;
+      width: 360px;
+    }
+    p {
+      font-family: "Proxima Nova", sans-serif;
+      font-size: 16px;
+      font-weight: lighter;
+      width: 360px;
+    }
+    .paragraph-3 {
+      div {
+        font-size: 14px;
+        font-family: "Proxima Nova", sans-serif;
+        width: 120px;
+        .q-icon {
+          background: black;
+          color: white;
+          font-size: 24px;
+          padding: 5px;
+          border-radius: 5px;
+        }
+      }
+    }
+  }
+}
+.fifth-layer {
+  background-image: url("../../../image/fifth-layer-image.png");
+  height: 90vh;
+  .first-child {
+    width: 1150px;
+    h2 {
+      font-size: 38px;
+      font-family: "Space Grotesk", sans-serif;
+    }
+    p {
+      font-family: "Proxima Nova", sans-serif;
+      font-size: 16px;
+      width: 420px;
+    }
+  }
+}
+.sixth-layer {
+  padding-top: 100px;
+  padding-bottom: 100px;
+  .first-child {
+    width: 1150px;
+    h2 {
+      font-family: "Space Grotesk", sans-serif;
+      font-size: 38px;
+      margin-bottom: 100px;
+    }
+    .feddback-container {
+      width: 310px;
+      border: 2px solid black;
+      border-radius: 20px;
+      .head {
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        background-color: #ffbf23;
+        height: 35px;
+        border-bottom: 2px solid black;
+      }
+      .content {
+        height: 350px;
+      }
+
+      p {
+        font-family: "Proxima Nova", sans-serif;
+        font-size: 16px;
+      }
+      .bottom-text {
+        width: 150px;
+        margin-right: -120px;
+      }
+    }
+  }
+}
+.seventh-layer {
+  background-image: url("../../../image/seventh-layer-imagepng.png");
+  height: 110vh;
+  background-position: bottom;
+  background-size: cover;
+  // background-repeat: no-repeat;
+  .first-child {
+    width: 1150px;
+    .support-cause {
+      width: 50%;
+      h2 {
+        font-size: 38px;
+        font-family: "Space Grotesk", sans-serif;
+        width: 250px;
+      }
+      p {
+        font-family: "Proxima Nova", sans-serif;
+        font-size: 16px;
+        width: 400px;
+      }
+    }
+    .channel {
+      width: 50%;
+      .best-value-container {
+        .best-value {
+          width: 200px;
+          border: 1px solid black;
+          margin-bottom: -10px;
+          z-index: 2;
+        }
+        .price {
+          border-top-left-radius: 10px;
+          border-top-right-radius: 10px;
+          // height: 300px;
+          max-width: 400px;
+        }
+        .benefit {
+          border-bottom-left-radius: 10px;
+          border-bottom-right-radius: 10px;
+          width: 100%;
+          max-width: 400px;
+          background-color: #ffd7ef;
+          p {
+            margin: 5px 0px;
+          }
+        }
+      }
+    }
+  }
+}
+.eaight-layer {
+  min-height: 90vh;
+  h2 {
+    font-size: 38px;
+    font-family: "Space Grotesk", sans-serif;
+    width: 700px;
+  }
+  img {
+    // height: 400px;
+    width: 65%;
+    // background: pink;
+    // margin-bottom: -35px;
+    border-bottom: 5px solid black;
+  }
+}
+
+// #ffbf23
+// .search_bar {
+//   // border: 1px solid black;
+//   height: 60px;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+// .background_image {
+//   height: 13%;
+//   width: 100%;
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+//   right: 0;
+//   object-fit: cover;
+//   object-position: center;
+//   border-bottom: 10px solid #b157ae;
+//   z-index: 0;
+//   opacity: 0.8;
+// }
+// .home_letter {
+//   align-items: center;
+//   display: flex;
+//   justify-content: center;
+//   font-size: 20px;
+//   color: white;
+//   height: 200px;
+//   // background: pink;
+// }
+// .text {
+//   position: relative;
+//   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+//   font-size: 50px;
+// }
+// .search_bar_second_div {
+//   z-index: 1;
+//   background: #b157ae;
+//   border-radius: 10px;
+//   height: 40px;
+//   width: 600px;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+// }
+// .search {
+//   background: white;
+//   border-radius: 10px;
+//   width: 550px;
+//   height: 30px;
+// }
+// .home_carousel {
+//   background: none;
+//   height: 280px;
+//   margin-top: 40px;
+// }
+// .home_carousel_container {
+//   background: none;
+//   padding: 0px;
+// }
+// .animal_name {
+//   background: white;
+//   text-align: center;
+//   border-bottom: 1px solid #b157ae;
+//   border-radius: 10px;
+//   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+//   letter-spacing: 2px;
+// }
+// .click_more_pets {
+//   background: #b157ae;
+//   border-radius: 3px;
+//   color: white;
+//   border: 1px solid #b157ae;
+//   border-bottom: none;
+//   border-top: none;
+//   font-size: 15px;
+//   font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+//   letter-spacing: 1px;
+//   box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.25);
+// }
+
+// .second-bottom-container {
+//   // border: 1px solid gray;
+//   background: #d9d9d9b8;
+// }
+// .advocacy {
+//   background: black;
+//   position: relative;
+//   z-index: 1;
+//   width: 85%;
+//   border-radius: 10px;
+//   color: white;
+// }
+// .advocacy-container {
+//   position: absolute;
+//   z-index: -1;
+//   top: 0;
+//   bottom: 0;
+//   left: 0;
+//   right: 0;
+//   background: url("../../../image/Portrait.jpg");
+//   opacity: 0.4;
+//   width: 100%;
+//   height: 100%;
+//   background-repeat: no-repeat;
+//   background-size: cover;
+//   background-position: center;
+// }
+
+// .announcement {
+//   background: rgba(217, 217, 217, 0.72);
+//   color: white;
+//   margin-bottom: 80px;
+//   width: 100%;
+//   padding: 5px;
+// }
+// .todayDonation {
+//   position: relative;
+//   height: 207px;
+//   width: 250px;
+//   border-top-right-radius: 10px;
+//   border-top-left-radius: 10px;
+//   background: #b157ae;
+//   overflow-y: scroll;
+// }
+// .sticky-element {
+//   position: sticky;
+//   top: 0;
+//   z-index: 3;
+//   background: #b157ae;
+//   border-bottom: 1px solid white;
+// }
+// .todayDonation2 {
+//   height: 207px;
+//   width: 250px;
+//   // border-radius: 10px;
+//   border-top-right-radius: 10px;
+//   border-top-left-radius: 10px;
+//   background: #b157ae;
+//   overflow-y: scroll;
+// }
+
+// .todayDonation div {
+//   width: 100%;
+// }
+// .totoalDonation {
+//   width: 100%;
+//   border-bottom-left-radius: 10px;
+//   border-bottom-right-radius: 10px;
+
+//   // height: 100px;
+// }
+// .totoalDonation-viewmore {
+//   width: 100%;
+//   border-bottom-left-radius: 10px;
+//   border-bottom-right-radius: 10px;
+
+//   // height: 100px;
+// }
+// ::-webkit-scrollbar {
+//   width: 0px;
+//   background: transparent; /* make scrollbar invisible */
+// }
+// .click-more-pets {
+//   padding: 10px;
+//   background: #b157ae;
+//   color: white;
+// }
+// .announcement-container {
+//   display: flex;
+//   flex-direction: row;
+//   justify-content: center;
+//   align-items: center;
+//   flex-wrap: nowrap;
+// }
+// .donor-report-container {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: space-between;
+//   align-items: center;
+//   // flex-wrap: wrap;
+//   // background: pink;
+// }
+// .donor-container {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: center;
+// }
+// .rescue-report-containter {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: center;
+//   align-items: center;
+// }
+// .todays-announcement-container {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: flex-start;
+//   align-items: flex-start;
+//   width: 680px;
+// }
+// .todays-announcement-inside {
+//   display: flex;
+//   flex-direction: column;
+//   justify-content: flex-start;
+//   align-items: flex-start;
+//   width: 100%;
+//   background: white;
+//   color: black;
+//   border-radius: 10px;
+// }
+// .todays-announcement-inside-scroll {
+//   display: flex;
+//   flex-direction: row;
+//   flex-wrap: nowrap;
+//   // width: 560px;
+//   width: 100%;
+//   height: 165px;
+//   overflow-x: auto;
+// }
+// .todays-announcement-details {
+//   white-space: pre-line;
+// }
+// .todays-announcement-image--official {
+//   height: 50px;
+//   width: 50px;
+//   border-radius: 100%;
+// }
+// .planning-reporting-details {
+//   font-size: 17px;
+//   width: auto;
+// }
+// .planning-reporting {
+//   width: 100%;
+//   // margin-left: -31px;
+// }
+// .purrhaps {
+//   width: 500px;
+//   background: #b157ae;
+//   border-radius: 10px;
+//   .puppu-title {
+//     font-size: 15px;
+//   }
+//   .puppy {
+//     height: auto;
+//     width: 150px;
+//   }
+//   .donateme {
+//     border-radius: 10px;
+//     .scroll {
+//       height: 200px;
+//       width: 500px;
+//       max-width: 350px;
+//       li {
+//         margin: 12px;
+//         color: #b157ae;
+//         font-weight: 700;
+//         font-size: 14px;
+//       }
+//     }
+//   }
+// }
+
+// .mission-vission-container {
+//   display: flex;
+//   flex-direction: row;
+//   flex-wrap: no-wrap;
+//   justify-content: space-between;
+//   align-items: center;
+//   width: 86%;
+//   margin-bottom: 100px;
+//   .mission-container {
+//     background: url("../../../image/Mission.jpg");
+//     background-repeat: no-repeat;
+//     background-size: cover;
+//     background-position: center;
+//     height: 250px;
+//     width: 100%;
+//     border-radius: 10px;
+//   }
+//   .vision-container {
+//     background: url("../../../image/Vision.jpg");
+//     background-repeat: no-repeat;
+//     background-size: cover;
+//     background-position: center;
+//     height: 250px;
+//     width: 100%;
+//     border-radius: 10px;
+//   }
+// }
+// .sticky-element {
+//   font-size: 17px;
+//   width: 100%;
+// }
+// .announcement-image {
+//   height: 148px;
+//   width: 170px;
+//   border-radius: 10px;
+// }
+// .small-carousel {
+//   width: 100%;
+//   max-width: 240px;
+// }
+// @media only screen and (max-width: 940px) {
+//   .announcement-container {
+//     flex-wrap: wrap;
+//   }
+//   .donor-report-container {
+//     display: flex;
+//     flex-direction: row;
+//     justify-content: space-between;
+//     align-items: center;
+//     max-width: 680px;
+//   }
+//   .totoalDonation {
+//     padding: 7px;
+//     width: 100%;
+//   }
+//   .donor-container {
+//     width: 100%;
+//     height: 220px;
+//     margin-left: 0px;
+//   }
+//   .rescue-report-containter {
+//     width: 100%;
+//     height: 220px;
+//     margin-right: 0px;
+//   }
+
+//   .todayDonation {
+//     width: 100%;
+//   }
+//   .todayDonation2 {
+//     width: 100%;
+//   }
+
+//   .home_carousel {
+//     // height: 230px;
+//     margin-top: 80px;
+//   }
+// }
+
+// @media only screen and (max-width: 922px) {
+//   .advocacy-title {
+//     font-size: 28px;
+//   }
+//   .click-more-pets {
+//     font-size: 13px;
+//   }
+// }
+// @media only screen and (max-width: 800px) {
+//   .text {
+//     font-size: 35px;
+//   }
+//   .todays-announcement-title {
+//     font-size: 28px;
+//     margin-top: 0;
+//   }
+//   .planning-reporting {
+//     font-size: 28px;
+//     // margin: 0 0 0 0;
+//   }
+//   .background_image {
+//     object-fit: cover;
+//     object-position: center;
+//     // height: 10%;
+//   }
+
+//   .click-more-pets-container {
+//     padding-left: 10px;
+//     padding-right: 10px;
+//     margin-top: -20px;
+//   }
+//   .click-more-pets {
+//     padding: 4px;
+//     font-size: 12px;
+//   }
+// }
+// @media only screen and (max-width: 700px) {
+//   .background_image {
+//     object-fit: cover;
+//     object-position: center;
+//     height: 10%;
+//   }
+//   .text {
+//     font-size: 25px;
+//     text-align: center;
+//     margin-top: -105px;
+//   }
+//   .todays-announcement-title {
+//     font-size: 20px;
+//   }
+//   .todays-announcement-container {
+//     width: 600px;
+//   }
+//   .todayDonation {
+//     div {
+//       p {
+//         font-size: 13px;
+//       }
+//     }
+//   }
+//   .donor-container {
+//     height: auto;
+//   }
+//   .rescue-report-containter {
+//     height: auto;
+//   }
+//   .donor-report-container {
+//     max-width: 600px;
+//   }
+//   .rescue-report-details {
+//     font-size: 13px;
+//   }
+//   .todays-announcement-details {
+//     font-size: 13px;
+//   }
+//   .home_carousel {
+//     height: 250px;
+//     // background: pink;
+//   }
+//   // .small-carousel {
+//   //   width: 150px;
+//   // }
+//   .home_carousel_container {
+//     // background-color: pink;
+//     margin-top: -100px;
+//   }
+//   .click-more-pets-container {
+//     padding: 0;
+//     margin-top: -20px;
+//   }
+//   .click-more-pets {
+//     padding: auto;
+//   }
+//   .planning-reporting {
+//     font-size: 23px;
+//   }
+//   .planning-reporting-details {
+//     font-size: 15px;
+//   }
+//   .view-more {
+//     font-size: 8px;
+//   }
+// }
+// @media only screen and (max-width: 660px) {
+//   .donor-report-container {
+//     width: 100%;
+//   }
+
+//   .planning-reporting {
+//     font-size: 25px;
+//   }
+//   .view-more {
+//     font-size: 9px;
+//   }
+//   .advocacy-title {
+//     font-size: 25px;
+//   }
+// }
+// @media only screen and (max-width: 615px) {
+//   .announcement-container {
+//     width: 100%;
+//     // background: pink;
+//   }
+//   .todays-announcement-container {
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: center;
+//     align-items: center;
+//     max-width: 100%;
+//   }
+//   .todays-announcement-inside {
+//     display: flex;
+//     flex-direction: column;
+//     justify-content: flex-start;
+//     align-items: flex-start;
+//     width: 100%;
+//     margin: 5px;
+//   }
+
+//   .mission-vission-container {
+//     flex-wrap: wrap;
+//     align-items: center;
+//     width: 89%;
+//   }
+//   .home_carousel {
+//     height: 240px;
+//   }
+//   // .small-carousel {
+//   //   width: 130px;
+//   // }
+//   .advocacy-details {
+//     font-size: 13px;
+//   }
+//   .advocacy {
+//     margin-bottom: 10px;
+//     border-radius: 5px;
+//   }
+// }
+
+// @media only screen and (max-width: 570px) {
+//   .animal_name {
+//     font-size: 12px;
+//     background: white;
+//     text-align: center;
+//     border-bottom: 1px solid #b157ae;
+//     border-top-right-radius: 0px;
+//     border-top-left-radius: 0px;
+//     border-bottom-left-radius: 5px;
+//     border-bottom-right-radius: 5px;
+//     letter-spacing: 1px;
+//   }
+
+//   .planning-reporting {
+//     font-size: 15px;
+//     margin: 0px 0px 35px 0px;
+//     text-align: center;
+//   }
+//   .todays-announcement-title {
+//     font-size: 18px;
+//   }
+//   .todays-announcement-image--official {
+//     height: 35px;
+//     width: 35px;
+//   }
+//   .todays-announcement-image--official-details {
+//     font-size: 12px;
+//   }
+//   .todays-announcement-date {
+//     font-size: 12px;
+//   }
+//   .todays-announcement-details {
+//     font-size: 12px;
+
+//     font-weight: normal;
+//     color: gray;
+//   }
+//   .donor-report-container div p {
+//     font-size: 12px;
+//   }
+//   .donor-report-container div .sticky-element {
+//     font-size: 15px;
+//   }
+//   .donor-report-container {
+//     height: 200px;
+//   }
+//   .todayDonation {
+//     height: 150px;
+//   }
+//   .todayDonation2 {
+//     height: 150px;
+//   }
+//   .planning-reporting-details {
+//     font-size: 12px;
+//   }
+//   .home_carousel {
+//     height: 240px;
+//   }
+
+//   .purrhaps {
+//     width: 400px;
+//     .puppu-title {
+//       font-size: 15px;
+//     }
+//     .donateme {
+//       .scroll {
+//         li {
+//           margin: 12px;
+//         }
+//       }
+//     }
+//   }
+
+//   .advocacy-title {
+//     font-size: 18px;
+//   }
+//   .advocacy-details {
+//     font-size: 12px;
+//   }
+
+//   .mission-vission-container {
+//     .mission-container {
+//       height: 200px;
+//     }
+//     .vision-container {
+//       height: 200px;
+//     }
+//   }
+//   .totoalDonation {
+//     font-size: 12px;
+//   }
+// }
+// @media only screen and (max-width: 536px) {
+//   .home_carousel {
+//     height: 240px;
+//   }
+//   // .small-carousel {
+//   //   width: 120px;
+//   // }
+// }
+// @media only screen and (max-width: 520px) {
+//   // .small-carousel {
+//   //   width: 110px;
+//   // }
+// }
+// @media only screen and (max-width: 450px) {
+//   .home_carousel {
+//     height: 240px;
+//   }
+//   // .small-carousel {
+//   //   width: 100px;
+//   // }
+//   .home_carousel_container {
+//     margin-top: -100px;
+//   }
+//   .todays-announcement-title {
+//     font-size: 15px;
+//     margin: 0;
+//     padding: 0;
+//   }
+
+//   .click-more-pets-container {
+//     margin-top: -20px;
+//   }
+//   .click-more-pets {
+//     font-size: 10px;
+//   }
+//   .todays-announcement-image--official {
+//     height: 30px;
+//     width: 30px;
+//   }
+
+//   .todays-announcement-inside {
+//     height: 35vh;
+//     .todays-announcement-inside-scroll {
+//       div {
+//         max-height: 100%;
+//         .q-img {
+//           max-height: 100%;
+//           margin: 0px 2px 0px 2px;
+//         }
+//       }
+//     }
+//   }
+//   .rescue-report-details {
+//     margin-left: 10px;
+//     margin-right: 10px;
+//   }
+//   .todayDonation {
+//     height: 150px;
+//     div {
+//       padding-left: 10px;
+//       padding-right: 10px;
+//       p {
+//         margin-left: 0px;
+//         margin-right: 0px;
+//       }
+//     }
+//   }
+//   .todayDonation2 {
+//     height: 150px;
+//   }
+//   .rescue-report-containter {
+//     .totoalDonation-viewmore {
+//       p {
+//         font-size: 12px;
+//       }
+//     }
+//   }
+// }
+// @media only screen and (max-width: 420px) {
+//   .purrhaps {
+//     width: 300px;
+//     .puppy {
+//       width: 80px;
+//     }
+//     .donateme {
+//       padding: 12px;
+//     }
+//   }
+
+//   .advocacy-title {
+//     margin: 0;
+//     padding: 0;
+//   }
+
+//   .home_carousel {
+//     .q-carousel-slide {
+//       padding-left: 0px;
+//       padding-right: 0px;
+//     }
+//   }
+//   .donor-report-container div .sticky-element {
+//     font-size: 13px;
+//   }
+//   .announcement-container {
+//     padding: 5px;
+//   }
+//   .donor-report-container {
+//     .donor-container {
+//       margin-right: 3px;
+//       margin-top: 0px;
+//     }
+//     .rescue-report-containter {
+//       margin-left: 3px;
+//       margin-top: 0px;
+//     }
+//   }
+//   .todays-announcement-container {
+//     background: pink;
+//   }
+//   .home_carousel {
+//     height: 200px;
+//   }
+// }
+// @media only screen and (max-width: 376px) {
+//   .small-carousel {
+//     border-radius: 0px;
+//     margin: 1px;
+//     margin-top: -10px;
+//   }
+
+//   .background_image {
+//     object-fit: cover;
+//     object-position: right;
+//     height: 9%;
+
+//     border-bottom: 1px solid pink;
+//   }
+// }

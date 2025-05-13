@@ -1,0 +1,135 @@
+.q-input {
+  border: 2px solid #b157ae;
+  border-radius: 5px;
+}
+.all-container {
+  height: 85vh;
+}
+.outer_box {
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
+  border: 1px solid black;
+  width: 500px;
+  height: auto;
+  border-radius: 10px;
+  background: white;
+}
+.padding-controler {
+  width: 100%;
+  max-width: 755px;
+}
+.p-input-container {
+  width: 100%;
+}
+.login {
+  font-family: Cambria, Cochin, Georgia, Times, "Times New Roman", serif;
+  font-weight: bold;
+  text-align: center;
+}
+.login_button {
+  background: #b157ae;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+.second_outer_box {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  border: 1px solid black;
+  width: 500px;
+  height: auto;
+  border-radius: 10px;
+  background: white;
+}
+.password {
+  border-radius: 10px;
+  border: 2px solid #b157ae;
+  font-size: 17px;
+}
+.cancel-button {
+  border: 2px solid #b157ae;
+  background: white;
+  width: 100%;
+  color: #b157ae;
+}
+.update-button {
+  width: 100%;
+  border: 2px solid #b157ae;
+  background: #b157ae;
+}
+.update-cance-button-container {
+  width: 100%;
+  max-width: 290px;
+}
+@media only screen and (max-width: 933px) {
+  .all-container {
+    height: 87vh;
+  }
+}
+@media only screen and (max-width: 701px) {
+  .all-container {
+    height: 91vh;
+  }
+}
+@media only screen and (max-width: 570px) {
+  .title-first {
+    font-size: 30px;
+    font-weight: 400;
+  }
+  .update-cance-button-container {
+    width: 100%;
+    max-width: 200px;
+  }
+  .all-container {
+    height: 94vh;
+  }
+}
+
+@media only screen and (max-width: 415px) {
+  .padding-controler {
+    padding: 0px 20px 0px 20px;
+    margin: 5px 0px 5px 0px;
+    .p-input-container {
+      width: 100%;
+      p {
+        font-size: 13px;
+        b {
+          font-weight: 400;
+        }
+      }
+      div {
+        .q-input {
+          border: 1px solid #b157ae;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+  .title-first {
+    margin-bottom: 20px;
+    margin-top: 0px;
+    font-size: 27px;
+  }
+  .update-cance-button-container .q-btn {
+    font-size: 12px;
+    border: 1px solid #b157ae;
+  }
+  .all-container {
+    min-height: 92.6vh;
+    div {
+      .third-child-container {
+        padding-top: 50px;
+        .title-first {
+          margin-bottom: 40px;
+        }
+      }
+    }
+  }
+  .footer {
+    margin: 0px;
+  }
+}

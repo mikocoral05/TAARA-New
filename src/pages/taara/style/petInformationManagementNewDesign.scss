@@ -1,0 +1,291 @@
+.all-container {
+  background-color: #f9f9f9;
+  min-height: 92.9vh;
+}
+.animals-navi {
+  border-radius: 10px;
+  background: white;
+  .first-child {
+    font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+      "Lucida Sans", Arial, sans-serif;
+    div {
+      border: 1px solid rgb(230, 233, 233);
+      padding: 10px 60px 10px 20px;
+      width: 100%;
+      max-width: auto;
+      h6 {
+        margin: 0px;
+      }
+      p {
+        margin: 0px;
+        color: grey;
+      }
+    }
+    div:nth-child(5) {
+      border: 1px solid rgb(230, 233, 233);
+      border-top: 1px solid white;
+      border-right: 1px solid white;
+      width: 100%;
+      max-width: auto;
+    }
+  }
+  .second-child {
+    border: 1px solid rgb(230, 233, 233);
+    border-top: 1px solid white;
+    .second-first-child {
+      .name-search {
+        width: 400px;
+        max-width: 400px;
+      }
+    }
+    .second-second-child {
+      .q-table {
+        height: 74.5vh;
+        text-transform: capitalize;
+        .q-img {
+          border-radius: 100%;
+          height: 40px;
+          width: 40px;
+          object-fit: cover;
+          object-position: center;
+        }
+      }
+    }
+    .third-second-child {
+      height: 74.5vh;
+      .f-c-third {
+        height: 100%;
+        .left-div {
+          width: 325px;
+          border: 1px solid lightgray;
+          border-bottom: none;
+          .animal_image {
+            height: 200px;
+            width: 200px;
+            object-fit: cover;
+            border-radius: 100%;
+            background: #b157ae;
+            // background: teal;
+          }
+        }
+        .right-div {
+          width: 100%;
+          .tab {
+            height: 40px;
+            border: 1px solid lightgray;
+            border-left: none;
+            .choices {
+              width: 200px;
+              margin-right: 10px;
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              font-size: 13px;
+              font-weight: 600;
+            }
+          }
+          .details {
+            height: 100%;
+
+            .first-div {
+              border: 1px solid lightgray;
+              border-top: none;
+              border-left: none;
+              border-bottom: none;
+              height: 100%;
+              .p-q-container {
+                margin-bottom: 20px;
+                .q-input-container {
+                  // width: 100%;
+                  // max-width: 300px;
+                  p {
+                    font-size: 13px;
+                  }
+                }
+                .animal_name {
+                  width: 100%;
+                  max-width: 300px;
+                }
+                .fur_color {
+                  width: 100%;
+                  max-width: 300px;
+                }
+                .health_status {
+                  width: 100%;
+                  max-width: 607px;
+                }
+              }
+            }
+            .q-btn-container {
+              width: 100%;
+              max-width: 630px;
+              .q-btn {
+                width: 100%;
+                max-width: 160px;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+// .show-animals {
+//   border-radius: 10px;
+//   font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+//     "Lucida Sans", Arial, sans-serif;
+
+//   background: white;
+//   .left-navi-animal {
+//     // height: 80vh;
+//     border-right: 1px solid rgb(230, 233, 233);
+//     width: 250px;
+//     .q-icon {
+//       font-size: 22px;
+//       margin-right: 5px;
+//     }
+//     div {
+//       margin: 10px 0px;
+//       // background: #b15789;
+//       padding-top: 10px;
+//       padding-bottom: 10px;
+//       border-radius: 10px;
+//     }
+//   }
+//   .middle-animal-details {
+//     width: 100%;
+//     max-width: 798px;
+//     .label {
+//       width: 85px;
+//       text-align: left;
+//     }
+//     .grid-container {
+//       display: grid;
+//       grid-template-columns: auto auto;
+//       padding: 10px;
+//     }
+
+//     .grid-container > div {
+//       background-color: rgba(255, 255, 255, 0.8);
+//       text-align: center;
+//       .q-icon {
+//         font-size: 25px;
+//         display: none;
+//       }
+//       .animal_image {
+//         border-radius: 10px;
+//         height: 93px;
+//         width: 250px;
+//         margin-bottom: 5px;
+//         object-fit: cover;
+//         object-position: center;
+//       }
+//     }
+
+//     .grid-container > div:nth-child(1) {
+//       grid-row-start: 1;
+//       grid-row-end: 4;
+//       grid-column-start: 1;
+//       grid-column-end: 1;
+//       .animal_image {
+//         height: 300px;
+//         width: 500px;
+//       }
+//     }
+//     .grid-container > div:nth-child(4) {
+//       position: relative;
+//       .animal_image_wrapper::after {
+//         content: "";
+//         position: absolute;
+//         top: 0;
+//         left: 0;
+//         right: 0;
+//         height: 93px;
+//         width: 250px;
+//         margin-left: 7px;
+//         border-radius: 10px;
+//         background-color: rgba(11, 5, 5, 0.5); /* semi-transparent white */
+//       }
+//       .q-icon {
+//         font-size: 25px;
+//         display: block;
+//       }
+//       .animal_image {
+//         overflow: hidden;
+//       }
+//     }
+
+//     .grid-container > div:nth-child(5) {
+//       display: none;
+//     }
+//   }
+//   .right-navi-animal {
+//     border-left: 1px solid rgb(230, 233, 233);
+//     width: 250px;
+//     .q-icon {
+//       font-size: 22px;
+//       margin-right: 5px;
+//     }
+//     div {
+//       border-radius: 10px;
+//     }
+//   }
+// }
+.q-dialog {
+  .scroll {
+    width: 400px;
+    max-width: 400px;
+  }
+  .animal_img_contanier {
+    .animal_img {
+      height: 50px;
+      border-radius: 10px;
+      object-fit: cover;
+      object-position: center;
+      width: 100px;
+    }
+  }
+}
+.container-alert-icon {
+  background: rgb(255, 225, 225);
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 7px;
+  div {
+    border-radius: 100%;
+    background: rgb(253, 191, 191);
+    .delete-icon {
+      margin: 6px;
+      border-radius: 100%;
+    }
+  }
+}
+.q-card-action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .cancel {
+    // border: 2px solid gray;
+    border: 2px solid rgba(208, 213, 221, 1);
+    background: white;
+    color: #3d3d3d;
+    padding: 0px 50px;
+    font-size: 13px;
+  }
+  .delete {
+    background: rgba(217, 45, 32, 1);
+    font-size: 13px;
+    color: white;
+    padding: 0px 50px;
+  }
+}
+.vet-sched-container {
+  // width: 100%;
+  // max-width: 80%;
+  .vet-header {
+    width: 60%;
+  }
+}

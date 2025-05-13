@@ -1,0 +1,111 @@
+.container {
+  width: 1200px;
+}
+.donation-container {
+  p {
+    font-size: 14px;
+    font-family: "Space Grotesk", sans-serif;
+  }
+  margin-bottom: 70px;
+}
+.background-image {
+  height: 600px;
+  z-index: -1;
+  background: url("../../../image/seventh-layer-image.png");
+  // transform: rotate(180deg);
+}
+.best-value-container {
+  font-family: "Space Grotesk", sans-serif;
+
+  margin-top: 100px;
+  margin: 0px 20px;
+  .best-value {
+    width: 200px;
+    border: 1px solid black;
+    z-index: 2;
+    top: -1px;
+  }
+  .price {
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    // height: 300px;
+    max-width: 360px;
+  }
+  .benefit {
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+
+    background-color: #f6f5f5;
+    p {
+      margin: 5px 0px;
+    }
+    .choose-option {
+      font-size: 10px;
+    }
+  }
+}
+.other-amount {
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 14px;
+  width: 200px;
+}
+.overlooping-avatar {
+  img {
+    object-fit: cover;
+    object-position: center;
+  }
+}
+
+.donor-summary-section {
+  width: 1160px;
+  .my-card {
+    margin: 0px 10px;
+    border-radius: 10px;
+    width: 100%;
+    height: 210px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f6f5f5;
+  }
+}
+.walkin-donation {
+  // width: 1170px;
+  min-height: 80vh;
+  border-radius: 10px;
+  .box {
+    min-height: 500px;
+    background-color: #f6f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    // box-shadow: 0px 10px 6px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    width: 360px;
+    max-width: 420px;
+  }
+}
+.thanks-donor-section {
+  width: 1160px;
+  // overflow: hidden;
+  // div {
+  //   background-color: pink;
+  //   animation: flowRightToLeft 6s linear infinite;
+  //   img {
+  //     object-fit: cover;
+  //     object-position: center;
+  //   }
+  // }
+}
+.q-carousel-slide {
+  width: 1160px;
+}
+.donors-container {
+  img {
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 100%;
+    border: 1px solid goldenrod;
+  }
+}

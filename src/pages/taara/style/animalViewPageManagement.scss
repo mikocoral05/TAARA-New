@@ -1,0 +1,614 @@
+.img-top {
+  margin: 5px;
+  height: auto;
+  width: 360px;
+  position: relative;
+  opacity: 0.2;
+}
+.table {
+  height: 355px;
+  width: 100%;
+  max-width: 80%;
+}
+.add-new-item-button {
+  color: white;
+  background: #b157ae;
+  width: 200px;
+}
+.cancel {
+  color: #b157ae;
+  background: white;
+  width: 200px;
+  border: 1px solid #b157ae;
+}
+.save-details {
+  color: white;
+  background: #b157ae;
+  width: 200px;
+}
+
+.follow-up-check-up-button {
+  color: black;
+  width: 200px;
+  background: white;
+}
+img {
+  margin: 5px;
+  height: 380px;
+  position: relative;
+}
+.edit-delete-img {
+  height: 20px;
+  width: 20px;
+  position: relative;
+  margin-left: 35px;
+  margin-top: 10px;
+}
+.ccenters {
+  width: auto;
+  position: relative;
+  z-index: 4;
+  width: 330px;
+  height: auto;
+  opacity: none;
+}
+.container-alert-icon {
+  background: rgb(255, 225, 225);
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 7px;
+  div {
+    border-radius: 100%;
+    background: rgb(253, 191, 191);
+    .delete-icon {
+      margin: 6px;
+      border-radius: 100%;
+    }
+  }
+}
+.q-card-action {
+  justify-content: center;
+  align-items: center;
+
+  .delete-cancel {
+    border: 1px solid gray;
+    background: white;
+    color: #3d3d3d;
+    padding: 0px 50px;
+    font-size: 13px;
+  }
+  .delete {
+    background: #b157ae;
+    color: white;
+    padding: 0px 50px;
+    font-size: 13px;
+  }
+}
+.editImage {
+  height: 90px;
+  width: 90px;
+  border-radius: 100%;
+  object-fit: cover;
+}
+.label-edit {
+  font-size: 13px;
+  font-weight: normal;
+}
+.edit-container {
+  height: 81vh;
+  width: 100vw;
+  min-width: 30vw;
+
+  .q-input {
+    font-size: 12px;
+    text-transform: capitalize;
+  }
+  .q-select {
+    font-size: 12px;
+    text-transform: capitalize;
+  }
+  .autogrow-input {
+    font-size: 12px;
+  }
+}
+.animal-label {
+  color: #b157ae;
+  font-weight: 700;
+  font-size: 30px;
+  text-align: center;
+  width: 100%;
+  max-width: 60%;
+  border-bottom: 5px solid #b157ae;
+}
+.iimg {
+  max-width: 100%;
+  height: 150px;
+  width: 100%;
+  object-fit: cover;
+}
+.my-card {
+  width: 100%;
+  max-width: 200px;
+  height: auto;
+  max-height: 200px;
+}
+.qb {
+  width: 100%;
+}
+/* width */
+::-webkit-scrollbar {
+  width: 5px;
+  border-radius: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #b157ae;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+  border-radius: 10px;
+}
+.red-button {
+  color: red;
+}
+.edit-button {
+  color: white;
+  background: #b157ae;
+  width: 200px;
+}
+.edit-button-container {
+  .cancel {
+    width: 100%;
+    max-width: 200px;
+    margin-right: 10px;
+    background: white;
+    color: #b157ae;
+    font-size: 13px;
+  }
+  .save-details {
+    width: 100%;
+    max-width: 200px;
+    color: white;
+    background: #b157ae;
+    font-size: 13px;
+  }
+}
+
+.blue-button {
+  color: #b157ae;
+}
+.details-div {
+  width: 100%;
+  max-width: 60%;
+}
+.bottom-div {
+  width: 100%;
+  max-width: 60%;
+  .about-health {
+    width: 60%;
+  }
+}
+.vet-sched-container {
+  max-width: 80%;
+  width: 100%;
+  .vet-header {
+    width: 70%;
+  }
+}
+.button-heart {
+  background: white;
+}
+.story-contianer-first-child {
+  border: 2px solid #b157ae;
+  border-radius: 10px;
+  height: 220px;
+  .animal-story-title {
+    color: #b157ae;
+    font-weight: 700;
+    font-size: 20px;
+    text-transform: capitalize;
+    box-shadow: 0 4px 2px -2px lightgray;
+  }
+  .story-inner-container {
+    overflow-y: auto;
+    height: 170px;
+    position: relative;
+    margin-top: 0px;
+    .story-p {
+      width: 100%;
+      max-width: 320px;
+      height: auto;
+      padding-left: 10px;
+      padding-right: 10px;
+      margin: auto;
+      margin-top: 5px;
+      // background: pink;
+    }
+  }
+}
+
+.button-heart {
+  font-size: 1.4rem;
+}
+
+.more-pets-animal-name {
+  padding: 5px;
+  font-size: 15px;
+  letter-spacing: 1px;
+  color: #b157ae;
+}
+.more-pets-container {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 10px;
+  max-width: 700px;
+  width: 100%;
+}
+.more-pets-container > .q-card {
+  background-color: rgba(255, 255, 255, 0.8);
+  text-align: center;
+}
+.more-pets-animal-name {
+  font-size: 13px;
+}
+.buttons {
+  width: 100%;
+}
+.my-button {
+  width: 200px;
+  color: white;
+  background: #b157ae;
+}
+.header {
+  display: none;
+}
+.add-dialog {
+  height: 51.2vh;
+  width: 50vw;
+  .date {
+    width: 40%;
+  }
+}
+@media only screen and (max-width: 933px) {
+  .q-stepper-container {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+}
+@media only screen and (max-width: 889px) {
+  .details-div {
+    max-width: 70%;
+  }
+  .animal-label {
+    max-width: 70%;
+  }
+}
+@media only screen and (max-width: 779px) {
+  .q-stepper-container {
+    height: 70px;
+  }
+}
+@media only screen and (max-width: 762px) {
+  .details-div {
+    max-width: 80%;
+  }
+  .animal-label {
+    max-width: 80%;
+  }
+}
+@media only screen and (max-width: 701px) {
+  .more-pets-title {
+    font-size: 28px;
+  }
+}
+@media only screen and (max-width: 667px) {
+  .details-div {
+    max-width: 90%;
+  }
+  .animal-label {
+    max-width: 90%;
+  }
+}
+@media only screen and (max-width: 593px) {
+  .story-contianer {
+    width: 300px;
+  }
+  .story-p {
+    width: auto;
+  }
+  .more-pets-title {
+    font-size: 25px;
+  }
+}
+@media only screen and (max-width: 526px) {
+  .story-contianer {
+    width: 250px;
+  }
+  .story-p {
+    width: auto;
+    font-size: 13.5px;
+  }
+
+  .buttons {
+    font-size: 12px;
+  }
+  .button-heart {
+    font-size: 17px;
+  }
+}
+@media only screen and (max-width: 500px) {
+  .image-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .edit-container {
+    margin-top: 4.3vh;
+    min-height: 92vh;
+    min-width: 100vw;
+  }
+  .iimg {
+    height: 110px;
+    width: 150px;
+  }
+  .more-pets-animal-name b {
+    font-size: 12px;
+  }
+  .header {
+    display: flex;
+    .q-icon {
+      color: #b157ae;
+      font-size: 2rem;
+    }
+    p {
+      font-size: 16px;
+    }
+  }
+  .web-edit-button {
+    display: none;
+  }
+  .bottom-div {
+    width: 100%;
+    max-width: 60%;
+    .about-health {
+      width: 100%;
+      h5 {
+        text-align: center;
+      }
+      p {
+        text-align: center;
+      }
+    }
+    .status-container {
+      width: 100%;
+      .status {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        p:nth-child(1) {
+          margin: 0px;
+          font-size: 15px;
+          font-weight: 500;
+        }
+        .state-value {
+          font-weight: normal;
+          font-size: 14px;
+          margin: 0px;
+        }
+      }
+    }
+  }
+  .table {
+    display: none;
+  }
+  .vet-sched-container {
+    max-width: 100%;
+    .vet-header {
+      width: 100%;
+    }
+
+    h4 {
+      display: none;
+    }
+    .add-vet-button-container {
+      display: none;
+    }
+    .choose-vet-btn-container {
+      margin-bottom: 20px;
+      width: 100vw;
+      .q-btn {
+        background: #b157ae;
+        color: white;
+        font-size: 12px;
+      }
+      .q-btn:nth-child(1) {
+        width: 150px;
+      }
+      .q-btn:nth-child(2) {
+        width: 170px;
+      }
+    }
+  }
+
+  .vet-schedule {
+    padding: 0px;
+    margin: 0px;
+  }
+  .about-container {
+    margin-bottom: 10px;
+  }
+  .mobile-vet-sched {
+    .detials {
+      margin: 10px;
+      border: 1px solid #b157ae;
+      padding: 10px;
+      border-radius: 10px;
+      font-size: 12px;
+      p {
+        margin: 5px 0px;
+      }
+    }
+  }
+  .mobile-vet-show-details {
+    div {
+      margin: 10px 0px;
+      padding: 10px;
+      font-size: 13px;
+      p {
+        margin: 5px 0px;
+      }
+    }
+  }
+  .add-dialog {
+    height: 55vh;
+    width: 100vw;
+    .date {
+      width: 55%;
+    }
+    h5 {
+      font-size: 18px;
+    }
+  }
+  .cancel {
+    width: 120px;
+  }
+  .save-details {
+    width: 120px;
+  }
+  .delete-warning {
+    font-weight: 400;
+  }
+  .q-card-action {
+    .q-btn {
+      font-size: 12px;
+    }
+    .delete-cancel {
+      padding: 0px 50px;
+    }
+    .delete {
+      padding: 0px 50px;
+    }
+  }
+}
+@media only screen and (max-width: 471px) {
+  .details-left-container {
+    margin-top: 20px;
+    p {
+      text-align: center;
+      letter-spacing: 0.7px;
+    }
+  }
+  .story-contianer {
+    width: 340px;
+    margin: auto;
+    margin-top: 20px;
+  }
+  .story-p {
+    width: auto;
+    font-size: 13.9px;
+  }
+
+  .button-heart {
+    font-size: 17px;
+  }
+  .more-pets-title {
+    font-size: 25px;
+  }
+  .animal-label {
+    border-bottom: 3px solid #b157ae;
+  }
+  .details-div {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .story-inner-container {
+    margin-bottom: 0px;
+  }
+}
+@media only screen and (max-width: 380px) {
+  .iimg {
+    height: 90px;
+    width: 150px;
+  }
+  .more-pets-animal-name {
+    margin: -8px;
+  }
+  .more-pets-animal-name b {
+    font-size: 10px;
+  }
+  .more-pets-title {
+    font-size: 20px;
+  }
+  .story-p {
+    width: auto;
+    font-size: 13.5px;
+  }
+  .header {
+    .q-icon {
+      font-size: 1.5rem;
+    }
+    p {
+      font-size: 14px;
+    }
+  }
+  .edit-button-container {
+    .cancel {
+      font-size: 12px;
+    }
+    .save-details {
+      font-size: 12px;
+    }
+  }
+  .add-dialog {
+    height: 55vh;
+    width: 100vw;
+    .date {
+      width: 55%;
+    }
+    h5 {
+      font-size: 23px;
+    }
+    p {
+      font-size: 12px;
+    }
+    .q-input {
+      font-size: 12px;
+    }
+    .q-select {
+      font-size: 12px;
+    }
+  }
+  .cancel {
+    font-size: 12px;
+  }
+  .save-details {
+    font-size: 12px;
+  }
+  .add-btn-container {
+    margin-top: 10px;
+  }
+}
+@media only screen and (max-width: 353px) {
+  .button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+  }
+}

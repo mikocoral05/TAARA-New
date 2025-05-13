@@ -1,0 +1,71 @@
+.container {
+  background-color: #f9f9f9;
+
+  .container-first-child {
+    z-index: 2;
+    background: white;
+    // position: relative; /* Add this to establish a new positioning context */
+    // overflow: hidden; /* Add this to hide the overflow */
+
+    height: 83vh;
+    .cfs-left-child {
+      width: 35%;
+      // background: lightcyan;
+      .events-div {
+        background: #f9f9f9;
+        border-radius: 5px;
+        color: black;
+        margin: 8px 0px;
+      }
+    }
+    .cfs-right-child {
+      // background: rgb(235, 208, 203);
+      width: 65%;
+      height: 75.5%;
+
+      .q-date-container {
+        height: 100%;
+        .qds-first-child {
+          background-image: url("../../../image/blue-building.png");
+          background-size: contain;
+          height: 100px;
+          .moving-div {
+            position: relative; /* Add this to allow child div to move within */
+            // background-image: url("../../../image/rods.png");
+            // background-size: contain;
+            overflow: hidden;
+            .q-img:nth-child(1) {
+              animation: move1 10s infinite linear; /* Add this to create the moving effect */
+              width: 40px;
+            }
+            .q-img:nth-child(2) {
+              animation: move2 10s infinite linear; /* Add this to create the moving effect */
+              width: 40px;
+            }
+          }
+        }
+        .q-date {
+          height: 100%;
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+@keyframes move1 {
+  0% {
+    left: -10%;
+  }
+  100% {
+    left: 100%;
+  }
+}
+@keyframes move2 {
+  0% {
+    left: -100%;
+  }
+
+  100% {
+    left: 100%;
+  }
+}

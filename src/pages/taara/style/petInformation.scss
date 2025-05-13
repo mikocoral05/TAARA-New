@@ -1,0 +1,158 @@
+.first-layer {
+  .sub-text {
+    font-size: 14px;
+  }
+  .q-btn-container {
+    width: 1310px;
+    .search-field {
+      // margin: 0px 10px;
+      width: 100%;
+      max-width: 400px;
+    }
+  }
+  .categorize-container {
+    width: 1310px;
+    .q-btn {
+      font-size: 14px;
+    }
+  }
+  .my-card {
+    width: 250px;
+    border-radius: 10px;
+    img {
+      height: 250px;
+      width: 100%;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 10px;
+    }
+    .animal-name {
+      padding: 5px;
+      font-size: 15px;
+      letter-spacing: 1px;
+      color: #b157ae;
+    }
+    .q-btn {
+      border-radius: 10px;
+    }
+  }
+}
+
+.q-btn {
+  width: 100%;
+}
+.footer {
+  margin-top: 200px;
+}
+.advancesearch-dropdown {
+  position: absolute;
+  bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  // background: rgb(0, 0, 0, 0.7);
+  background: white;
+  color: black;
+  height: auto;
+  // width: 100%;
+  z-index: 3;
+}
+.advance-button-responsive {
+  border: 1px solid #b157ae;
+  font-weight: 300;
+}
+.advance-button-responsive-select {
+  border: 1px solid #b157ae;
+  width: 100%;
+  padding-left: 15px;
+  height: 30px;
+}
+
+.responsive-advance-search-input {
+  height: 30px;
+}
+
+.advancesearch-button-responsive {
+  display: none;
+}
+.search-icon {
+  position: absolute;
+  right: 0;
+  margin-top: -30px;
+}
+.back-next-container {
+  padding: 0px 100px;
+  .q-btn {
+    width: 200px;
+  }
+  .q-btn:nth-child(1) {
+    border: 1px solid #b157ae;
+    color: #b157ae;
+  }
+  .q-btn:nth-child(2) {
+    border: 1px solid #b157ae;
+    color: white;
+    background: #b157ae;
+  }
+}
+@media only screen and (max-width: 933px) {
+  .my-card {
+    width: 150px;
+  }
+  .animal-name {
+    font-size: 13px;
+    padding: 2px;
+  }
+}
+@media only screen and (max-width: 764px) {
+  .my-card {
+    width: 130px;
+  }
+  .animal-name {
+    font-size: 13px;
+    padding: 2px;
+  }
+  img {
+    height: 120px;
+  }
+  .animal-name {
+    font-size: 12px;
+    padding: 1px;
+  }
+}
+@media only screen and (max-width: 581px) {
+  .advancesearch-button-responsive {
+    display: flex;
+  }
+  .q-drawer {
+    display: none;
+  }
+  .back-next-container {
+    padding: 0px 70px;
+    .q-btn {
+      width: 150px;
+    }
+  }
+}
+@media only screen and (max-width: 400px) {
+  .my-card {
+    width: 130px;
+  }
+  .animal-name {
+    font-size: 13px;
+    padding: 2px;
+  }
+  img {
+    height: 120px;
+  }
+  .animal-name {
+    font-size: 11px;
+    padding: 1px;
+  }
+  .back-next-container {
+    padding: 0px 30px;
+    .q-btn {
+      width: 100px;
+    }
+  }
+}

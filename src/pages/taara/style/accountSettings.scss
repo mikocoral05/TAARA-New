@@ -1,0 +1,83 @@
+.first-child {
+  width: 950px;
+  margin-bottom: 100px;
+  .member-profile-card {
+    background: #ffbf23;
+    height: 250px;
+    div {
+      .img-container {
+        div {
+          height: 100px;
+          width: 100px;
+          background-color: white;
+          color: black;
+          border-radius: 100%;
+        }
+        img {
+          height: 100px;
+          width: 100px;
+          border-radius: 100%;
+          object-position: center;
+          object-fit: cover;
+        }
+      }
+      h4 {
+        font-family: "Space Grotesk", sans-serif;
+      }
+    }
+  }
+  .tabs {
+    div {
+      font-family: "Proxima Nova", sans-serif;
+      font-size: 16px;
+      padding: 15px 15px;
+      margin: 0px 15px;
+    }
+  }
+  .details {
+    font-family: "Proxima Nova", sans-serif;
+    min-height: 500px;
+    .account-title {
+      font-size: 25px;
+    }
+    .btn-container {
+      min-height: 36px;
+      .q-btn {
+        // font-size: 16px;
+        border: 1px solid black;
+        padding: 0px 25px;
+      }
+    }
+    p {
+      font-size: 16px;
+    }
+    .change-btn {
+      height: 40px;
+      background-color: black;
+      color: white;
+      padding: 0px 20px;
+      margin-top: 30px;
+    }
+    .verification-container {
+      .code-container {
+        min-height: 200px;
+        padding-top: 80px;
+        .confirm {
+          width: 300px;
+          margin-top: 80px;
+        }
+      }
+    }
+  }
+  .each-div {
+    p {
+      font-size: 14px;
+    }
+    .q-input {
+      width: 400px;
+    }
+    .q-select {
+      width: 400px;
+    }
+  }
+}

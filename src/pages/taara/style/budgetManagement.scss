@@ -1,0 +1,181 @@
+.second-layer {
+  background-color: #f9f9f9;
+  min-height: 83vh;
+  .first-child {
+    width: 30%;
+    .fc-fc-child {
+      border-radius: 5px;
+      width: 100%;
+      height: 77%;
+      background: white;
+      .icon-container {
+        .q-icon {
+          background: #f9f9f9;
+          border-radius: 5px;
+          padding: 10px;
+        }
+      }
+      .day-expense-container {
+        border: 1px solid rgb(240, 237, 237);
+        border-radius: 5px;
+      }
+      .daily-expense-details {
+        border-bottom: 1px solid rgb(240, 237, 237);
+        // border-top: 1px solid rgb(240, 237, 237);
+        border-radius: 5px;
+      }
+    }
+    .sc-sc-child {
+      border-radius: 5px;
+      height: 23%;
+      width: 100%;
+      background: white;
+    }
+  }
+  .second-child {
+    width: 100%;
+    .fc-fc-child {
+      border-radius: 5px;
+      height: 100%;
+      width: 70%;
+      background: white;
+      // background: rgb(244, 255, 255);
+      .top-container {
+        height: auto;
+        // height: 33%;
+        .f-c {
+          height: 100%;
+          .fc-fc {
+            height: auto;
+            width: 100%;
+            border: 1px solid rgb(240, 237, 237);
+            // margin-right: 10px;
+            border-radius: 5px;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+            .circular-progress {
+              padding: 10px;
+              border-radius: 100%;
+              position: relative;
+              background: purple;
+            }
+
+            .circular-progress {
+              .cp-f-c {
+                padding: 18px;
+                border-radius: 100%;
+                background: #c38edb;
+                position: relative;
+              }
+            }
+
+            .circular-progress::before {
+              content: "";
+              position: absolute;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              border-radius: 50%;
+              background: conic-gradient(white 30%, transparent 30% 100%);
+            }
+          }
+          .fc-fc:nth-child(2) {
+            .circular-progress {
+              background: lightgray;
+            }
+            .circular-progress {
+              .cp-f-c {
+                background: white;
+              }
+            }
+            .circular-progress::before {
+              background: conic-gradient(teal 30%, transparent 30% 100%);
+            }
+          }
+          .fc-fc:nth-child(3) {
+            .circular-progress {
+              background: lightgray;
+            }
+            .circular-progress {
+              .cp-f-c {
+                background: white;
+              }
+            }
+            .circular-progress::before {
+              background: conic-gradient(orange 30%, transparent 30% 100%);
+            }
+          }
+        }
+        .f-c:nth-child(3) {
+          margin-right: 0px;
+        }
+      }
+      .bottome-container {
+        // box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        border: 1px solid #e8e7e7;
+        border-radius: 5px;
+        .line-chart-container {
+          width: 100%;
+          .legend-container {
+            span {
+              border-radius: 100%;
+              width: 10px;
+              height: 10px;
+            }
+          }
+          .line-chart {
+            // height: 280px;
+            // background: pink;
+          }
+        }
+      }
+    }
+    .sc-sc-child {
+      border-radius: 5px;
+      height: 100%;
+      width: 30%;
+      border-left: 1px solid #f9f9f9;
+      background: white;
+      .icon-container {
+        .q-icon {
+          background: #f9f9f9;
+          border-radius: 5px;
+          padding: 10px;
+        }
+        .add-budget-allocation-container {
+          .lower-button-container {
+            .q-btn {
+              font-size: 14px;
+            }
+          }
+        }
+      }
+      .dougnut {
+        height: auto;
+      }
+      .expense-details {
+        // font-size: 14px;
+        .v-for {
+          min-width: 120px;
+        }
+      }
+
+      // .fund-expense-q-table {
+      //   thead tr:first-child th {
+      //     background-color: white;
+      //     color: black;
+      //     font-size: 13px;
+      //     font-weight: 600;
+      //   }
+      // }
+    }
+  }
+}
+
+.add-icon-container {
+  .q-icon {
+    background: #f9f9f9;
+    border-radius: 5px;
+    padding: 10px;
+  }
+}

@@ -1,0 +1,295 @@
+.search-section {
+  width: 100%;
+  max-width: 1070px;
+  .report-search {
+    width: 300px;
+  }
+}
+.report-container {
+  min-height: 70vh;
+}
+.animal_image {
+  height: auto;
+  width: 200px;
+  display: inline-block;
+}
+.splitter {
+  white-space: pre-line;
+}
+.edit-icon-container {
+  .q-btn {
+    color: white;
+    background: #b157ae;
+    border-radius: 5px;
+    width: 100px;
+  }
+}
+.add-icon-container {
+  width: 100%;
+  max-width: 1070px;
+  .add {
+    color: white;
+    background: #b157ae;
+    border-radius: 5px;
+    width: auto;
+  }
+}
+.rescueReport-container {
+  width: 100%;
+  max-width: 1070px;
+  // min-height: 300px;
+  // border: 1px solid #f6f5f5;
+  border: 1px solid #e1e1e1;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 255);
+  // box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  position: relative;
+  .report-description {
+    width: 60%;
+    img {
+      height: 40px;
+      width: 40px;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 100%;
+    }
+    .details {
+      overflow: hidden;
+      white-space: pre-line;
+      word-wrap: break-word;
+      height: 60px;
+      font-size: 13.5px;
+    }
+
+    .icon-container {
+      img {
+        height: 25px;
+        width: 25px;
+        margin: 0px 5px;
+      }
+    }
+    .q-stepper {
+      height: 100px;
+    }
+  }
+  .report-image {
+    width: 40%;
+    div {
+      border-bottom-left-radius: 10px;
+      .q-carousel {
+        max-height: 280px;
+        border-radius: 10px;
+      }
+    }
+  }
+}
+
+.image-container {
+  overflow-x: hidden;
+  height: auto;
+  overflow-x: scroll;
+  width: 98%;
+}
+.showLessMoreButton {
+  color: #b157ae;
+  font-size: 13px;
+}
+.reported-by {
+  text-transform: capitalize;
+  font-size: 15px;
+}
+.close-dialog {
+  font-size: 2rem;
+  // color: #b157ae;
+}
+.image-container {
+  overflow-x: hidden;
+  height: auto;
+  overflow-x: scroll;
+  width: 98%;
+}
+.edit-report {
+  .input-container {
+    width: 100%;
+    max-width: 80%;
+  }
+}
+.edit-container-button {
+  .cancel {
+    color: #b157ae;
+    background: white;
+    border: 1px solid #b157ae;
+    width: 200px;
+  }
+  .save {
+    width: 200px;
+    color: white;
+    background: #b157ae;
+  }
+}
+.add-image-container {
+  overflow: hidden;
+  width: 100%;
+  display: grid;
+  display: flex;
+  flex-wrap: wrap;
+  background: #e4e6eb;
+  padding: 3px;
+  height: auto;
+  border-radius: 5px;
+}
+.add-image-container > div {
+  max-width: 200px;
+  height: 95px;
+  flex: 1 0 calc(33.33% - 20px); /* Subtract twice the gap size */
+  background: rgba(255, 255, 255, 0.8);
+  margin: 1px; /* Half of the gap size */
+  .animal_image {
+    height: 100%;
+    width: 100%;
+    margin: auto;
+    object-fit: cover;
+  }
+}
+@media only screen and (max-width: 933px) {
+  .reported-by {
+    font-size: 13px;
+    margin: 0;
+    padding: 0;
+  }
+  .date-time-container {
+    padding: 0;
+    padding: 0;
+  }
+  .date-time-container p {
+    padding: 0;
+    margin: 0;
+  }
+  .date-time-container p:first-child {
+    margin-right: 10px;
+  }
+  .rescue-reportby-container div {
+    margin: 0;
+  }
+}
+@media only screen and (max-width: 701px) {
+  .rescueReport-title {
+    font-size: 25px;
+  }
+  .report-details {
+    font-size: 15px;
+  }
+  .image-container {
+    margin: auto;
+    margin-top: 10px;
+  }
+  .animal_image {
+    margin: 5px;
+  }
+  .announcements-container {
+    margin-bottom: 15px;
+  }
+}
+@media only screen and (max-width: 530px) {
+  .report-details {
+    font-size: 14px;
+  }
+
+  .rescueReport-container {
+    margin-bottom: 13px;
+    padding: 10px;
+    margin-top: 0;
+  }
+  .date-time-container {
+    margin: 0;
+  }
+  .add-icon-container {
+    margin-bottom: 5px;
+  }
+}
+@media only screen and (max-width: 430px) {
+  .reported-by {
+    font-weight: normal;
+    margin-left: -10px;
+    font-size: 12px;
+  }
+  .date-time-container p {
+    margin: 0;
+    padding: 0;
+    font-size: 12px;
+  }
+  .report-details {
+    font-size: 12px;
+  }
+  .rescueReport-container {
+    margin-bottom: 12px;
+  }
+  .showLessMoreButton {
+    font-size: 12px;
+  }
+  .image-container {
+    overflow: hidden;
+    width: 98%;
+    display: grid;
+    display: flex;
+    flex-wrap: wrap;
+    background: #e4e6eb;
+    padding: 3px;
+    height: auto;
+  }
+  .image-container > div {
+    max-width: 200px;
+    height: 130px;
+    flex: 1 0 calc(33.33% - 20px); /* Subtract twice the gap size */
+    background: rgba(255, 255, 255, 0.8);
+    margin: 1px; /* Half of the gap size */
+    .animal_image {
+      height: 100%;
+      width: 100%;
+      margin: auto;
+      object-fit: cover;
+    }
+  }
+  .image-container:nth-child(4),
+  .image-container:nth-child(5) {
+    flex-grow: 2;
+  }
+
+  .showLessMoreButton {
+    font-size: 11px;
+  }
+  .add-icon-container {
+    margin-bottom: 5px;
+    .add {
+      font-size: 12px;
+    }
+  }
+  .edit-icon-container {
+    margin-top: 5px;
+    .q-btn {
+      font-size: 12px;
+      width: auto;
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+  }
+}
+@media only screen and (max-width: 385px) {
+  .date-time-container p {
+    margin: 0;
+    padding: 0;
+    font-size: 11px;
+  }
+  .reported-by {
+    margin-top: -10px;
+  }
+  .image-container {
+    margin-top: 0px;
+  }
+}
+
+@media only screen and (max-width: 321px) {
+  .close-dialog {
+    font-size: 1.5rem;
+  }
+}

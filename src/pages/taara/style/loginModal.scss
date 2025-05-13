@@ -1,0 +1,78 @@
+.left-container {
+  background: #b157ae;
+  color: white;
+  border-top-left-radius: 10px;
+  border-bottom-left-radius: 10px;
+}
+.qinput {
+  margin: 3px;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.img {
+  background-image: url("../../../image/friendlyDogCat.png");
+  height: 200px;
+  width: 150px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+.close-button {
+  border-radius: 100%;
+  background: #b157ae;
+  margin-top: -350px;
+  font-size: 3rem;
+}
+.register-box {
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+.sign-up-button {
+  color: white;
+  margin-left: -9px;
+  display: none;
+}
+@media only screen and (max-width: 735px) {
+  .register-box {
+    display: none;
+  }
+  .close-button {
+    font-size: 2rem;
+  }
+  .left-container {
+    border-radius: 10px;
+    padding-right: 65px;
+  }
+  .sign-up-button {
+    display: flex;
+  }
+}
+@media only screen and (max-width: 456px) {
+  .qinput {
+    max-width: 100%;
+  }
+  .left-container {
+    width: 400px;
+    margin-left: -10px;
+  }
+  .close-button {
+    margin-top: -270px;
+    margin-left: -40px;
+  }
+}
+@media only screen and (max-width: 412px) {
+  .left-container {
+    width: 360px;
+  }
+  .h6-text {
+    font-size: 18px;
+  }
+  .login-button {
+    width: 100%;
+  }
+  .close-button {
+    margin-top: -300px;
+    margin-left: -40px;
+  }
+}

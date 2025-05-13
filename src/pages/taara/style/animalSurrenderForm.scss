@@ -1,0 +1,39 @@
+.form-container {
+  width: 100%;
+  max-width: 70%;
+  border: 1px solid black;
+  border-radius: 10px;
+}
+.logo {
+  height: 70px;
+  object-fit: cover;
+}
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  flex-wrap: nowrap;
+
+  .back {
+    border: 1px solid #b157ae;
+    color: #b157ae;
+    background: white;
+    border-radius: 10px;
+    width: 200px;
+  }
+  .submit {
+    border-radius: 10px;
+    background: #b157ae;
+    color: white;
+    width: 200px;
+  }
+}
+.details-container {
+  width: 100%;
+  max-width: 80%;
+  div {
+    p {
+      width: 200px;
+    }
+  }
+}

@@ -1,0 +1,138 @@
+.container {
+  font-family: "Proxima Nova", sans-serif;
+  height: 100vh;
+  background-color: rgb(252, 251, 251);
+  background-image: url("../../../image/login-a32423.png");
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  .left-div {
+    width: 50%;
+    height: 100%;
+    position: relative;
+    // background-color: #b157ae;
+    // padding: 10px 0px 10px 10px;
+    border-top-left-radius: 5%;
+    border-bottom-left-radius: 5%;
+    .border {
+      // background-color: white;
+      border-top-left-radius: 5%;
+      border-bottom-left-radius: 5%;
+      border: 10px solid #b157ae;
+      border-right: none;
+      height: 100%;
+      width: 100%;
+      img {
+        width: 100%;
+        border-bottom-left-radius: 15%;
+      }
+      .left-header {
+        img {
+          margin-top: 8px;
+          margin-right: 10px;
+          height: 30px;
+          width: 30px;
+          border-radius: 100%;
+          padding: 3px;
+          border: 1px solid lightgray;
+        }
+        .title {
+          font-family: "Space Grotesk", sans-serif;
+          font-size: 15px;
+          font-weight: bold;
+        }
+        .sub-title {
+          font-family: "Proxima Nova", sans-serif;
+          font-size: 12px;
+        }
+      }
+    }
+  }
+  .right-div {
+    border-top-right-radius: 5%;
+    border-bottom-right-radius: 5%;
+    width: 50%;
+    height: 100%;
+    padding: 0px 100px;
+    background-color: white;
+    // background-color: rgb(252, 251, 251);
+    .q-form {
+      min-height: 420px;
+    }
+    .back {
+      border: 1px solid #b157ae;
+    }
+    .q-btn {
+      width: 100%;
+    }
+    img {
+      height: 50px;
+      width: 50px;
+    }
+
+    .left-header {
+      img {
+        margin-top: 8px;
+        margin-right: 10px;
+        height: 30px;
+        width: 30px;
+        border-radius: 100%;
+        padding: 3px;
+        border: 1px solid lightgray;
+      }
+      .title {
+        font-family: "Space Grotesk", sans-serif;
+        font-size: 15px;
+        font-weight: bold;
+      }
+      .sub-title {
+        font-family: "Proxima Nova", sans-serif;
+        font-size: 12px;
+      }
+    }
+    .personal-info-fdiv {
+      // height: 320px;
+      height: 310px;
+    }
+    .personal-info-nav {
+      .q-btn {
+        width: 50px;
+        margin: 0px 5px;
+      }
+    }
+    .code-container {
+      height: 200px;
+      .q-input {
+        width: 60px;
+        margin: 0px 5px;
+      }
+    }
+  }
+  @keyframes fadeInOutBottomTop {
+    0% {
+      opacity: 0;
+      transform: translateY(50px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes fadeInOutLeftRight {
+    0% {
+      opacity: 0;
+      transform: translateX(50px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .fade-in {
+    animation: fadeInOutBottomTop 2s;
+  }
+  .fade-in-left-right {
+    animation: fadeInOutLeftRight 2s;
+  }
+}

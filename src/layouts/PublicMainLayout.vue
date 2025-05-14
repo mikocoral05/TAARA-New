@@ -9,7 +9,7 @@
     >
       <div class="left-header row no-wrap">
         <div class="column justify-start">
-          <img src="../image/TAARA_Logo.jpg" alt="" />
+          <img src="TAARALogo.png" alt="" />
         </div>
         <div class="column no-wrap justify-start text-black">
           <div class="title">TAARA</div>
@@ -30,9 +30,7 @@
             to="home"
             @click="headerColor = 'white'"
             :class="
-              $route.fullPath == '/home' || ''
-                ? 'bg-primary text-white'
-                : 'bg-white text-black'
+              $route.fullPath == '/home' || '' ? 'bg-primary text-white' : 'bg-white text-black'
             "
           />
           <q-btn
@@ -42,9 +40,7 @@
             flat
             to="pet-list?page=1"
             :class="
-              $route.fullPath == '/pet-list'
-                ? 'bg-primary text-white'
-                : 'bg-white text-black'
+              $route.fullPath == '/pet-list' ? 'bg-primary text-white' : 'bg-white text-black'
             "
           />
           <q-btn
@@ -54,9 +50,7 @@
             flat
             to="taara-charts"
             :class="
-              $route.fullPath == '/taara-charts'
-                ? 'bg-primary text-white'
-                : 'bg-white text-black'
+              $route.fullPath == '/taara-charts' ? 'bg-primary text-white' : 'bg-white text-black'
             "
           />
           <q-btn
@@ -64,11 +58,7 @@
             no-caps
             dense
             flat
-            :class="
-              $route.fullPath == '/contact'
-                ? 'bg-primary text-white'
-                : 'bg-white text-black'
-            "
+            :class="$route.fullPath == '/contact' ? 'bg-primary text-white' : 'bg-white text-black'"
             @click="goToContactUs()"
           />
 
@@ -123,10 +113,7 @@
             </q-list>
           </q-btn-dropdown>
         </div>
-        <div
-          class="profile-tab row no-rap justify-center items-center"
-          v-if="logInDetails != null"
-        >
+        <div class="profile-tab row no-rap justify-center items-center" v-if="logInDetails != null">
           <div class="img-container relative-position">
             <img :src="logInDetails[0].image" class="absolute-center" />
             <p
@@ -139,11 +126,7 @@
           <q-btn bordered icon="expand_more" round flat dense>
             <q-menu>
               <q-list>
-                <q-item
-                  clickable
-                  v-close-popup
-                  to="account-settings?my-account"
-                >
+                <q-item clickable v-close-popup to="account-settings?my-account">
                   <q-item-section>My Account</q-item-section>
                 </q-item>
 
@@ -172,22 +155,13 @@
           </q-btn>
         </div>
         <div class="get-started" v-if="logInDetails == null">
-          <q-btn
-            class="q-ml-md text-white"
-            label="Log In"
-            no-caps
-            flat
-            to="/loginPage"
-          />
+          <q-btn class="q-ml-md text-white" label="Log In" no-caps flat to="/loginPage" />
         </div>
       </div>
     </q-header>
 
     <q-page-container>
-      <loginModal
-        v-if="counterStore.showDialog == true"
-        style="position: absolute"
-      ></loginModal>
+      <loginModal v-if="counterStore.showDialog == true" style="position: absolute"></loginModal>
       <router-view />
     </q-page-container>
   </q-layout>

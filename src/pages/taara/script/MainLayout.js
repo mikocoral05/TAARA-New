@@ -1,8 +1,7 @@
-import { defineComponent, ref, onMounted, watch, onBeforeUnmount } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import { useCounterStore } from "../../../stores/example-store";
-import loginModal from "../../../components/loginModal.vue";
-import reportAnnouncementDialog from "../../../components/reportAnnouncementDialog.vue";
+import { defineComponent, ref, onMounted, watch, onBeforeUnmount } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import loginModal from 'src/components/loginModal.vue'
+import reportAnnouncementDialog from 'src/components/reportAnnouncementDialog.vue'
 import {
   logInDetails,
   logOut,
@@ -15,10 +14,11 @@ import {
   getNotification,
   notifData,
   notifUpdate,
-} from "../../../composable/taaraComposable.js";
-import { timeAgo } from "src/composable/simpleComposable";
+} from 'src/composable/taaraComposable.js'
+import { timeAgo } from 'src/composable/simpleComposable'
+import { useCounterStore } from 'src/stores/example-store'
 export default defineComponent({
-  name: "MainLayout",
+  name: 'MainLayout',
 
   components: {
     loginModal,
@@ -26,147 +26,144 @@ export default defineComponent({
   },
 
   setup() {
-    notifCount.value = JSON.parse(localStorage.getItem("count"));
-    logInDetails.value = JSON.parse(localStorage.getItem("logInDetails"));
+    notifCount.value = JSON.parse(localStorage.getItem('count'))
+    logInDetails.value = JSON.parse(localStorage.getItem('logInDetails'))
 
-    const counterStore = useCounterStore();
-    const router = useRouter();
-    const route = useRoute();
-    const rightDrawerNotification = ref(false);
-    let headerColor = ref("white");
-    let secondDialog = ref();
+    const counterStore = useCounterStore()
+    const router = useRouter()
+    const route = useRoute()
+    const rightDrawerNotification = ref(false)
+    let headerColor = ref('white')
+    let secondDialog = ref()
 
-    let fundRaiser = ref(false);
-    let rescueReport = ref(false);
-    let ourPetsMenu = ref(false);
-    let contactUs = ref(false);
-    let responsiveNav = ref(false);
-    let responsiveNavAll = ref(false);
-    let myFavorites;
-    let myNotification;
-    let mySettings;
-    let rightDrawerFavorites = ref(false);
-    let menu = ref(false);
-    let responsiveNavAllSlideHide = ref("slide-left");
-    let responsiveNavAllSlideShow = ref("slide-left");
-    let v = ref([]);
-    let resizeTimeout = null;
+    let fundRaiser = ref(false)
+    let rescueReport = ref(false)
+    let ourPetsMenu = ref(false)
+    let contactUs = ref(false)
+    let responsiveNav = ref(false)
+    let responsiveNavAll = ref(false)
+    let myFavorites
+    let myNotification
+    let mySettings
+    let rightDrawerFavorites = ref(false)
+    let menu = ref(false)
+    let responsiveNavAllSlideHide = ref('slide-left')
+    let responsiveNavAllSlideShow = ref('slide-left')
+    let v = ref([])
+    let resizeTimeout = null
 
     let showDropDown = (payload) => {
-      ourPetsMenu.value = payload == 1;
-      fundRaiser.value = payload == 2;
-      rescueReport.value = payload == 3;
-      contactUs.value = payload == 4;
-    };
+      ourPetsMenu.value = payload == 1
+      fundRaiser.value = payload == 2
+      rescueReport.value = payload == 3
+      contactUs.value = payload == 4
+    }
 
     let logOuts = () => {
-      logOut();
-      router.push("/home");
-      counterStore.changeNotif(0);
-    };
+      logOut()
+      router.push('/home')
+      counterStore.changeNotif(0)
+    }
     let goToContactUs = () => {
-      if (route.fullPath == "/home") {
-        counterStore.incrementFooter();
+      if (route.fullPath == '/home') {
+        counterStore.incrementFooter()
       } else {
-        router.push("/home");
+        router.push('/home')
         setTimeout(() => {
-          counterStore.incrementFooter();
-        }, 500);
+          counterStore.incrementFooter()
+        }, 500)
       }
-    };
+    }
     let likeShow = () => {
-      logInDetails.value == null ? "" : getLikes(logInDetails.value[0].user_id);
-      rightDrawerFavorites.value = !rightDrawerFavorites.value;
-      console.log(rightDrawerFavorites.value);
-      rightDrawerNotification.value = false;
-    };
+      logInDetails.value == null ? '' : getLikes(logInDetails.value[0].user_id)
+      rightDrawerFavorites.value = !rightDrawerFavorites.value
+      console.log(rightDrawerFavorites.value)
+      rightDrawerNotification.value = false
+    }
     let showLikeAnimal = (payload) => {
-      localStorage.setItem("specificAnimalId", JSON.stringify(payload));
-      viewSpecificAnimal(payload);
-      rightDrawerFavorites.value = false;
-    };
-    const thirtyDaysAgo = new Date();
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-    const givenDate =
-      logInDetails.value == null ? "" : logInDetails.value[0].date_created;
-    const dates = new Date(givenDate);
-    dates.setDate(dates.getDate() + 30);
+      localStorage.setItem('specificAnimalId', JSON.stringify(payload))
+      viewSpecificAnimal(payload)
+      rightDrawerFavorites.value = false
+    }
+    const thirtyDaysAgo = new Date()
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+    const givenDate = logInDetails.value == null ? '' : logInDetails.value[0].date_created
+    const dates = new Date(givenDate)
+    dates.setDate(dates.getDate() + 30)
 
-    const numberNotif = ref([]);
+    const numberNotif = ref([])
     let notificationShow = () => {
-      rightDrawerNotification.value = !rightDrawerNotification.value;
-    };
+      rightDrawerNotification.value = !rightDrawerNotification.value
+    }
     let viewNotification = (payload, notif_id) => {
-      if (payload == "rescue_report") {
-        if (route.path == "/rescue-reports") {
-          counterStore.changeReport(notif_id);
+      if (payload == 'rescue_report') {
+        if (route.path == '/rescue-reports') {
+          counterStore.changeReport(notif_id)
         } else {
-          router.push("/rescue-reports");
-          counterStore.changeReport(notif_id);
+          router.push('/rescue-reports')
+          counterStore.changeReport(notif_id)
         }
-      } else if (payload == "Announcement") {
-        if (route.path == "/announcementsPage") {
-          counterStore.changeAnnounce(notif_id);
+      } else if (payload == 'Announcement') {
+        if (route.path == '/announcementsPage') {
+          counterStore.changeAnnounce(notif_id)
         } else {
-          router.push("/announcementsPage");
-          counterStore.changeAnnounce(notif_id);
+          router.push('/announcementsPage')
+          counterStore.changeAnnounce(notif_id)
         }
-      } else if (payload == "New Animal for Adoption") {
-        router.push("/view-specific-animal");
-        viewSpecificAnimal(notif_id);
-      } else if (payload == "pEt-o-sHooT") {
-        router.push("/activitiesAndEventsViewEvent");
+      } else if (payload == 'New Animal for Adoption') {
+        router.push('/view-specific-animal')
+        viewSpecificAnimal(notif_id)
+      } else if (payload == 'pEt-o-sHooT') {
+        router.push('/activitiesAndEventsViewEvent')
       }
-    };
+    }
     let readNotif = (pay, user_id, notif) => {
       for (var i = 0; i < pay.length; i++) {
-        v.value.push(pay[i]);
+        v.value.push(pay[i])
       }
-      v.value.push(user_id);
-      notifUpdate(v.value.join(","), notif);
-      notifCount.value = JSON.parse(localStorage.getItem("count") - 1);
-    };
+      v.value.push(user_id)
+      notifUpdate(v.value.join(','), notif)
+      notifCount.value = JSON.parse(localStorage.getItem('count') - 1)
+    }
 
     const handleResize = () => {
-      clearTimeout(resizeTimeout);
+      clearTimeout(resizeTimeout)
       resizeTimeout = setTimeout(() => {
         if (window.innerWidth < 376) {
-          responsiveNavAllSlideHide.value = "slide-right";
-          responsiveNavAllSlideShow.value = "slide-left";
+          responsiveNavAllSlideHide.value = 'slide-right'
+          responsiveNavAllSlideShow.value = 'slide-left'
         } else {
-          responsiveNavAllSlideShow.value = "slide-right";
-          responsiveNavAllSlideHide.value = "slide-left";
+          responsiveNavAllSlideShow.value = 'slide-right'
+          responsiveNavAllSlideHide.value = 'slide-left'
         }
-      }, 250);
-    };
+      }, 250)
+    }
     let navigateMobileMenu = (navigate) => {
-      responsiveNavAll.value = true;
-      secondDialog.value = navigate;
-    };
+      responsiveNavAll.value = true
+      secondDialog.value = navigate
+    }
 
     let suppliesFormControl = (logDetails) => {
-      responsiveNavAll.value = false;
-      responsiveNav.value = false;
-      logDetails == null
-        ? (counterStore.showDialog = true)
-        : router.push("/donateSuppliesForm");
-    };
+      responsiveNavAll.value = false
+      responsiveNav.value = false
+      logDetails == null ? (counterStore.showDialog = true) : router.push('/donateSuppliesForm')
+    }
 
     const checkIfClickedOutsideFavorites = (event) => {
       if (myFavorites && !myFavorites.contains(event.target)) {
-        rightDrawerFavorites.value = false; // Hide the div when a click is detected outside of it
+        rightDrawerFavorites.value = false // Hide the div when a click is detected outside of it
       }
-    };
+    }
     const checkIfClickedOutsideNotification = (event) => {
       if (myNotification && !myNotification.contains(event.target)) {
-        rightDrawerNotification.value = false; // Hide the div when a click is detected outside of it
+        rightDrawerNotification.value = false // Hide the div when a click is detected outside of it
       }
-    };
+    }
     const checkIfClickedOutsideSettings = (event) => {
       if (mySettings && !mySettings.contains(event.target)) {
-        menu.value = false; // Hide the div when a click is detected outside of it
+        menu.value = false // Hide the div when a click is detected outside of it
       }
-    };
+    }
     watch(
       () => [
         counterStore.notif,
@@ -176,42 +173,39 @@ export default defineComponent({
       ],
       (
         [newStore, newDrawer, newDrawerNotif, newMenu],
-        [oldStore, oldDrawer, oldDrawerNotif, oldMenu]
+        [oldStore, oldDrawer, oldDrawerNotif, oldMenu],
       ) => {
-        myFavorites = document.querySelector("#favorites-button");
-        myNotification = document.querySelector("#notification-button");
-        mySettings = document.querySelector("#profile-settings");
+        myFavorites = document.querySelector('#favorites-button')
+        myNotification = document.querySelector('#notification-button')
+        mySettings = document.querySelector('#profile-settings')
         if (newDrawer == true) {
-          document.addEventListener("click", checkIfClickedOutsideFavorites);
+          document.addEventListener('click', checkIfClickedOutsideFavorites)
         } else {
-          document.removeEventListener("click", checkIfClickedOutsideFavorites);
+          document.removeEventListener('click', checkIfClickedOutsideFavorites)
         }
         if (newDrawerNotif == true) {
-          document.addEventListener("click", checkIfClickedOutsideNotification);
+          document.addEventListener('click', checkIfClickedOutsideNotification)
         } else {
-          document.removeEventListener(
-            "click",
-            checkIfClickedOutsideNotification
-          );
+          document.removeEventListener('click', checkIfClickedOutsideNotification)
         }
         if (newMenu == true) {
-          document.addEventListener("click", checkIfClickedOutsideSettings);
+          document.addEventListener('click', checkIfClickedOutsideSettings)
         } else {
-          document.removeEventListener("click", checkIfClickedOutsideSettings);
+          document.removeEventListener('click', checkIfClickedOutsideSettings)
         }
-      }
-    );
+      },
+    )
 
     onMounted(() => {
-      window.addEventListener("resize", handleResize);
-      logInDetails.value == null ? "" : getNotification(0);
-      logInDetails.value == null ? "" : getLikes(logInDetails.value[0].user_id);
-    });
+      window.addEventListener('resize', handleResize)
+      logInDetails.value == null ? '' : getNotification(0)
+      logInDetails.value == null ? '' : getLikes(logInDetails.value[0].user_id)
+    })
     onBeforeUnmount(() => {
-      window.removeEventListener("resize", handleResize);
-      document.removeEventListener("click", checkIfClickedOutsideFavorites);
-      document.removeEventListener("click", checkIfClickedOutsideNotification);
-    });
+      window.removeEventListener('resize', handleResize)
+      document.removeEventListener('click', checkIfClickedOutsideFavorites)
+      document.removeEventListener('click', checkIfClickedOutsideNotification)
+    })
 
     return {
       secondDialog,
@@ -219,11 +213,11 @@ export default defineComponent({
       items,
       onLoad(index, done) {
         setTimeout(() => {
-          getNotification(lastObjectNotif);
+          getNotification(lastObjectNotif)
           if (notifData.value.length == 0) {
-            done(true);
+            done(true)
           }
-        }, 2000);
+        }, 2000)
       },
       showDropDown,
       lastObjectNotif,
@@ -259,6 +253,6 @@ export default defineComponent({
       loginModal,
       headerColor,
       goToContactUs,
-    };
+    }
   },
-});
+})

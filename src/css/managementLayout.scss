@@ -1,0 +1,288 @@
+.header-taara {
+  // height: 5vh;
+  .tool-bar {
+    background: #b157ae;
+    .accountname {
+      // font-family: "Arial";
+      font-style: normal;
+      font-weight: 700;
+      font-size: 14px;
+      line-height: 24px;
+      color: #ffffff;
+    }
+    .taara-logo {
+      height: 30px;
+      width: 30px;
+      margin: 0px 10px 0px 2px;
+      border-radius: 100%;
+      object-fit: cover;
+      object-position: center;
+      border-radius: 100%;
+    }
+    .right-navi {
+      // margin-right: 50px;
+      .notif {
+        border: 1px solid white;
+      }
+      .officials-profile {
+        height: 30px;
+        width: 30px;
+        margin: 0px 10px 0px 0px;
+        border-radius: 100%;
+        object-fit: cover;
+        object-position: center;
+        border-radius: 100%;
+      }
+      .official-name {
+        display: block;
+        font-size: 14px;
+        text-transform: capitalize;
+      }
+      .expand-more {
+        border: 1px solid white;
+      }
+    }
+  }
+}
+.sidedrawer {
+  // background: #b157ae;
+  .q-drawer {
+    .q-list {
+      height: auto;
+      min-height: 100%;
+      // background: #b157ae;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      border-right: 1px solid rgb(233, 230, 230);
+      // border-right: 1px solid #917396;
+
+      .q-item {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        margin: 3px 0px;
+        padding-left: 15px;
+        img {
+          margin-right: 15px;
+        }
+        .q-icon {
+          margin-right: 18px;
+          color: #8e618b;
+          font-size: 22px;
+        }
+        .q-item-section {
+          color: #3c4151;
+          display: flex;
+          flex-direction: row;
+          flex-wrap: nowrap;
+          justify-content: space-between;
+          align-items: center;
+          // font-weight: 800;
+          margin-left: 2px;
+          font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+            "Lucida Sans", Arial, sans-serif;
+        }
+      }
+      .dropdown {
+        color: #8f7396;
+        font-family: "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande",
+          "Lucida Sans", Arial, sans-serif;
+        font-size: 12px;
+        min-height: 100px;
+
+        div {
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-end;
+          align-items: center;
+          flex-wrap: nowrap;
+          margin-bottom: 2px;
+          padding-right: 18px;
+          // background: #c38edb;
+          border-radius: 10px;
+          margin-left: 20px;
+          margin-right: 20px;
+          p {
+            width: 126px;
+            font-size: 13px;
+            font-weight: 300;
+          }
+          white-space: nowrap;
+          .q-icon {
+            font-size: 22px;
+          }
+        }
+      }
+    }
+  }
+}
+.web-profile-setting {
+  position: absolute;
+  top: 67px;
+  right: 0;
+  z-index: 2;
+  border-bottom-left-radius: 10px;
+  background: #b157ae;
+}
+.hamburger-menu {
+  margin-left: 11px;
+  color: white;
+}
+
+.dialog-nav {
+  width: 300px;
+  background: rgba(177, 87, 174, 1);
+}
+.responsive-nav {
+  color: white;
+}
+.responsive-nav .q-btn {
+  font-size: 13px;
+}
+.log-sign .q-btn {
+  font-size: 13px;
+}
+.responsive-nav-second .q-btn {
+  font-size: 13.5px;
+  margin-left: 25px;
+}
+.responsive-nav-second .q-btn {
+  font-size: 13.5px;
+  margin-left: 25px;
+}
+.hamburger-menu {
+  display: block;
+}
+.hamburger-menu2 {
+  display: none;
+}
+@media only screen and (max-width: 933px) {
+  .header-taara {
+    .tool-bar {
+      .right-navi {
+        margin-right: 0px;
+        div {
+          margin-right: 0px;
+        }
+        .notif {
+          border: 1px solid white;
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 609px) {
+  .header-taara {
+    .tool-bar {
+      .right-navi {
+        .official-name {
+          display: none;
+        }
+        .expand-more {
+          border: 1px solid white;
+          margin-left: 5px;
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 501px) {
+  .hamburger-menu {
+    display: none;
+  }
+  .hamburger-menu2 {
+    display: block;
+    margin-top: 8px;
+  }
+
+  .user-image {
+    border-radius: 100%;
+    object-fit: cover;
+    object-position: center;
+    border-radius: 100%;
+    height: 35px;
+    width: 35px;
+  }
+  .responsive-nav {
+    div {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      padding-left: 20px;
+      img {
+        width: 20px;
+        height: 20px;
+      }
+    }
+  }
+  .responsive-official-nav {
+    display: block;
+  }
+  .web-profile-setting {
+    display: none;
+  }
+  .header-taara {
+    .tool-bar {
+      .taara-logo {
+        display: none;
+        margin-left: 0px;
+      }
+      .right-navi {
+        .notif {
+          border: 1px solid white;
+        }
+        .officials-profile {
+          height: 30px;
+          width: 30px;
+          margin: 0px 10px 0px 0px;
+          border-radius: 100%;
+          object-fit: cover;
+          object-position: center;
+          border-radius: 100%;
+        }
+
+        .expand-more {
+          display: none;
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 402px) {
+  .accountname {
+    font-size: 13px;
+  }
+}
+@media only screen and (max-width: 395px) {
+  .header-taara {
+    .tool-bar {
+      .accountname {
+        padding-left: 0px;
+      }
+
+      .right-navi {
+        .notif {
+          border: 1px solid white;
+          margin-right: 5px;
+        }
+        .officials-profile {
+          margin-right: 0px;
+        }
+      }
+    }
+  }
+}
+@media only screen and (max-width: 376px) {
+  .logout {
+    font-size: 12px;
+  }
+
+  .responsive-nav-second .q-btn {
+    font-size: 13.5px;
+    margin-left: 25px;
+  }
+  .dialog-nav {
+    width: 100vw;
+  }
+}

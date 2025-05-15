@@ -1,7 +1,5 @@
 <template>
-  <div
-    class="containerFooter column no-wrap justify-center items-center bg-amber text-black"
-  >
+  <div class="containerFooter column no-wrap justify-center items-center bg-amber text-black">
     <div class="left-header row no-wrap full-width">
       <div class="column justify-start">
         <img src="../image/TAARA_Logo.jpg" />
@@ -17,7 +15,7 @@
     </div>
     <div class="row no-wrap justify-between items-center second-layer">
       <div class="colum no-wrap justify-start items-center">
-        <p class="paragraph1">​Contact</p>
+        <p class="paragraph1">Contact</p>
         <p class="paragraph2">123 Main Street, Tabaco City, Philippines</p>
         <p class="paragraph2">General Inquiries: info@taara.org</p>
         <p class="paragraph2">Donations: donate@taara.org</p>
@@ -38,9 +36,7 @@
       </div>
       <div class="colum no-wrap justify-start items-center">
         <p class="paragraph1">Donate</p>
-        <p class="paragraph2">
-          Sign up to get the latest updates on our mission and activities.
-        </p>
+        <p class="paragraph2">Sign up to get the latest updates on our mission and activities.</p>
       </div>
       <div class="column no-wrap justify-start items-center">
         <p class="paragraph1">Instagram</p>
@@ -48,44 +44,39 @@
         <p class="paragraph1">Facebook</p>
       </div>
     </div>
-    <div
-      class="reserve bg-black q-pa-sm text-white full-width row justify-center items-center"
-    >
+    <div class="reserve bg-black q-pa-sm text-white full-width row justify-center items-center">
       <p class="q-ma-none">© 2024 by TAARA. All rights reserved.</p>
     </div>
   </div>
 </template>
 
 <script>
-import { defineComponent } from "vue";
-import {
-  logInDetails,
-  specificVolunteerFormData,
-} from "src/composable/taaraComposable";
-import { useCounterStore } from "src/stores/example-store";
-import { useRouter } from "vue-router";
+import { defineComponent } from 'vue'
+import { logInDetails, specificVolunteerFormData } from 'src/composable/taaraComposable'
+import { useCounterStore } from 'src/stores/example-store'
+import { useRouter } from 'vue-router'
 export default defineComponent({
-  name: "taaraFooter",
+  name: 'taaraFooter',
 
   setup() {
-    const counterStore = useCounterStore();
-    const router = useRouter();
-    logInDetails.value = JSON.parse(localStorage.getItem("logInDetails"));
+    const counterStore = useCounterStore()
+    const router = useRouter()
+    logInDetails.value = JSON.parse(localStorage.getItem('logInDetails'))
     let restriction = () => {
       if (logInDetails.value == null) {
-        counterStore.showDialog = true;
+        counterStore.showDialog = true
       } else {
-        router.push("volunteer-form");
+        router.push('volunteer-form')
       }
-    };
+    }
     return {
       router,
       restriction,
       logInDetails,
       specificVolunteerFormData,
-    };
+    }
   },
-});
+})
 </script>
 
 <style lang="scss" scoped>
@@ -108,12 +99,12 @@ export default defineComponent({
       width: 50px;
     }
     .title {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 22px;
       font-weight: bold;
     }
     .sub-title {
-      font-family: "Proxima Nova", sans-serif;
+      font-family: 'Proxima Nova', sans-serif;
       font-size: 14px;
     }
   }
@@ -124,17 +115,17 @@ export default defineComponent({
       width: 200px;
       margin: 20px; // background: green;
       .paragraph1 {
-        font-family: "Proxima Nova", sans-serif;
+        font-family: 'Proxima Nova', sans-serif;
         font-size: 20px;
         font-weight: bold;
       }
       .paragraph2 {
-        font-family: "Proxima Nova", sans-serif; // font-size: 16px;
+        font-family: 'Proxima Nova', sans-serif; // font-size: 16px;
       }
     }
   }
   .reserve {
-    font-family: "Proxima Nova", sans-serif;
+    font-family: 'Proxima Nova', sans-serif;
   }
 }
 </style>

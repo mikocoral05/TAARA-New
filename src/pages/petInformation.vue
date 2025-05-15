@@ -29,29 +29,19 @@
           >
             <template v-slot:append>
               <q-avatar>
-                <q-icon
-                  name="search"
-                  size="20px"
-                  style="color: #b157ae"
-                  class="search-icon"
-                />
+                <q-icon name="search" size="20px" style="color: #b157ae" class="search-icon" />
               </q-avatar>
             </template>
           </q-input>
           <p class="text-center q-mt-sm q-ma-none">ANIMAL TYPE</p>
-          <div
-            style="width: 100%"
-            class="flex row no-wrap justify-center items-center"
-          >
+          <div style="width: 100%" class="flex row no-wrap justify-center items-center">
             <q-btn
               label="Dog"
               class="q-ma-sm q-pa-none advance-button-responsive"
               no-caps
               dense
               flat
-              @click="
-                search.animal_type = search.animal_type === 'dog' ? '' : 'dog'
-              "
+              @click="search.animal_type = search.animal_type === 'dog' ? '' : 'dog'"
               :style="
                 search.animal_type == 'dog'
                   ? { background: '#b157ae', color: 'white' }
@@ -64,9 +54,7 @@
               no-caps
               flat
               dense
-              @click="
-                search.animal_type = search.animal_type === 'cat' ? '' : 'cat'
-              "
+              @click="search.animal_type = search.animal_type === 'cat' ? '' : 'cat'"
               :style="
                 search.animal_type == 'cat'
                   ? { background: '#b157ae', color: 'white' }
@@ -76,10 +64,7 @@
           </div>
           <p class="text-center q-mb-none">BREED</p>
           <!-- //breed dropdown-button -->
-          <div
-            style="width: 100%"
-            class="flex row no-wrap justify-center items-center"
-          >
+          <div style="width: 100%" class="flex row no-wrap justify-center items-center">
             <q-select
               dense
               class="q-ma-sm bg-white advance-button-responsive-select"
@@ -92,10 +77,7 @@
             />
           </div>
           <p class="text-center q-mb-none">AGE</p>
-          <div
-            class="flex row no-wrap justify-center items-center"
-            style="width: 100%"
-          >
+          <div class="flex row no-wrap justify-center items-center" style="width: 100%">
             <q-btn
               label="Young"
               dense
@@ -137,10 +119,7 @@
             />
           </div>
           <p class="text-center q-mb-none">SIZE</p>
-          <div
-            class="flex row no-wrap justify-center items-center"
-            style="width: 100%"
-          >
+          <div class="flex row no-wrap justify-center items-center" style="width: 100%">
             <q-btn
               label="Small (0-6 lbs)"
               no-caps
@@ -169,10 +148,7 @@
             />
           </div>
 
-          <div
-            class="flex row no-wrap justify-center items-center"
-            style="width: 100%"
-          >
+          <div class="flex row no-wrap justify-center items-center" style="width: 100%">
             <q-btn
               label="Large (12-16 lbs)"
               dense
@@ -189,10 +165,7 @@
           </div>
 
           <p class="text-center q-mb-none">GENDER</p>
-          <div
-            class="flex row no-wrap justify-center items-center"
-            style="width: 100%"
-          >
+          <div class="flex row no-wrap justify-center items-center" style="width: 100%">
             <q-btn
               label="Male"
               no-caps
@@ -221,10 +194,7 @@
             />
           </div>
           <p class="text-center q-mb-none">GOOD WITH</p>
-          <div
-            class="flex row no-wrap justify-center items-center"
-            style="width: 100%"
-          >
+          <div class="flex row no-wrap justify-center items-center" style="width: 100%">
             <q-btn
               label="People"
               dense
@@ -266,10 +236,7 @@
             />
           </div>
           <p class="text-center q-mb-none">CARE & BEHAVIOUR</p>
-          <div
-            class="flex row no-wrap justify-center items-center"
-            style="width: 100%"
-          >
+          <div class="flex row no-wrap justify-center items-center" style="width: 100%">
             <q-btn
               label="House Trained"
               dense
@@ -277,8 +244,7 @@
               flat
               class="q-pa-none q-ma-sm advance-button-responsive"
               @click="
-                search.behaviour =
-                  search.behaviour === 'house trained' ? '' : 'house trained'
+                search.behaviour = search.behaviour === 'house trained' ? '' : 'house trained'
               "
               :style="
                 search.behaviour == 'house trained'
@@ -292,10 +258,7 @@
               no-caps
               flat
               class="q-pa-none q-ma-sm advance-button-responsive"
-              @click="
-                search.behaviour =
-                  search.behaviour === 'declawed' ? '' : 'declawed'
-              "
+              @click="search.behaviour = search.behaviour === 'declawed' ? '' : 'declawed'"
               :style="
                 search.behaviour == 'declawed'
                   ? { background: '#b157ae', color: 'white' }
@@ -303,20 +266,14 @@
               "
             />
           </div>
-          <div
-            class="flex row no-wrap justify-center items-center"
-            style="width: 100%"
-          >
+          <div class="flex row no-wrap justify-center items-center" style="width: 100%">
             <q-btn
               label="Playful"
               dense
               no-caps
               flat
               class="q-pa-none q-ma-sm advance-button-responsive"
-              @click="
-                search.behaviour =
-                  search.behaviour === 'playful' ? '' : 'playful'
-              "
+              @click="search.behaviour = search.behaviour === 'playful' ? '' : 'playful'"
               :style="
                 search.behaviour == 'playful'
                   ? { background: '#b157ae', color: 'white' }
@@ -329,9 +286,7 @@
               no-caps
               flat
               class="q-pa-none q-ma-sm advance-button-responsive"
-              @click="
-                search.behaviour = search.behaviour === 'loving' ? '' : 'loving'
-              "
+              @click="search.behaviour = search.behaviour === 'loving' ? '' : 'loving'"
               :style="
                 search.behaviour == 'loving'
                   ? { background: '#b157ae', color: 'white' }
@@ -339,10 +294,7 @@
               "
             />
           </div>
-          <div
-            class="flex row no-wrap justify-center items-center q-mb-md"
-            style="width: 100%"
-          >
+          <div class="flex row no-wrap justify-center items-center q-mb-md" style="width: 100%">
             <q-btn
               label="Special Needs"
               dense
@@ -350,8 +302,7 @@
               flat
               class="q-pa-none q-ma-sm advance-button-responsive"
               @click="
-                search.behaviour =
-                  search.behaviour === 'special needs' ? '' : 'special needs'
+                search.behaviour = search.behaviour === 'special needs' ? '' : 'special needs'
               "
               :style="
                 search.behaviour == 'special needs'
@@ -363,19 +314,15 @@
         </div>
       </q-dialog>
       <div class="column no-wrap items-center text-body1 first-layer">
-        <h4 class="q-mb-lg title">
-          Our pets <span class="text-primary"> Gallery </span>
-        </h4>
+        <h4 class="q-mb-lg title">Our pets <span class="text-primary"> Gallery </span></h4>
         <p class="text-center sub-text">
-          “Welcome to Our Pets Gallery! Discover a diverse collection of
-          animals, each on their unique journey.<br />
-          From adoptable pets to those who’ve found homes or need medical care,
-          our gallery showcases their resilience and charm.<br />
+          “Welcome to Our Pets Gallery! Discover a diverse collection of animals, each on their
+          unique journey.<br />
+          From adoptable pets to those who’ve found homes or need medical care, our gallery
+          showcases their resilience and charm.<br />
           Explore, connect with their stories, and learn how you can help.”
         </p>
-        <div
-          class="row no-wrap justify-between items-center q-btn-container q-mt-lg"
-        >
+        <div class="row no-wrap justify-between items-center q-btn-container q-mt-lg">
           <q-select
             outlined
             v-model="searchValue"
@@ -415,9 +362,7 @@
             />
           </div>
         </div>
-        <div
-          class="categorize-container row justify-between items-center q-pt-md no-wrap"
-        >
+        <div class="categorize-container row justify-between items-center q-pt-md no-wrap">
           <q-btn
             label="Name"
             :icon-right="categorizeByName ? 'arrow_drop_up' : 'arrow_drop_down'"
@@ -439,9 +384,7 @@
             no-caps
             dense
             class="text-weight-regular"
-            :icon-right="
-              categorizeByWeight ? 'arrow_drop_up' : 'arrow_drop_down'
-            "
+            :icon-right="categorizeByWeight ? 'arrow_drop_up' : 'arrow_drop_down'"
             @click="sortByWeight(allAnimalData)"
           />
           <q-btn
@@ -449,9 +392,7 @@
             no-caps
             dense
             class="text-weight-regular"
-            :icon-right="
-              categorizeByHeight ? 'arrow_drop_up' : 'arrow_drop_down'
-            "
+            :icon-right="categorizeByHeight ? 'arrow_drop_up' : 'arrow_drop_down'"
             @click="sortByHeight(allAnimalData)"
           />
           <q-btn
@@ -459,9 +400,7 @@
             no-caps
             dense
             class="text-weight-regular"
-            :icon-right="
-              categorizeByYearRescued ? 'arrow_drop_up' : 'arrow_drop_down'
-            "
+            :icon-right="categorizeByYearRescued ? 'arrow_drop_up' : 'arrow_drop_down'"
             @click="sortByDateRescued(allAnimalData)"
           />
         </div>
@@ -483,13 +422,8 @@
               "
               no-caps
             >
-              <img
-                :src="data.animal_image"
-                alt="Looks like image is not available"
-              />
-              <q-card-section
-                class="q-ma-none q-pa-none text-center text-capitalize"
-              >
+              <img :src="data.animal_image" alt="Looks like image is not available" />
+              <q-card-section class="q-ma-none q-pa-none text-center text-capitalize">
                 <div class="q-ma-none animal-name text-weight-regular">
                   <b> {{ data.breed }}</b>
                 </div>
@@ -497,9 +431,7 @@
                   Sex: {{ data.sex }} Age:
                   {{ calculateAge(data.age) }}
                 </div>
-                <div class="q-ma-none text-caption">
-                  Name: {{ data.animal_name }}
-                </div>
+                <div class="q-ma-none text-caption">Name: {{ data.animal_name }}</div>
               </q-card-section>
             </q-btn>
           </q-card>
@@ -521,9 +453,5 @@
     <taaraFooter class="footer" />
   </q-page>
 </template>
-<script src="../pages/taara/script/petInformation.js"></script>
-<style
-  lang="scss"
-  scoped
-  src="../pages/taara/style/petInformation.scss"
-></style>
+<script src="./taara/script/petInformation.js"></script>
+<style lang="scss" scoped src="../pages/taara/style/petInformation.scss"></style>

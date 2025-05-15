@@ -6,4 +6,6 @@ export default defineBoot(() => {
   getPendingRescueReport().then((response) => {
     store.pendingRescueReport = response
   })
+  const raw = sessionStorage.getItem('user_data')
+  store.userData = raw ? JSON.parse(raw) : {}
 })

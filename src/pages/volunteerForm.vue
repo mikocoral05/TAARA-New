@@ -1,9 +1,7 @@
 <template>
   <q-page>
     <div class="first-layer column justify-center items-center text-body1">
-      <div
-        class="inner-div column justify-center items-center relative-position"
-      >
+      <div class="inner-div column justify-center items-center relative-position">
         <div class="relative-position fi-container">
           <div class="bg-amber first-shape"></div>
           <div class="second-shape bg-blue"></div>
@@ -20,8 +18,8 @@
           <span class="text-primary"> Volunteer</span> with Us!”
         </h3>
         <p>
-          “Unite with fellow animal lovers and make a lasting difference in the
-          lives of pets in need.”
+          “Unite with fellow animal lovers and make a lasting difference in the lives of pets in
+          need.”
         </p>
         <q-btn
           label="Get Started"
@@ -31,9 +29,7 @@
         />
       </div>
     </div>
-    <div
-      class="second-layer q-pa-lg text-body1 column no-wrap items-center relative-position"
-    >
+    <div class="second-layer q-pa-lg text-body1 column no-wrap items-center relative-position">
       <h4 class="q-mb-sm">Let's get you started</h4>
       <p class="q-mb-md">Enter the detials to get going</p>
       <div class="bg-amber first-shape"></div>
@@ -49,12 +45,7 @@
           vertical
           class="full-height"
         >
-          <q-step
-            :name="1"
-            title="Personal Information"
-            icon="settings"
-            :done="step > 1"
-          >
+          <q-step :name="1" title="Personal Information" icon="settings" :done="step > 1">
             <q-form class="full-width q-ma-none" @submit="step = 2">
               <div class="row no-wrap">
                 <div class="q-pa-sm field-container">
@@ -117,11 +108,7 @@
                   >
                     <template v-slot:append>
                       <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy
-                          cover
-                          transition-show="scale"
-                          transition-hide="scale"
-                        >
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                           <q-date
                             minimal
                             today-btn
@@ -151,9 +138,7 @@
                     v-model="volunteer_form.phone_number"
                     :rules="[
                       (val) => (!!val && val.length == 16) || '',
-                      (val) =>
-                        (val && val[1] === '9') ||
-                        'Phone number must start with 9',
+                      (val) => (val && val[1] === '9') || 'Phone number must start with 9',
                     ]"
                     hide-bottom-space
                   />
@@ -247,31 +232,19 @@
                 </div>
               </div>
               <div class="row justify-end items-end q-pa-sm">
-                <q-btn
-                  class="bg-primary text-white q-px-lg"
-                  label="Next"
-                  no-caps
-                  type="submit"
-                />
+                <q-btn class="bg-primary text-white q-px-lg" label="Next" no-caps type="submit" />
               </div>
             </q-form>
           </q-step>
 
-          <q-step
-            :name="2"
-            title="Background Check"
-            icon="create_new_folder"
-            :done="step > 2"
-          >
+          <q-step :name="2" title="Background Check" icon="create_new_folder" :done="step > 2">
             <q-form @submit="step = 3" class="q-ma-none q-pa-none full-width">
               <div
                 class="column justify-center items-center full-width background-check text-body1"
               >
                 <div class="row items-center full-width">
                   <div class="q-ma-sm p-div">
-                    <p>
-                      Are you a member of any other animal welfare organization?
-                    </p>
+                    <p>Are you a member of any other animal welfare organization?</p>
                   </div>
                   <div class="column justify-center radio-div">
                     <q-radio
@@ -377,9 +350,7 @@
                     stack-label
                     dense
                     :rules="
-                      volunteer_form.experience_in_recue == 'No'
-                        ? [(val) => val]
-                        : [(val) => !!val]
+                      volunteer_form.experience_in_recue == 'No' ? [(val) => val] : [(val) => !!val]
                     "
                   />
                 </div>
@@ -430,10 +401,7 @@
 
                 <div class="row items-center detials-conatiner full-width">
                   <div class="q-ma-sm p-div">
-                    <p>
-                      Are your family members in favour of you being a
-                      volunteer?
-                    </p>
+                    <p>Are your family members in favour of you being a volunteer?</p>
                   </div>
                   <div class="column justify-center radio-div">
                     <q-radio
@@ -478,16 +446,11 @@
                   </div>
                 </div>
 
-                <div
-                  class="row items-center detials-conatiner mobile-column full-width"
-                >
+                <div class="row items-center detials-conatiner mobile-column full-width">
                   <div class="q-ma-sm p-div">
                     <p>If yes, please indicate *?</p>
                   </div>
-                  <div
-                    class="row no-wrap justify-center items-center"
-                    style="width: 80%"
-                  >
+                  <div class="row no-wrap justify-center items-center" style="width: 80%">
                     <q-input
                       class="q-ma-sm"
                       :disable="
@@ -496,14 +459,11 @@
                       "
                       :value="
                         volunteer_form.related_member_in_organization == 'No'
-                          ? (volunteer_form.related_member_in_organization_name =
-                              null)
+                          ? (volunteer_form.related_member_in_organization_name = null)
                           : volunteer_form.related_member_in_organization
                       "
                       filled
-                      v-model="
-                        volunteer_form.related_member_in_organization_name
-                      "
+                      v-model="volunteer_form.related_member_in_organization_name"
                       label="Name: Ex: Jessy"
                       stack-label
                       dense
@@ -522,14 +482,11 @@
                       "
                       :value="
                         volunteer_form.related_member_in_organization == 'No'
-                          ? (volunteer_form.related_member_in_organization_relationship =
-                              null)
+                          ? (volunteer_form.related_member_in_organization_relationship = null)
                           : volunteer_form.related_member_in_organization
                       "
                       filled
-                      v-model="
-                        volunteer_form.related_member_in_organization_relationship
-                      "
+                      v-model="volunteer_form.related_member_in_organization_relationship"
                       label="Relationship: Ex: Mother"
                       stack-label
                       dense
@@ -542,15 +499,11 @@
                     />
                   </div>
                 </div>
-                <div
-                  class="column items-start detials-conatiner mobile-column full-width"
-                >
+                <div class="column items-start detials-conatiner mobile-column full-width">
                   <div class="p-div q-ma-sm">
                     <p>How did you know about our volunteer program?</p>
                   </div>
-                  <div
-                    class="q-ma-sm autogrow-div column justify-center items-center"
-                  >
+                  <div class="q-ma-sm autogrow-div column justify-center items-center">
                     <q-input
                       class="autogrow"
                       autogrow
@@ -564,23 +517,17 @@
                     />
                   </div>
                 </div>
-                <div
-                  class="column items-start q-mt-md detials-conatiner full-width"
-                >
+                <div class="column items-start q-mt-md detials-conatiner full-width">
                   <div class="q-ma-sm p-div">
                     <p>
-                      Please indicate your most available days and time that you
-                      can be active as a volunteer of the TAARA. *
+                      Please indicate your most available days and time that you can be active as a
+                      volunteer of the TAARA. *
                     </p>
                   </div>
                   <div class="row no-wrap">
-                    <div
-                      class="q-mx-xl q-option-group-div column justify-start items-start"
-                    >
+                    <div class="q-mx-xl q-option-group-div column justify-start items-start">
                       <p class="hidden">
-                        {{
-                          (volunteer_form.most_available_day = group.join(","))
-                        }}
+                        {{ volunteer_form.most_available_day = group.join(',') }}
                       </p>
                       <q-option-group
                         v-model="group"
@@ -589,10 +536,7 @@
                         type="checkbox"
                       />
                     </div>
-                    <div
-                      class="q-mx-lg column justify-start items-start"
-                      style="width: 150px"
-                    >
+                    <div class="q-mx-lg column justify-start items-start" style="width: 150px">
                       <q-radio
                         v-model="volunteer_form.most_available_time"
                         checked-icon="task_alt"
@@ -645,52 +589,32 @@
                   </div>
                 </div>
 
-                <p
-                  class="text-red q-ma-sm text-center full-width"
-                  v-if="warning == true"
-                >
+                <p class="text-red q-ma-sm text-center full-width" v-if="warning == true">
                   All fields are required!
                 </p>
 
-                <div
-                  class="row justify-between items-center q-pa-sm full-width q-mt-xl"
-                >
+                <div class="row justify-between items-center q-pa-sm full-width q-mt-xl">
                   <q-btn
                     class="bg-primary text-white q-px-lg"
                     label="Back"
                     no-caps
                     @click="step = 1"
                   />
-                  <q-btn
-                    class="bg-primary text-white q-px-lg"
-                    label="Next"
-                    no-caps
-                    type="submit"
-                  />
+                  <q-btn class="bg-primary text-white q-px-lg" label="Next" no-caps type="submit" />
                 </div>
               </div>
             </q-form>
           </q-step>
 
-          <q-step
-            :name="3"
-            title="Skills and Experience"
-            icon="assignment"
-            :done="step > 3"
-          >
+          <q-step :name="3" title="Skills and Experience" icon="assignment" :done="step > 3">
             <q-form @submit="step = 4" class="full-width q-ma-none q-pa-none">
               <div class="column justify-center items-center full-width skills">
-                <div
-                  class="row justify-start items-start small-label full-width"
-                >
+                <div class="row justify-start items-start small-label full-width">
                   <h6>Skills & Experience</h6>
                 </div>
                 <div class="row items-center detials-conatiner">
                   <div class="q-ma-sm p-div">
-                    <p>
-                      Have you had any formal education in pet care or animal
-                      welfare?
-                    </p>
+                    <p>Have you had any formal education in pet care or animal welfare?</p>
                   </div>
                   <div class="q-ma-sm column justify-center radio-div">
                     <q-radio
@@ -732,9 +656,7 @@
                   </div>
                 </div>
 
-                <div
-                  class="justify-center column items-start detials-conatiner"
-                >
+                <div class="justify-center column items-start detials-conatiner">
                   <div class="q-ma-sm p-div">
                     <p>If yes, indicate if any.</p>
                   </div>
@@ -745,19 +667,14 @@
                     "
                     :value="
                       volunteer_form.done_any_other_volunteer_work == 'No'
-                        ? (volunteer_form.done_any_other_volunteer_work_indicate =
-                            null)
+                        ? (volunteer_form.done_any_other_volunteer_work_indicate = null)
                         : volunteer_form.done_any_other_volunteer_work_indicate
                     "
                     :rules="
-                      volunteer_form.done_any_other_volunteer_work == 'Yes'
-                        ? [(val) => !!val]
-                        : []
+                      volunteer_form.done_any_other_volunteer_work == 'Yes' ? [(val) => !!val] : []
                     "
                     hide-bottom-space
-                    v-model="
-                      volunteer_form.done_any_other_volunteer_work_indicate
-                    "
+                    v-model="volunteer_form.done_any_other_volunteer_work_indicate"
                     filled
                     type="textarea"
                     class="second-text-area q-mx-sm"
@@ -765,10 +682,7 @@
                 </div>
                 <div class="row items-center detials-conatiner">
                   <div class="q-ma-sm p-div">
-                    <p>
-                      Do you have any physical andpsychological
-                      limitations/disabilities?
-                    </p>
+                    <p>Do you have any physical andpsychological limitations/disabilities?</p>
                   </div>
                   <div class="q-ma-sm column justify-center radio-div">
                     <q-radio
@@ -788,22 +702,18 @@
                   </div>
                 </div>
 
-                <div
-                  class="justify-center column items-start detials-conatiner"
-                >
+                <div class="justify-center column items-start detials-conatiner">
                   <div class="q-ma-sm p-div">
                     <p>If yes, indicate if any.</p>
                   </div>
                   <q-input
                     :disable="
-                      volunteer_form.physical_psychological_limitation ==
-                        'No' ||
+                      volunteer_form.physical_psychological_limitation == 'No' ||
                       volunteer_form.physical_psychological_limitation == null
                     "
                     :value="
                       volunteer_form.physical_psychological_limitation == 'No'
-                        ? (volunteer_form.physical_psychological_limitation_indicate =
-                            null)
+                        ? (volunteer_form.physical_psychological_limitation_indicate = null)
                         : volunteer_form.physical_psychological_limitation_indicate
                     "
                     :rules="
@@ -812,17 +722,13 @@
                         : []
                     "
                     hide-bottom-space
-                    v-model="
-                      volunteer_form.physical_psychological_limitation_indicate
-                    "
+                    v-model="volunteer_form.physical_psychological_limitation_indicate"
                     filled
                     type="textarea"
                     class="second-text-area q-mx-sm"
                   />
                 </div>
-                <div
-                  class="justify-center column items-start detials-conatiner"
-                >
+                <div class="justify-center column items-start detials-conatiner">
                   <div class="q-mt-sm q-ml-sm p-div">
                     <p>Person to contact in case of emergency.</p>
                   </div>
@@ -853,9 +759,7 @@
                     <q-input
                       class="q-mx-lg"
                       standout
-                      v-model="
-                        volunteer_form.contact_person_emergency_relationship
-                      "
+                      v-model="volunteer_form.contact_person_emergency_relationship"
                       label="Relationship: Ex: Mother"
                       stack-label
                       dense
@@ -881,48 +785,29 @@
                     label="Virtual Committee"
                   />
                 </div>
-                <p
-                  class="text-red text-center full-width"
-                  v-if="warning == true"
-                >
+                <p class="text-red text-center full-width" v-if="warning == true">
                   All fields are required!
                 </p>
-                <div
-                  class="row justify-between items-center q-pa-sm full-width q-mt-xl"
-                >
+                <div class="row justify-between items-center q-pa-sm full-width q-mt-xl">
                   <q-btn
                     class="bg-primary text-white q-px-lg"
                     label="Back"
                     no-caps
                     @click="step = 2"
                   />
-                  <q-btn
-                    class="bg-primary text-white q-px-lg"
-                    label="Next"
-                    no-caps
-                    type="submit"
-                  />
+                  <q-btn class="bg-primary text-white q-px-lg" label="Next" no-caps type="submit" />
                 </div>
               </div>
             </q-form>
           </q-step>
 
-          <q-step
-            :name="4"
-            title="Desire Position"
-            icon="add_comment"
-            :done="step > 4"
-          >
+          <q-step :name="4" title="Desire Position" icon="add_comment" :done="step > 4">
             <q-form
               @submit="step = 5"
               class="full-width q-ma-none q-pa-none"
-              v-if="
-                volunteer_form.field_or_virtual_committee == 'Field Committee'
-              "
+              v-if="volunteer_form.field_or_virtual_committee == 'Field Committee'"
             >
-              <div
-                class="column justify-center items-center full-width field-committee"
-              >
+              <div class="column justify-center items-center full-width field-committee">
                 <div class="row justify-start items-center">
                   <h6>Field Committee</h6>
                 </div>
@@ -936,24 +821,17 @@
                     label="Rescue/Medical Committee"
                   />
                   <p class="hidden">
-                    {{
-                      (volunteer_form.field_or_virtual_committee_position =
-                        chooseWork.join(","))
-                    }}
+                    {{ volunteer_form.field_or_virtual_committee_position = chooseWork.join(',') }}
                   </p>
                   <ul>
                     <li>Preferably 18 years old and above</li>
+                    <li>willing to assist the head of a rescuer during rescue operation</li>
                     <li>
-                      willing to assist the head of a rescuer during rescue
-                      operation
+                      Preferably has knowledge in rescuing and/or 1st aid medication to injured
+                      animals
                     </li>
                     <li>
-                      Preferably has knowledge in rescuing and/or 1st aid
-                      medication to injured animals
-                    </li>
-                    <li>
-                      In charge in rescuing animals in animals in the first
-                      district of Albay.
+                      In charge in rescuing animals in animals in the first district of Albay.
                     </li>
                     <li>Run errands related to TAARA.</li>
                   </ul>
@@ -967,15 +845,11 @@
                     label="Animal Care Committee"
                   />
                   <ul>
-                    <li>Manage  the temporary Shelter</li>
+                    <li>Manage the temporary Shelter</li>
                     <li>
-                      Help in cleaning, feeding, taking medicine, walking,
-                      bathing the rescues
+                      Help in cleaning, feeding, taking medicine, walking, bathing the rescues
                     </li>
-                    <li>
-                      Bring the rescues to the vet clinic on their schedule
-                      check-ups
-                    </li>
+                    <li>Bring the rescues to the vet clinic on their schedule check-ups</li>
                   </ul>
                 </div>
                 <div class="choose-committee-pad">
@@ -988,12 +862,10 @@
                   />
                   <ul>
                     <li>
-                      Gather essential information and make posts of cats / dogs
-                      up for adoption
+                      Gather essential information and make posts of cats / dogs up for adoption
                     </li>
                     <li>
-                      Record and screen adopters if they are qualified to become
-                      new furparents
+                      Record and screen adopters if they are qualified to become new furparents
                     </li>
                     <li>Bringing the adopted cats/dogs to their new home</li>
                   </ul>
@@ -1023,28 +895,28 @@
                   />
                   <ul>
                     <li>
-                      Can scout for people that are also animal advocates that
-                      are willing to foster the rescues
+                      Can scout for people that are also animal advocates that are willing to foster
+                      the rescues
                     </li>
                     <li>
-                      Can regularly monitor the well-being and sustenance of the
-                      fostered rescues by their selected fosterer
+                      Can regularly monitor the well-being and sustenance of the fostered rescues by
+                      their selected fosterer
                     </li>
                     <li>
-                      willing to provide TEMPORARY SHELTER to the rescues while
-                      waiting for their FURever home/fosterer
+                      willing to provide TEMPORARY SHELTER to the rescues while waiting for their
+                      FURever home/fosterer
                     </li>
                     <li>
-                      Distributing food support for the rescues while they are
-                      under the fosterer’s care (1-2 weeks only)
+                      Distributing food support for the rescues while they are under the fosterer’s
+                      care (1-2 weeks only)
                     </li>
                   </ul>
                 </div>
                 <div class="row justify-start items-start detials-conatiner">
                   <div class="q-ma-sm p-div">
                     <p>
-                      Do you have any vehicle and would you be willing to drive
-                      it to transport rescues or run errands for TAARA? *
+                      Do you have any vehicle and would you be willing to drive it to transport
+                      rescues or run errands for TAARA? *
                     </p>
                   </div>
                   <div class="column justify-center q-button-div">
@@ -1073,8 +945,7 @@
                     class="q-mx-sm"
                     filled
                     :disable="
-                      volunteer_form.have_vehicle == 'No' ||
-                      volunteer_form.have_vehicle == null
+                      volunteer_form.have_vehicle == 'No' || volunteer_form.have_vehicle == null
                     "
                     :value="
                       volunteer_form.have_vehicle == 'No'
@@ -1085,58 +956,37 @@
                     label="Vehicale type"
                     stack-label
                     dense
-                    :rules="
-                      volunteer_form.have_vehicle == 'Yes'
-                        ? [(val) => !!val]
-                        : []
-                    "
+                    :rules="volunteer_form.have_vehicle == 'Yes' ? [(val) => !!val] : []"
                     hide-bottom-space
                   />
                 </div>
 
-                <p
-                  class="text-red text-center full-width"
-                  v-if="warning == true"
-                >
+                <p class="text-red text-center full-width" v-if="warning == true">
                   All fields are required!
                 </p>
-                <div
-                  class="row justify-between items-center q-pa-sm full-width q-mt-xl"
-                >
+                <div class="row justify-between items-center q-pa-sm full-width q-mt-xl">
                   <q-btn
                     class="bg-primary text-white q-px-lg"
                     label="Back"
                     no-caps
                     @click="step = 3"
                   />
-                  <q-btn
-                    class="bg-primary text-white q-px-lg"
-                    label="Next"
-                    no-caps
-                    type="submit"
-                  />
+                  <q-btn class="bg-primary text-white q-px-lg" label="Next" no-caps type="submit" />
                 </div>
               </div>
             </q-form>
             <q-form
               @submit="step = 5"
               class="full-width q-ma-none q-pa-none"
-              v-if="
-                volunteer_form.field_or_virtual_committee == 'Virtual Committee'
-              "
+              v-if="volunteer_form.field_or_virtual_committee == 'Virtual Committee'"
             >
-              <div
-                class="column justify-center items-center full-width virtual-committee"
-              >
+              <div class="column justify-center items-center full-width virtual-committee">
                 <div class="row justify-start items-center small-label">
                   <h6>Virtual Committee</h6>
                 </div>
                 <div class="choose-committee-pad">
                   <p class="hidden">
-                    {{
-                      (volunteer_form.field_or_virtual_committee_position =
-                        chooseWork.join(","))
-                    }}
+                    {{ volunteer_form.field_or_virtual_committee_position = chooseWork.join(',') }}
                   </p>
                   <q-checkbox
                     v-model="chooseWork"
@@ -1147,18 +997,15 @@
                   />
                   <ul>
                     <li>
-                      Monitoring the adopted cats/dogs by chatting with the
-                      adoptees on the designated GC and checking for weekly
-                      picture updates
+                      Monitoring the adopted cats/dogs by chatting with the adoptees on the
+                      designated GC and checking for weekly picture updates
                     </li>
                     <li>
-                      Requires home visit to the adoptees who doesn’t/no longer
-                      provide updates
+                      Requires home visit to the adoptees who doesn’t/no longer provide updates
                     </li>
                     <li>
-                      managing messages from different people
-                      (emergency/adoption/missing) and reporting directly to the
-                      coordinators
+                      managing messages from different people (emergency/adoption/missing) and
+                      reporting directly to the coordinators
                     </li>
                   </ul>
                 </div>
@@ -1172,13 +1019,11 @@
                   />
                   <ul>
                     <li>
-                      Can scout and coordinate with any possible affiliations to
-                      TAARA that can benefit the organization to help with its
-                      advocacies
+                      Can scout and coordinate with any possible affiliations to TAARA that can
+                      benefit the organization to help with its advocacies
                     </li>
                     <li>
-                      Can monitor and manage offered/proposed sponsorship for
-                      events and in general
+                      Can monitor and manage offered/proposed sponsorship for events and in general
                     </li>
                     <li>Can speak in person with partners if need be</li>
                   </ul>
@@ -1193,26 +1038,19 @@
                   />
                   <ul>
                     <li>
-                      Has knowledge of graphic design/presentation (can use
-                      different applications)
+                      Has knowledge of graphic design/presentation (can use different applications)
                     </li>
                     <li>
-                      Content Writer for social media purposes and special days
-                      (ex. National Aspin Day)
+                      Content Writer for social media purposes and special days (ex. National Aspin
+                      Day)
                     </li>
-                    <li>
-                      Has experience in in photography and filming for
-                      documentations
-                    </li>
+                    <li>Has experience in in photography and filming for documentations</li>
                   </ul>
                 </div>
 
                 <div class="row justify-start items-start detials-conatiner">
                   <div class="q-ma-sm p-div">
-                    <p>
-                      Do you have any experience related to managing social
-                      media pages?
-                    </p>
+                    <p>Do you have any experience related to managing social media pages?</p>
                   </div>
                   <div class="column justify-center q-button-div">
                     <q-radio
@@ -1234,8 +1072,8 @@
                 <div class="column justify-start items-start detials-conatiner">
                   <div class="q-ma-sm p-div">
                     <p>
-                      What software or applications do you use in creating
-                      layouts or designs?, please indicate here
+                      What software or applications do you use in creating layouts or designs?,
+                      please indicate here
                     </p>
                   </div>
                   <q-input
@@ -1301,10 +1139,7 @@
                 </div>
                 <div class="row justify-start items-start detials-conatiner">
                   <div class="q-ma-sm p-div">
-                    <p>
-                      Are you willing to use it for the task of the virtual
-                      committee?
-                    </p>
+                    <p>Are you willing to use it for the task of the virtual committee?</p>
                   </div>
                   <div class="column justify-center">
                     <q-radio
@@ -1325,84 +1160,56 @@
                 </div>
               </div>
               <div class="row justify-between items-center">
-                <p
-                  class="text-red text-center full-width"
-                  v-if="warning == true"
-                >
+                <p class="text-red text-center full-width" v-if="warning == true">
                   All fields are required!
                 </p>
-                <div
-                  class="row justify-between items-center q-pa-sm full-width q-mt-xl"
-                >
+                <div class="row justify-between items-center q-pa-sm full-width q-mt-xl">
                   <q-btn
                     class="bg-primary text-white q-px-lg"
                     label="Back"
                     no-caps
                     @click="step = 3"
                   />
-                  <q-btn
-                    class="bg-primary text-white q-px-lg"
-                    label="Next"
-                    no-caps
-                    type="submit"
-                  />
+                  <q-btn class="bg-primary text-white q-px-lg" label="Next" no-caps type="submit" />
                 </div>
               </div>
             </q-form>
           </q-step>
-          <q-step
-            :name="5"
-            title="Agreement"
-            icon="add_comment"
-            :done="step > 5"
-          >
+          <q-step :name="5" title="Agreement" icon="add_comment" :done="step > 5">
             <div class="container1 column q-my-lg">
               <div class="row justify-center items-center">
-                <q-img
-                  class="image"
-                  src="../image/TAARA_Logo.jpg"
-                  heigth="90px"
-                  width="90px"
-                />
+                <q-img class="image" src="../image/TAARA_Logo.jpg" heigth="90px" width="90px" />
               </div>
-              <div
-                class="column justify-center items-center aggreement q-mt-md"
-              >
+              <div class="column justify-center items-center aggreement q-mt-md">
                 <ul>
                   <li class="q-ma-sm">
-                    IF ACCEPTED AS A TAARA’s VOLUNTEER, I UNDERSTAND AND AGREE
-                    TO THE FOLLOWING:
+                    IF ACCEPTED AS A TAARA’s VOLUNTEER, I UNDERSTAND AND AGREE TO THE FOLLOWING:
                   </li>
                   <li class="q-ma-sm">
-                    I understand that my service in TAARA is purely voluntary
-                    and I will not receive any compensation or salary in
-                    exchange to the services I rendered.
+                    I understand that my service in TAARA is purely voluntary and I will not receive
+                    any compensation or salary in exchange to the services I rendered.
                   </li>
                   <li class="q-ma-sm">
-                     I shall always exercise compassion and care to the animals
-                    I will encounter.
+                    I shall always exercise compassion and care to the animals I will encounter.
                   </li>
                   <li class="q-ma-sm">
-                    I shall not do anything that may harm or cause trouble to
-                    the organization.
+                    I shall not do anything that may harm or cause trouble to the organization.
                   </li>
                   <li class="q-ma-sm">
-                    I will keep all confidential information during and even
-                    after my service in the group.
+                    I will keep all confidential information during and even after my service in the
+                    group.
                   </li>
                   <li class="q-ma-sm">
-                    I fully acknowledge and assume the responsibility in taking
-                    risk in all TAARA-related activities.
+                    I fully acknowledge and assume the responsibility in taking risk in all
+                    TAARA-related activities.
                   </li>
                   <li class="q-ma-sm">
-                    If I fail to follow the terms of this agreement, I will be
-                    terminated from the group at the sole discretion of TAARA.
+                    If I fail to follow the terms of this agreement, I will be terminated from the
+                    group at the sole discretion of TAARA.
                   </li>
                 </ul>
 
-                <div
-                  class="row justify-between items-center q-pa-sm full-width q-mt-xl"
-                >
+                <div class="row justify-between items-center q-pa-sm full-width q-mt-xl">
                   <q-btn
                     class="bg-primary text-white q-px-lg"
                     label="Back"

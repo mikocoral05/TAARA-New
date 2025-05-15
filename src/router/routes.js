@@ -1,6 +1,21 @@
 import { logInDetails } from 'src/composable/taaraComposable'
 const routes = [
   {
+    path: '/',
+    component: () => import('layouts/DefaultLayout.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('src/pages/UserLogin.vue'),
+      },
+      {
+        name: 'user-login',
+        path: 'user-login',
+        component: () => import('src/pages/UserLogin.vue'),
+      },
+    ],
+  },
+  {
     path: '/management/',
     component: () => import('layouts/MainLayout.vue'),
     children: [
@@ -64,11 +79,11 @@ const routes = [
         path: 'pending-application',
         component: () => import('src/pages/PendingApplication.vue'),
       },
-      {
-        name: 'activities-and-events',
-        path: 'activities-and-events',
-        component: () => import('src/pages/ActivitiesAndEvents.vue'),
-      },
+      // {
+      //   name: 'activities-and-events',
+      //   path: 'activities-and-events',
+      //   component: () => import('src/pages/ActivitiesAndEvents.vue'),
+      // },
       {
         name: 'announcement',
         path: 'announcement',
@@ -77,58 +92,58 @@ const routes = [
     ],
   },
   {
-    path: '/',
-    component: () => import('layouts/MainLayout.vue'),
+    path: '/public/',
+    component: () => import('layouts/PublicMainLayout.vue'),
     children: [
       { path: '', component: () => import('pages/PublicView.vue') },
 
       { path: 'home', component: () => import('pages/PublicView.vue') },
-      {
-        path: 'login',
-        component: () => import('pages/LogIn.vue'),
-        beforeEnter: (to, from, next) => {
-          if (logInDetails.value == null || logInDetails.value == undefined) {
-            if (to.path === '/login') {
-              next(true)
-            }
-          } else {
-            if (logInDetails.value[0].account_identifier !== 'publicUser') {
-              next('/404 + not + found')
-            } else {
-              if (to.path === '/login') {
-                next('/404 + not + found')
-              }
-            }
-          }
-        },
-      },
+      // {
+      //   path: 'login',
+      //   component: () => import('pages/LogIn.vue'),
+      //   beforeEnter: (to, from, next) => {
+      //     if (logInDetails.value == null || logInDetails.value == undefined) {
+      //       if (to.path === '/login') {
+      //         next(true)
+      //       }
+      //     } else {
+      //       if (logInDetails.value[0].account_identifier !== 'publicUser') {
+      //         next('/404 + not + found')
+      //       } else {
+      //         if (to.path === '/login') {
+      //           next('/404 + not + found')
+      //         }
+      //       }
+      //     }
+      //   },
+      // },
 
       {
         path: 'experimentPage',
-        component: () => import('pages/experimentPage.vue'),
+        component: () => import('src/pages/ExperimentPage.vue'),
       },
-      {
-        path: 'register',
-        component: () => import('pages/accountRegistration.vue'),
-        beforeEnter: (to, from, next) => {
-          if (logInDetails.value == null || logInDetails.value == undefined) {
-            if (to.path === '/register') {
-              next(true)
-            }
-          } else {
-            if (logInDetails.value[0].account_identifier !== 'publicUser') {
-              next('/404 + not + found')
-            } else {
-              if (to.path === '/register') {
-                next('/404 + not + found')
-              }
-            }
-          }
-        },
-      },
+      // {
+      //   path: 'register',
+      //   component: () => import('pages/accountRegistration.vue'),
+      //   beforeEnter: (to, from, next) => {
+      //     if (logInDetails.value == null || logInDetails.value == undefined) {
+      //       if (to.path === '/register') {
+      //         next(true)
+      //       }
+      //     } else {
+      //       if (logInDetails.value[0].account_identifier !== 'publicUser') {
+      //         next('/404 + not + found')
+      //       } else {
+      //         if (to.path === '/register') {
+      //           next('/404 + not + found')
+      //         }
+      //       }
+      //     }
+      //   },
+      // },
       {
         path: 'reportAndRescue',
-        component: () => import('pages/reportAndRescue.vue'),
+        component: () => import('src/pages/ReportAndRescue.vue'),
         // beforeEnter: (to, from, next) => {
         //   if (logInDetails.value == null || logInDetails.value == undefined) {
         //     if (to.path === "/reportAndRescue") {
@@ -147,7 +162,7 @@ const routes = [
       },
       {
         path: 'pet-care',
-        component: () => import('src/pages/petCare.vue'),
+        component: () => import('src/pages/PetCare.vue'),
         // beforeEnter: (to, from, next) => {
         //   if (logInDetails.value == null || logInDetails.value == undefined) {
         //     if (to.path === "/aboutDogCare") {
@@ -167,7 +182,7 @@ const routes = [
 
       {
         path: 'pet-adoption-form',
-        component: () => import('pages/petAdoptionForm.vue'),
+        component: () => import('src/pages/PetAdoptionForm.vue'),
         beforeEnter: (to, from, next) => {
           if (logInDetails.value == null || logInDetails.value == undefined) {
             if (to.path === '/pet-adoption-form') {
@@ -186,7 +201,7 @@ const routes = [
       },
       {
         path: 'taara-faqs',
-        component: () => import('src/pages/taaraFaqs.vue'),
+        component: () => import('src/pages/TaaraFaqs.vue'),
         beforeEnter: (to, from, next) => {
           if (logInDetails.value == null || logInDetails.value == undefined) {
             if (to.path === '/taara-faqs') {
@@ -205,7 +220,7 @@ const routes = [
       },
       {
         path: 'privacyPolicy',
-        component: () => import('src/pages/privacyPolicy.vue'),
+        component: () => import('src/pages/PrivacyPolicy.vue'),
         beforeEnter: (to, from, next) => {
           if (logInDetails.value == null || logInDetails.value == undefined) {
             if (to.path === '/privacyPolicy') {
@@ -224,7 +239,7 @@ const routes = [
       },
       {
         path: 'termsAndConditions',
-        component: () => import('src/pages/termsAndConditions.vue'),
+        component: () => import('src/pages/TermsAndConditions.vue'),
         beforeEnter: (to, from, next) => {
           if (logInDetails.value == null || logInDetails.value == undefined) {
             if (to.path === '/termsAndConditions') {
@@ -243,7 +258,7 @@ const routes = [
       },
       {
         path: 'account-settings',
-        component: () => import('src/pages/accountSettings.vue'),
+        component: () => import('src/pages/AccountSettings.vue'),
         beforeEnter: (to, from, next) => {
           if (logInDetails.value == null || logInDetails.value == undefined) {
             if (to.path === '/account-settings') {
@@ -262,103 +277,103 @@ const routes = [
       },
       {
         path: 'about-us',
-        component: () => import('src/pages/aboutUs.vue'),
-        beforeEnter: (to, from, next) => {
-          if (logInDetails.value == null || logInDetails.value == undefined) {
-            if (to.path === '/about-us') {
-              next(true)
-            }
-          } else {
-            if (logInDetails.value[0].account_identifier !== 'publicUser') {
-              next('/404 + not + found')
-            } else {
-              if (to.path === '/about-us') {
-                next(true)
-              }
-            }
-          }
-        },
+        component: () => import('src/pages/AboutUs.vue'),
+        // beforeEnter: (to, from, next) => {
+        //   if (logInDetails.value == null || logInDetails.value == undefined) {
+        //     if (to.path === '/about-us') {
+        //       next(true)
+        //     }
+        //   } else {
+        //     if (logInDetails.value[0].account_identifier !== 'publicUser') {
+        //       next('/404 + not + found')
+        //     } else {
+        //       if (to.path === '/about-us') {
+        //         next(true)
+        //       }
+        //     }
+        //   }
+        // },
       },
       {
         path: 'taara-charts',
-        component: () => import('src/pages/taaraCharts.vue'),
-        beforeEnter: (to, from, next) => {
-          if (logInDetails.value == null || logInDetails.value == undefined) {
-            if (to.path === '/taara-charts') {
-              next(true)
-            }
-          } else {
-            if (logInDetails.value[0].account_identifier !== 'publicUser') {
-              next('/404 + not + found')
-            } else {
-              if (to.path === '/taara-charts') {
-                next(true)
-              }
-            }
-          }
-        },
+        component: () => import('src/pages/TaaraCharts.vue'),
+        // beforeEnter: (to, from, next) => {
+        //   if (logInDetails.value == null || logInDetails.value == undefined) {
+        //     if (to.path === '/taara-charts') {
+        //       next(true)
+        //     }
+        //   } else {
+        //     if (logInDetails.value[0].account_identifier !== 'publicUser') {
+        //       next('/404 + not + found')
+        //     } else {
+        //       if (to.path === '/taara-charts') {
+        //         next(true)
+        //       }
+        //     }
+        //   }
+        // },
       },
       {
         path: 'totalOfRescue',
-        component: () => import('src/pages/totalOfRescue.vue'),
-        beforeEnter: (to, from, next) => {
-          if (logInDetails.value == null || logInDetails.value == undefined) {
-            if (to.path === '/totalOfRescue') {
-              next(true)
-            }
-          } else {
-            if (logInDetails.value[0].account_identifier !== 'publicUser') {
-              next('/404 + not + found')
-            } else {
-              if (to.path === '/totalOfRescue') {
-                next(true)
-              }
-            }
-          }
-        },
+        component: () => import('src/pages/TotalOfRescue.vue'),
+        // beforeEnter: (to, from, next) => {
+        //   if (logInDetails.value == null || logInDetails.value == undefined) {
+        //     if (to.path === '/totalOfRescue') {
+        //       next(true)
+        //     }
+        //   } else {
+        //     if (logInDetails.value[0].account_identifier !== 'publicUser') {
+        //       next('/404 + not + found')
+        //     } else {
+        //       if (to.path === '/totalOfRescue') {
+        //         next(true)
+        //       }
+        //     }
+        //   }
+        // },
       },
       {
         path: 'totalOfAdoption',
-        component: () => import('src/pages/totalOfAdoption.vue'),
-        beforeEnter: (to, from, next) => {
-          if (logInDetails.value == null || logInDetails.value == undefined) {
-            if (to.path === '/totalOfAdoption') {
-              next(true)
-            }
-          } else {
-            if (logInDetails.value[0].account_identifier !== 'publicUser') {
-              next('/404 + not + found')
-            } else {
-              if (to.path === '/totalOfAdoption') {
-                next(true)
-              }
-            }
-          }
-        },
+        component: () => import('src/pages/TotalOfAdoption.vue'),
+        // beforeEnter: (to, from, next) => {
+        //   if (logInDetails.value == null || logInDetails.value == undefined) {
+        //     if (to.path === '/totalOfAdoption') {
+        //       next(true)
+        //     }
+        //   } else {
+        //     if (logInDetails.value[0].account_identifier !== 'publicUser') {
+        //       next('/404 + not + found')
+        //     } else {
+        //       if (to.path === '/totalOfAdoption') {
+        //         next(true)
+        //       }
+        //     }
+        //   }
+        // },
       },
       {
         path: 'totalOfDonations',
-        component: () => import('src/pages/totalOfDonations.vue'),
-        beforeEnter: (to, from, next) => {
-          if (logInDetails.value == null || logInDetails.value == undefined) {
-            if (to.path === '/totalOfDonations') {
-              next(true)
-            }
-          } else {
-            if (logInDetails.value[0].account_identifier !== 'publicUser') {
-              next('/404 + not + found')
-            } else {
-              if (to.path === '/totalOfDonations') {
-                next(true)
-              }
-            }
-          }
-        },
+        component: () => import('src/pages/TotalOfDonations.vue'),
+        // beforeEnter: (to, from, next) => {
+        //   if (logInDetails.value == null || logInDetails.value == undefined) {
+        //     if (to.path === '/totalOfDonations') {
+        //       next(true)
+        //     }
+        //   } else {
+        //     if (logInDetails.value[0].account_identifier !== 'publicUser') {
+        //       next('/404 + not + found')
+        //     } else {
+        //       if (to.path === '/totalOfDonations') {
+        //         next(true)
+        //       }
+        //     }
+        //   }
+        // },
       },
 
       {
         path: 'volunteer-form',
-        component: () => import('src/pages/volunteerForm.vue'),
+        component: () => import('src/pages/VolunteerForm.vue'),
         // beforeEnter: (to, from, next) => {
         //   if (logInDetails.value == null || logInDetails.value == undefined) {
         //     if (to.path === "/volunteer-form") {
@@ -377,7 +392,7 @@ const routes = [
       },
       {
         path: 'pet-transfer',
-        component: () => import('src/pages/petTransfer.vue'),
+        component: () => import('src/pages/PetTransfer.vue'),
         // beforeEnter: (to, from, next) => {
         //   if (logInDetails.value == null || logInDetails.value == undefined) {
         //     if (to.path === "/pet-transfer") {
@@ -396,104 +411,104 @@ const routes = [
       },
       {
         path: 'donation-channel',
-        component: () => import('src/pages/donationChannel.vue'),
-        beforeEnter: (to, from, next) => {
-          if (logInDetails.value == null || logInDetails.value == undefined) {
-            if (to.path === '/donation-channel') {
-              next(true)
-            }
-          } else {
-            if (logInDetails.value[0].account_identifier !== 'publicUser') {
-              next('/404 + not + found')
-            } else {
-              if (to.path === '/donation-channel') {
-                next(true)
-              }
-            }
-          }
-        },
+        component: () => import('src/pages/DonationChannel.vue'),
+        // beforeEnter: (to, from, next) => {
+        //   if (logInDetails.value == null || logInDetails.value == undefined) {
+        //     if (to.path === '/donation-channel') {
+        //       next(true)
+        //     }
+        //   } else {
+        //     if (logInDetails.value[0].account_identifier !== 'publicUser') {
+        //       next('/404 + not + found')
+        //     } else {
+        //       if (to.path === '/donation-channel') {
+        //         next(true)
+        //       }
+        //     }
+        //   }
+        // },
       },
       {
         path: 'pet-list',
-        component: () => import('src/pages/petInformation.vue'),
-        beforeEnter: (to, from, next) => {
-          if (logInDetails.value == null || logInDetails.value == undefined) {
-            if (to.path === '/pet-list') {
-              next(true)
-            }
-          } else {
-            if (logInDetails.value[0].account_identifier !== 'publicUser') {
-              next('/404 + not + found')
-            } else {
-              if (to.path === '/pet-list') {
-                next(true)
-              }
-            }
-          }
-        },
+        component: () => import('src/pages/PetInformation.vue'),
+        // beforeEnter: (to, from, next) => {
+        //   if (logInDetails.value == null || logInDetails.value == undefined) {
+        //     if (to.path === '/pet-list') {
+        //       next(true)
+        //     }
+        //   } else {
+        //     if (logInDetails.value[0].account_identifier !== 'publicUser') {
+        //       next('/404 + not + found')
+        //     } else {
+        //       if (to.path === '/pet-list') {
+        //         next(true)
+        //       }
+        //     }
+        //   }
+        // },
       },
       {
         path: 'view-specific-animal',
-        component: () => import('src/pages/animalViewPage.vue'),
-        beforeEnter: (to, from, next) => {
-          if (logInDetails.value == null || logInDetails.value == undefined) {
-            if (to.path === '/view-specific-animal') {
-              next(true)
-            }
-          } else {
-            if (logInDetails.value[0].account_identifier !== 'publicUser') {
-              next('/404 + not + found')
-            } else {
-              if (to.path === '/view-specific-animal') {
-                next(true)
-              }
-            }
-          }
-        },
+        component: () => import('src/pages/AnimalViewPage.vue'),
+        // beforeEnter: (to, from, next) => {
+        //   if (logInDetails.value == null || logInDetails.value == undefined) {
+        //     if (to.path === '/view-specific-animal') {
+        //       next(true)
+        //     }
+        //   } else {
+        //     if (logInDetails.value[0].account_identifier !== 'publicUser') {
+        //       next('/404 + not + found')
+        //     } else {
+        //       if (to.path === '/view-specific-animal') {
+        //         next(true)
+        //       }
+        //     }
+        //   }
+        // },
       },
       {
         path: 'announcementsPage',
         name: 'announcementsPage',
-        component: () => import('src/pages/announcementsPage.vue'),
-        beforeEnter: (to, from, next) => {
-          if (logInDetails.value == null || logInDetails.value == undefined) {
-            if (to.path === '/announcementsPage') {
-              next(true)
-            }
-          } else {
-            if (logInDetails.value[0].account_identifier !== 'publicUser') {
-              next('/404 + not + found')
-            } else {
-              if (to.path === '/announcementsPage') {
-                next(true)
-              }
-            }
-          }
-        },
+        component: () => import('src/pages/AnnouncementsPagePublic.vue'),
+        // beforeEnter: (to, from, next) => {
+        //   if (logInDetails.value == null || logInDetails.value == undefined) {
+        //     if (to.path === '/announcementsPage') {
+        //       next(true)
+        //     }
+        //   } else {
+        //     if (logInDetails.value[0].account_identifier !== 'publicUser') {
+        //       next('/404 + not + found')
+        //     } else {
+        //       if (to.path === '/announcementsPage') {
+        //         next(true)
+        //       }
+        //     }
+        //   }
+        // },
       },
       {
         path: 'rescue-reports',
         name: 'rescue-reports',
-        component: () => import('src/pages/rescueReports.vue'),
-        beforeEnter: (to, from, next) => {
-          if (logInDetails.value == null || logInDetails.value == undefined) {
-            if (to.path === '/rescue-reports') {
-              next(true)
-            }
-          } else {
-            if (logInDetails.value[0].account_identifier !== 'publicUser') {
-              next('/404 + not + found')
-            } else {
-              if (to.path === '/rescue-reports') {
-                next(true)
-              }
-            }
-          }
-        },
+        component: () => import('src/pages/RescueReports.vue'),
+        // beforeEnter: (to, from, next) => {
+        //   if (logInDetails.value == null || logInDetails.value == undefined) {
+        //     if (to.path === '/rescue-reports') {
+        //       next(true)
+        //     }
+        //   } else {
+        //     if (logInDetails.value[0].account_identifier !== 'publicUser') {
+        //       next('/404 + not + found')
+        //     } else {
+        //       if (to.path === '/rescue-reports') {
+        //         next(true)
+        //       }
+        //     }
+        //   }
+        // },
       },
       {
         path: 'donateSuppliesForm',
-        component: () => import('src/pages/donateSuppliesForm.vue'),
+        component: () => import('src/pages/DonateSuppliesForm.vue'),
         // beforeEnter: (to, from, next) => {
         //   if (logInDetails.value == null || logInDetails.value == undefined) {
         //     if (to.path === "/donateSuppliesForm") {
@@ -512,26 +527,26 @@ const routes = [
       },
       {
         path: 'userSettings',
-        component: () => import('src/pages/userSetting.vue'),
-        beforeEnter: (to, from, next) => {
-          if (logInDetails.value == null || logInDetails.value == undefined) {
-            if (to.path === '/userSettings') {
-              next(true)
-            }
-          } else {
-            if (logInDetails.value[0].account_identifier !== 'publicUser') {
-              next('/404 + not + found')
-            } else {
-              if (to.path === '/userSettings') {
-                next(true)
-              }
-            }
-          }
-        },
+        component: () => import('src/pages/UserSetting.vue'),
+        // beforeEnter: (to, from, next) => {
+        //   if (logInDetails.value == null || logInDetails.value == undefined) {
+        //     if (to.path === '/userSettings') {
+        //       next(true)
+        //     }
+        //   } else {
+        //     if (logInDetails.value[0].account_identifier !== 'publicUser') {
+        //       next('/404 + not + found')
+        //     } else {
+        //       if (to.path === '/userSettings') {
+        //         next(true)
+        //       }
+        //     }
+        //   }
+        // },
       },
       {
         path: 'editProfile',
-        component: () => import('src/pages/editProfile.vue'),
+        component: () => import('src/pages/EditProfile.vue'),
         // beforeEnter: (to, from, next) => {
         //   if (logInDetails.value == null || logInDetails.value == undefined) {
         //     if (to.path === "/editProfile") {
@@ -569,7 +584,7 @@ const routes = [
       // },
       {
         path: 'imageUpload',
-        component: () => import('src/pages/imageUpload.vue'),
+        component: () => import('src/pages/ImageUpload.vue'),
         // beforeEnter: (to, from, next) => {
         //   if (logInDetails.value == null || logInDetails.value == undefined) {
         //     if (to.path === "/imageUpload") {
@@ -588,41 +603,41 @@ const routes = [
       },
       {
         path: 'activitiesAndEvents',
-        component: () => import('src/pages/activitiesAndEvents.vue'),
-        beforeEnter: (to, from, next) => {
-          if (logInDetails.value == null || logInDetails.value == undefined) {
-            if (to.path === '/activitiesAndEvents') {
-              next(true)
-            }
-          } else {
-            if (logInDetails.value[0].account_identifier !== 'publicUser') {
-              next('/404 + not + found')
-            } else {
-              if (to.path === '/activitiesAndEvents') {
-                next(true)
-              }
-            }
-          }
-        },
+        component: () => import('src/pages/ActivitiesAndEvents.vue'),
+        // beforeEnter: (to, from, next) => {
+        //   if (logInDetails.value == null || logInDetails.value == undefined) {
+        //     if (to.path === '/activitiesAndEvents') {
+        //       next(true)
+        //     }
+        //   } else {
+        //     if (logInDetails.value[0].account_identifier !== 'publicUser') {
+        //       next('/404 + not + found')
+        //     } else {
+        //       if (to.path === '/activitiesAndEvents') {
+        //         next(true)
+        //       }
+        //     }
+        //   }
+        // },
       },
       {
         path: 'activitiesAndEventsViewEvent',
-        component: () => import('src/pages/activitiesAndEventsViewPage.vue'),
-        beforeEnter: (to, from, next) => {
-          if (logInDetails.value == null || logInDetails.value == undefined) {
-            if (to.path === '/activitiesAndEventsViewEvent') {
-              next(true)
-            }
-          } else {
-            if (logInDetails.value[0].account_identifier !== 'publicUser') {
-              next('/404 + not + found')
-            } else {
-              if (to.path === '/activitiesAndEventsViewEvent') {
-                next(true)
-              }
-            }
-          }
-        },
+        component: () => import('src/pages/ActivitiesAndEventsViewPage.vue'),
+        //   beforeEnter: (to, from, next) => {
+        //     if (logInDetails.value == null || logInDetails.value == undefined) {
+        //       if (to.path === '/activitiesAndEventsViewEvent') {
+        //         next(true)
+        //       }
+        //     } else {
+        //       if (logInDetails.value[0].account_identifier !== 'publicUser') {
+        //         next('/404 + not + found')
+        //       } else {
+        //         if (to.path === '/activitiesAndEventsViewEvent') {
+        //           next(true)
+        //         }
+        //       }
+        //     }
+        //   },
       },
     ],
   },

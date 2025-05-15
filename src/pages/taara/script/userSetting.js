@@ -38,7 +38,7 @@ export default {
       '</b><br><br> If you did request to change your email, please ignore this message.<br><br>Best regards, Tabaco Animal Rescue and Adoption'
     var Email = {
       send: function (a) {
-        return new Promise(function (n, e) {
+        return new Promise(function (n) {
           ;(a.nocache = Math.floor(1e6 * Math.random() + 1)), (a.Action = 'Send')
           var t = JSON.stringify(a)
           Email.ajaxPost('https://smtpjs.com/v3/smtpjs.aspx?', t, function (e) {
@@ -63,17 +63,17 @@ export default {
         }),
           t.send()
       },
-      createCORSRequest: function (e, n) {
-        var t = new XMLHttpRequest()
-        return (
-          'withCredentials' in t
-            ? t.open(e, n, !0)
-            : 'undefined' != typeof XDomainRequest
-              ? (t = new XDomainRequest()).open(e, n)
-              : (t = null),
-          t
-        )
-      },
+      // createCORSRequest: function (e, n) {
+      //   var t = new XMLHttpRequest()
+      //   return (
+      //     'withCredentials' in t
+      //       ? t.open(e, n, !0)
+      //       : 'undefined' != typeof XDomainRequest
+      //         ? (t = new XDomainRequest()).open(e, n)
+      //         : (t = null),
+      //     t
+      //   )
+      // },
     }
     let sendEmail = (to, body) => {
       if (to.includes('@yahoo.com') || to.includes('@gmail.com')) {

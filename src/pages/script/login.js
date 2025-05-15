@@ -235,11 +235,14 @@ export default {
           console.log(response.data)
 
           if (response.status == 'success') {
-            if (response.data.user_type == '1') {
-              // router.push('/home')
+            if (response.data.user_type == 1) {
+              setTimeout(() => {
+                router.replace('/public')
+                $q.loading.hide()
+              }, 2000)
             } else {
               setTimeout(() => {
-                // router.push('/')
+                router.replace('/management')
                 $q.loading.hide()
               }, 2000)
             }

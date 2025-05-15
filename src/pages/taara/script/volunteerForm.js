@@ -1,53 +1,49 @@
-import { defineComponent, ref } from "vue";
-import taaraFooter from "src/components/taaraFooter.vue";
-import {
-  addVolunteerRequest,
-  logInDetails,
-  voluteerFormData,
-} from "../../../composable/taaraComposable";
-import { timeNow, dateToday } from "src/composable/simpleComposable";
-import { useRouter } from "vue-router";
+import { defineComponent, ref } from 'vue'
+import taaraFooter from 'src/components/taaraFooter.vue'
+import { addVolunteerRequest, logInDetails, voluteerFormData } from 'src/composable/taaraComposable'
+import { timeNow, dateToday } from 'src/composable/simpleComposable'
+import { useRouter } from 'vue-router'
 export default defineComponent({
   components: {
     taaraFooter,
   },
   setup() {
-    let step = ref(1);
+    let step = ref(1)
     //
-    const router = useRouter();
+    const router = useRouter()
 
-    const chooseWork = ref([]);
-    const group = ref([]);
+    const chooseWork = ref([])
+    const group = ref([])
     const options = [
       {
-        label: "Monday",
-        value: "Monday",
+        label: 'Monday',
+        value: 'Monday',
       },
       {
-        label: "Tuesday",
-        value: "Tuesday",
+        label: 'Tuesday',
+        value: 'Tuesday',
       },
       {
-        label: "Wednesday",
-        value: "Wednesday",
+        label: 'Wednesday',
+        value: 'Wednesday',
       },
       {
-        label: "Thursday",
-        value: "Thursday",
+        label: 'Thursday',
+        value: 'Thursday',
       },
       {
-        label: "Friday",
-        value: "Friday",
+        label: 'Friday',
+        value: 'Friday',
       },
       {
-        label: "Saturday",
-        value: "Saturday",
+        label: 'Saturday',
+        value: 'Saturday',
       },
       {
-        label: "Sunday",
-        value: "Sunday",
+        label: 'Sunday',
+        value: 'Sunday',
       },
-    ];
+    ]
 
     let volunteer_form = ref({
       member_of_welfare_org: null,
@@ -85,128 +81,113 @@ export default defineComponent({
       volunteer_form_id: null,
       date_created: dateToday,
       time: timeNow,
-    });
+    })
 
-    let agree = ref(null);
-    let valueMove = ref(0);
-    let warning = ref("");
+    let agree = ref(null)
+    let valueMove = ref(0)
+    let warning = ref('')
     let moveSecond = () => {
       let checkKeys = ref([
-        "member_of_welfare_org",
-        "have_pets",
-        "have_children",
-        "experience_in_recue",
-        "vaccinated_anti_rabies",
-        "willing_to_be_vaccinated",
-        "family_favor_being_volunteer",
-        "related_member_in_organization",
-        "most_available_day",
-        "most_available_time",
-      ]);
+        'member_of_welfare_org',
+        'have_pets',
+        'have_children',
+        'experience_in_recue',
+        'vaccinated_anti_rabies',
+        'willing_to_be_vaccinated',
+        'family_favor_being_volunteer',
+        'related_member_in_organization',
+        'most_available_day',
+        'most_available_time',
+      ])
       let isNull = checkKeys.value.some(
-        (key) =>
-          volunteer_form.value[key] === null || volunteer_form.value[key] === ""
-      );
+        (key) => volunteer_form.value[key] === null || volunteer_form.value[key] === '',
+      )
       if (isNull == false) {
-        valueMove.value = 1;
-        warning.value = false;
+        valueMove.value = 1
+        warning.value = false
       } else {
-        warning.value = true;
+        warning.value = true
       }
-    };
+    }
     let moveThird = () => {
       let checkKeys = ref([
-        "formal_education_pet_care",
-        "field_or_virtual_committee",
-        "done_any_other_volunteer_work",
-        "physical_psychological_limitation",
-      ]);
-      let isNull = checkKeys.value.some(
-        (key) => volunteer_form.value[key] === null
-      );
+        'formal_education_pet_care',
+        'field_or_virtual_committee',
+        'done_any_other_volunteer_work',
+        'physical_psychological_limitation',
+      ])
+      let isNull = checkKeys.value.some((key) => volunteer_form.value[key] === null)
       if (isNull == false) {
-        warning.value = false;
-        if (
-          volunteer_form.value.field_or_virtual_committee == "Field Committee"
-        ) {
-          valueMove.value = 2;
-          chooseWork.value = [];
+        warning.value = false
+        if (volunteer_form.value.field_or_virtual_committee == 'Field Committee') {
+          valueMove.value = 2
+          chooseWork.value = []
           let arrayKeys = [
-            "experience_managing_social_media",
-            "software_use_in_design",
-            "have_internet_connection",
-            "device_use",
-            "device_use_willing_to_use",
-            "field_or_virtual_committee_position",
-          ];
+            'experience_managing_social_media',
+            'software_use_in_design',
+            'have_internet_connection',
+            'device_use',
+            'device_use_willing_to_use',
+            'field_or_virtual_committee_position',
+          ]
           for (let key of arrayKeys) {
-            volunteer_form.value[key] = null;
+            volunteer_form.value[key] = null
           }
-        } else if (
-          volunteer_form.value.field_or_virtual_committee == "Virtual Committee"
-        ) {
-          valueMove.value = 3;
-          chooseWork.value = [];
-          let arrayKeys = [
-            "have_vehicle",
-            "vehicle_type",
-            "field_or_virtual_committee_position",
-          ];
+        } else if (volunteer_form.value.field_or_virtual_committee == 'Virtual Committee') {
+          valueMove.value = 3
+          chooseWork.value = []
+          let arrayKeys = ['have_vehicle', 'vehicle_type', 'field_or_virtual_committee_position']
           for (let key of arrayKeys) {
-            volunteer_form.value[key] = null;
+            volunteer_form.value[key] = null
           }
         }
       } else {
-        warning.value = true;
+        warning.value = true
       }
-    };
+    }
     let moveFourth = () => {
       if (
         volunteer_form.value.field_or_virtual_committee_position == null ||
-        volunteer_form.value.field_or_virtual_committee_position == ""
+        volunteer_form.value.field_or_virtual_committee_position == ''
       ) {
-        warning.value = true;
+        warning.value = true
       } else {
-        warning.value = false;
-        valueMove.value = 4;
-        console.log(volunteer_form.value.field_or_virtual_committee_position);
+        warning.value = false
+        valueMove.value = 4
+        console.log(volunteer_form.value.field_or_virtual_committee_position)
       }
-    };
+    }
     let moveFourth2 = () => {
       let checkKeys = ref([
-        "field_or_virtual_committee_position",
-        "experience_managing_social_media",
-        "device_use",
-        "device_use_willing_to_use",
-      ]);
-      let isNull = checkKeys.value.some(
-        (key) => volunteer_form.value[key] === null
-      );
+        'field_or_virtual_committee_position',
+        'experience_managing_social_media',
+        'device_use',
+        'device_use_willing_to_use',
+      ])
+      let isNull = checkKeys.value.some((key) => volunteer_form.value[key] === null)
       if (isNull == true) {
-        warning.value = true;
+        warning.value = true
       } else {
-        valueMove.value = 4;
-        warning.value = false;
+        valueMove.value = 4
+        warning.value = false
       }
-    };
+    }
     let backCommittee = () => {
-      if (
-        volunteer_form.value.field_or_virtual_committee == "Field Committee"
-      ) {
-        valueMove.value = 2;
+      if (volunteer_form.value.field_or_virtual_committee == 'Field Committee') {
+        valueMove.value = 2
       } else {
-        valueMove.value = 3;
-        volunteer_form.value.field_or_virtual_committee == "Virtual Committe";
+        valueMove.value = 3
+        volunteer_form.value.field_or_virtual_committee == 'Virtual Committe'
       }
-    };
+    }
     let agreeMove = (payload, id) => {
-      payload.volunteer_form_id = id;
-      addVolunteerRequest(payload);
-      valueMove.value = 5;
+      payload.volunteer_form_id = id
+      addVolunteerRequest(payload)
+      valueMove.value = 5
       setTimeout(() => {
-        router.go(-1);
-      }, 1500);
-    };
+        router.go(-1)
+      }, 1500)
+    }
 
     return {
       options,
@@ -227,29 +208,29 @@ export default defineComponent({
       chooseWork,
       sex_options: [
         {
-          label: "Male",
-          value: "Male",
+          label: 'Male',
+          value: 'Male',
         },
         {
-          label: "Female",
-          value: "Female",
+          label: 'Female',
+          value: 'Female',
         },
       ],
       civil_status_options: [
         {
-          label: "Single",
-          value: "Single",
+          label: 'Single',
+          value: 'Single',
         },
         {
-          label: "Married",
-          value: "Married",
+          label: 'Married',
+          value: 'Married',
         },
         {
-          label: "Seperated",
-          value: "Seperated",
+          label: 'Seperated',
+          value: 'Seperated',
         },
       ],
       // shape,
-    };
+    }
   },
-});
+})

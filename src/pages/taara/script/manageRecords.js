@@ -1,5 +1,5 @@
-import { ref, onMounted, watch } from "vue";
-import BarChartsRescue from "src/components/BarChartsRescue.vue";
+import { ref, onMounted, watch } from 'vue'
+import BarChartsRescue from 'src/components/BarChartsRescue.vue'
 import {
   manageRecordBasicSearch,
   //new
@@ -58,26 +58,21 @@ import {
   deleteWalkInDonation,
   exportDonationTracker,
   donationTrackerBasicSearch,
-} from "../../../composable/taaraComposable.js";
-import {
-  dateToday,
-  timeNow,
-  calculateAge,
-  formatNumber,
-} from "src/composable/simpleComposable.js";
-import surrenderedAnimals from "src/pages/managementRecords/script/surrenderedAnimals.js";
+} from 'src/composable/taaraComposable.js'
+import { dateToday, timeNow, calculateAge, formatNumber } from 'src/composable/simpleComposable.js'
+import surrenderedAnimals from 'src/pages/managementRecords/script/surrenderedAnimals.js'
 export default {
   components: {
     BarChartsRescue,
   },
   setup() {
-    let isActive = ref(1);
-    let searchUser = ref({ search: null });
-    let deletePropHolder = ref([]);
-    let deleteCheckBox = ref(false);
-    let alertDelete = ref(false);
-    let showUpdateItem = ref(false);
-    let addOrUpdate = ref();
+    let isActive = ref(1)
+    let searchUser = ref({ search: null })
+    let deletePropHolder = ref([])
+    let deleteCheckBox = ref(false)
+    let alertDelete = ref(false)
+    let showUpdateItem = ref(false)
+    let addOrUpdate = ref()
     let profileDetailsHolder = ref({
       account_identifier: null,
       age: null,
@@ -105,165 +100,165 @@ export default {
       emergency_contact_name: null,
       emergency_contact_number: null,
       emergency_contact_relationship: null,
-    });
-    let updateRecordHolder = ref({});
+    })
+    let updateRecordHolder = ref({})
     const updateItem = (props) => {
-      showUpdateItem.value = true;
-      updateRecordHolder.value = { ...props };
-      addOrUpdate.value = false;
-      console.log(updateRecordHolder.value);
-    };
+      showUpdateItem.value = true
+      updateRecordHolder.value = { ...props }
+      addOrUpdate.value = false
+      console.log(updateRecordHolder.value)
+    }
     const resetUpdateRecord = () => {
-      showUpdateItem.value = true;
-      addOrUpdate.value = true;
-      updateRecordHolder.value = {};
-    };
+      showUpdateItem.value = true
+      addOrUpdate.value = true
+      updateRecordHolder.value = {}
+    }
 
     const addNewRecord = (based) => {
       if (based == 1) {
-        addRehomedPets(updateRecordHolder.value);
+        addRehomedPets(updateRecordHolder.value)
       } else if (based == 2) {
-        addRescuedStrayAnimals(updateRecordHolder.value);
+        addRescuedStrayAnimals(updateRecordHolder.value)
       } else if (based == 3) {
-        addDeceasedAnimals(updateRecordHolder.value);
+        addDeceasedAnimals(updateRecordHolder.value)
       } else if (based == 4) {
-        addSurrenderAnimal(updateRecordHolder.value);
+        addSurrenderAnimal(updateRecordHolder.value)
       } else if (based == 5) {
-        addInKindDonation(updateRecordHolder.value);
+        addInKindDonation(updateRecordHolder.value)
       } else if (based == 6) {
-        addWalkIn(updateRecordHolder.value);
+        addWalkIn(updateRecordHolder.value)
       }
-      deletePropHolder.value = [];
-      showUpdateItem.value = false;
-    };
+      deletePropHolder.value = []
+      showUpdateItem.value = false
+    }
     const updateRecord = (based) => {
       if (based == 1) {
-        updateRehomedPets(updateRecordHolder.value);
+        updateRehomedPets(updateRecordHolder.value)
       } else if (based == 2) {
-        updateRescuedStrayAnimals(updateRecordHolder.value);
+        updateRescuedStrayAnimals(updateRecordHolder.value)
       } else if (based == 3) {
-        updateDeceasedAnimals(updateRecordHolder.value);
+        updateDeceasedAnimals(updateRecordHolder.value)
       } else if (based == 4) {
-        updateSurrenderedAnimal(updateRecordHolder.value);
+        updateSurrenderedAnimal(updateRecordHolder.value)
       } else if (based == 5) {
-        updateInKindDonation(updateRecordHolder.value);
+        updateInKindDonation(updateRecordHolder.value)
       } else if (based == 6) {
-        updateCashWalkInDonation(updateRecordHolder.value);
+        updateCashWalkInDonation(updateRecordHolder.value)
       }
-      showUpdateItem.value = false;
-    };
+      showUpdateItem.value = false
+    }
     const deleteBtn = (id) => {
-      deletePropHolder.value = [];
-      deletePropHolder.value.push(id);
-      alertDelete.value = true;
-    };
+      deletePropHolder.value = []
+      deletePropHolder.value.push(id)
+      alertDelete.value = true
+    }
     const deleteRecord = (based) => {
-      let filterData = [];
+      let filterData = []
       if (based == 1) {
-        filterData = allAnimalsAdopted.value;
+        filterData = allAnimalsAdopted.value
       } else if (based == 2) {
-        filterData = allStrayAnimals.value;
+        filterData = allStrayAnimals.value
       } else if (based == 3) {
-        filterData = allAnimalsDeceased.value;
+        filterData = allAnimalsDeceased.value
       } else if (based == 4) {
-        filterData = allSurrenderedAnimals.value;
+        filterData = allSurrenderedAnimals.value
       } else if (based == 5) {
-        filterData = [];
+        filterData = []
       } else if (based == 6) {
-        filterData = [];
+        filterData = []
       }
       let returnAnimalChoices = filterData
         .filter((obj) => {
-          return deletePropHolder.value.includes(obj.id);
+          return deletePropHolder.value.includes(obj.id)
         })
         .map((obj) => {
           return {
             animal_id: obj.animal_id,
             animal_name: obj.animal_name,
             animal_image: obj.animal_image,
-          };
-        });
+          }
+        })
 
       if (based == 1) {
-        deleteRehomedPets(deletePropHolder.value, returnAnimalChoices);
+        deleteRehomedPets(deletePropHolder.value, returnAnimalChoices)
       } else if (based == 2) {
-        deleteRescuedStrayAnimal(deletePropHolder.value, returnAnimalChoices);
+        deleteRescuedStrayAnimal(deletePropHolder.value, returnAnimalChoices)
       } else if (based == 3) {
-        deleteDeceasedAnimal(deletePropHolder.value, returnAnimalChoices);
+        deleteDeceasedAnimal(deletePropHolder.value, returnAnimalChoices)
       } else if (based == 4) {
-        deleteSurrenderedAnimal(deletePropHolder.value, returnAnimalChoices);
+        deleteSurrenderedAnimal(deletePropHolder.value, returnAnimalChoices)
       } else if (based == 5) {
-        deleteInKindDonation(deletePropHolder.value);
+        deleteInKindDonation(deletePropHolder.value)
       } else if (based == 6) {
-        deleteWalkInDonation(deletePropHolder.value);
+        deleteWalkInDonation(deletePropHolder.value)
       }
-      showUpdateItem.value = false;
-      deletePropHolder.value = [];
-      deleteCheckBox.value = false;
-    };
+      showUpdateItem.value = false
+      deletePropHolder.value = []
+      deleteCheckBox.value = false
+    }
     let fetchData = (based) => {
-      deleteCheckBox.value = false;
-      isActive.value = based;
-      deletePropHolder.value = [];
+      deleteCheckBox.value = false
+      isActive.value = based
+      deletePropHolder.value = []
       if (based == 2) {
-        getAllAnimalsStray();
-        getAllAnimalsNotStray();
+        getAllAnimalsStray()
+        getAllAnimalsNotStray()
       } else if (based == 3) {
-        getAllAnimalsDeceased();
-        getAllAnimalsNotDeceased();
+        getAllAnimalsDeceased()
+        getAllAnimalsNotDeceased()
       } else if (based == 4) {
-        getAllSurrenderedAnimals();
-        getAllNotSurrenderedAnimals();
+        getAllSurrenderedAnimals()
+        getAllNotSurrenderedAnimals()
       } else if (based == 5) {
-        getallInKindDonations();
+        getallInKindDonations()
       } else if (based == 6) {
-        getDonations();
+        getDonations()
       }
-    };
+    }
     let exportData = (based) => {
       if (based == 1) {
-        exportRehomedPets();
+        exportRehomedPets()
       } else if (based == 2) {
-        exportRescuedStrayAnimals();
+        exportRescuedStrayAnimals()
       } else if (based == 3) {
-        exportDeceasedAnimals();
+        exportDeceasedAnimals()
       } else if (based == 4) {
-        exportSurrenderedAnimals();
+        exportSurrenderedAnimals()
       } else if (based == 5) {
-        exportInKindDonations();
+        exportInKindDonations()
       } else if (based == 6) {
-        exportDonationTracker();
+        exportDonationTracker()
       }
-    };
+    }
     const columnsRehomed = [
       {
-        name: "id",
+        name: 'id',
         required: true,
-        label: "ID",
-        align: "center",
+        label: 'ID',
+        align: 'center',
         field: (row) => row.id,
         format: (val) => `${val}`,
         sortable: true,
       },
       {
-        name: "animal_name",
-        align: "center",
-        label: "Animal Name",
-        field: "animal_name",
+        name: 'animal_name',
+        align: 'center',
+        label: 'Animal Name',
+        field: 'animal_name',
         sortable: true,
       },
       {
-        name: "adopter_name",
-        align: "center",
-        label: "Pet Owner Name",
-        field: "adopter_name",
+        name: 'adopter_name',
+        align: 'center',
+        label: 'Pet Owner Name',
+        field: 'adopter_name',
         sortable: true,
       },
       {
-        name: "adopter_city_municipality",
-        align: "center",
-        label: "Municipality",
-        field: "adopter_city_municipality",
+        name: 'adopter_city_municipality',
+        align: 'center',
+        label: 'Municipality',
+        field: 'adopter_city_municipality',
         sortable: true,
       },
       // {
@@ -282,64 +277,64 @@ export default {
       // },
 
       {
-        name: "adopter_phone_number",
-        align: "center",
-        label: "Phone Number",
-        field: "adopter_phone_number",
+        name: 'adopter_phone_number',
+        align: 'center',
+        label: 'Phone Number',
+        field: 'adopter_phone_number',
         sortable: true,
       },
       {
-        name: "date_adopted",
-        align: "center",
-        label: "Date",
-        field: "date_adopted",
+        name: 'date_adopted',
+        align: 'center',
+        label: 'Date',
+        field: 'date_adopted',
         sortable: true,
       },
       {
-        name: "time_adopted",
-        align: "center",
-        label: "Time",
-        field: "time_adopted",
+        name: 'time_adopted',
+        align: 'center',
+        label: 'Time',
+        field: 'time_adopted',
         sortable: true,
       },
       {
-        name: "action",
-        align: "center",
-        label: "Action",
-        field: "action",
+        name: 'action',
+        align: 'center',
+        label: 'Action',
+        field: 'action',
         sortable: true,
       },
-    ];
-    const rowRehomed = allAnimalsAdopted;
+    ]
+    const rowRehomed = allAnimalsAdopted
     const columnsRescued = [
       {
-        name: "id",
+        name: 'id',
         required: true,
-        label: "ID",
-        align: "center",
+        label: 'ID',
+        align: 'center',
         field: (row) => row.id,
         format: (val) => `${val}`,
         sortable: true,
       },
       {
-        name: "animal_name",
-        align: "center",
-        label: "Animal Name",
-        field: "animal_name",
+        name: 'animal_name',
+        align: 'center',
+        label: 'Animal Name',
+        field: 'animal_name',
         sortable: true,
       },
       {
-        name: "reporter_name",
-        align: "center",
-        label: "Reported By",
-        field: "reporter_name",
+        name: 'reporter_name',
+        align: 'center',
+        label: 'Reported By',
+        field: 'reporter_name',
         sortable: true,
       },
       {
-        name: "reporter_municipality",
-        align: "center",
-        label: "Municipality",
-        field: "reporter_municipality",
+        name: 'reporter_municipality',
+        align: 'center',
+        label: 'Municipality',
+        field: 'reporter_municipality',
         sortable: true,
       },
       // {
@@ -358,65 +353,65 @@ export default {
       // },
 
       {
-        name: "reporter_phone_number",
-        align: "center",
-        label: "Phone Number",
-        field: "reporter_phone_number",
+        name: 'reporter_phone_number',
+        align: 'center',
+        label: 'Phone Number',
+        field: 'reporter_phone_number',
         sortable: true,
       },
 
       {
-        name: "rescue_date",
-        align: "center",
-        label: "Date",
-        field: "rescue_date",
+        name: 'rescue_date',
+        align: 'center',
+        label: 'Date',
+        field: 'rescue_date',
         sortable: true,
       },
 
       {
-        name: "rescue_time",
-        align: "center",
-        label: "Time",
-        field: "rescue_time",
+        name: 'rescue_time',
+        align: 'center',
+        label: 'Time',
+        field: 'rescue_time',
         sortable: true,
       },
       {
-        name: "action",
-        align: "center",
-        label: "Action",
-        field: "action",
+        name: 'action',
+        align: 'center',
+        label: 'Action',
+        field: 'action',
         sortable: true,
       },
-    ];
+    ]
     const columnsDeceased = [
       {
-        name: "id",
+        name: 'id',
         required: true,
-        label: "ID",
-        align: "center",
+        label: 'ID',
+        align: 'center',
         field: (row) => row.id,
         format: (val) => `${val}`,
         sortable: true,
       },
       {
-        name: "animal_name",
-        align: "center",
-        label: "Animal Name",
-        field: "animal_name",
+        name: 'animal_name',
+        align: 'center',
+        label: 'Animal Name',
+        field: 'animal_name',
         sortable: true,
       },
       {
-        name: "breed",
-        align: "center",
-        label: "Breed",
-        field: "breed",
+        name: 'breed',
+        align: 'center',
+        label: 'Breed',
+        field: 'breed',
         sortable: true,
       },
       {
-        name: "age",
-        align: "center",
-        label: "Age",
-        field: "age",
+        name: 'age',
+        align: 'center',
+        label: 'Age',
+        field: 'age',
         sortable: true,
       },
       // {
@@ -428,10 +423,10 @@ export default {
       // },
 
       {
-        name: "sex",
-        align: "center",
-        label: "Gender",
-        field: "sex",
+        name: 'sex',
+        align: 'center',
+        label: 'Gender',
+        field: 'sex',
         sortable: true,
       },
       // {
@@ -442,58 +437,58 @@ export default {
       //   sortable: true,
       // },
       {
-        name: "deceased_date",
-        align: "center",
-        label: "Date",
-        field: "deceased_date",
+        name: 'deceased_date',
+        align: 'center',
+        label: 'Date',
+        field: 'deceased_date',
         sortable: true,
       },
       {
-        name: "deceased_time",
-        align: "center",
-        label: "Time",
-        field: "deceased_time",
+        name: 'deceased_time',
+        align: 'center',
+        label: 'Time',
+        field: 'deceased_time',
         sortable: true,
       },
       {
-        name: "action",
-        align: "center",
-        label: "Action",
-        field: "action",
+        name: 'action',
+        align: 'center',
+        label: 'Action',
+        field: 'action',
         sortable: true,
       },
-    ];
-    const rowDeceased = allAnimalsDeceased;
-    const rowRescued = allStrayAnimals;
+    ]
+    const rowDeceased = allAnimalsDeceased
+    const rowRescued = allStrayAnimals
     const columnsSurrendered = [
       {
-        name: "id",
+        name: 'id',
         required: true,
-        label: "ID",
-        align: "center",
+        label: 'ID',
+        align: 'center',
         field: (row) => row.id,
         format: (val) => `${val}`,
         sortable: true,
       },
       {
-        name: "animal_name",
-        align: "center",
-        label: "Animal Name",
-        field: "animal_name",
+        name: 'animal_name',
+        align: 'center',
+        label: 'Animal Name',
+        field: 'animal_name',
         sortable: true,
       },
       {
-        name: "surrenderer_name",
-        align: "center",
-        label: "Pet Owner Name",
-        field: "surrenderer_name",
+        name: 'surrenderer_name',
+        align: 'center',
+        label: 'Pet Owner Name',
+        field: 'surrenderer_name',
         sortable: true,
       },
       {
-        name: "surrenderer_city_municipality",
-        align: "center",
-        label: "Municipality",
-        field: "surrenderer_city_municipality",
+        name: 'surrenderer_city_municipality',
+        align: 'center',
+        label: 'Municipality',
+        field: 'surrenderer_city_municipality',
         sortable: true,
       },
       // {
@@ -511,160 +506,160 @@ export default {
       //   sortable: true,
       // },
       {
-        name: "surrenderer_phone_number",
-        align: "center",
-        label: "Phone Number",
-        field: "surrenderer_phone_number",
+        name: 'surrenderer_phone_number',
+        align: 'center',
+        label: 'Phone Number',
+        field: 'surrenderer_phone_number',
         sortable: true,
       },
       {
-        name: "surrender_date",
-        align: "center",
-        label: "Date",
-        field: "surrender_date",
+        name: 'surrender_date',
+        align: 'center',
+        label: 'Date',
+        field: 'surrender_date',
         sortable: true,
       },
       {
-        name: "surrender_time",
-        align: "center",
-        label: "Time",
-        field: "surrender_time",
+        name: 'surrender_time',
+        align: 'center',
+        label: 'Time',
+        field: 'surrender_time',
         sortable: true,
       },
       {
-        name: "action",
-        align: "center",
-        label: "Action",
-        field: "action",
+        name: 'action',
+        align: 'center',
+        label: 'Action',
+        field: 'action',
         sortable: true,
       },
-    ];
-    const rowSurrendered = allSurrenderedAnimals;
+    ]
+    const rowSurrendered = allSurrenderedAnimals
     const columnsKindDonation = [
       {
-        name: "donation_in_kind_id",
+        name: 'donation_in_kind_id',
         required: true,
-        label: "ID",
-        align: "center",
+        label: 'ID',
+        align: 'center',
         field: (row) => row.donation_in_kind_id,
         format: (val) => `${val}`,
         sortable: true,
       },
       {
-        name: "name",
-        align: "center",
-        label: "Name",
-        field: "name",
+        name: 'name',
+        align: 'center',
+        label: 'Name',
+        field: 'name',
         sortable: true,
       },
       {
-        name: "donation_type",
-        align: "center",
-        label: "Donation Type",
-        field: "donation_type",
+        name: 'donation_type',
+        align: 'center',
+        label: 'Donation Type',
+        field: 'donation_type',
         sortable: true,
       },
       {
-        name: "qty",
-        align: "center",
-        label: "Qty",
-        field: "qty",
+        name: 'qty',
+        align: 'center',
+        label: 'Qty',
+        field: 'qty',
         sortable: true,
       },
       {
-        name: "qty_type",
-        align: "center",
-        label: "Qty Type",
-        field: "qty_type",
+        name: 'qty_type',
+        align: 'center',
+        label: 'Qty Type',
+        field: 'qty_type',
         sortable: true,
       },
       {
-        name: "address",
-        align: "center",
-        label: "Address",
-        field: "address",
+        name: 'address',
+        align: 'center',
+        label: 'Address',
+        field: 'address',
         sortable: true,
       },
       {
-        name: "phone_number",
-        align: "center",
-        label: "Phone Number",
-        field: "phone_number",
+        name: 'phone_number',
+        align: 'center',
+        label: 'Phone Number',
+        field: 'phone_number',
         sortable: true,
       },
       {
-        name: "action",
-        align: "center",
-        label: "Action",
-        field: "action",
+        name: 'action',
+        align: 'center',
+        label: 'Action',
+        field: 'action',
         sortable: true,
       },
-    ];
-    const rowKindDonation = allInKindDonations;
+    ]
+    const rowKindDonation = allInKindDonations
     const columnsTracker = [
       {
-        name: "donation_id",
+        name: 'donation_id',
         required: true,
-        label: "ID",
-        align: "center",
+        label: 'ID',
+        align: 'center',
         field: (row) => row.donation_id,
         format: (val) => `${val}`,
         sortable: true,
       },
 
       {
-        name: "donation_amount",
-        align: "center",
-        label: "Donation Amount",
-        field: "donation_amount",
+        name: 'donation_amount',
+        align: 'center',
+        label: 'Donation Amount',
+        field: 'donation_amount',
         sortable: true,
       },
       {
-        name: "walk_in_name",
-        align: "center",
-        label: "Donor Name",
-        field: "walk_in_name",
+        name: 'walk_in_name',
+        align: 'center',
+        label: 'Donor Name',
+        field: 'walk_in_name',
         sortable: true,
       },
       {
-        name: "walk_in_address",
-        align: "center",
-        label: "Donor Address",
-        field: "walk_in_address",
+        name: 'walk_in_address',
+        align: 'center',
+        label: 'Donor Address',
+        field: 'walk_in_address',
         sortable: true,
       },
       {
-        name: "phone_number",
-        align: "center",
-        label: "Phone Number",
-        field: "phone_number",
+        name: 'phone_number',
+        align: 'center',
+        label: 'Phone Number',
+        field: 'phone_number',
         sortable: true,
       },
       {
-        name: "donation_date",
-        align: "center",
-        label: "Donation Date",
-        field: "donation_date",
+        name: 'donation_date',
+        align: 'center',
+        label: 'Donation Date',
+        field: 'donation_date',
         sortable: true,
       },
       {
-        name: "action",
-        align: "center",
-        label: "Action",
-        field: "action",
+        name: 'action',
+        align: 'center',
+        label: 'Action',
+        field: 'action',
         sortable: true,
       },
-    ];
-    const rowTracker = allDonations;
+    ]
+    const rowTracker = allDonations
 
     onMounted(() => {
       //new
-      getAllAnimalsAdopted();
-      getAllAnimalsNotAdopted();
-    });
+      getAllAnimalsAdopted()
+      getAllAnimalsNotAdopted()
+    })
     watch(searchUser.value, (newVal) => {
-      manageRecordBasicSearch(searchUser.value.search, isActive.value);
-    });
+      manageRecordBasicSearch(searchUser.value.search, isActive.value)
+    })
 
     return {
       columnsRehomed,
@@ -681,8 +676,8 @@ export default {
       rowTracker,
       resetUpdateRecord,
       profileDetailsHolder,
-      civilStatusOption: ["Single", "Married", "Divorced"],
-      sexOption: ["Male", "Female"],
+      civilStatusOption: ['Single', 'Married', 'Divorced'],
+      sexOption: ['Male', 'Female'],
       isActive,
       searchUser,
       //new
@@ -712,6 +707,6 @@ export default {
       deleteRecord,
       deleteBtn,
       alertDelete,
-    };
+    }
   },
-};
+}

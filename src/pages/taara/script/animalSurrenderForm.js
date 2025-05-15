@@ -1,5 +1,5 @@
-import { addSurrenderForm } from "../../../composable/taaraComposable";
-import { ref } from "vue";
+import { addSurrenderForm } from 'src/composable/taaraComposable'
+import { ref } from 'vue'
 export default {
   setup() {
     let surrederFormDetails = ref({
@@ -12,7 +12,7 @@ export default {
       health_status: null,
       surrender_reason: null,
       donation_amount: null,
-    });
-    return { addSurrenderForm, surrederFormDetails };
+    })
+    return { addSurrenderForm, surrederFormDetails }
   },
-};
+}

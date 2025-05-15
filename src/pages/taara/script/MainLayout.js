@@ -5,7 +5,7 @@ import reportAnnouncementDialog from 'src/components/reportAnnouncementDialog.vu
 import {
   logInDetails,
   logOut,
-  getLikes,
+  // getLikes,
   notifCount,
   likesData,
   viewSpecificAnimal,
@@ -13,7 +13,7 @@ import {
   items,
   getNotification,
   notifData,
-  notifUpdate,
+  // notifUpdate,
 } from 'src/composable/taaraComposable.js'
 import { timeAgo } from 'src/composable/simpleComposable'
 import { useCounterStore } from 'src/stores/example-store'
@@ -49,7 +49,7 @@ export default defineComponent({
     let menu = ref(false)
     let responsiveNavAllSlideHide = ref('slide-left')
     let responsiveNavAllSlideShow = ref('slide-left')
-    let v = ref([])
+    // let v = ref([])
     let resizeTimeout = null
 
     let showDropDown = (payload) => {
@@ -65,17 +65,17 @@ export default defineComponent({
       counterStore.changeNotif(0)
     }
     let goToContactUs = () => {
-      if (route.fullPath == '/home') {
+      if (route.fullPath == '/public/home') {
         counterStore.incrementFooter()
       } else {
-        router.push('/home')
+        router.push('/public/home')
         setTimeout(() => {
           counterStore.incrementFooter()
         }, 500)
       }
     }
     let likeShow = () => {
-      logInDetails.value == null ? '' : getLikes(logInDetails.value[0].user_id)
+      // logInDetails.value == null ? '' : getLikes(logInDetails.value[0].user_id)
       rightDrawerFavorites.value = !rightDrawerFavorites.value
       console.log(rightDrawerFavorites.value)
       rightDrawerNotification.value = false
@@ -85,11 +85,11 @@ export default defineComponent({
       viewSpecificAnimal(payload)
       rightDrawerFavorites.value = false
     }
-    const thirtyDaysAgo = new Date()
-    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-    const givenDate = logInDetails.value == null ? '' : logInDetails.value[0].date_created
-    const dates = new Date(givenDate)
-    dates.setDate(dates.getDate() + 30)
+    // const thirtyDaysAgo = new Date()
+    // thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
+    // const givenDate = logInDetails.value == null ? '' : logInDetails.value[0].date_created
+    // const dates = new Date(givenDate)
+    // dates.setDate(dates.getDate() + 30)
 
     const numberNotif = ref([])
     let notificationShow = () => {
@@ -117,14 +117,14 @@ export default defineComponent({
         router.push('/activitiesAndEventsViewEvent')
       }
     }
-    let readNotif = (pay, user_id, notif) => {
-      for (var i = 0; i < pay.length; i++) {
-        v.value.push(pay[i])
-      }
-      v.value.push(user_id)
-      notifUpdate(v.value.join(','), notif)
-      notifCount.value = JSON.parse(localStorage.getItem('count') - 1)
-    }
+    // let readNotif = (pay, user_id, notif) => {
+    //   for (var i = 0; i < pay.length; i++) {
+    //     v.value.push(pay[i])
+    //   }
+    //   v.value.push(user_id)
+    //   notifUpdate(v.value.join(','), notif)
+    //   notifCount.value = JSON.parse(localStorage.getItem('count') - 1)
+    // }
 
     const handleResize = () => {
       clearTimeout(resizeTimeout)
@@ -171,10 +171,7 @@ export default defineComponent({
         rightDrawerNotification.value,
         menu.value,
       ],
-      (
-        [newStore, newDrawer, newDrawerNotif, newMenu],
-        [oldStore, oldDrawer, oldDrawerNotif, oldMenu],
-      ) => {
+      ([newDrawer, newDrawerNotif, newMenu]) => {
         myFavorites = document.querySelector('#favorites-button')
         myNotification = document.querySelector('#notification-button')
         mySettings = document.querySelector('#profile-settings')
@@ -197,9 +194,9 @@ export default defineComponent({
     )
 
     onMounted(() => {
-      window.addEventListener('resize', handleResize)
-      logInDetails.value == null ? '' : getNotification(0)
-      logInDetails.value == null ? '' : getLikes(logInDetails.value[0].user_id)
+      // window.addEventListener('resize', handleResize)
+      // logInDetails.value == null ? '' : getNotification(0)
+      // logInDetails.value == null ? '' : getLikes(logInDetails.value[0].user_id)
     })
     onBeforeUnmount(() => {
       window.removeEventListener('resize', handleResize)
@@ -229,7 +226,7 @@ export default defineComponent({
       responsiveNavAllSlideShow,
       responsiveNav,
       numberNotif,
-      readNotif,
+      // readNotif,
       viewNotification,
       notifCount,
       counterStore,

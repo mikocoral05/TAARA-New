@@ -30,7 +30,9 @@
             to="home"
             @click="headerColor = 'white'"
             :class="
-              $route.fullPath == '/home' || '' ? 'bg-primary text-white' : 'bg-white text-black'
+              ['/public', '/public/home'].includes($route.fullPath) || ''
+                ? 'bg-primary text-white'
+                : 'bg-white text-black'
             "
           />
           <q-btn
@@ -38,9 +40,11 @@
             no-caps
             dense
             flat
-            to="pet-list?page=1"
+            to="/public/pet-list?page=1"
             :class="
-              $route.fullPath == '/pet-list' ? 'bg-primary text-white' : 'bg-white text-black'
+              $route.fullPath == '/public/pet-list'
+                ? 'bg-primary text-white'
+                : 'bg-white text-black'
             "
           />
           <q-btn
@@ -48,9 +52,11 @@
             no-caps
             dense
             flat
-            to="taara-charts"
+            to="/public/taara-charts"
             :class="
-              $route.fullPath == '/taara-charts' ? 'bg-primary text-white' : 'bg-white text-black'
+              $route.fullPath == '/public/taara-charts'
+                ? 'bg-primary text-white'
+                : 'bg-white text-black'
             "
           />
           <q-btn
@@ -58,7 +64,11 @@
             no-caps
             dense
             flat
-            :class="$route.fullPath == '/contact' ? 'bg-primary text-white' : 'bg-white text-black'"
+            :class="
+              $route.fullPath == '/public//contact'
+                ? 'bg-primary text-white'
+                : 'bg-white text-black'
+            "
             @click="goToContactUs()"
           />
 
@@ -67,10 +77,10 @@
               <q-item
                 clickable
                 v-close-popup
-                to="about-us"
+                to="/public/about-us"
                 @click="headerColor = 'white'"
                 :class="
-                  $route.fullPath == '/about-us' || ''
+                  $route.fullPath == '/public/about-us' || ''
                     ? 'bg-primary text-white'
                     : 'bg-white text-black'
                 "
@@ -83,10 +93,10 @@
               <q-item
                 clickable
                 v-close-popup
-                to="taara-faqs"
+                to="/public/taara-faqs"
                 @click="headerColor = '#ffd7ef'"
                 :class="
-                  $route.fullPath == '/taara-faqs' || ''
+                  $route.fullPath == '/public/taara-faqs' || ''
                     ? 'bg-primary text-white'
                     : 'bg-white text-black'
                 "
@@ -98,10 +108,10 @@
               <q-item
                 clickable
                 v-close-popup
-                to="pet-care"
+                to="/public/pet-care"
                 @click="headerColor = 'white'"
                 :class="
-                  $route.fullPath == '/pet-care' || ''
+                  $route.fullPath == '/public/pet-care' || ''
                     ? 'bg-primary text-white'
                     : 'bg-white text-black'
                 "
@@ -115,9 +125,9 @@
         </div>
         <div class="profile-tab row no-rap justify-center items-center" v-if="logInDetails != null">
           <div class="img-container relative-position">
-            <img :src="logInDetails[0].image" class="absolute-center" />
+            <img :src="logInDetails[0]?.image" class="absolute-center" />
             <p
-              v-if="logInDetails[0].image == ''"
+              v-if="logInDetails[0]?.image == ''"
               class="q-ma-none bg-amber text-white absolute-center row justify-center items-center"
             >
               M
@@ -126,7 +136,7 @@
           <q-btn bordered icon="expand_more" round flat dense>
             <q-menu>
               <q-list>
-                <q-item clickable v-close-popup to="account-settings?my-account">
+                <q-item clickable v-close-popup to="/public/account-settings?my-account">
                   <q-item-section>My Account</q-item-section>
                 </q-item>
 
@@ -140,10 +150,10 @@
           <q-btn bordered icon="notifications" round flat dense class="q-ml-sm">
             <q-menu>
               <q-list>
-                <q-item clickable v-close-popup to="account-settings">
+                <q-item clickable v-close-popup to="/public/account-settings">
                   <q-item-section>My Account</q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup to="account-settings">
+                <q-item clickable v-close-popup to="/public/account-settings">
                   <q-item-section class="item-name">My Activity</q-item-section>
                 </q-item>
                 <q-separator />
@@ -155,7 +165,7 @@
           </q-btn>
         </div>
         <div class="get-started" v-if="logInDetails == null">
-          <q-btn class="q-ml-md text-white" label="Log In" no-caps flat to="/loginPage" />
+          <q-btn class="q-ml-md text-white" label="Log In" no-caps flat to="/public/loginPage" />
         </div>
       </div>
     </q-header>

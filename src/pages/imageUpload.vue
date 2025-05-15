@@ -3,11 +3,7 @@
     <div class="Attachments bg-grey-3 q-pa-sm q-mb-sm" style="width: 100%">
       <div class="files q-mb-sm q-pa-sm">
         <div class="imgCon q-gutter-sm">
-          <div
-            v-for="(image, index) in images"
-            :key="index"
-            class="cardImg q-pa-sm"
-          >
+          <div v-for="(image, index) in images" :key="index" class="cardImg q-pa-sm">
             <q-card class="imgsrc">
               <q-img
                 :src="image"
@@ -35,70 +31,65 @@
   </div>
 </template>
 <script>
-import { ref } from "vue";
-import {
-  uploadImage,
-  imageURL,
-  logInDetails,
-} from "../composable/taaraComposable";
+import { ref } from 'vue'
+import { uploadImage, imageURL, logInDetails } from '../composable/taaraComposable'
 export default {
   setup() {
-    const images = ref([]);
-    let imageUrl = ref([]);
+    const images = ref([])
     function resizeImage(file, maxWidth, maxHeight) {
-      var img = document.createElement("img");
-      var canvas = document.createElement("canvas");
-      var ctx = canvas.getContext("2d");
-      var reader = new FileReader();
+      var img = document.createElement('img')
+      var canvas = document.createElement('canvas')
+      var ctx = canvas.getContext('2d')
+      var reader = new FileReader()
       reader.onload = function (e) {
-        img.src = e.target.result;
+        img.src = e.target.result
         img.onload = function () {
-          var width = img.width;
-          var height = img.height;
+          var width = img.width
+          var height = img.height
           if (width > height) {
             if (width > maxWidth) {
-              height *= maxWidth / width;
-              width = maxWidth;
+              height *= maxWidth / width
+              width = maxWidth
             }
           } else {
             if (height > maxHeight) {
-              width *= maxHeight / height;
-              height = maxHeight;
+              width *= maxHeight / height
+              height = maxHeight
             }
           }
-          canvas.width = width;
-          canvas.height = height;
-          ctx.drawImage(img, 0, 0, width, height);
-          images.value.push(canvas.toDataURL(file.type));
-          console.log(images.value);
+          canvas.width = width
+          canvas.height = height
+          ctx.drawImage(img, 0, 0, width, height)
+          images.value.push(canvas.toDataURL(file.type))
+          console.log(images.value)
           // uploadImage(images.value,logInDetails.value[0].user_id);
-        };
-      };
-      reader.readAsDataURL(file);
+        }
+      }
+      reader.readAsDataURL(file)
       // console.log(reader.result);
     }
     const handleFileUpload = (event) => {
-      const files = event.target.files;
-      console.log(files);
+      const files = event.target.files
+      console.log(files)
       for (let i = 0; i < files.length; i++) {
-        const file = files[i];
-        console.log(file.name);
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
+        const file = files[i]
+        console.log(file.name)
+        const reader = new FileReader()
+        reader.readAsDataURL(file)
         reader.onload = () => {
-          resizeImage(file, 500, 500); // call the resizeImage function here
+          resizeImage(file, 500, 500) // call the resizeImage function here
           // console.log(reader.result);
           // images.value.push(reader.result);
-        };
+        }
       }
       // console.log(logInDetails);
       // console.log(logInDetails.value[0].user_id);
-    };
+    }
 
-    const fileInput = ref(null);
+    const fileInput = ref(null)
     const pickFile = () => {
-      fileInput.value.click();
-    };
+      fileInput.value.click()
+    }
 
     return {
       imageURL,
@@ -108,7 +99,7 @@ export default {
       logInDetails,
       pickFile,
       fileInput,
-    };
+    }
   },
-};
+}
 </script>

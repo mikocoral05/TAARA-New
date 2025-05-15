@@ -17,15 +17,12 @@
         "
       >
         <div
-          v-for="(image, index) in activitiesAndEventsDataSpecific.image.slice(
-            0,
-            3
-          )"
+          v-for="(image, index) in activitiesAndEventsDataSpecific.image.slice(0, 3)"
           :key="image.id"
         >
           <div
             class="flex row more-image-container full-width full-height"
-            @click="test(index), (carousel = true)"
+            @click="(test(index), (carousel = true))"
           >
             <q-icon name="add" class="text-white more-image-icon" />
             <p class="text-white text-h4">
@@ -35,11 +32,9 @@
           <img
             v-if="data.activities_events_id === image.activities_events_id"
             :src="image.image"
-            :class="
-              imageCount(data.activities_events_id) < 3 ? 'q-ma-sm  ' : ''
-            "
+            :class="imageCount(data.activities_events_id) < 3 ? 'q-ma-sm  ' : ''"
             alt=""
-            @click="test(index), (carousel = true)"
+            @click="(test(index), (carousel = true))"
           />
         </div>
       </div>
@@ -49,10 +44,7 @@
       <p class="text-bold text-center text-purple date">
         {{ time(data.date) }}
       </p>
-      <p
-        class="q-ma-sm q-mb-lg event-details q-mx-md"
-        style="word-wrap: break-word"
-      >
+      <p class="q-ma-sm q-mb-lg event-details q-mx-md" style="word-wrap: break-word">
         {{ data.activities_events_details }}
       </p>
       <q-dialog v-model="carousel" maximized>
@@ -68,11 +60,7 @@
               class="absolute-top-right color-white q-ma-md close-dialog"
               @click="carousel = false"
             />
-            <img
-              :src="image.image"
-              alt=""
-              style="max-width: 100%; height: auto"
-            />
+            <img :src="image.image" alt="" style="max-width: 100%; height: auto" />
           </q-carousel-slide>
         </q-carousel>
       </q-dialog>
@@ -81,12 +69,12 @@
   <PageFooter class="q-mt-xl"></PageFooter>
 </template>
 <script>
-import { ref, onMounted, watch } from "vue";
-import PageFooter from "src/components/PageFooter.vue";
+import { ref, onMounted } from 'vue'
+import PageFooter from 'src/components/PageFooter.vue'
 import {
   activitiesAndEventsDataSpecific,
   getActivitiesAndEventsSpecific,
-} from "../composable/taaraComposable";
+} from '../composable/taaraComposable'
 export default {
   components: {
     PageFooter,
@@ -94,39 +82,39 @@ export default {
   setup() {
     let imageCount = (dataId) => {
       return activitiesAndEventsDataSpecific.value.image.filter(
-        (image) => image.activities_events_id === dataId
-      ).length;
-    };
+        (image) => image.activities_events_id === dataId,
+      ).length
+    }
 
     onMounted(() => {
-      getActivitiesAndEventsSpecific();
-    });
+      getActivitiesAndEventsSpecific()
+    })
     function time(param) {
-      var date = new Date(param);
-      var d = date.getDate();
-      var m = date.getMonth() + 1;
-      var y = date.getFullYear();
+      var date = new Date(param)
+      var d = date.getDate()
+      var m = date.getMonth() + 1
+      var y = date.getFullYear()
       var mthNames = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-      return mthNames[m - 1] + " " + d + ", " + y;
+        'Jan',
+        'Feb',
+        'Mar',
+        'Apr',
+        'May',
+        'Jun',
+        'Jul',
+        'Aug',
+        'Sep',
+        'Oct',
+        'Nov',
+        'Dec',
+      ]
+      return mthNames[m - 1] + ' ' + d + ', ' + y
     }
-    let slide = ref(1);
-    let nameIndexBased = ref(0);
+    let slide = ref(1)
+    let nameIndexBased = ref(0)
     let test = (payload) => {
-      slide.value = payload;
-    };
+      slide.value = payload
+    }
     return {
       slide,
       nameIndexBased,
@@ -136,12 +124,8 @@ export default {
       activitiesAndEventsDataSpecific,
       time,
       imageCount,
-    };
+    }
   },
-};
+}
 </script>
-<style
-  lang="scss"
-  scoped
-  src="../pages/taara/style/activitiesAndEventsViewPage.scss"
-/>
+<style lang="scss" scoped src="../pages/taara/style/activitiesAndEventsViewPage.scss" />

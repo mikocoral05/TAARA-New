@@ -26,10 +26,7 @@
               caption="Please answer the question truthfuly"
               :done="step > 1"
             >
-              <q-form
-                @submit="nextInfo(adoptionDetails)"
-                class="q-ma-none q-pa-none"
-              >
+              <q-form @submit="nextInfo(adoptionDetails)" class="q-ma-none q-pa-none">
                 <div class="flex row justify-start items-center">
                   <div class="q-ma-sm" style="width: 230px">
                     <p>Do you own any pets?*</p>
@@ -55,9 +52,7 @@
                   class="flex row justify-start items-center"
                   v-show="adoptionDetails.have_other_pet == 'Yes'"
                 >
-                  <p class="q-ma-sm q-mr-md" style="width: 230px">
-                    How many pets do you own?
-                  </p>
+                  <p class="q-ma-sm q-mr-md" style="width: 230px">How many pets do you own?</p>
                   <q-input
                     class="q-ma-sm q-mx-md"
                     :disable="
@@ -65,11 +60,7 @@
                       adoptionDetails.have_other_pet == null
                     "
                     outlined
-                    :rules="[
-                      (val) =>
-                        (!!val && adoptionDetails.have_other_pet == 'Yes') ||
-                        '',
-                    ]"
+                    :rules="[(val) => (!!val && adoptionDetails.have_other_pet == 'Yes') || '']"
                     hide-bottom-space
                     :value="
                       adoptionDetails.have_other_pet == 'No'
@@ -107,14 +98,8 @@
                         adoptionDetails.have_other_pet == 'No' ||
                         adoptionDetails.have_other_pet == null
                       "
-                      :color="
-                        adoptionDetails.have_other_pet == 'Yes'
-                          ? 'accent'
-                          : 'gray'
-                      "
-                      :keep-color="
-                        adoptionDetails.have_other_pet == 'Yes' ? true : false
-                      "
+                      :color="adoptionDetails.have_other_pet == 'Yes' ? 'accent' : 'gray'"
+                      :keep-color="adoptionDetails.have_other_pet == 'Yes' ? true : false"
                       :value="
                         adoptionDetails.have_other_pet == 'Yes'
                           ? adoptionDetails.behavior_other_animals
@@ -131,14 +116,8 @@
                         adoptionDetails.have_other_pet == 'No' ||
                         adoptionDetails.have_other_pet == null
                       "
-                      :color="
-                        adoptionDetails.have_other_pet == 'Yes'
-                          ? 'accent'
-                          : 'gray'
-                      "
-                      :keep-color="
-                        adoptionDetails.have_other_pet == 'Yes' ? true : false
-                      "
+                      :color="adoptionDetails.have_other_pet == 'Yes' ? 'accent' : 'gray'"
+                      :keep-color="adoptionDetails.have_other_pet == 'Yes' ? true : false"
                       :value="
                         adoptionDetails.have_other_pet == 'No'
                           ? (adoptionDetails.behavior_other_animals = '')
@@ -176,9 +155,7 @@
                   class="flex row justify-start items-center"
                   v-show="adoptionDetails.have_vet == 'Yes'"
                 >
-                  <p class="q-ma-sm q-mr-md" style="width: 230px">
-                    Phone Number
-                  </p>
+                  <p class="q-ma-sm q-mr-md" style="width: 230px">Phone Number</p>
                   <q-input
                     class="q-ma-sm q-mx-md"
                     outlined
@@ -206,13 +183,9 @@
                     "
                     :rules="[
                       (val) =>
-                        (!!val &&
-                          adoptionDetails.have_other_pet == 'Yes' &&
-                          val.length == 16) ||
+                        (!!val && adoptionDetails.have_other_pet == 'Yes' && val.length == 16) ||
                         '',
-                      (val) =>
-                        (val && val[1] === '9') ||
-                        'Phone number must start with 9',
+                      (val) => (val && val[1] === '9') || 'Phone number must start with 9',
                     ]"
                     hide-bottom-space
                     :disable="
@@ -292,9 +265,7 @@
                   class="flex row justify-start items-center"
                   v-show="adoptionDetails.have_children == 'Yes'"
                 >
-                  <p class="q-ma-sm q-mr-md" style="width: 230px">
-                    If yes, number of children
-                  </p>
+                  <p class="q-ma-sm q-mr-md" style="width: 230px">If yes, number of children</p>
                   <q-input
                     class="q-ma-sm q-mx-md"
                     type="number"
@@ -308,10 +279,7 @@
                           : { borderRadius: '10px' }
                         : {}
                     "
-                    :rules="[
-                      (val) =>
-                        (!!val && adoptionDetails.have_children == 'Yes') || '',
-                    ]"
+                    :rules="[(val) => (!!val && adoptionDetails.have_children == 'Yes') || '']"
                     hide-bottom-space
                     :value="
                       adoptionDetails.have_children == 'No'
@@ -319,8 +287,7 @@
                         : adoptionDetails.number_of_children
                     "
                     :disable="
-                      adoptionDetails.have_children == 'No' ||
-                      adoptionDetails.have_children == null
+                      adoptionDetails.have_children == 'No' || adoptionDetails.have_children == null
                     "
                     outlined
                     v-model="adoptionDetails.number_of_children"
@@ -330,10 +297,7 @@
                 </div>
                 <div class="flex row justify-start items-center">
                   <div class="q-ma-sm" style="width: 230px">
-                    <p>
-                      Will there be someone to take care of your pets while
-                      you're away?
-                    </p>
+                    <p>Will there be someone to take care of your pets while you're away?</p>
                   </div>
                   <div class="q-ma-sm row justify-start">
                     <q-radio
@@ -354,9 +318,7 @@
                 </div>
                 <div
                   class="flex row justify-start items-center"
-                  v-show="
-                    adoptionDetails.someone_gonna_takecare_of_pet == 'Yes'
-                  "
+                  v-show="adoptionDetails.someone_gonna_takecare_of_pet == 'Yes'"
                 >
                   <p class="q-ma-sm q-mr-md" style="width: 230px">If yes,</p>
                   <q-select
@@ -387,10 +349,7 @@
                     "
                     :rules="[
                       (val) =>
-                        (!!val &&
-                          adoptionDetails.someone_gonna_takecare_of_pet ==
-                            'Yes') ||
-                        '',
+                        (!!val && adoptionDetails.someone_gonna_takecare_of_pet == 'Yes') || '',
                     ]"
                     hide-bottom-space
                   />
@@ -400,8 +359,7 @@
                   v-show="adoptionDetails.someone_gonna_takecare_of_pet == 'No'"
                 >
                   <p class="q-ma-sm q-mr-md" style="width: 230px">
-                    If no, what are your plans in taking care of your pets while
-                    you're away?
+                    If no, what are your plans in taking care of your pets while you're away?
                   </p>
                   <q-input
                     class="q-ma-sm q-mx-md"
@@ -426,10 +384,7 @@
                     "
                     :rules="[
                       (val) =>
-                        (!!val &&
-                          adoptionDetails.someone_gonna_takecare_of_pet ==
-                            'No') ||
-                        '',
+                        (!!val && adoptionDetails.someone_gonna_takecare_of_pet == 'No') || '',
                     ]"
                     hide-bottom-space
                     type="textarea"
@@ -442,8 +397,8 @@
                 <div class="flex row justify-start items-center">
                   <div class="q-ma-sm" style="width: 230px">
                     <p>
-                      Are you easily disturbed or triggered by loud noises (such
-                      as barking), or unpleasant smell (such as animal poop)?
+                      Are you easily disturbed or triggered by loud noises (such as barking), or
+                      unpleasant smell (such as animal poop)?
                     </p>
                   </div>
                   <div class="q-ma-sm row justify-start">
@@ -466,9 +421,8 @@
                 <div class="flex row justify-start items-center">
                   <div class="q-ma-sm" style="width: 230px">
                     <p>
-                      Have you ever been convicted of an animal related crime,
-                      such as cruelty to animals, animal theft, or animal
-                      abandonment?*
+                      Have you ever been convicted of an animal related crime, such as cruelty to
+                      animals, animal theft, or animal abandonment?*
                     </p>
                   </div>
                   <div class="q-ma-sm row justify-start">
@@ -493,10 +447,7 @@
                     Please provide valid ID’s for personal references:*
                   </p>
                   <div class="column no-wrap">
-                    <div
-                      class="flex row no-wrap items-center justify-center"
-                      style="width: 380px"
-                    >
+                    <div class="flex row no-wrap items-center justify-center" style="width: 380px">
                       <q-btn
                         class="filebtn q-ma-none q-mr-sm q-pa-none q-pr-sm"
                         @click="pickFile"
@@ -543,13 +494,7 @@
                   Please input the red fields!
                 </p>
                 <div class="row no-wrap justify-end">
-                  <q-btn
-                    class="submit"
-                    filled
-                    flat
-                    label="Continue"
-                    type="submit"
-                  />
+                  <q-btn class="submit" filled flat label="Continue" type="submit" />
                 </div>
               </q-form>
             </q-step>
@@ -562,26 +507,16 @@
               :done="step > 2"
             >
               <p class="text-center aggreement">
-                <b class="q-ma-none q-pa-none text-body1">•</b>By submitting the
-                form, you agree to provide adequate<br />care for the pet, pay
-                the adoption fee, surrender the pet to the organization if
-                you<br />
-                can no longer care for it, and hold the organization harmless
-                against any losses.<br />
-                The organization discloses known health or behavior issues with
-                the pet prior to<br />
+                <b class="q-ma-none q-pa-none text-body1">•</b>By submitting the form, you agree to
+                provide adequate<br />care for the pet, pay the adoption fee, surrender the pet to
+                the organization if you<br />
+                can no longer care for it, and hold the organization harmless against any losses.<br />
+                The organization discloses known health or behavior issues with the pet prior to<br />
                 adoption.
               </p>
 
               <div class="flex row justify-around items-center q-my-lg">
-                <q-btn
-                  class="back"
-                  filled
-                  flat
-                  label="Back"
-                  @click="step = 1"
-                  icon="arrow_left"
-                />
+                <q-btn class="back" filled flat label="Back" @click="step = 1" icon="arrow_left" />
                 <q-btn
                   class="submit"
                   filled
@@ -594,17 +529,9 @@
 
             <q-step :name="3" title="Done" icon="assignment" :done="step == 3">
               <div class="flex column justify-center items-center">
-                <q-icon
-                  class="q-mx-xl"
-                  size="10rem"
-                  name="task_alt"
-                  style="color: #b157ae"
-                />
+                <q-icon class="q-mx-xl" size="10rem" name="task_alt" style="color: #b157ae" />
                 <p class="text-h4 q-mx-xl text-weight-medium">Thank you!</p>
-                <p
-                  class="text-body1 q-mx-xl text-weight-medium"
-                  style="color: gray"
-                >
+                <p class="text-body1 q-mx-xl text-weight-medium" style="color: gray">
                   You submission has been sent!
                 </p>
               </div>
@@ -626,20 +553,15 @@
             animated
             flat
           >
-            <q-step
-              :name="0"
-              title="Request Submitted"
-              icon="add_task"
-              :done="stepProgress > 0"
-            >
+            <q-step :name="0" title="Request Submitted" icon="add_task" :done="stepProgress > 0">
               <ul>
                 <li>
-                  📝 Step Description: You’ve submitted your request to adopt a
-                  pet. Thank you for your interest!
+                  📝 Step Description: You’ve submitted your request to adopt a pet. Thank you for
+                  your interest!
                 </li>
                 <li>
-                  🕒 Expected Duration: We’ll process your request promptly,
-                  typically within one business day.
+                  🕒 Expected Duration: We’ll process your request promptly, typically within one
+                  business day.
                 </li>
               </ul>
             </q-step>
@@ -651,32 +573,25 @@
             >
               <ul>
                 <li>
-                  🧐 Step Description: Our organization is carefully examining
-                  your adoption request. We want to ensure the best match for
-                  both you and the pet.
+                  🧐 Step Description: Our organization is carefully examining your adoption
+                  request. We want to ensure the best match for both you and the pet.
                 </li>
                 <li>
-                  🕒 Expected Duration: This step usually takes at least one
-                  business day as we review your information.
+                  🕒 Expected Duration: This step usually takes at least one business day as we
+                  review your information.
                 </li>
               </ul>
             </q-step>
 
-            <q-step
-              :name="2"
-              title="Qualified"
-              icon="sports_handball"
-              :done="stepProgress > 2"
-            >
+            <q-step :name="2" title="Qualified" icon="sports_handball" :done="stepProgress > 2">
               <ul>
                 <li>
-                  ✅ Step Description: Congratulations! Your request has met our
-                  initial criteria. You’re one step closer to adopting a furry
-                  friend.
+                  ✅ Step Description: Congratulations! Your request has met our initial criteria.
+                  You’re one step closer to adopting a furry friend.
                 </li>
                 <li>
-                  🕒 Expected Duration: The qualification process varies but
-                  generally doesn’t take long.
+                  🕒 Expected Duration: The qualification process varies but generally doesn’t take
+                  long.
                 </li>
               </ul>
             </q-step>
@@ -688,29 +603,23 @@
             >
               <ul>
                 <li>
-                  🚚 Step Description: Your pet is almost ready! We’re making
-                  arrangements for you to pick up your new companion.
+                  🚚 Step Description: Your pet is almost ready! We’re making arrangements for you
+                  to pick up your new companion.
                 </li>
                 <li>
-                  🕒 Expected Duration: We’ll notify you when your pet is
-                  prepared for pickup.
+                  🕒 Expected Duration: We’ll notify you when your pet is prepared for pickup.
                 </li>
               </ul>
             </q-step>
-            <q-step
-              :name="4"
-              title="Adopted"
-              icon="pets"
-              :done="stepProgress > 4"
-            >
+            <q-step :name="4" title="Adopted" icon="pets" :done="stepProgress > 4">
               <ul>
                 <li>
-                  🎉 Step Description: Success! You’ve officially adopted your
-                  pet. Thank you for choosing to give them a loving home.
+                  🎉 Step Description: Success! You’ve officially adopted your pet. Thank you for
+                  choosing to give them a loving home.
                 </li>
                 <li>
-                  🕒 Expected Duration: This step happens immediately upon
-                  completing the adoption process.
+                  🕒 Expected Duration: This step happens immediately upon completing the adoption
+                  process.
                 </li>
               </ul>
             </q-step>
@@ -722,9 +631,5 @@
     <!-- <taaraFooter></taaraFooter> -->
   </q-page>
 </template>
-<script src="../pages/taara/script/petAdoptionForm.js"></script>
-<style
-  lang="scss"
-  src="../pages/taara/style/petAdoptionForm.scss"
-  scoped
-></style>
+<script src="./taara/script/petAdoptionForm.js"></script>
+<style lang="scss" src="../pages/taara/style/petAdoptionForm.scss" scoped></style>

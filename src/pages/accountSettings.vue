@@ -2,12 +2,7 @@
   <div class="column justify-start items-center">
     <div class="first-child">
       <div class="member-profile-card column justify-between no-wrap q-pa-lg">
-        <q-icon
-          name="photo_camera"
-          size="sm"
-          color="white"
-          @click="imageShow()"
-        />
+        <q-icon name="photo_camera" size="sm" color="white" @click="imageShow()" />
         <input
           type="file"
           accept="image/*"
@@ -20,10 +15,7 @@
         />
         <div class="row no-wrap">
           <div class="img-container column justify-center items-center">
-            <div
-              class="row justify-center items-center"
-              v-if="userInfo.image == ''"
-            >
+            <div class="row justify-center items-center" v-if="userInfo.image == ''">
               <h4 class="q-ma-none">
                 {{ userInfo.first_name[0] }}
               </h4>
@@ -32,7 +24,7 @@
           </div>
           <div class="column justify-end items-end">
             <h4 class="q-ma-md">
-              {{ userInfo.first_name + " " + userInfo.last_name }}
+              {{ userInfo.first_name + ' ' + userInfo.last_name }}
             </h4>
           </div>
         </div>
@@ -40,11 +32,11 @@
       <div class="tabs row no-wrap">
         <div
           @click="
-            (tab = 1),
-              $router.push({
-                path: '/account-settings',
-                query: { 'my-account': null },
-              })
+            ((tab = 1),
+            $router.push({
+              path: '/account-settings',
+              query: { 'my-account': null },
+            }))
           "
           :style="
             tab == 1
@@ -57,11 +49,11 @@
 
         <div
           @click="
-            (tab = 2),
-              $router.push({
-                path: '/account-settings',
-                query: { 'email-password': null },
-              })
+            ((tab = 2),
+            $router.push({
+              path: '/account-settings',
+              query: { 'email-password': null },
+            }))
           "
           :style="
             tab == 2
@@ -153,11 +145,7 @@
               >
                 <template v-slot:append>
                   <q-icon name="event" class="cursor-pointer">
-                    <q-popup-proxy
-                      cover
-                      transition-show="scale"
-                      transition-hide="scale"
-                    >
+                    <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-date
                         v-model="userInfo.birth_date"
                         mask="YYYY-MM-DD"
@@ -166,12 +154,7 @@
                         subtitle="Birthday"
                       >
                         <div class="row items-center justify-end">
-                          <q-btn
-                            v-close-popup
-                            label="Close"
-                            color="primary"
-                            flat
-                          />
+                          <q-btn v-close-popup label="Close" color="primary" flat />
                         </div>
                       </q-date>
                     </q-popup-proxy>
@@ -350,9 +333,7 @@
           <div>
             <h6 class="q-mb-sm">Verification</h6>
             <p class="text-caption">Input the code we sent in you email</p>
-            <div
-              class="code-container column justify-center items-center no-wrap"
-            >
+            <div class="code-container column justify-center items-center no-wrap">
               <div class="row no-wrap justify-center items-center">
                 <q-input
                   v-model="code"
@@ -378,7 +359,7 @@
                   :disable="seconds !== 0"
                 />
                 <p v-if="seconds !== 0" class="q-ma-none">
-                  {{ minutes }}:{{ seconds < 10 ? "0" : "" }}{{ seconds }}
+                  {{ minutes }}:{{ seconds < 10 ? '0' : '' }}{{ seconds }}
                 </p>
               </div>
               <q-btn
@@ -432,9 +413,7 @@
                   v-model="newPassword"
                   outlined
                   :type="isPwd ? 'password' : 'text'"
-                  :rules="[
-                    (val) => val.length >= 8 || 'Password length atleast 8!',
-                  ]"
+                  :rules="[(val) => val.length >= 8 || 'Password length atleast 8!']"
                   hide-bottom-space
                 >
                   <template v-slot:append>
@@ -486,9 +465,5 @@
   </div>
   <taaraFooter></taaraFooter>
 </template>
-<script src="../pages/taara/script/accountSettings.js"></script>
-<style
-  lang="scss"
-  scope
-  src="../pages/taara/style/accountSettings.scss"
-></style>
+<script src="./taara/script/accountSettings.js"></script>
+<style lang="scss" scope src="../pages/taara/style/accountSettings.scss"></style>

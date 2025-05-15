@@ -14,10 +14,12 @@ import {
 } from 'src/composable/taaraComposable'
 import BubbleChart from 'src/components/BubbleChart.vue'
 import { logIn } from 'src/composable/latestComposable'
+import { globalStore } from 'src/stores/global-store'
 export default {
   components: { BubbleChart },
   setup() {
     const $q = useQuasar()
+    const store = globalStore()
     const router = useRouter()
     let fadeValue = ref(false)
     let step = ref(1)
@@ -235,6 +237,8 @@ export default {
           console.log(response.data)
 
           if (response.status == 'success') {
+            store.userData = response.data
+            sessionStorage.setItem('user_data', JSON.stringify(response.data))
             if (response.data.user_type == 1) {
               setTimeout(() => {
                 router.replace('/public')

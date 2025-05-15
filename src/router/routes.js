@@ -34,11 +34,7 @@ const routes = [
         component: () => import('src/pages/InventorySection.vue'),
       },
       { name: 'pets', path: 'pets', component: () => import('src/pages/PetInfo.vue') },
-      {
-        name: 'user-login',
-        path: 'user-login',
-        component: () => import('src/pages/UserLogin.vue'),
-      },
+
       {
         name: 'user-registration',
         path: 'user-registration',

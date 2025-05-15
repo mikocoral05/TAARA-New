@@ -4,8 +4,6 @@ import loginModal from 'src/components/loginModal.vue'
 import reportAnnouncementDialog from 'src/components/reportAnnouncementDialog.vue'
 import {
   logInDetails,
-  logOut,
-  // getLikes,
   notifCount,
   likesData,
   viewSpecificAnimal,
@@ -13,10 +11,10 @@ import {
   items,
   getNotification,
   notifData,
-  // notifUpdate,
 } from 'src/composable/taaraComposable.js'
 import { timeAgo } from 'src/composable/simpleComposable'
 import { useCounterStore } from 'src/stores/example-store'
+import { useQuasar } from 'quasar'
 export default defineComponent({
   name: 'MainLayout',
 
@@ -35,7 +33,7 @@ export default defineComponent({
     const rightDrawerNotification = ref(false)
     let headerColor = ref('white')
     let secondDialog = ref()
-
+    const $q = useQuasar()
     let fundRaiser = ref(false)
     let rescueReport = ref(false)
     let ourPetsMenu = ref(false)
@@ -49,7 +47,6 @@ export default defineComponent({
     let menu = ref(false)
     let responsiveNavAllSlideHide = ref('slide-left')
     let responsiveNavAllSlideShow = ref('slide-left')
-    // let v = ref([])
     let resizeTimeout = null
 
     let showDropDown = (payload) => {
@@ -60,9 +57,15 @@ export default defineComponent({
     }
 
     let logOuts = () => {
-      logOut()
-      router.push('/home')
-      counterStore.changeNotif(0)
+      $q.loading.show({
+        message: 'Logging Out. Please wait...',
+      })
+      setTimeout(() => {
+        sessionStorage.clear()
+        router.replace('/user-login')
+
+        $q.loading.hide()
+      }, 2000)
     }
     let goToContactUs = () => {
       if (route.fullPath == '/public/home') {

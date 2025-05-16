@@ -23,8 +23,7 @@ class API
       $query = $this->db->rawQuery("SELECT * FROM tbl_animals_info WHERE  featured = '$answer' ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("all_animals", $ref_id)) {
-      $cols = array('animal_id', 'animal_name', 'animal_type', 'age', 'breed', 'eye_color', 'fur_color', 'weight', 'height', 'length', 'sex', 'size', 'animal_image', 'favorite_food', 'care_start_date', 'current_state');
-      $query = $this->db->get("tbl_animals_info", null, $cols);
+      $query = $this->db->get("tbl_animal_info");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("get_user_by_type", $ref_id)) {
       $cols = array('animal_id', 'animal_name', 'animal_type', 'age', 'breed', 'eye_color', 'fur_color', 'weight', 'height', 'length', 'sex', 'size', 'animal_image', 'favorite_food', 'care_start_date', 'current_state');

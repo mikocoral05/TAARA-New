@@ -10,7 +10,7 @@
         color="white"
         text-color="blue"
         unelevated
-        to="/management"
+        to="/user-login"
         label="Go Home"
         no-caps
       />

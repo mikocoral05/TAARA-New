@@ -26,18 +26,6 @@ export default {
     let categorizeByHeight = ref(false)
     let categorizeByYearRescued = ref(false)
 
-    // let search = ref({
-    //   animal_name: null,
-    //   animal_type: "Any",
-    //   breed: "Any",
-    //   age: "Any",
-    //   sex: "Any",
-    //   size: "Any",
-    //   fur_color: "Any",
-    //   good_with: "Any",
-    //   behaviour: "Any",
-    // });
-
     let search = ref(null)
     const stringOptions = ['Name', 'Sex', 'Twitter', 'Apple', 'Oracle']
     const options = ref()
@@ -179,7 +167,6 @@ export default {
       if (window.innerWidth <= 581) {
         drawer.value = false
       }
-      console.log()
       currentPage.value = route.query.page == undefined ? 1 : route.query.page
     })
     return {

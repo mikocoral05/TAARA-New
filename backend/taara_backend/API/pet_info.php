@@ -18,9 +18,12 @@ class API
         if (array_key_exists('get_animal_list', $payload)) {
             $category = $payload['get_animal_list'];
 
-            $this->db->where("health_status", $category);
+            $this->db->join("tbl_files f", "f.id = tbl_animal_info.primary_image", "LEFT");
             $this->db->where("is_deleted", 1);
-            $animalRows = $this->db->get("tbl_animal_info");
+            $this->db->where("health_status", $category);
+
+            // ✅ Add column selection with alias
+            $animalRows = $this->db->get("tbl_animal_info", null, "tbl_animal_info.*, f.image_path AS primary_image");
 
             foreach ($animalRows as &$animal) {
                 $galleryIds = json_decode($animal['image_gallery'], true);
@@ -35,6 +38,7 @@ class API
                     $animal['image_gallery'] = [];
                 }
             }
+
 
             echo json_encode([
                 'status' => 'success',

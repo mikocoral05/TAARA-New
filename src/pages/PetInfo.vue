@@ -85,10 +85,16 @@
           <div>{{ rowIndex + 1 }}</div>
         </template>
         <template #cell-name="{ row }">
-          <q-avatar size="30px" class="q-mr-md">
-            <q-img :src="row.img_path || 'animal-no-image.svg'" />
-          </q-avatar>
-          {{ row.name }}
+          <div class="row no-wrap items-center">
+            <q-img
+              height="30px"
+              width="30px"
+              :src="getImageLink(row.primary_image) || 'animal-no-image.svg'"
+              fit="cover"
+              class="radius-100 q-mr-sm"
+            />
+            {{ row.name }}
+          </div>
         </template>
         <template #cell-expiration_date="{ row }">
           <div

@@ -532,7 +532,7 @@
                           name="sym_r_delete"
                           size="1.2rem"
                           color="negative"
-                          @click="removeUploadedImage(props.rowIndex)"
+                          @click="removeUploadedImage(props.rowIndex, props.row.id)"
                         />
                       </q-td>
                     </template>
@@ -654,7 +654,7 @@ export default {
     const filterTab = ref('1')
     const editTab = ref('1')
     const showDialog = ref(false)
-    const step = ref(1)
+    const step = ref(4)
     const rows = ref([])
     const confirm = ref(false)
     const search = ref(null)
@@ -687,6 +687,7 @@ export default {
         if (filterTab.value !== 2) showDialog.value = !showDialog.value
 
         if (modeParam == 'Add') {
+          idToRemove.value = []
           dataStorage.value = {}
         } else {
           dataStorage.value = data
@@ -742,6 +743,7 @@ export default {
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
+        dataStorage.value.toRemoveId = idToRemove.value
         editAnimalInfo(dataStorage.value).then((response) => {
           console.log(response)
           $q.loading.show({
@@ -792,19 +794,40 @@ export default {
 
     const previewImage = ref([])
     const imageFnUpdate = () => {
-      previewImage.value = [] // RESET before adding new images
+      previewImage.value = [] // Reset previews
+      const updatedFiles = []
 
-      if (dataStorage.value.file.length > 0) {
-        dataStorage.value.file.forEach((element) => {
-          console.log(element)
+      dataStorage.value.file.forEach((item) => {
+        // Check if it's a File (newly uploaded)
+        if (item instanceof File) {
+          // Create object with full metadata
+          const fileObj = {
+            name: item.name,
+            type: item.type,
+            size: item.size,
+            file: item, // Store the actual File object
+          }
 
-          previewImage.value.push(URL.createObjectURL(element))
-        })
-      }
+          updatedFiles.push(fileObj)
+          previewImage.value.push(URL.createObjectURL(item))
+        } else if (item.name !== undefined) {
+          // Existing image object from DB
+          previewImage.value.push(getImageLink(item.name)) // your backend image URL logic
+          updatedFiles.push(item)
+        }
+      })
+
+      // Replace the array with normalized and clean data
+      dataStorage.value.file = updatedFiles
     }
 
-    const removeUploadedImage = (indexp) => {
-      dataStorage.value.file = dataStorage.value.file.filter((obj, index) => index != indexp)
+    const idToRemove = ref([])
+    const removeUploadedImage = (indexp, id) => {
+      if (mode.value == 'Edit') {
+        idToRemove.value.push(id)
+      }
+      dataStorage.value.file.splice(indexp, 1)
+      previewImage.value.splice(indexp, 1)
     }
 
     watchEffect(() => {

@@ -15,6 +15,7 @@ import {
 import { timeAgo } from 'src/composable/simpleComposable'
 import { useCounterStore } from 'src/stores/example-store'
 import { useQuasar } from 'quasar'
+import { globalStore } from 'src/stores/global-store'
 export default defineComponent({
   name: 'MainLayout',
 
@@ -24,6 +25,7 @@ export default defineComponent({
   },
 
   setup() {
+    const store = globalStore()
     notifCount.value = JSON.parse(localStorage.getItem('count'))
     logInDetails.value = JSON.parse(localStorage.getItem('logInDetails'))
 
@@ -63,7 +65,7 @@ export default defineComponent({
       setTimeout(() => {
         sessionStorage.clear()
         router.replace('/user-login')
-
+        store.reset()
         $q.loading.hide()
       }, 2000)
     }

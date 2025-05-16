@@ -1,4 +1,9 @@
 import { defineStore } from 'pinia'
+const getDefaultState = () => ({
+  counter: 0,
+  userData: {},
+  pendingRescueReport: 0,
+})
 
 export const globalStore = defineStore('store', {
   state: () => ({
@@ -10,8 +15,8 @@ export const globalStore = defineStore('store', {
     doubleCount: (state) => state.counter * 2,
   },
   actions: {
-    increment() {
-      this.counter++
+    reset() {
+      this.$state = getDefaultState()
     },
   },
 })

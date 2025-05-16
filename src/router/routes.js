@@ -1,4 +1,6 @@
 import { logInDetails } from 'src/composable/taaraComposable'
+import { globalStore } from 'src/stores/global-store'
+
 const routes = [
   {
     path: '/',
@@ -18,11 +20,20 @@ const routes = [
   {
     path: '/management/',
     component: () => import('layouts/MainLayout.vue'),
+    beforeEnter: (to, from, next) => {
+      const store = globalStore()
+      if (store.userData?.user_type === 3) {
+        next() // ✅ Proceed to layout
+      } else {
+        next('/404+not+found') // 🚫 Block access
+      }
+    },
     children: [
       {
         path: '',
         component: () => import('src/pages/DashBoard.vue'),
       },
+
       {
         name: 'volunteer',
         path: 'volunteer',

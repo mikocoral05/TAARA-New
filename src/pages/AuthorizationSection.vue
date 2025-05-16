@@ -27,11 +27,18 @@
       :tableAction="tableAction"
     >
       <template #cell-fullName="{ row }">
-        <q-avatar size="30px" class="q-mr-md">
-          <q-img
-            :src="row.img_path || row.sex == 1 ? 'no-profile-male.svg' : 'no-profile-female.svg'"
-          />
-        </q-avatar>
+        <q-img
+          height="30px"
+          width="30px"
+          class="radius-100 q-mr-sm"
+          :src="
+            row?.image_path
+              ? getImageLink(row.image_path)
+              : row.sex == 1
+                ? 'no-profile-male.svg'
+                : 'no-profile-female.svg'
+          "
+        />
         {{ row.first_name }}
         {{ row.middle_name }}
         {{ row.last_name }}
@@ -552,6 +559,7 @@ import {
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
+import { getImageLink } from 'src/composable/simpleComposable'
 export default {
   components: {
     ReusableTable,
@@ -647,9 +655,11 @@ export default {
         : ['id', 'fullName', 'email', 'age', 'profession', 'phone_number', 'btn']
       getUserByType(tab.value).then((response) => {
         userRows.value = response
+        console.log(userRows.value)
       })
     })
     return {
+      getImageLink,
       search,
       softDeleteFn,
       arrayOfId,

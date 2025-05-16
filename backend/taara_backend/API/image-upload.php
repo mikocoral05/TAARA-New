@@ -48,9 +48,11 @@ class API
                         $insertedIds[] = $id;
                     }
                 }
+
                 // ✅ Update tbl_animal_info *once* if animal_id is set and images were uploaded
                 if ($animal_id && !empty($insertedIds)) {
                     $update_values = [
+                        'primary_image' => $insertedIds[0],
                         'image_gallery' => json_encode($insertedIds),
                         'updated_at' => date('Y-m-d H:i:s')
                     ];

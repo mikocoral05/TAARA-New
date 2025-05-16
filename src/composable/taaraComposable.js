@@ -76,6 +76,8 @@ const getAllAnimals = () => {
     api
       .get('api.php', { params: { all_animals: 'all_animals' } })
       .then((response) => {
+        console.log(response.data.data)
+
         allAnimalBackUp.value = response.data.data
         allAnimalData.value = response.data.data
         allAnimalData.value.forEach((obj) => {
@@ -84,14 +86,6 @@ const getAllAnimals = () => {
         const shuffled1 = [...response.data.data].sort(() => 0.5 - Math.random()).slice(0, 1)
         localStorage.setItem('one', JSON.stringify(shuffled1))
         shuffleOne.value = JSON.parse(localStorage.getItem('one'))
-        // localStorage.setItem("allAnimal", JSON.stringify(response.data.data));
-        // allAnimalData.value = JSON.parse(localStorage.getItem("allAnimal"));
-        // localStorage.setItem(
-        //   "allAnimalBackUp",
-        //   JSON.stringify(response.data.data)
-        // );
-
-        // console.log(allAnimalData.value);
       })
       .catch((error) => {
         reject(error)

@@ -64,14 +64,22 @@ export default defineComponent({
       type: Number,
       default: 0,
     },
+    action: {
+      type: Function,
+      default: null,
+    },
   },
   setup(props, { emit }) {
     const router = useRouter()
     const isActive = computed(() => props.tab === props.title)
 
     const updateTab = () => {
-      emit('update-tab', props.title) // Emit event to update tab in MainLayout
-      router.push(props.nav)
+      if (props.action) {
+        props.action()
+      } else {
+        emit('update-tab', props.title)
+        if (props.nav) router.push(props.nav)
+      }
     }
 
     return {

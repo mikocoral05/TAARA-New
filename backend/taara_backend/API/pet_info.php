@@ -25,6 +25,20 @@ class API
             // ✅ Add column selection with alias
             $animalRows = $this->db->get("tbl_animal_info", null, "tbl_animal_info.*, f.image_path AS primary_image");
 
+            // foreach ($animalRows as &$animal) {
+            //     $galleryIds = json_decode($animal['image_gallery'], true);
+
+            //     if (is_array($galleryIds) && count($galleryIds)) {
+            //         $this->db->where('id', $galleryIds, 'IN');
+            //         $files = $this->db->get('tbl_files');
+
+            //         $paths = array_column($files, 'image_path');
+            //         $animal['image_gallery'] = $paths;
+            //     } else {
+            //         $animal['image_gallery'] = [];
+            //     }
+            // }
+
             foreach ($animalRows as &$animal) {
                 $galleryIds = json_decode($animal['image_gallery'], true);
 
@@ -32,11 +46,21 @@ class API
                     $this->db->where('id', $galleryIds, 'IN');
                     $files = $this->db->get('tbl_files');
 
-                    $paths = array_column($files, 'image_path');
-                    $animal['image_gallery'] = $paths;
+                    $fileObjects = array_map(function ($file) {
+                        return [
+                            'name' => $file['image_path'],
+                            'type' => $file['type'],
+                            'size' => $file['size']
+                        ];
+                    }, $files);
+
+                    $animal['file'] = $fileObjects; // ✅ renamed key
                 } else {
-                    $animal['image_gallery'] = [];
+                    $animal['file'] = []; // ✅ renamed key
                 }
+
+                // Optional: remove the original image_gallery if you want
+                unset($animal['image_gallery']);
             }
 
 

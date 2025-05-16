@@ -209,20 +209,20 @@ export default defineComponent({
     ])
 
     const routeToTabMap = {
-      '/': 'Dashboard',
-      '/users': 'User Management',
-      '/report': 'Report',
-      '/pets': 'Pets',
-      '/budget-and-expenses': 'Budget & Expenses',
-      '/donation': 'Donation',
-      '/invetory': 'Inventory',
-      '/pending-application': 'Pending',
-      '/animal-schedule': 'Schedule',
-      '/supplies': 'Supplies',
-      '/activities-and-events': 'Activities & Events',
-      '/announcement': 'Announcement',
-      '/rescue-report': 'Rescue Report',
-      '/analytic-report': 'Report',
+      '/management/': 'Dashboard',
+      '/management/users': 'User Management',
+      '/management/report': 'Report',
+      '/management/pets': 'Pets',
+      '/management/budget-and-expenses': 'Budget & Expenses',
+      '/management/donation': 'Donation',
+      '/management/invetory': 'Inventory',
+      '/management/pending-application': 'Pending',
+      '/management/animal-schedule': 'Schedule',
+      '/management/supplies': 'Supplies',
+      '/management/activities-and-events': 'Activities & Events',
+      '/management/announcement': 'Announcement',
+      '/management/rescue-report': 'Rescue Report',
+      '/management/analytic-report': 'Report',
     }
     const tab = ref(routeToTabMap[route.path] || 'Dashboard')
 

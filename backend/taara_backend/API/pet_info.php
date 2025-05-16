@@ -50,7 +50,8 @@ class API
                         return [
                             'name' => $file['image_path'],
                             'type' => $file['type'],
-                            'size' => $file['size']
+                            'size' => $file['size'],
+                            'id' => $file['id']
                         ];
                     }, $files);
 

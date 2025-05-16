@@ -106,9 +106,10 @@
 <script>
 import { defineComponent, onMounted, ref, watchEffect } from 'vue'
 import EssentialLink from 'components/EssentialLink.vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { globalStore } from 'src/stores/global-store'
 import { computed } from 'vue'
+import { useQuasar } from 'quasar'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -120,12 +121,25 @@ export default defineComponent({
   setup() {
     const store = globalStore()
     const route = useRoute()
+    const router = useRouter()
     const showLayout = ref(true)
     const myScrollArea = ref(null)
     const scrollPosition = ref(0)
     const language = ref('English')
     const pathExclude = ref(['/management/user-login', '/management/user-registration'])
     const leftDrawerOpen = ref(false)
+    const $q = useQuasar()
+    let logOuts = () => {
+      $q.loading.show({
+        message: 'Logging Out. Please wait...',
+      })
+      setTimeout(() => {
+        sessionStorage.clear()
+        store.reset()
+        router.replace('/user-login')
+        $q.loading.hide()
+      }, 2000)
+    }
 
     const linksList = computed(() => [
       {
@@ -205,6 +219,7 @@ export default defineComponent({
         title: 'Logout',
         icon: 'logout',
         nav: '',
+        action: logOuts,
       },
     ])
 
@@ -224,6 +239,7 @@ export default defineComponent({
       '/management/rescue-report': 'Rescue Report',
       '/management/analytic-report': 'Report',
     }
+
     const tab = ref(routeToTabMap[route.path] || 'Dashboard')
 
     const scrollFn = (event) => {
@@ -241,6 +257,7 @@ export default defineComponent({
     })
 
     return {
+      logOuts,
       scrollPosition,
       myScrollArea,
       scrollFn,

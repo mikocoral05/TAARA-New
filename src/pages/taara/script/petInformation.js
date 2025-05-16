@@ -8,7 +8,7 @@ import {
   specificAnimalId,
   SearchAnimalByName,
 } from 'src/composable/taaraComposable'
-import { calculateAge, encodeAnimalId } from 'src/composable/simpleComposable'
+import { calculateAge, encodeAnimalId, getImageLink } from 'src/composable/simpleComposable'
 
 export default {
   components: { taaraFooter },
@@ -170,6 +170,7 @@ export default {
       currentPage.value = route.query.page == undefined ? 1 : route.query.page
     })
     return {
+      getImageLink,
       sortPets,
       sortByDateRescued,
       sortByHeight,

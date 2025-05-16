@@ -422,14 +422,17 @@
               "
               no-caps
             >
-              <img :src="data.animal_image" alt="Looks like image is not available" />
+              <img
+                :src="getImageLink(data.primary_image)"
+                alt="Looks like image is not available"
+              />
               <q-card-section class="q-ma-none q-pa-none text-center text-capitalize">
                 <div class="q-ma-none animal-name text-weight-regular">
                   <b> {{ data.breed }}</b>
                 </div>
                 <div class="q-ma-none text-caption">
                   Sex: {{ data.sex }} Age:
-                  {{ calculateAge(data.age) }}
+                  {{ calculateAge(data.date_of_birth) }}
                 </div>
                 <div class="q-ma-none text-caption">Name: {{ data.animal_name }}</div>
               </q-card-section>

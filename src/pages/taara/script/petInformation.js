@@ -37,6 +37,7 @@ export default {
     //   good_with: "Any",
     //   behaviour: "Any",
     // });
+
     let search = ref(null)
     const stringOptions = ['Name', 'Sex', 'Twitter', 'Apple', 'Oracle']
     const options = ref()
@@ -168,12 +169,11 @@ export default {
         })
       }
     }
-    // watch(search.value, (newVal) => {
-    //   SearchAnimalByName(newVal);
-    // });
+
     watch(watchRoute, (newVal) => {
       currentPage.value = route.query.page == undefined ? 1 : Number(newVal)
     })
+
     onMounted(() => {
       getAllAnimals()
       if (window.innerWidth <= 581) {

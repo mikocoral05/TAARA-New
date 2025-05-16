@@ -40,6 +40,8 @@ class API
 
                     $insertData = [
                         'image_path' => $pathForDB,
+                        'type' => $files['type'][$index],
+                        'size' => $files['size'][$index],
                     ];
 
                     $this->db->insert('tbl_files', $insertData);

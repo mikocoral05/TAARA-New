@@ -21,7 +21,7 @@ class API
             $columns = [
                 'tbl_users.user_id',
                 'tbl_users.user_type',
-                'tbl_users.image_path',
+                'f.image_path',
                 'tbl_users.first_name',
                 'tbl_users.middle_name',
                 'tbl_users.last_name',
@@ -59,6 +59,7 @@ class API
             // Perform the query with the selected columns and join
             $this->db->where('tbl_users.user_type', $type);
             $this->db->where('tbl_users.is_deleted', 1);
+            $this->db->join('tbl_files f', 'f.id = tbl_users.image_id', 'LEFT');
             $query = $this->db->get("tbl_users", null, $columns);
 
             // Respond with success and the query data

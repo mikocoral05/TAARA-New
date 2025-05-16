@@ -471,7 +471,7 @@ const softDeleteSchedule = (arrayId) => {
 }
 
 const editAnimalInfo = (obj) => {
-  const { image_gallery, ...animal_data } = obj
+  const { file, toRemoveId, ...animal_data } = obj
   return new Promise((resolve, reject) => {
     api
       .put('pet_info.php', {
@@ -479,7 +479,9 @@ const editAnimalInfo = (obj) => {
       })
       .then((response) => {
         if (response.data.status == 'success') {
-          console.log(image_gallery)
+          if (toRemoveId?.length > 0) {
+            console.log(file)
+          }
         }
         resolve(response.data.status)
       })

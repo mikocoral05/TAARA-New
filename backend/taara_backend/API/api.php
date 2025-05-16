@@ -23,8 +23,32 @@ class API
       $query = $this->db->rawQuery("SELECT * FROM tbl_animals_info WHERE  featured = '$answer' ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("all_animals", $ref_id)) {
-      $query = $this->db->get("tbl_animal_info");
-      echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
+      $this->db->join("tbl_files f", "f.id = tbl_animal_info.primary_image", "LEFT");
+      $this->db->where("is_deleted", 1);
+
+      // ✅ Add column selection with alias
+      $animalRows = $this->db->get("tbl_animal_info", null, "tbl_animal_info.*, f.image_path AS primary_image");
+
+      foreach ($animalRows as &$animal) {
+        $galleryIds = json_decode($animal['image_gallery'], true);
+
+        if (is_array($galleryIds) && count($galleryIds)) {
+          $this->db->where('id', $galleryIds, 'IN');
+          $files = $this->db->get('tbl_files');
+
+          $paths = array_column($files, 'image_path');
+          $animal['image_gallery'] = $paths;
+        } else {
+          $animal['image_gallery'] = [];
+        }
+      }
+
+
+      echo json_encode([
+        'status' => 'success',
+        'data' => $animalRows,
+        'method' => 'GET'
+      ]);
     } else if (array_key_exists("get_user_by_type", $ref_id)) {
       $cols = array('animal_id', 'animal_name', 'animal_type', 'age', 'breed', 'eye_color', 'fur_color', 'weight', 'height', 'length', 'sex', 'size', 'animal_image', 'favorite_food', 'care_start_date', 'current_state');
       $query = $this->db->get("tbl_animals_info", null, $cols);

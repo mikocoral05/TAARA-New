@@ -453,5 +453,5 @@
     <taaraFooter class="footer" />
   </q-page>
 </template>
-<script src="./taara/script/petInformation.js"></script>
-<style lang="scss" scoped src="../pages/taara/style/petInformation.scss"></style>
+<script src="pages/taara/script/petInformation.js"></script>
+<style lang="scss" scoped src="pages/taara/style/petInformation.scss"></style>

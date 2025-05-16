@@ -433,104 +433,79 @@
               </q-step>
 
               <q-step :name="4" title="Pet Image" icon="sym_r_photo_camera">
-                <div class="text-body1">Choose Pet Image</div>
-                <div class="text-caption text-grey-7">
-                  Choose an image that will appear in public page in the specific pet
+                <div class="row no-wrap items-start justify-between">
+                  <div class="column no-wrap">
+                    <div class="text-body1">Choose Pet Image</div>
+                    <div class="text-caption text-grey-7">
+                      Choose an image that will appear in public page in the specific pet
+                    </div>
+                  </div>
+                  <q-btn
+                    icon="sym_r_upload"
+                    label="Upload"
+                    outline
+                    no-caps
+                    dense
+                    class="q-px-md"
+                    @click="triggerUpload"
+                  />
                 </div>
                 <q-file
                   ref="myFile"
                   v-model="dataStorage.file"
                   label="Upload your file"
                   multiple
-                  :readonly="mode == 'View'"
+                  max-files="5"
                   append
+                  :readonly="mode == 'View'"
                   class="hidden"
                   accept=".jpg, .jpeg, .png, .svg"
                   @update:model-value="imageFnUpdate"
                 />
+                <q-table
+                  class="q-mt-md"
+                  :rows="dataStorage?.file"
+                  :columns="columnsImage"
+                  row-key="name"
+                  bordered
+                  dense
+                  flat
+                >
+                  <template v-slot:body-cell-name="props">
+                    <q-td :props="props" class="text-center">
+                      <q-img
+                        :src="previewImage[props.rowIndex]"
+                        height="100px"
+                        width="100px"
+                        class="radius-10"
+                      />
+                      <div>{{ props.row.name }}</div>
+                    </q-td>
+                  </template>
 
-                <q-card class="q-mt-md radius-10 shadow-1" @click="triggerUpload">
-                  <q-card-section
-                    style="height: 200px"
-                    class="column no-wrap items-center justify-center"
-                  >
-                    <q-icon name="sym_r_folder_open" size="1.5rem" />
-                    <div class="q-mt-md">Click or drag and drop to upload file</div>
-                    <div class="q-mt-sm text-caption text-grey-7">PNG,JPG,SVG</div>
-                  </q-card-section>
-                </q-card>
-                <div class="row no-wrap image-viewer-container flex flex-center">
-                  <div class="light-border-dashed image-viewer">
-                    <q-img
-                      v-if="previewImage?.[0]"
-                      :src="previewImage?.[0]"
-                      height="120px"
-                      width="120px"
-                    />
-                    <q-icon
-                      v-else
-                      name="sym_r_add_photo_alternate"
-                      size="1.2rem"
-                      class="absolute-center"
-                    />
-                  </div>
-                  <div class="light-border-dashed image-viewer">
-                    <q-img
-                      v-if="previewImage?.[1]"
-                      :src="previewImage?.[1]"
-                      height="120px"
-                      width="120px"
-                    />
-                    <q-icon
-                      v-else
-                      name="sym_r_add_photo_alternate"
-                      size="1.2rem"
-                      class="absolute-center"
-                    />
-                  </div>
-                  <div class="light-border-dashed image-viewer">
-                    <q-img
-                      v-if="previewImage?.[2]"
-                      :src="previewImage?.[2]"
-                      height="120px"
-                      width="120px"
-                    />
-                    <q-icon
-                      v-else
-                      name="sym_r_add_photo_alternate"
-                      size="1.2rem"
-                      class="absolute-center"
-                    />
-                  </div>
-                  <div class="light-border-dashed image-viewer">
-                    <q-img
-                      v-if="previewImage?.[3]"
-                      :src="previewImage?.[3]"
-                      height="120px"
-                      width="120px"
-                    />
-                    <q-icon
-                      v-else
-                      name="sym_r_add_photo_alternate"
-                      size="1.2rem"
-                      class="absolute-center"
-                    />
-                  </div>
-                  <div class="light-border-dashed image-viewer">
-                    <q-img
-                      v-if="previewImage?.[4]"
-                      :src="previewImage?.[4]"
-                      height="120px"
-                      width="120px"
-                    />
-                    <q-icon
-                      v-else
-                      name="sym_r_add_photo_alternate"
-                      size="1.2rem"
-                      class="absolute-center"
-                    />
-                  </div>
-                </div>
+                  <template v-slot:body-cell-btn="props">
+                    <q-td :props="props" class="text-center">
+                      <q-icon
+                        name="sym_r_delete"
+                        size="1.2rem"
+                        color="negative"
+                        @click="removeUploadedImage(props.rowIndex)"
+                      />
+                    </q-td>
+                  </template>
+
+                  <template v-slot:no-data>
+                    <div class="row no-wrap items-center">
+                      <q-icon
+                        name="sym_r_scan_delete"
+                        size="1rem"
+                        color="negative"
+                        class="q-mr-sm"
+                      />
+                      <div>No file upload</div>
+                    </div>
+                  </template>
+                </q-table>
               </q-step>
             </q-stepper>
             <div class="row no-wrap q-pa-md q-px-lg">
@@ -544,7 +519,7 @@
                 color="primary"
               />
               <q-btn
-                label="Continue"
+                :label="step == 4 ? 'Save' : 'Continue'"
                 class="btn"
                 color="primary"
                 no-caps
@@ -630,11 +605,11 @@ export default {
     const tab = ref('1')
     const filterTab = ref('1')
     const editTab = ref('1')
-    const step = ref(1)
+    const showDialog = ref(true)
+    const step = ref(4)
     const rows = ref([])
     const confirm = ref(false)
     const search = ref(null)
-    const showDialog = ref(false)
     const pages = ref([])
     const dataStorage = ref({ file: [] })
     const elseSummary = ref({})
@@ -773,13 +748,19 @@ export default {
     const previewImage = ref([])
     const imageFnUpdate = () => {
       previewImage.value = [] // RESET before adding new images
+
       if (dataStorage.value.file.length > 0) {
         dataStorage.value.file.forEach((element) => {
+          console.log(element)
+
           previewImage.value.push(URL.createObjectURL(element))
         })
       }
     }
 
+    const removeUploadedImage = (indexp) => {
+      dataStorage.value.file = dataStorage.value.file.filter((obj, index) => index != indexp)
+    }
     watchEffect(() => {
       getAnimalList(tab.value).then((response) => {
         tableConfig.value.title = `${obj[tab.value]} Pet`
@@ -797,8 +778,24 @@ export default {
         console.log(rows.value)
       })
     })
+    const columnsImage = [
+      {
+        name: 'name',
+        required: true,
+        label: 'File name',
+        align: 'left',
+        field: (row) => row.name,
+        format: (val) => `${val}`,
+        sortable: true,
+      },
+      { name: 'size', align: 'center', label: 'File size', field: 'size', sortable: true },
+      { name: 'type', label: 'File type', field: 'type', sortable: true },
+      { name: 'btn', label: 'Remove', align: 'center' },
+    ]
 
     return {
+      removeUploadedImage,
+      columnsImage,
       getImageLink,
       imageFnUpdate,
       step,

@@ -42,7 +42,7 @@
             flat
             to="/public/pet-list?page=1"
             :class="
-              $route.fullPath == '/public/pet-list'
+              $route.fullPath.indexOf('/public/pet-list') !== -1
                 ? 'bg-primary text-white'
                 : 'bg-white text-black'
             "

@@ -10,7 +10,7 @@
         color="white"
         text-color="blue"
         unelevated
-        to="/user-login"
+        :to="navigateFn()"
         label="Go Home"
         no-caps
       />
@@ -19,9 +19,26 @@
 </template>
 
 <script>
+import { globalStore } from 'src/stores/global-store'
 import { defineComponent } from 'vue'
 
 export default defineComponent({
   name: 'ErrorNotFound',
+  setup() {
+    const store = globalStore()
+    const navigateFn = () => {
+      if ([3, 2].includes(store.userData?.user_type)) {
+        return '/management'
+      } else if (store.userData?.user_type == 1) {
+        return '/public'
+      } else {
+        return '/user-login'
+      }
+    }
+    return {
+      navigateFn,
+      store,
+    }
+  },
 })
 </script>

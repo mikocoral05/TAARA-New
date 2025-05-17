@@ -125,7 +125,7 @@
         </div>
         <div class="profile-tab row no-rap justify-center items-center" v-if="logInDetails != null">
           <div class="img-container relative-position">
-            <img
+            <q-img
               :src="
                 store.userData?.image_path
                   ? getImageLink(store.userData?.image_path)
@@ -133,7 +133,9 @@
                     ? 'no-profile-male.svg'
                     : 'no-profile-female.svg'
               "
-              class="absolute-center"
+              class="radius-100"
+              height="40px"
+              width="40px"
             />
           </div>
           <q-btn bordered icon="expand_more" round flat dense>

@@ -125,13 +125,16 @@
         </div>
         <div class="profile-tab row no-rap justify-center items-center" v-if="logInDetails != null">
           <div class="img-container relative-position">
-            <img :src="logInDetails[0]?.image" class="absolute-center" />
-            <p
-              v-if="logInDetails[0]?.image == ''"
-              class="q-ma-none bg-amber text-white absolute-center row justify-center items-center"
-            >
-              M
-            </p>
+            <img
+              :src="
+                store.userData?.image_path
+                  ? getImageLink(store.userData?.image_path)
+                  : store.userData?.sex == 1
+                    ? 'no-profile-male.svg'
+                    : 'no-profile-female.svg'
+              "
+              class="absolute-center"
+            />
           </div>
           <q-btn bordered icon="expand_more" round flat dense>
             <q-menu>

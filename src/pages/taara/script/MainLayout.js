@@ -12,7 +12,7 @@ import {
   getNotification,
   notifData,
 } from 'src/composable/taaraComposable.js'
-import { timeAgo } from 'src/composable/simpleComposable'
+import { getImageLink, timeAgo } from 'src/composable/simpleComposable'
 import { useCounterStore } from 'src/stores/example-store'
 import { useQuasar } from 'quasar'
 import { globalStore } from 'src/stores/global-store'
@@ -210,6 +210,8 @@ export default defineComponent({
     })
 
     return {
+      getImageLink,
+      store,
       secondDialog,
       navigateMobileMenu,
       items,

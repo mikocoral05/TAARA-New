@@ -3,6 +3,7 @@ import taaraFooter from 'src/components/taaraFooter.vue'
 import { addVolunteerRequest, logInDetails, voluteerFormData } from 'src/composable/taaraComposable'
 import { timeNow, dateToday } from 'src/composable/simpleComposable'
 import { useRouter } from 'vue-router'
+import { globalStore } from 'src/stores/global-store'
 export default defineComponent({
   components: {
     taaraFooter,
@@ -12,6 +13,7 @@ export default defineComponent({
     const router = useRouter()
     const chooseWork = ref([])
     const group = ref([])
+    const store = globalStore()
     const options = [
       {
         label: 'Monday',
@@ -45,7 +47,7 @@ export default defineComponent({
 
     let volunteer_form = ref({
       member_of_welfare_org: null,
-      // user_id: logInDetails.value.user_id,
+      user_id: store.userData?.user_id ?? null,
       have_pets: null,
       have_children: null,
       experience_in_recue: null,

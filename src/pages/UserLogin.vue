@@ -119,9 +119,9 @@
                     Username or Email address<span class="q-ml-sm text-negative">*</span>
                   </p>
                   <q-input
-                    outlined
                     placeholder="Username or Email address"
                     dense
+                    filled
                     v-model="userInfo.username"
                     :rules="[(val) => !!val || 'Username is required!']"
                     hint="This will appear ini you public profile"
@@ -133,7 +133,7 @@
                     Password<span class="q-ml-sm text-negative">*</span>
                   </p>
                   <q-input
-                    outlined
+                    filled
                     label="Password"
                     type="password"
                     dense

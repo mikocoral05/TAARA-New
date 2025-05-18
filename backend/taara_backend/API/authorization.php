@@ -52,8 +52,10 @@ class API
             if ($type == 2) {
                 $columns[] = 'tbl_volunteer_position.position_title';
                 $columns[] = 'tbl_volunteer_position.position_description';
+                $columns[] = 'ff.application_status';
                 $columns[] = 'page_access';
                 $this->db->join('tbl_volunteer_position', 'tbl_users.roles = tbl_volunteer_position.id', 'left');
+                $this->db->join('tbl_volunteer_form ff', 'tbl_users.user_id = ff.user_id', 'left');
             }
 
             // Perform the query with the selected columns and join
@@ -74,6 +76,19 @@ class API
             echo json_encode([
                 'status' => 'success',
                 'data' => $query,
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists('get_pending_volunteer', $payload)) {
+            $this->db->where("u.is_deleted", 1);
+            $this->db->where("f.application_status", 1);
+            $this->db->join("tbl_volunteer_form f", 'f.user_id = u.user_id', "left");
+
+            $result = $this->db->get('tbl_users u');
+            $count = count($result); // 👈 Count the number of records
+
+            echo json_encode([
+                'status' => 'success',
+                'count' => $count,        // ✅ Include the count here
                 'method' => 'GET'
             ]);
         } else {

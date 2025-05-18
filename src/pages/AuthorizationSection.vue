@@ -3,8 +3,8 @@
     <div class="row no-wrap justify-between items-center">
       <q-tabs dense v-model="tab" inline-label flat active-color="primary">
         <q-tab name="3" icon="sym_r_manage_accounts" label="Officials" no-caps />
-        <q-tab name="2" icon="sym_r_person_raised_hand" label="Volunteer " no-caps />
         <q-tab name="1" icon="sym_r_identity_platform" label="Public  Users" no-caps />
+        <q-tab name="2" icon="sym_r_person_raised_hand" label="Volunteer " no-caps />
       </q-tabs>
       <div class="row no-wrap justify-between items-center">
         <q-btn icon="sym_r_add" dense unelevated class="q-mr-md" />

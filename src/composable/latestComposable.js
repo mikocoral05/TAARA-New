@@ -36,6 +36,23 @@ const getPendingRescueReport = () => {
       })
   })
 }
+const getPendingVolunteer = () => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('authorization.php', {
+        params: { get_pending_volunteer: 'get_pending_volunteer' },
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          store.pendingVolunteer = response.data.count
+          resolve(response.data.count)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 const getActivitiesAndEvents = () => {
   return new Promise((resolve, reject) => {
     api
@@ -727,6 +744,7 @@ const logIn = (obj) => {
   })
 }
 export {
+  getPendingVolunteer,
   logIn,
   saveActivitiesAndEvents,
   getActivitiesAndEvents,

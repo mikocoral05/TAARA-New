@@ -71,7 +71,6 @@
             "
             @click="goToContactUs()"
           />
-
           <q-btn-dropdown label="More" dense flat no-caps>
             <q-list>
               <q-item
@@ -123,7 +122,10 @@
             </q-list>
           </q-btn-dropdown>
         </div>
-        <div class="profile-tab row no-rap justify-center items-center" v-if="logInDetails != null">
+        <div
+          class="profile-tab row no-rap justify-center items-center"
+          v-if="Object.keys(myVar ?? {}).length !== 0"
+        >
           <div class="img-container relative-position">
             <q-img
               :src="
@@ -169,7 +171,7 @@
             </q-menu>
           </q-btn>
         </div>
-        <div class="get-started" v-if="logInDetails == null">
+        <div class="get-started" v-else>
           <q-btn class="q-ml-md text-white" label="Log In" no-caps flat to="/public/loginPage" />
         </div>
       </div>

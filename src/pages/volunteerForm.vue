@@ -1177,6 +1177,7 @@
               </div>
             </q-form>
           </q-step>
+
           <q-step :name="5" title="Agreement" icon="add_comment" :done="step > 5">
             <div class="container1 column q-my-lg">
               <div class="row justify-center items-center">

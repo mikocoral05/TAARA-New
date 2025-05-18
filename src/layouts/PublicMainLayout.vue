@@ -172,7 +172,7 @@
           </q-btn>
         </div>
         <div class="get-started" v-else>
-          <q-btn class="q-ml-md text-white" label="Log In" no-caps flat to="user-login" />
+          <q-btn class="q-ml-md text-white" label="Log In" no-caps flat to="/user-login" />
         </div>
       </div>
     </q-header>

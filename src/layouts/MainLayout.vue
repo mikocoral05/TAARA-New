@@ -151,6 +151,7 @@ export default defineComponent({
         title: 'User Management',
         icon: 'groups',
         nav: '/management/users',
+        pending: store.pendingVolunteer,
       },
       {
         title: 'Report',

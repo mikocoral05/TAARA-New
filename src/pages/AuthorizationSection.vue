@@ -2,9 +2,30 @@
   <q-page>
     <div class="row no-wrap justify-between items-center">
       <q-tabs dense v-model="tab" inline-label flat active-color="primary">
-        <q-tab name="3" icon="sym_r_manage_accounts" label="Officials" no-caps />
         <q-tab name="1" icon="sym_r_identity_platform" label="Public  Users" no-caps />
-        <q-tab name="2" icon="sym_r_person_raised_hand" label="Volunteer " no-caps />
+        <q-tab
+          name="2"
+          icon="sym_r_person_raised_hand"
+          label="Volunteer "
+          no-caps
+          style="width: 170px"
+          class="relative-position"
+        >
+          <div class="absolute-right" style="margin-right: -25px">
+            <q-badge
+              v-if="store.pendingVolunteer"
+              color="red"
+              align="middle"
+              class="absolute-right relative-position"
+              style="height: 20px; width: 20px"
+            >
+              <div class="absolute-center text-caption">
+                {{ store.pendingVolunteer }}
+              </div>
+            </q-badge>
+          </div></q-tab
+        >
+        <q-tab name="3" icon="sym_r_manage_accounts" label="Officials" no-caps />
       </q-tabs>
       <div class="row no-wrap justify-between items-center">
         <q-btn icon="sym_r_add" dense unelevated class="q-mr-md" />
@@ -31,6 +52,8 @@
           height="30px"
           width="30px"
           class="radius-100 q-mr-sm"
+          loading="lazy"
+          loading-show-delay="2000"
           :src="
             row?.image_path
               ? getImageLink(row.image_path)
@@ -43,7 +66,15 @@
         {{ row.middle_name }}
         {{ row.last_name }}
       </template>
-      <!-- Button slot with icon -->
+      <template #cell-application_status="{ row }">
+        <div
+          class="row no-wrap q-px-sm radius-5 items-center text-white"
+          :class="statusColor(row.application_status)"
+        >
+          <q-icon :name="statusIcon(row.application_status)" size="1rem" class="q-mr-sm" />
+          {{ statusText(row.application_status) }}
+        </div>
+      </template>
       <template #cell-btn="{ row }">
         <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
           <q-menu anchor="bottom left" self="top right">
@@ -560,6 +591,7 @@ import {
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
 import { getImageLink } from 'src/composable/simpleComposable'
+import { globalStore } from 'src/stores/global-store'
 export default {
   components: {
     ReusableTable,
@@ -567,7 +599,7 @@ export default {
   setup() {
     const obj = { 3: 'Officials', 2: 'Volunteer', 1: 'Public Users' }
     const $q = useQuasar()
-    const tab = ref('3')
+    const tab = ref('1')
     const editTab = ref('1')
     const search = ref(null)
     const userRows = ref([])
@@ -578,7 +610,7 @@ export default {
     const mode = ref('')
     const arrayOfId = ref([])
     const tableConfig = ref({ title: '', columns: [] })
-
+    const store = globalStore()
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
       userData.value = data
@@ -653,12 +685,45 @@ export default {
       tableConfig.value.columns = ['3', '2'].includes(tab.value)
         ? ['id', 'fullName', 'email', 'roles', 'age', 'profession', 'phone_number', 'btn']
         : ['id', 'fullName', 'email', 'age', 'profession', 'phone_number', 'btn']
+      if (tab.value == 2) {
+        tableConfig.value.columns.push('application_status')
+      }
       getUserByType(tab.value).then((response) => {
         userRows.value = response
         console.log(userRows.value)
       })
     })
+    const statusColor = (status) => {
+      const obj = {
+        1: 'bg-orange  ',
+        2: 'bg-positive q-px-sm',
+        3: 'bg-negative q-px-sm',
+      }
+      return obj[status]
+    }
+
+    const statusIcon = (status) => {
+      const obj = {
+        1: 'sym_r_assignment',
+        2: 'sym_r_thumb_up',
+        3: 'sym_r_thumb_down',
+      }
+      return obj[status]
+    }
+
+    const statusText = (status) => {
+      const obj = {
+        1: 'Pending',
+        2: 'Approved',
+        3: 'Disapproved',
+      }
+      return obj[status]
+    }
     return {
+      store,
+      statusText,
+      statusColor,
+      statusIcon,
       getImageLink,
       search,
       softDeleteFn,
@@ -688,7 +753,14 @@ export default {
           align: 'left',
         },
         { name: 'email', label: 'Email', field: 'email_address', sortable: true, align: 'center' },
-        { name: 'roles', label: 'Role', field: 'position_title', sortable: true, align: 'center' },
+        {
+          name: 'roles',
+          label: 'Role',
+          field: 'position_title',
+          sortable: true,
+          align: 'center',
+          style: 'max-width: 150px; word-wrap: break-word; white-space: normal;',
+        },
         { name: 'age', label: 'Age', field: 'birth_date', sortable: true, align: 'center' },
         {
           name: 'profession',
@@ -702,6 +774,12 @@ export default {
           label: 'Phone no.',
           field: 'phone_number',
           sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'application_status',
+          label: 'Status',
+          field: 'application_status',
           align: 'center',
         },
         {

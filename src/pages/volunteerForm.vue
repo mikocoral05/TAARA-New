@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <div class="first-layer column justify-center items-center text-body1">
+    <!-- <div class="first-layer column justify-center items-center text-body1">
       <div class="inner-div column justify-center items-center relative-position">
         <div class="relative-position fi-container">
           <div class="bg-amber first-shape"></div>
@@ -28,8 +28,10 @@
           no-caps
         />
       </div>
-    </div>
-    <div class="second-layer q-pa-lg text-body1 column no-wrap items-center relative-position">
+    </div> -->
+    <div
+      class="second-layer q-pa-lg text-body1 q-mt-xl column no-wrap items-center relative-position"
+    >
       <h4 class="q-mb-sm">Let's get you started</h4>
       <p class="q-mb-md">Enter the detials to get going</p>
       <div class="bg-amber first-shape"></div>
@@ -1233,6 +1235,6 @@
     <taaraFooter class="footer"></taaraFooter>
   </q-page>
 </template>
-<script src="../pages/taara/script/volunteerForm"></script>
+<script src="pages/taara/script/volunteerForm"></script>
 
-<style scoped lang="scss" src="../pages/taara/style/volunteerForm.scss"></style>
+<style scoped lang="scss" src="pages/taara/style/volunteerForm.scss"></style>

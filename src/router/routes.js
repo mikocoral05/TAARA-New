@@ -381,40 +381,10 @@ const routes = [
       {
         path: 'volunteer-form',
         component: () => import('src/pages/VolunteerForm.vue'),
-        // beforeEnter: (to, from, next) => {
-        //   if (logInDetails.value == null || logInDetails.value == undefined) {
-        //     if (to.path === "/volunteer-form") {
-        //       next(true);
-        //     }
-        //   } else {
-        //     if (logInDetails.value[0].account_identifier !== "publicUser") {
-        //       next("/404 + not + found");
-        //     } else {
-        //       if (to.path === "/volunteer-form") {
-        //         next(true);
-        //       }
-        //     }
-        //   }
-        // },
       },
       {
         path: 'pet-transfer',
         component: () => import('src/pages/PetTransfer.vue'),
-        // beforeEnter: (to, from, next) => {
-        //   if (logInDetails.value == null || logInDetails.value == undefined) {
-        //     if (to.path === "/pet-transfer") {
-        //       next(true);
-        //     }
-        //   } else {
-        //     if (logInDetails.value[0].account_identifier !== "publicUser") {
-        //       next("/404 + not + found");
-        //     } else {
-        //       if (to.path === "/pet-transfer") {
-        //         next(true);
-        //       }
-        //     }
-        //   }
-        // },
       },
       {
         path: 'donation-channel',

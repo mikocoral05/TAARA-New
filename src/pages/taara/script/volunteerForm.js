@@ -9,9 +9,7 @@ export default defineComponent({
   },
   setup() {
     let step = ref(1)
-    //
     const router = useRouter()
-
     const chooseWork = ref([])
     const group = ref([])
     const options = [

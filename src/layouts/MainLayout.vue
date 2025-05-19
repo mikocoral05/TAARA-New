@@ -52,8 +52,8 @@
               width="40px"
             />
             <div class="column no-wrap">
-              <div>Moni Roy</div>
-              <div class="text-grey-7">Admin</div>
+              <div>{{ store.userData?.first_name + ' ' + store.userData?.last_name }}</div>
+              <div class="text-grey-7">{{ store.userData?.position_title }}</div>
             </div>
           </div>
         </div>

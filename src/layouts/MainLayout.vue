@@ -39,9 +39,18 @@
             />
           </div>
           <div class="row no-wrap items-center">
-            <q-avatar class="q-mr-md">
-              <img src="https://cdn.quasar.dev/img/avatar.png" />
-            </q-avatar>
+            <q-img
+              :src="
+                store.userData?.image_path
+                  ? getImageLink(store.userData?.image_path)
+                  : store.userData?.sex == 1
+                    ? 'no-profile-male.svg'
+                    : 'no-profile-female.svg'
+              "
+              class="radius-100 q-mr-md"
+              height="40px"
+              width="40px"
+            />
             <div class="column no-wrap">
               <div>Moni Roy</div>
               <div class="text-grey-7">Admin</div>
@@ -110,6 +119,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { globalStore } from 'src/stores/global-store'
 import { computed } from 'vue'
 import { useQuasar } from 'quasar'
+import { getImageLink } from 'src/composable/simpleComposable'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -256,8 +266,9 @@ export default defineComponent({
       const savedPosition = parseFloat(sessionStorage.getItem('myScrollPos') || '0')
       myScrollArea.value?.setScrollPosition('vertical', savedPosition)
     })
-
     return {
+      store,
+      getImageLink,
       logOuts,
       scrollPosition,
       myScrollArea,

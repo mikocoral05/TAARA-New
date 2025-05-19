@@ -47,7 +47,13 @@
           vertical
           class="full-height"
         >
-          <q-step :name="1" title="Personal Information" icon="settings" :done="step > 1">
+          <q-step
+            :name="1"
+            title="Personal Information"
+            icon="settings"
+            caption="Put N/A if not applicable"
+            :done="step > 1"
+          >
             <q-form class="full-width q-ma-none" @submit="step = 2">
               <div class="row no-wrap">
                 <div class="q-pa-sm field-container">
@@ -57,7 +63,7 @@
                     dense
                     label="Ex: Juan"
                     stack-label
-                    v-model="volunteer_form.first_name"
+                    v-model="userVolunteerData.first_name"
                     class="input"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
@@ -71,7 +77,7 @@
                     label="Ex: Juan"
                     stack-label
                     class="input"
-                    v-model="volunteer_form.last_name"
+                    v-model="userVolunteerData.last_name"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
                   />
@@ -89,7 +95,7 @@
                     :options="sex_options"
                     label="Ex: Male"
                     stack-label
-                    v-model="volunteer_form.sex"
+                    v-model="userVolunteerData.sex"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
                   />
@@ -106,7 +112,7 @@
                     label="Ex: 2000/05/23"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
-                    v-model="volunteer_form.birth_date"
+                    v-model="userVolunteerData.birth_date"
                   >
                     <template v-slot:append>
                       <q-icon name="event" class="cursor-pointer">
@@ -117,7 +123,7 @@
                             emit-immediately
                             mask="YYYY-MM-DD"
                             default-year-month="2000/01"
-                            v-model="volunteer_form.birth_date"
+                            v-model="userVolunteerData.birth_date"
                           >
                           </q-date>
                         </q-popup-proxy>
@@ -137,7 +143,7 @@
                     label="Ex: +63 (923) 456 - 7891"
                     stack-label
                     mask="phone"
-                    v-model="volunteer_form.phone_number"
+                    v-model="userVolunteerData.phone_number"
                     :rules="[
                       (val) => (!!val && val.length == 16) || '',
                       (val) => (val && val[1] === '9') || 'Phone number must start with 9',
@@ -155,7 +161,7 @@
                     :options="civil_status_options"
                     stack-label
                     label="Ex: Married"
-                    v-model="volunteer_form.civil_status"
+                    v-model="userVolunteerData.civil_status"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
                   />
@@ -170,7 +176,7 @@
                     label="Ex: Juan"
                     stack-label
                     class="input"
-                    v-model="volunteer_form.occupation"
+                    v-model="userVolunteerData.occupation"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
                   />
@@ -186,7 +192,7 @@
                     label="Ex: Juan"
                     stack-label
                     class="input"
-                    v-model="volunteer_form.street"
+                    v-model="userVolunteerData.street"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
                   />
@@ -198,7 +204,7 @@
                     dense
                     label="Ex: Juan"
                     stack-label
-                    v-model="volunteer_form.brgy_name"
+                    v-model="userVolunteerData.brgy_name"
                     class="input"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
@@ -212,7 +218,7 @@
                     label="Ex: Juan"
                     stack-label
                     class="input"
-                    v-model="volunteer_form.city_municipality"
+                    v-model="userVolunteerData.city_municipality"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
                   />
@@ -227,7 +233,7 @@
                     label="Ex: Juan"
                     stack-label
                     class="input"
-                    v-model="volunteer_form.province"
+                    v-model="userVolunteerData.province"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
                   />
@@ -1223,9 +1229,8 @@
                     class="bg-primary text-white q-px-lg"
                     label="Agree"
                     no-caps
-                    @click="step = 6"
+                    @click="agreeMove()"
                   />
-                  <!-- @click="agreeMove(volunteer_form, logInDetails[0].user_id)" -->
                 </div>
               </div>
             </div>

@@ -52,8 +52,6 @@
           height="30px"
           width="30px"
           class="radius-100 q-mr-sm"
-          loading="lazy"
-          loading-show-delay="2000"
           :src="
             row?.image_path
               ? getImageLink(row.image_path)

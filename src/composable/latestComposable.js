@@ -53,6 +53,22 @@ const getPendingVolunteer = () => {
       })
   })
 }
+const checkIfVolunteer = (user_id) => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('volunteer_public.php', {
+        params: { get_if_volunteer: user_id },
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          resolve(response.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 const getActivitiesAndEvents = () => {
   return new Promise((resolve, reject) => {
     api
@@ -744,6 +760,7 @@ const logIn = (obj) => {
   })
 }
 export {
+  checkIfVolunteer,
   getPendingVolunteer,
   logIn,
   saveActivitiesAndEvents,

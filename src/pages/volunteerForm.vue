@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div
-      v-if="store.userData?.user_id"
+      v-if="store.userData?.user_id && registrationStatus == 0 && canRegister"
       class="second-layer q-pa-lg text-body1 q-mt-xl column no-wrap items-center relative-position"
     >
       <h4 class="q-mb-sm">Let's get you started</h4>
@@ -9,7 +9,7 @@
       <div class="bg-amber first-shape"></div>
       <div class="second-shape bg-blue"></div>
       <div class="absolute-center third-shape bg-grey-1"></div>
-      <div class="form-container column no-wrap" v-if="registrationStatus == 1">
+      <div class="form-container column no-wrap">
         <q-stepper
           v-model="step"
           ref="stepper"
@@ -108,14 +108,8 @@
                     dense
                     prefix="+63"
                     class="phone_number"
-                    placeholder="Ex: +63 (923) 456 - 7891"
-                    mask="phone"
+                    placeholder="9234567891"
                     v-model="userVolunteerData.phone_number"
-                    :rules="[
-                      (val) => (!!val && val.length == 16) || '',
-                      (val) => (val && val[1] === '9') || 'Phone number must start with 9',
-                    ]"
-                    hide-bottom-space
                   />
                 </div>
                 <div class="q-pa-sm field-container">
@@ -1199,7 +1193,11 @@
         </q-stepper>
       </div>
     </div>
-    <div v-else style="height: 80vh" class="column items-center justify-center no-wrap">
+    <div
+      v-if="!store.userData?.user_id"
+      style="height: 80vh"
+      class="column items-center justify-center no-wrap"
+    >
       <q-img src="registration-icon.svg" width="250px" />
       <div class="q-mt-md">
         You must <u class="text-primary text-body1">LOGIN</u> or
@@ -1207,6 +1205,45 @@
       </div>
       <div class="text-caption text-grey-7">Thank you for understanding.</div>
     </div>
+    <div
+      v-if="registrationStatus == 1"
+      style="height: 80vh"
+      class="column items-center justify-center no-wrap"
+    >
+      <q-icon name="sym_r_pending_actions" size="5rem" color="primary" />
+      <div class="q-mt-md">
+        Your registration is currently under review. The application process typically takes 1–3
+        business days.
+      </div>
+      <div class="text-caption text-grey-7">Thank you for your patience and understanding.</div>
+    </div>
+
+    <div
+      v-if="registrationStatus == 2"
+      style="height: 80vh"
+      class="column items-center justify-center no-wrap"
+    >
+      <q-icon name="sym_r_inventory" size="5rem" color="positive" />
+      <div class="q-mt-md">
+        Congratulations! Your registration has been approved. You can now log in and access the
+        management dashboard.
+      </div>
+      <div class="text-caption text-grey-7">We're excited to have you on board!</div>
+    </div>
+
+    <div
+      v-if="registrationStatus == 3"
+      style="height: 80vh"
+      class="column items-center justify-center no-wrap"
+    >
+      <q-icon name="sym_r_sentiment_frustrated" size="5rem" color="red" />
+      <div class="q-mt-md">
+        Unfortunately, your registration was not approved. You are welcome to reapply one month
+        after your original submission date.
+      </div>
+      <div class="text-caption text-grey-7">We appreciate your interest and understanding.</div>
+    </div>
+
     <taaraFooter class="footer"></taaraFooter>
   </q-page>
 </template>

@@ -65,9 +65,7 @@
             dense
             flat
             :class="
-              $route.fullPath == '/public//contact'
-                ? 'bg-primary text-white'
-                : 'bg-white text-black'
+              $route.fullPath == '/public/contact' ? 'bg-primary text-white' : 'bg-white text-black'
             "
             @click="goToContactUs()"
           />
@@ -88,7 +86,6 @@
                   <q-item-label>About Us</q-item-label>
                 </q-item-section>
               </q-item>
-              <!-- <q-separator></q-separator> -->
               <q-item
                 clickable
                 v-close-popup

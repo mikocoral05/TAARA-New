@@ -1,7 +1,6 @@
 import { defineComponent, ref } from 'vue'
 import taaraFooter from 'src/components/taaraFooter.vue'
 import { addVolunteerRequest, logInDetails, voluteerFormData } from 'src/composable/taaraComposable'
-import { useRouter } from 'vue-router'
 import { globalStore } from 'src/stores/global-store'
 import { useQuasar } from 'quasar'
 export default defineComponent({
@@ -10,11 +9,10 @@ export default defineComponent({
   },
   setup() {
     const $q = useQuasar()
-    let step = ref(1)
-    const router = useRouter()
+    const store = globalStore()
+    let step = ref(store.userData?.user_id ? 2 : 1)
     const chooseWork = ref([])
     const group = ref([])
-    const store = globalStore()
     const options = [
       {
         label: 'Monday',
@@ -185,7 +183,7 @@ export default defineComponent({
     let agreeMove = () => {
       $q.loading.show({ group: 'register', message: 'Registering as volunteer. Please wait...' })
 
-      addVolunteerRequest(volunteer_form, userVolunteerData).then((response) => {
+      addVolunteerRequest(volunteer_form.value, userVolunteerData.value).then((response) => {
         console.log(response)
         $q.loading.show({ group: 'register', message: response.message })
         setTimeout(() => {

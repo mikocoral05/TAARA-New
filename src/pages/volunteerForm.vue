@@ -1,34 +1,5 @@
 <template>
   <q-page>
-    <!-- <div class="first-layer column justify-center items-center text-body1">
-      <div class="inner-div column justify-center items-center relative-position">
-        <div class="relative-position fi-container">
-          <div class="bg-amber first-shape"></div>
-          <div class="second-shape bg-blue"></div>
-          <img src="../image/3343274.png" alt="" class="first-image" />
-        </div>
-        <div class="relative-position si-container">
-          <div class="bg-info first-shape"></div>
-          <div class="second-shape bg-purple"></div>
-          <img src="../image/3797592.png" alt="" class="second-image" />
-        </div>
-
-        <h3 class="text-center">
-          Become a Champion for Pets:<br />
-          <span class="text-primary"> Volunteer</span> with Us!”
-        </h3>
-        <p>
-          “Unite with fellow animal lovers and make a lasting difference in the lives of pets in
-          need.”
-        </p>
-        <q-btn
-          label="Get Started"
-          class="bg-black text-white q-pa-sm q-mb-lg q-px-md"
-          flat
-          no-caps
-        />
-      </div>
-    </div> -->
     <div
       class="second-layer q-pa-lg text-body1 q-mt-xl column no-wrap items-center relative-position"
     >
@@ -37,7 +8,7 @@
       <div class="bg-amber first-shape"></div>
       <div class="second-shape bg-blue"></div>
       <div class="absolute-center third-shape bg-grey-1"></div>
-      <div class="form-container column no-wrap">
+      <div class="form-container column no-wrap" v-if="registrationStatus == 1">
         <q-stepper
           v-model="step"
           ref="stepper"

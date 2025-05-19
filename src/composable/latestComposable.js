@@ -61,7 +61,7 @@ const checkIfVolunteer = (user_id) => {
       })
       .then((response) => {
         if (response.data.status == 'success') {
-          resolve(response.data)
+          resolve(response.data.data)
         }
       })
       .catch((error) => {

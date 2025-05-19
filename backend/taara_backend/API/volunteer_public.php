@@ -17,7 +17,7 @@ class API
         if (array_key_exists('get_if_volunteer', $payload)) {
             $id = $payload['get_if_volunteer'];
 
-            $column = ['application_status'];
+            $column = ['application_status', 'date_created'];
             $this->db->where("user_id", $id);
             $this->db->orderBy("id", "desc");
             $query = $this->db->get("tbl_volunteer_form", 1, $column);
@@ -56,6 +56,7 @@ class API
 
                     $copied_data = $user_data;
                     unset($copied_data['user_id']);
+
                     $this->db->where('user_id', $id);
                     $this->db->update('tbl_users', $copied_data);
 

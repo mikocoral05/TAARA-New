@@ -1,8 +1,9 @@
-import { defineComponent, ref } from 'vue'
+import { defineComponent, onMounted, ref } from 'vue'
 import taaraFooter from 'src/components/taaraFooter.vue'
-import { addVolunteerRequest, logInDetails, voluteerFormData } from 'src/composable/taaraComposable'
+import { addVolunteerRequest } from 'src/composable/taaraComposable'
 import { globalStore } from 'src/stores/global-store'
 import { useQuasar } from 'quasar'
+import { checkIfVolunteer } from 'src/composable/latestComposable'
 export default defineComponent({
   components: {
     taaraFooter,
@@ -10,6 +11,7 @@ export default defineComponent({
   setup() {
     const $q = useQuasar()
     const store = globalStore()
+    const registrationStatus = ref(1)
     let step = ref(store.userData?.user_id ? 2 : 1)
     const chooseWork = ref([])
     const group = ref([])
@@ -109,6 +111,7 @@ export default defineComponent({
         warning.value = true
       }
     }
+
     let moveThird = () => {
       let checkKeys = ref([
         'formal_education_pet_care',
@@ -145,6 +148,7 @@ export default defineComponent({
         warning.value = true
       }
     }
+
     let moveFourth = () => {
       if (
         volunteer_form.value.field_or_virtual_committee_position == null ||
@@ -157,6 +161,7 @@ export default defineComponent({
         console.log(volunteer_form.value.field_or_virtual_committee_position)
       }
     }
+
     let moveFourth2 = () => {
       let checkKeys = ref([
         'field_or_virtual_committee_position',
@@ -172,6 +177,7 @@ export default defineComponent({
         warning.value = false
       }
     }
+
     let backCommittee = () => {
       if (volunteer_form.value.field_or_virtual_committee == 'Field Committee') {
         valueMove.value = 2
@@ -180,6 +186,7 @@ export default defineComponent({
         volunteer_form.value.field_or_virtual_committee == 'Virtual Committe'
       }
     }
+
     let agreeMove = () => {
       $q.loading.show({ group: 'register', message: 'Registering as volunteer. Please wait...' })
 
@@ -192,7 +199,14 @@ export default defineComponent({
       })
     }
 
+    onMounted(() => {
+      if (store.userData?.user_id)
+        checkIfVolunteer(store.userData?.user_id).then((response) => {
+          console.log(response)
+        })
+    })
     return {
+      registrationStatus,
       userVolunteerData,
       options,
       step,
@@ -202,10 +216,8 @@ export default defineComponent({
       agreeMove,
       backCommittee,
       moveFourth2,
-      logInDetails,
       moveFourth,
       moveThird,
-      voluteerFormData,
       warning,
       valueMove,
       moveSecond,

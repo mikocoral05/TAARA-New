@@ -3,6 +3,7 @@ const getDefaultState = () => ({
   counter: 0,
   userData: {},
   pendingRescueReport: 0,
+  pendingVolunteer: 0,
 })
 
 export const globalStore = defineStore('store', {

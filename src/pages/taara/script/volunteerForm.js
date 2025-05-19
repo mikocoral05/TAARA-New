@@ -1,9 +1,8 @@
 import { defineComponent, onMounted, ref } from 'vue'
 import taaraFooter from 'src/components/taaraFooter.vue'
-import { addVolunteerRequest } from 'src/composable/taaraComposable'
 import { globalStore } from 'src/stores/global-store'
 import { useQuasar } from 'quasar'
-import { checkIfVolunteer } from 'src/composable/latestComposable'
+import { addVolunteerRequest, checkIfVolunteer } from 'src/composable/latestComposable'
 export default defineComponent({
   components: {
     taaraFooter,

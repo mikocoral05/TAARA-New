@@ -10,7 +10,7 @@ export default defineComponent({
   setup() {
     const $q = useQuasar()
     const store = globalStore()
-    const registrationStatus = ref(1)
+    const registrationStatus = ref(0)
     let step = ref(1)
     const chooseWork = ref([])
     const group = ref([])
@@ -46,6 +46,7 @@ export default defineComponent({
     ]
 
     const volunteer_form = ref({
+      user_id: store.userData?.user_id,
       member_of_welfare_org: null,
       have_pets: null,
       have_children: null,
@@ -77,11 +78,10 @@ export default defineComponent({
       have_internet_connection: null,
       device_use: null,
       device_use_willing_to_use: null,
-      volunteer_form_id: null,
     })
 
     const userVolunteerData = ref({
-      user_id: store.userData?.user_id ?? null,
+      user_id: store.userData?.user_id,
       first_name: store.userData?.first_name,
       last_name: store.userData?.first_name,
       sex: store.userData?.sex,
@@ -209,13 +209,51 @@ export default defineComponent({
       })
     }
 
+    const validatePhoneNumber = (val) => {
+      if (!val) return 'Phone number is required'
+      if (!digits.startsWith('9')) return 'Phone number must start with 9'
+      const digits = val.replace(/\D/g, '')
+
+      if (digits.length !== 10) return 'Phone number must be 10 digits'
+
+      return true
+    }
+    const canRegister = ref(true)
     onMounted(() => {
-      if (store.userData?.user_id)
+      if (store.userData?.user_id) {
         checkIfVolunteer(store.userData?.user_id).then((response) => {
-          console.log(response)
+          if (response.length > 0) {
+            console.log(response)
+            registrationStatus.value = response[0]['application_status']
+
+            if (registrationStatus.value == 3) {
+              const createdDateStr = response[0]['date_created']
+              if (createdDateStr) {
+                const createdDate = new Date(createdDateStr)
+                const today = new Date()
+
+                const daysPassed = Math.floor(
+                  (today.getTime() - createdDate.getTime()) / (1000 * 60 * 60 * 24),
+                )
+
+                canRegister.value = daysPassed >= 30 // ✅ allow registration after 30 days
+              } else {
+                canRegister.value = false // fallback: disallow if date is missing
+              }
+            } else {
+              canRegister.value = false
+            }
+          } else {
+            registrationStatus.value = null
+            canRegister.value = true // No record? Let them register.
+          }
         })
+      }
     })
+
     return {
+      canRegister,
+      validatePhoneNumber,
       store,
       registrationStatus,
       userVolunteerData,

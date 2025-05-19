@@ -124,7 +124,7 @@
         </div>
         <div
           class="profile-tab row no-rap justify-center items-center"
-          v-if="Object.keys(myVar ?? {}).length !== 0"
+          v-if="Object.keys(store.userData ?? {}).length !== 0"
         >
           <div class="img-container relative-position">
             <q-img

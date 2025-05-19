@@ -40,8 +40,8 @@ class API
     public function httpPost($payload)
     {
         if (array_key_exists("volunteer_request", $payload)) {
-            $id = isset($payload['volunteer_request']['use_data']['user_id']) ? (int)$payload['volunteer_request']['use_data']['user_id'] : 0;
-            $user_data = (array) $payload['volunteer_request']['use_data'];
+            $id = isset($payload['volunteer_request']['user_data']['user_id']) ? (int)$payload['volunteer_request']['user_data']['user_id'] : 0;
+            $user_data = (array) $payload['volunteer_request']['user_data'];
             $form_data = (array) $payload['volunteer_request']['form_data'];
 
             $response = [
@@ -53,6 +53,12 @@ class API
             if ($id > 0) {
                 $query_compar = $this->db->rawQuery("SELECT * FROM tbl_volunteer_form WHERE user_id = $id");
                 if (count($query_compar) == 0) {
+
+                    $copied_data = $user_data;
+                    unset($copied_data['user_id']);
+                    $this->db->where('user_id', $id);
+                    $this->db->update('tbl_users', $copied_data);
+
                     if ($this->db->insert('tbl_volunteer_form', $form_data)) {
                         $response = [
                             'status' => 'success',
@@ -128,41 +134,6 @@ class API
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
             }
-        } else if (isset($payload['edit_inventory_list'])) {
-            $data = $payload['edit_inventory_list'];
-            $id = $data['id'];
-
-            // Sanitize and validate as needed
-            $updateData = [
-                'item_name'       => $data['item_name'] ?? null,
-                'category'        => $data['category'] ?? null,
-                'quantity'        => $data['quantity'] ?? null,
-                'unit'            => $data['unit'] ?? null,
-                'expiration_date' => $data['expiration_date'] ?? null,
-                'group_name'      => $data['group_name'] ?? null,
-                'date_received'   => $data['date_received'] ?? date('Y-m-d'),
-                'description'   => $data['description'] ?? '',
-                'notes'   => $data['notes'] ?? '',
-                'date_updated'   => date('Y-m-d'),
-            ];
-
-            $this->db->where('id', $id);
-            $update = $this->db->update('tbl_inventory', $updateData);
-
-            if ($update) {
-                echo json_encode([
-                    'status' => 'success',
-                    'message' => 'Inventory list successfully updated',
-                    'method' => 'PUT'
-                ]);
-            } else {
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'Failed to update inventory list',
-                    'method' => 'PUT'
-                ]);
-            }
-            // return;
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Missing soft_delete_inventory_data in the payload']);
         }

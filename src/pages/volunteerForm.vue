@@ -33,8 +33,7 @@
                   <q-input
                     filled
                     dense
-                    label="Ex: Juan"
-                    stack-label
+                    placeholder="Ex: Juan"
                     v-model="userVolunteerData.first_name"
                     class="input"
                     :rules="[(val) => !!val || '']"
@@ -46,8 +45,7 @@
                   <q-input
                     filled
                     dense
-                    label="Ex: Juan"
-                    stack-label
+                    placeholder="Ex: Juan"
                     class="input"
                     v-model="userVolunteerData.last_name"
                     :rules="[(val) => !!val || '']"
@@ -65,8 +63,7 @@
                     map-options
                     emit-value
                     :options="sex_options"
-                    label="Ex: Male"
-                    stack-label
+                    placeholder="Ex: Male"
                     v-model="userVolunteerData.sex"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
@@ -79,9 +76,8 @@
                     filled
                     dense
                     class="input full-width"
-                    stack-label
                     mask="####-##-##"
-                    label="Ex: 2000/05/23"
+                    placeholder="Ex: 2000/05/23"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
                     v-model="userVolunteerData.birth_date"
@@ -112,8 +108,7 @@
                     dense
                     prefix="+63"
                     class="phone_number"
-                    label="Ex: +63 (923) 456 - 7891"
-                    stack-label
+                    placeholder="Ex: +63 (923) 456 - 7891"
                     mask="phone"
                     v-model="userVolunteerData.phone_number"
                     :rules="[
@@ -131,8 +126,7 @@
                     class="civil_status"
                     emit-value
                     :options="civil_status_options"
-                    stack-label
-                    label="Ex: Married"
+                    placeholder="Ex: Married"
                     v-model="userVolunteerData.civil_status"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
@@ -145,8 +139,7 @@
                   <q-input
                     filled
                     dense
-                    label="Ex: Juan"
-                    stack-label
+                    placeholder="Ex: Juan"
                     class="input"
                     v-model="userVolunteerData.occupation"
                     :rules="[(val) => !!val || '']"
@@ -161,8 +154,7 @@
                   <q-input
                     filled
                     dense
-                    label="Ex: Juan"
-                    stack-label
+                    placeholder="Ex: Juan"
                     class="input"
                     v-model="userVolunteerData.street"
                     :rules="[(val) => !!val || '']"
@@ -174,8 +166,7 @@
                   <q-input
                     filled
                     dense
-                    label="Ex: Juan"
-                    stack-label
+                    placeholder="Ex: Juan"
                     v-model="userVolunteerData.brgy_name"
                     class="input"
                     :rules="[(val) => !!val || '']"
@@ -187,8 +178,7 @@
                   <q-input
                     filled
                     dense
-                    label="Ex: Juan"
-                    stack-label
+                    placeholder="Ex: Juan"
                     class="input"
                     v-model="userVolunteerData.city_municipality"
                     :rules="[(val) => !!val || '']"
@@ -202,8 +192,7 @@
                   <q-input
                     filled
                     dense
-                    label="Ex: Juan"
-                    stack-label
+                    placeholder="Ex: Juan"
                     class="input"
                     v-model="userVolunteerData.province"
                     :rules="[(val) => !!val || '']"

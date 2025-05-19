@@ -1031,14 +1031,15 @@ const addUser = (payload) => {
   })
 }
 
-const addVolunteerRequest = (payload) => {
-  console.log(payload)
+const addVolunteerRequest = (volunteer_form, userVolunteerData) => {
   return new Promise((resolve, reject) => {
     api
-      .post('api.php', { volunteer_request: payload })
+      .post('volunteer_public.php', {
+        volunteer_request: { use_data: userVolunteerData, form_data: volunteer_form },
+      })
       .then((response) => {
         voluteerFormData.value = response.data.data
-        console.log(voluteerFormData.value)
+        resolve(response.data)
       })
       .catch((error) => {
         reject(error)

@@ -1,6 +1,7 @@
 <template>
   <q-page>
     <div
+      v-if="store.userData?.user_id"
       class="second-layer q-pa-lg text-body1 q-mt-xl column no-wrap items-center relative-position"
     >
       <h4 class="q-mb-sm">Let's get you started</h4>
@@ -1208,6 +1209,14 @@
           </q-step>
         </q-stepper>
       </div>
+    </div>
+    <div v-else style="height: 80vh" class="column items-center justify-center no-wrap">
+      <q-img src="registration-icon.svg" width="250px" />
+      <div class="q-mt-md">
+        You must <u class="text-primary text-body1">LOGIN</u> or
+        <u class="text-primary">REGISTER</u> first before you can apply for volunteer!
+      </div>
+      <div class="text-caption text-grey-7">Thank you for understanding.</div>
     </div>
     <taaraFooter class="footer"></taaraFooter>
   </q-page>

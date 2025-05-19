@@ -12,7 +12,7 @@ export default defineComponent({
     const $q = useQuasar()
     const store = globalStore()
     const registrationStatus = ref(1)
-    let step = ref(store.userData?.user_id ? 2 : 1)
+    let step = ref(1)
     const chooseWork = ref([])
     const group = ref([])
     const options = [
@@ -83,6 +83,17 @@ export default defineComponent({
 
     const userVolunteerData = ref({
       user_id: store.userData?.user_id ?? null,
+      first_name: store.userData?.first_name,
+      last_name: store.userData?.first_name,
+      sex: store.userData?.sex,
+      birth_date: store.userData?.birth_date,
+      phone_number: store.userData?.phone_number,
+      occupation: store.userData?.occupation,
+      civil_status: store.userData?.civil_status,
+      street: store.userData?.street,
+      brgy_name: store.userData?.brgy_name,
+      city_municipality: store.userData?.city_municipality,
+      province: store.userData?.province,
     })
 
     let agree = ref(null)
@@ -206,6 +217,7 @@ export default defineComponent({
         })
     })
     return {
+      store,
       registrationStatus,
       userVolunteerData,
       options,

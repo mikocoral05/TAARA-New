@@ -24,7 +24,10 @@ class API
             $this->db->where("u.username", $username_or_email);
             $this->db->orwhere("u.email_address", $username_or_email);
             $this->db->join("tbl_files f", "f.id = u.image_id", "LEFT");
-            $data = $this->db->getOne("tbl_users u", null, "u.*, f.image_path");
+            $this->db->join("tbl_official_position op", "u.roles = op.id", "LEFT");
+            $this->db->join("tbl_volunteer_position vp", "u.roles = vp.id", "LEFT");
+            $data = $this->db->getOne("tbl_users u", null, "u.*, f.image_path, CASE WHEN u.roles_type = 1
+             then op.position_title WHEN u.roles_type = 2 then vp.position_title else null");
 
             echo json_encode([
                 'status' => 'success',

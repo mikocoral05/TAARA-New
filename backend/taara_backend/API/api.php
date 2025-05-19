@@ -165,11 +165,11 @@ class API
       $year = $ref_id['year'];
       $query = $this->db->rawQuery("SELECT  tbl2.budget_allocation_id, tbl2.item_name, tbl2.percentage,
       IFNULL(SUM(tbl1.expense_total), 0) as accumulated_expenses
-FROM tbl_budget_allocation AS tbl2
-LEFT JOIN tbl_expenses AS tbl1 ON tbl2.item_name = tbl1.expense_type AND MONTH(tbl1.date) = $month AND YEAR(tbl1.date) = $year
-GROUP BY tbl2.item_name;
+    FROM tbl_budget_allocation AS tbl2
+    LEFT JOIN tbl_expenses AS tbl1 ON tbl2.item_name = tbl1.expense_type AND MONTH(tbl1.date) = $month AND YEAR(tbl1.date) = $year
+    GROUP BY tbl2.item_name;
 
-");
+    ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("get_all_animal_stray", $ref_id)) {
       $query = $this->db->rawQuery("SELECT tb1.id,tb1.reporter_id,  tb2.animal_id,tb2.animal_name,tb2.animal_image,
@@ -209,31 +209,31 @@ GROUP BY tbl2.item_name;
       AND YEAR(tbl_animals_info.care_start_date) = $year
       GROUP BY months.month;
 
-");
+    ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("get_monthly_adoption", $ref_id)) {
       $year = $ref_id['get_monthly_adoption'];
       $query = $this->db->rawQuery("SELECT months.month, IFNULL(COUNT(tbl_animals_info.date_adopted), 0) AS Number_of_Adoption
-      FROM (
-         SELECT 1 AS month
-         UNION ALL SELECT 2
-         UNION ALL SELECT 3
-         UNION ALL SELECT 4
-         UNION ALL SELECT 5
-         UNION ALL SELECT 6
-         UNION ALL SELECT 7
-         UNION ALL SELECT 8
-         UNION ALL SELECT 9
-         UNION ALL SELECT 10
-         UNION ALL SELECT 11
-         UNION ALL SELECT 12
-      ) AS months
-      LEFT JOIN tbl_animals_info
-      ON months.month = MONTH(tbl_animals_info.date_adopted)
-      AND YEAR(tbl_animals_info.date_adopted) =$year
-      GROUP BY months.month;
+          FROM (
+            SELECT 1 AS month
+            UNION ALL SELECT 2
+            UNION ALL SELECT 3
+            UNION ALL SELECT 4
+            UNION ALL SELECT 5
+            UNION ALL SELECT 6
+            UNION ALL SELECT 7
+            UNION ALL SELECT 8
+            UNION ALL SELECT 9
+            UNION ALL SELECT 10
+            UNION ALL SELECT 11
+            UNION ALL SELECT 12
+          ) AS months
+          LEFT JOIN tbl_animals_info
+          ON months.month = MONTH(tbl_animals_info.date_adopted)
+          AND YEAR(tbl_animals_info.date_adopted) =$year
+          GROUP BY months.month;
 
-");
+    ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("get_all_animal_not_stray", $ref_id)) {
       $query = $this->db->rawQuery("SELECT tb1.animal_id, tb1.animal_name, tb1.animal_image
@@ -257,10 +257,10 @@ GROUP BY tbl2.item_name;
       COALESCE(tb3.phone_number, tb1.adopter_phone_number) AS adopter_phone_number,
       tb1.date_adopted,
       tb1.time_adopted
-FROM tbl_adopted_animals tb1
-LEFT JOIN tbl_animals_info tb2 ON tb1.animal_id = tb2.animal_id
-LEFT JOIN tbl_users tb3 ON tb1.adopter_id = tb3.user_id;
-");
+    FROM tbl_adopted_animals tb1
+    LEFT JOIN tbl_animals_info tb2 ON tb1.animal_id = tb2.animal_id
+    LEFT JOIN tbl_users tb3 ON tb1.adopter_id = tb3.user_id;
+    ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("export_wishlist", $ref_id)) {
       $columns = array();
@@ -314,21 +314,21 @@ LEFT JOIN tbl_users tb3 ON tb1.adopter_id = tb3.user_id;
     } else if (array_key_exists("export_donation_tracker", $ref_id)) {
       $query = $this->db->rawQuery("SELECT tb1.donation_id,   CASE WHEN tb3.id IS NULL THEN CONCAT(tb2.first_name,' ', tb2.last_name)
       ELSE CONCAT(tb3.walk_in_name)
-  END AS walk_in_name,  tb1.donation_amount,
+      END AS walk_in_name,  tb1.donation_amount,
 
-  CASE
-      WHEN tb3.id IS NULL THEN CONCAT(tb2.street, ' ', tb2.brgy_name, ', ', tb2.city_municipality, ' ', tb2.province)
-      ELSE CONCAT(tb3.walk_in_address)
-  END AS walk_in_address,
+      CASE
+          WHEN tb3.id IS NULL THEN CONCAT(tb2.street, ' ', tb2.brgy_name, ', ', tb2.city_municipality, ' ', tb2.province)
+          ELSE CONCAT(tb3.walk_in_address)
+      END AS walk_in_address,
 
-  CASE
-      WHEN tb3.id IS NULL THEN 'No'
-      ELSE 'Yes'
-  END AS is_walk_in ,tb1.donation_date,tb1.donation_time
-FROM tbl_donations tb1
-LEFT JOIN tbl_users tb2 ON tb1.donators_id = tb2.user_id
-LEFT JOIN tbl_walk_in_donations tb3 ON tb1.walk_in_id = tb3.id
-  ");
+      CASE
+          WHEN tb3.id IS NULL THEN 'No'
+          ELSE 'Yes'
+      END AS is_walk_in ,tb1.donation_date,tb1.donation_time
+    FROM tbl_donations tb1
+    LEFT JOIN tbl_users tb2 ON tb1.donators_id = tb2.user_id
+    LEFT JOIN tbl_walk_in_donations tb3 ON tb1.walk_in_id = tb3.id
+      ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("export_deceased_animals", $ref_id)) {
 

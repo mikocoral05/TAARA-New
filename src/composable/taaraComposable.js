@@ -1031,22 +1031,6 @@ const addUser = (payload) => {
   })
 }
 
-const addVolunteerRequest = (volunteer_form, userVolunteerData) => {
-  return new Promise((resolve, reject) => {
-    api
-      .post('volunteer_public.php', {
-        volunteer_request: { use_data: userVolunteerData, form_data: volunteer_form },
-      })
-      .then((response) => {
-        voluteerFormData.value = response.data.data
-        resolve(response.data)
-      })
-      .catch((error) => {
-        reject(error)
-      })
-  })
-}
-
 let likesData = ref([])
 const likes = (payload1, payload2, date, image, name) => {
   return new Promise((resolve, reject) => {
@@ -4412,7 +4396,6 @@ export {
   voluteerFormData,
   exportSurrenderedAnimals,
   likesData,
-  addVolunteerRequest,
   exportDonationTracker,
   declineAdoptionRequest,
   deleteWalkInDonation,

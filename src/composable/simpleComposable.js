@@ -328,6 +328,7 @@ const removeNumSymbols = (num) => {
   console.log(formattedNumber)
   return formattedNumber
 }
+
 const sendTelerivetSms = async (phone_number, message) => {
   try {
     const recipientNumber = removeNumSymbols(phone_number)
@@ -351,10 +352,12 @@ const sendTelerivetSms = async (phone_number, message) => {
     console.error('Error sending SMS:', error.message)
   }
 }
+
 let encodeAnimalId = (id) => {
   const encoded = btoa(id.toString()) // Convert to Base64
   return encoded
 }
+
 let decodeAnimalId = (encoded) => {
   const decoded = atob(encoded) // Convert from Base64
 
@@ -378,6 +381,7 @@ const isNearExpiration = (expirationDate) => {
 
   return diffInDays >= 0 && diffInDays <= 7
 }
+
 const isExpired = (expirationDate) => {
   // Normalize today's date (midnight, no time)
   const today = new Date()
@@ -423,6 +427,7 @@ const convertDaysToInterval = (days) => {
 
   return `Every ${days} days`
 }
+
 const intervalOptions = [
   { label: 'Every Day', value: 1 },
   { label: 'Every 2 Days', value: 2 },

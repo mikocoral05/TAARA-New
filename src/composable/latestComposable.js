@@ -36,6 +36,7 @@ const getPendingRescueReport = () => {
       })
   })
 }
+
 const getPendingVolunteer = () => {
   return new Promise((resolve, reject) => {
     api
@@ -53,6 +54,7 @@ const getPendingVolunteer = () => {
       })
   })
 }
+
 const checkIfVolunteer = (user_id) => {
   return new Promise((resolve, reject) => {
     api
@@ -84,6 +86,7 @@ const addVolunteerRequest = (volunteer_form, userVolunteerData) => {
       })
   })
 }
+
 const getActivitiesAndEvents = () => {
   return new Promise((resolve, reject) => {
     api
@@ -101,6 +104,7 @@ const getActivitiesAndEvents = () => {
       })
   })
 }
+
 const getDonation = (type) => {
   return new Promise((resolve, reject) => {
     api
@@ -117,6 +121,7 @@ const getDonation = (type) => {
       })
   })
 }
+
 const getAnnouncement = () => {
   return new Promise((resolve, reject) => {
     api
@@ -311,6 +316,7 @@ const getInventoryList = (category) => {
       })
   })
 }
+
 const getAnimalList = (healt_status) => {
   return new Promise((resolve, reject) => {
     api
@@ -327,6 +333,7 @@ const getAnimalList = (healt_status) => {
       })
   })
 }
+
 const getSchedule = () => {
   return new Promise((resolve, reject) => {
     api
@@ -343,6 +350,7 @@ const getSchedule = () => {
       })
   })
 }
+
 const getAnimalOption = () => {
   return new Promise((resolve, reject) => {
     api
@@ -774,7 +782,33 @@ const logIn = (obj) => {
       })
   })
 }
+
+const getTotalUser = async () => {
+  const response = await api.get('dashboard.php', {
+    params: { get_user_sum: 'get_user_sum' },
+  })
+
+  if (response.data.status === 'success') {
+    return response.data.count
+  } else {
+    throw new Error(response.data.message || 'Unexpected response status')
+  }
+}
+const getTotalAnimalCount = async () => {
+  const response = await api.get('dashboard.php', {
+    params: { get_count_animals: 'get_user_sum' },
+  })
+
+  if (response.data.status === 'success') {
+    return response.data.count
+  } else {
+    throw new Error(response.data.message || 'Unexpected response status')
+  }
+}
+
 export {
+  getTotalAnimalCount,
+  getTotalUser,
   addVolunteerRequest,
   checkIfVolunteer,
   getPendingVolunteer,

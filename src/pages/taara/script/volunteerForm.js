@@ -1,14 +1,15 @@
 import { defineComponent, ref } from 'vue'
 import taaraFooter from 'src/components/taaraFooter.vue'
 import { addVolunteerRequest, logInDetails, voluteerFormData } from 'src/composable/taaraComposable'
-import { timeNow, dateToday } from 'src/composable/simpleComposable'
 import { useRouter } from 'vue-router'
 import { globalStore } from 'src/stores/global-store'
+import { useQuasar } from 'quasar'
 export default defineComponent({
   components: {
     taaraFooter,
   },
   setup() {
+    const $q = useQuasar()
     let step = ref(1)
     const router = useRouter()
     const chooseWork = ref([])
@@ -45,9 +46,8 @@ export default defineComponent({
       },
     ]
 
-    let volunteer_form = ref({
+    const volunteer_form = ref({
       member_of_welfare_org: null,
-      user_id: store.userData?.user_id ?? null,
       have_pets: null,
       have_children: null,
       experience_in_recue: null,
@@ -79,8 +79,10 @@ export default defineComponent({
       device_use: null,
       device_use_willing_to_use: null,
       volunteer_form_id: null,
-      date_created: dateToday,
-      time: timeNow,
+    })
+
+    const userVolunteerData = ref({
+      user_id: store.userData?.user_id ?? null,
     })
 
     let agree = ref(null)
@@ -180,16 +182,20 @@ export default defineComponent({
         volunteer_form.value.field_or_virtual_committee == 'Virtual Committe'
       }
     }
-    let agreeMove = (payload, id) => {
-      payload.volunteer_form_id = id
-      addVolunteerRequest(payload)
-      valueMove.value = 5
-      setTimeout(() => {
-        router.go(-1)
-      }, 1500)
+    let agreeMove = () => {
+      $q.loading.show({ group: 'register', message: 'Registering as volunteer. Please wait...' })
+
+      addVolunteerRequest(volunteer_form, userVolunteerData).then((response) => {
+        console.log(response)
+        $q.loading.show({ group: 'register', message: response.message })
+        setTimeout(() => {
+          $q.loading.hide()
+        }, 1000)
+      })
     }
 
     return {
+      userVolunteerData,
       options,
       step,
       group,

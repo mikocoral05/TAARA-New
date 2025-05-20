@@ -39,6 +39,11 @@ const routes = [
         component: () => import('src/pages/VolunteerSection.vue'),
       },
       {
+        name: 'wishlist',
+        path: 'wishlist',
+        component: () => import('src/pages/WishlistManagement.vue'),
+      },
+      {
         name: 'invetory',
         path: 'invetory',
         component: () => import('src/pages/InventorySection.vue'),
@@ -104,35 +109,11 @@ const routes = [
       { path: '', component: () => import('pages/PublicView.vue') },
 
       { path: 'home', component: () => import('pages/PublicView.vue') },
-      // {
-      //   path: 'login',
-      //   component: () => import('pages/LogIn.vue'),
-
-      // },
-
       {
         path: 'experimentPage',
         component: () => import('src/pages/ExperimentPage.vue'),
       },
-      // {
-      //   path: 'register',
-      //   component: () => import('pages/accountRegistration.vue'),
-      //   beforeEnter: (to, from, next) => {
-      //     if (logInDetails.value == null || logInDetails.value == undefined) {
-      //       if (to.path === '/register') {
-      //         next(true)
-      //       }
-      //     } else {
-      //       if (logInDetails.value[0].account_identifier !== 'publicUser') {
-      //         next('/404 + not + found')
-      //       } else {
-      //         if (to.path === '/register') {
-      //           next('/404 + not + found')
-      //         }
-      //       }
-      //     }
-      //   },
-      // },
+
       {
         path: 'reportAndRescue',
         component: () => import('src/pages/ReportAndRescue.vue'),

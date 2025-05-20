@@ -23,12 +23,16 @@ class API
       $query = $this->db->rawQuery("SELECT * FROM tbl_animals_info WHERE  featured = '$answer' ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("year_donation_cash", $ref_id)) {
-
       $this->db->where("YEAR(f.created_at)", date('Y'));
       $this->db->where("f.is_deleted", 0);
       $this->db->join("tbl_cash_donations c", "f.fund_id = c.fund_id", "LEFT");
       $max = $this->db->getValue("tbl_funds f", "MAX(c.amount)");
-
+      echo json_encode(array('status' => 'success', 'data' => $max, 'method' => 'GET'));
+    } else if (array_key_exists("mont_donation_cash", $ref_id)) {
+      $this->db->where("MONTH(f.created_at)", date('n')); // ✔️ 'n' = numeric month (1 to 12)
+      $this->db->where("f.is_deleted", 0);
+      $this->db->join("tbl_cash_donations c", "f.fund_id = c.fund_id", "LEFT");
+      $max = $this->db->getValue("tbl_funds f", "MAX(c.amount)");
       echo json_encode(array('status' => 'success', 'data' => $max, 'method' => 'GET'));
     } else if (array_key_exists("all_animals", $ref_id)) {
       $this->db->join("tbl_files f", "f.id = tbl_animal_info.primary_image", "LEFT");

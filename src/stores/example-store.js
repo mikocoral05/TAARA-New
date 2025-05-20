@@ -1,6 +1,6 @@
-import { defineStore } from "pinia";
+import { defineStore } from 'pinia'
 
-export const useCounterStore = defineStore("counter", {
+export const useCounterStore = defineStore('counter', {
   state: () => ({
     rescueReport: null,
     announcement: null,
@@ -11,7 +11,7 @@ export const useCounterStore = defineStore("counter", {
     specificAnimalId: 0,
     manageAnimal: 0,
     donChart: null,
-    headerColor: "",
+    headerColor: '',
     scrollToDiv: 0,
     donationDialog: false,
   }),
@@ -21,25 +21,25 @@ export const useCounterStore = defineStore("counter", {
 
   actions: {
     increment() {
-      this.counter++;
+      this.counter++
     },
     incrementFooter() {
-      this.scrollToDiv++;
+      this.scrollToDiv++
     },
     changeReport(payload) {
-      this.rescueReport = payload;
+      this.rescueReport = payload
     },
     changeAnnounce(payload) {
-      this.announcement = payload;
+      this.announcement = payload
     },
     changeNotif(p) {
-      this.notif = p;
+      this.notif = p
     },
     ChangeSearchValue() {
-      this.search++;
+      this.search++
     },
     incrementid() {
-      this.specificAnimalId++;
+      this.specificAnimalId++
     },
   },
-});
+})

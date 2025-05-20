@@ -24,15 +24,9 @@
                   class="bg-black text-white q-pa-sm"
                   flat
                   no-caps
-                  @click="
-                    ((counterStore.donationDialog = true),
-                    $router.push({
-                      query: {
-                        G: encodeAnimalId(500),
-                      },
-                    }))
-                  "
+                  @click="counterStore.donationDialog = true"
                   style="width: 200px"
+                  to="/public/donation-channel?amount=500"
                 />
               </div>
             </div>
@@ -80,14 +74,8 @@
                   class="bg-white text-black q-pa-sm"
                   flat
                   no-caps
-                  @click="
-                    ((counterStore.donationDialog = true),
-                    $router.push({
-                      query: {
-                        G: encodeAnimalId(1000),
-                      },
-                    }))
-                  "
+                  @click="counterStore.donationDialog = true"
+                  to="/public/donation-channel?amount=1000"
                   style="width: 200px"
                 />
               </div>
@@ -133,14 +121,8 @@
                   class="bg-black text-white q-pa-sm"
                   flat
                   no-caps
-                  @click="
-                    ((counterStore.donationDialog = true),
-                    $router.push({
-                      query: {
-                        G: encodeAnimalId(1500),
-                      },
-                    }))
-                  "
+                  @click="counterStore.donationDialog = true"
+                  to="/public/donation-channel?amount=1500"
                   style="width: 200px"
                 />
               </div>
@@ -176,14 +158,7 @@
           style="color: goldenrod"
           label="Other Amount"
           class="other-amount q-mt-lg"
-          @click="
-            ((counterStore.donationDialog = true),
-            $router.push({
-              query: {
-                G: encodeAnimalId(0),
-              },
-            }))
-          "
+          @click="counterStore.donationDialog = true"
         />
         <div class="row no-wrap q-mt-md overlooping-avatar items-center">
           <q-avatar

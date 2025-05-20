@@ -199,139 +199,52 @@
       </div>
       <div class="donation-container q-pt-xl">
         <h4 class="q-mb-md text-center">Thank You Donors</h4>
-        <p class="text-center text-caption">Use this area to describe one of your memberships.</p>
+        <p class="text-center text-caption">
+          We always appreciate your love and support in helping animals to have a good life.
+        </p>
       </div>
-      <div class="thanks-donor-section row no-wrap justify-center items-center">
-        <q-carousel
-          v-model="slide"
-          transition-prev="slide-right"
-          transition-next="slide-left"
-          swipeable
-          animated
-          infinite
-          :autoplay="10000"
-          control-color="amber"
-          arrows
-          height="200px"
-          class="bg-grey-4 shadow-2 rounded-borders"
+      <div class="thanks-donor-section">
+        <q-scroll-area
+          style="height: 230px; max-width: 80vw"
+          class="rounded-borders"
+          :horizontal-thumb-style="{
+            right: '4px',
+            borderRadius: '5px',
+            height: '5px',
+            opacity: 0.75,
+          }"
+          :horizontal-bar-style="{
+            right: '2px',
+            borderRadius: '9px',
+            height: '5px',
+            opacity: 0.2,
+          }"
         >
-          <q-carousel-slide :name="1" class="column no-wrap q-carousel-slide flex flex-center">
+          <div class="row no-wrap">
             <div
-              class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap flex flex-center"
+              v-for="(n, index) in randomDonor"
+              :key="index"
+              class="q-pa-sm bg-white radius-10 q-mx-md column no-wrap"
             >
-              <div
-                class="rounded-borders full-height bg-white donors-container q-pa-md column justify-between"
-                v-for="data in cuttedDonors(4)"
-                :key="data"
-              >
-                <div class="row no-wrap justify-between">
-                  <div class="row no-wrap">
-                    <img :src="data.image ? data.image : 'anonymous/379817-PCBJ5N-46.jpg'" alt="" />
-                    <p class="q-ma-none q-ml-md text-body1">M***** A****</p>
-                  </div>
-                  <div class="q-ml-md">
-                    <p class="q-ma-none text-caption">
-                      {{ wordifyDate(data.donation_date) }}
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <div class="text-h6 full-width">
-                    Amount: {{ formatNumber(data.donation_amount) }}
-                  </div>
-                  <p class="q-ma-none text-caption">Thank you for support</p>
-                </div>
+              <q-img
+                :src="
+                  n?.image_path
+                    ? getImageLink(n?.image_path)
+                    : n?.sex == 1
+                      ? 'no-profile-male.svg'
+                      : 'no-profile-female.svg'
+                "
+                class="q-mr-md radius-10 bg-white"
+                height="150px"
+                width="150px"
+              />
+              <div class="text-body1 q-mt-sm">{{ n.name ?? 'Annonymous' }}</div>
+              <div class="text-grey-7">
+                Donate: <span class="q-ml-sm">{{ n.donation_type }}</span>
               </div>
             </div>
-          </q-carousel-slide>
-          <q-carousel-slide :name="2" class="column no-wrap q-carousel-slide flex flex-center">
-            <div
-              class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap flex flex-center"
-            >
-              <div
-                class="rounded-borders full-height bg-white donors-container q-pa-md column justify-between"
-                v-for="data in cuttedDonors(8)"
-                :key="data"
-              >
-                <div class="row no-wrap justify-between">
-                  <div class="row no-wrap">
-                    <img :src="data.image ? data.image : 'anonymous/379817-PCBJ5N-46.jpg'" alt="" />
-                    <p class="q-ma-none q-ml-md text-body1">M***** A****</p>
-                  </div>
-                  <div class="q-ml-md">
-                    <p class="q-ma-none text-caption">
-                      {{ wordifyDate(data.donation_date) }}
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <div class="text-h6 full-width">
-                    Amount: {{ formatNumber(data.donation_amount) }}
-                  </div>
-                  <p class="q-ma-none text-caption">Thank you for support</p>
-                </div>
-              </div>
-            </div>
-          </q-carousel-slide>
-          <q-carousel-slide :name="3" class="column no-wrap q-carousel-slide flex flex-center">
-            <div
-              class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap flex flex-center"
-            >
-              <div
-                class="rounded-borders full-height bg-white donors-container q-pa-md column justify-between"
-                v-for="data in cuttedDonors(12)"
-                :key="data"
-              >
-                <div class="row no-wrap justify-between">
-                  <div class="row no-wrap">
-                    <img :src="data.image ? data.image : 'anonymous/379817-PCBJ5N-46.jpg'" alt="" />
-                    <p class="q-ma-none q-ml-md text-body1">M***** A****</p>
-                  </div>
-                  <div class="q-ml-md">
-                    <p class="q-ma-none text-caption">
-                      {{ wordifyDate(data.donation_date) }}
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <div class="text-h6 full-width">
-                    Amount: {{ formatNumber(data.donation_amount) }}
-                  </div>
-                  <p class="q-ma-none text-caption">Thank you for support</p>
-                </div>
-              </div>
-            </div>
-          </q-carousel-slide>
-          <q-carousel-slide :name="4" class="column no-wrap q-carousel-slide flex flex-center">
-            <div
-              class="row fit justify-start items-center q-gutter-xs q-col-gutter no-wrap flex flex-center"
-            >
-              <div
-                class="rounded-borders full-height bg-white donors-container q-pa-md column justify-between"
-                v-for="data in cuttedDonors(16)"
-                :key="data"
-              >
-                <div class="row no-wrap justify-between">
-                  <div class="row no-wrap">
-                    <img :src="data.image ? data.image : 'anonymous/379817-PCBJ5N-46.jpg'" alt="" />
-                    <p class="q-ma-none q-ml-md text-body1">M***** A****</p>
-                  </div>
-                  <div class="q-ml-md">
-                    <p class="q-ma-none text-caption">
-                      {{ wordifyDate(data.donation_date) }}
-                    </p>
-                  </div>
-                </div>
-                <div>
-                  <div class="text-h6 full-width">
-                    Amount: {{ formatNumber(data.donation_amount) }}
-                  </div>
-                  <p class="q-ma-none text-caption">Thank you for support</p>
-                </div>
-              </div>
-            </div>
-          </q-carousel-slide>
-        </q-carousel>
+          </div>
+        </q-scroll-area>
       </div>
       <div class="donor-summary-section row no-wrap justify-center items-center q-mt-xl">
         <q-card class="my-card" flat bordered>

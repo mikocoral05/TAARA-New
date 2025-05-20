@@ -7,6 +7,7 @@ import {
   wordifyDate,
   formatNumber,
   yearToday,
+  getImageLink,
 } from 'src/composable/simpleComposable'
 import {
   getWishlistFood,
@@ -16,6 +17,7 @@ import {
   donatorsData,
   getOverAllDonationCash,
   getMonthDonationCash,
+  getLatestDonators,
 } from 'src/composable/taaraComposable'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
@@ -31,6 +33,7 @@ export default {
     const countOverallDonors = ref(0)
     const countOverallDonation = ref(0)
     const countThisMonthDonation = ref(0)
+    const randomDonor = ref([])
     const targetWishlist = ref(null)
     const route = useRoute()
     const counterStore = useCounterStore()
@@ -107,8 +110,14 @@ export default {
       if (route.query.wish) {
         VueScrollTo.scrollTo(targetWishlist.value, 500, { offset: Number(route.query.wish) })
       }
+      getLatestDonators().then((response) => {
+        randomDonor.value = response
+        console.log(randomDonor.value)
+      })
     })
     return {
+      getImageLink,
+      randomDonor,
       targetWishlist,
       yearToday,
       countThisMonthDonation,

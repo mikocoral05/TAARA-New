@@ -2587,96 +2587,89 @@ const getAllAnimalsNotAdopted = () => {
       })
   })
 }
-let wishlistMedicineData = ref([])
-let originalWishlistMedicineData = ref([])
+
 const getWishlistMedicine = () => {
   return new Promise((resolve, reject) => {
     api
       .get('api.php', { params: { get_wishlist_medicine: 'yes' } })
       .then((response) => {
-        originalWishlistMedicineData.value = response.data.data
-        wishlistMedicineData.value = response.data.data
+        resolve(response.data.data)
       })
       .catch((error) => {
         reject(error)
       })
   })
 }
-let wishlistFoodData = ref([])
-let originalWishlistFoodData = ref([])
 
 const getWishlistFood = () => {
   return new Promise((resolve, reject) => {
     api
       .get('api.php', { params: { get_wishlist_food: 'yes' } })
       .then((response) => {
-        originalWishlistFoodData.value = response.data.data
-        wishlistFoodData.value = response.data.data
+        resolve(response.data.data)
       })
       .catch((error) => {
         reject(error)
       })
   })
 }
-let wishlistSuppliesData = ref([])
-let originalWishlistSuppliesData = ref([])
+
 const getWishlistSupplies = () => {
   return new Promise((resolve, reject) => {
     api
       .get('api.php', { params: { get_wishlist_supplies: 'yes' } })
       .then((response) => {
-        originalWishlistSuppliesData.value = response.data.data
-        wishlistSuppliesData.value = response.data.data
+        resolve(response.data.data)
       })
       .catch((error) => {
         reject(error)
       })
   })
 }
-const updateWishlist = (payload, name, change) => {
-  return new Promise((resolve, reject) => {
-    api
-      .put('api.php', {
-        update_wishlist: payload,
-        name: name,
-        change: change,
-      })
-      .then((response) => {
-        if (response.data.status == 'success' && response.data.method == 'DELETE') {
-          if (response.data.deleted_wishlist == 'medicine') {
-            wishlistMedicineData.value = wishlistMedicineData.value.filter((obj) => {
-              return obj.wishlist_medicine_id !== payload.wishlist_medicine_id
-            })
-          } else if (response.data.deleted_wishlist == 'food') {
-            wishlistFoodData.value = wishlistFoodData.value.filter((obj) => {
-              return obj.wishlist_food_id !== payload.wishlist_food_id
-            })
-          } else if (response.data.deleted_wishlist == 'supplies') {
-            wishlistSuppliesData.value = wishlistSuppliesData.value.filter((obj) => {
-              return obj.wishlist_supplies_id !== payload.wishlist_supplies_id
-            })
-          }
-        } else if (response.data.status == 'success' && response.data.method == 'PUT') {
-          if (name == 'medicine') {
-            wishlistMedicineData.value = wishlistMedicineData.value.map((obj) =>
-              obj.wishlist_medicine_id === payload.wishlist_medicine_id ? payload : obj,
-            )
-          } else if (name == 'food') {
-            wishlistFoodData.value = wishlistFoodData.value.map((obj) =>
-              obj.wishlist_food_id === payload.wishlist_food_id ? payload : obj,
-            )
-          } else if (name == 'supplies') {
-            wishlistSuppliesData.value = wishlistSuppliesData.value.map((obj) =>
-              obj.wishlist_supplies_id === payload.wishlist_supplies_id ? payload : obj,
-            )
-          }
-        }
-      })
-      .catch((error) => {
-        reject(error)
-      })
-  })
-}
+// const updateWishlist = (payload, name, change) => {
+//   return new Promise((resolve, reject) => {
+//     api
+//       .put('api.php', {
+//         update_wishlist: payload,
+//         name: name,
+//         change: change,
+//       })
+//       .then((response) => {
+//         if (response.data.status == 'success' && response.data.method == 'DELETE') {
+//           if (response.data.deleted_wishlist == 'medicine') {
+//             wishlistMedicineData.value = wishlistMedicineData.value.filter((obj) => {
+//               return obj.wishlist_medicine_id !== payload.wishlist_medicine_id
+//             })
+//           } else if (response.data.deleted_wishlist == 'food') {
+//             wishlistFoodData.value = wishlistFoodData.value.filter((obj) => {
+//               return obj.wishlist_food_id !== payload.wishlist_food_id
+//             })
+//           } else if (response.data.deleted_wishlist == 'supplies') {
+//             wishlistSuppliesData.value = wishlistSuppliesData.value.filter((obj) => {
+//               return obj.wishlist_supplies_id !== payload.wishlist_supplies_id
+//             })
+//           }
+//         } else if (response.data.status == 'success' && response.data.method == 'PUT') {
+//           if (name == 'medicine') {
+//             wishlistMedicineData.value = wishlistMedicineData.value.map((obj) =>
+//               obj.wishlist_medicine_id === payload.wishlist_medicine_id ? payload : obj,
+//             )
+//           } else if (name == 'food') {
+//             wishlistFoodData.value = wishlistFoodData.value.map((obj) =>
+//               obj.wishlist_food_id === payload.wishlist_food_id ? payload : obj,
+//             )
+//           } else if (name == 'supplies') {
+//             wishlistSuppliesData.value = wishlistSuppliesData.value.map((obj) =>
+//               obj.wishlist_supplies_id === payload.wishlist_supplies_id ? payload : obj,
+//             )
+//           }
+//         }
+//       })
+//       .catch((error) => {
+//         reject(error)
+//       })
+//   })
+// }
 const addWishlist = (payload, name) => {
   console.log(payload)
   console.log(name)
@@ -2686,11 +2679,11 @@ const addWishlist = (payload, name) => {
       .then((response) => {
         if (response.data.status == 'success') {
           if (name == 'medicine') {
-            wishlistMedicineData.value.push(response.data.data)
+            // wishlistMedicineData.value.push(response.data.data)
           } else if (name == 'food') {
-            wishlistFoodData.value.push(response.data.data)
+            // wishlistFoodData.value.push(response.data.data)
           } else {
-            wishlistSuppliesData.value.push(response.data.data)
+            // wishlistSuppliesData.value.push(response.data.data)
           }
         }
       })
@@ -3602,58 +3595,58 @@ const rehomedBasicSearch = (searchValue) => {
 
   allAnimalsAdopted.value = exactMatches.length > 0 ? exactMatches : partialMatches
 }
-const wishlistBasicSearch = (searchValue, tab) => {
-  if (typeof tab === 'number') {
-    if (tab == 0) {
-      tab = 'medicine'
-    } else if (tab == 1) {
-      tab = 'food'
-    } else {
-      tab = 'supplies'
-    }
-  }
-  let exactMatches = []
-  let partialMatches = []
-  let copy = []
-  if (tab == 'medicine') {
-    wishlistMedicineData.value = originalWishlistMedicineData.value
-    copy = wishlistMedicineData.value
-  } else if (tab == 'food') {
-    wishlistFoodData.value = originalWishlistFoodData.value
-    copy = wishlistFoodData.value
-  } else {
-    wishlistSuppliesData.value = originalWishlistSuppliesData.value
-    copy = wishlistSuppliesData.value
-  }
-  copy.forEach((obj) => {
-    if (
-      Object.values(obj).some(
-        (val) =>
-          val &&
-          val.toString().trim() !== '' &&
-          val.toString().toLowerCase() === searchValue.toLowerCase(),
-      )
-    ) {
-      exactMatches.push(obj)
-    } else if (
-      Object.values(obj).some(
-        (val) =>
-          val &&
-          val.toString().trim() !== '' &&
-          val.toString().toLowerCase().includes(searchValue.toLowerCase()),
-      )
-    ) {
-      partialMatches.push(obj)
-    }
-  })
-  if (tab == 'medicine') {
-    wishlistMedicineData.value = exactMatches.length > 0 ? exactMatches : partialMatches
-  } else if (tab == 'food') {
-    wishlistFoodData.value = exactMatches.length > 0 ? exactMatches : partialMatches
-  } else {
-    wishlistSuppliesData.value = exactMatches.length > 0 ? exactMatches : partialMatches
-  }
-}
+// const wishlistBasicSearch = (searchValue, tab) => {
+//   if (typeof tab === 'number') {
+//     if (tab == 0) {
+//       tab = 'medicine'
+//     } else if (tab == 1) {
+//       tab = 'food'
+//     } else {
+//       tab = 'supplies'
+//     }
+//   }
+//   let exactMatches = []
+//   let partialMatches = []
+//   let copy = []
+//   if (tab == 'medicine') {
+//     wishlistMedicineData.value = originalWishlistMedicineData.value
+//     copy = wishlistMedicineData.value
+//   } else if (tab == 'food') {
+//     wishlistFoodData.value = originalWishlistFoodData.value
+//     copy = wishlistFoodData.value
+//   } else {
+//     wishlistSuppliesData.value = originalWishlistSuppliesData.value
+//     copy = wishlistSuppliesData.value
+//   }
+//   copy.forEach((obj) => {
+//     if (
+//       Object.values(obj).some(
+//         (val) =>
+//           val &&
+//           val.toString().trim() !== '' &&
+//           val.toString().toLowerCase() === searchValue.toLowerCase(),
+//       )
+//     ) {
+//       exactMatches.push(obj)
+//     } else if (
+//       Object.values(obj).some(
+//         (val) =>
+//           val &&
+//           val.toString().trim() !== '' &&
+//           val.toString().toLowerCase().includes(searchValue.toLowerCase()),
+//       )
+//     ) {
+//       partialMatches.push(obj)
+//     }
+//   })
+//   if (tab == 'medicine') {
+//     wishlistMedicineData.value = exactMatches.length > 0 ? exactMatches : partialMatches
+//   } else if (tab == 'food') {
+//     wishlistFoodData.value = exactMatches.length > 0 ? exactMatches : partialMatches
+//   } else {
+//     wishlistSuppliesData.value = exactMatches.length > 0 ? exactMatches : partialMatches
+//   }
+// }
 const fundsAndExpensesBasicSearch = (searchValue) => {
   let exactMatches = []
   let partialMatches = []
@@ -4222,9 +4215,25 @@ let donatorsData = ref([])
 const getDonators = () => {
   return new Promise((resolve, reject) => {
     api
-      .get('api.php', { params: { donatorsData: 'yes' } })
+      .get('api.php', { params: { donatorsData: 'donatorsData' } })
       .then((response) => {
-        donatorsData.value = response.data.data
+        // donatorsData.value = response.data.data
+        resolve(response.data.count)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
+const getOverAllDonationCash = () => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('api.php', { params: { year_donation_cash: 'year_donation_cash' } })
+      .then((response) => {
+        console.log(response.data.data)
+
+        resolve(response.data.data)
       })
       .catch((error) => {
         reject(error)
@@ -4355,6 +4364,7 @@ localStorage.setItem('change', userSettings)
 userSettingChanger.value = JSON.parse(localStorage.getItem('change'))
 
 export {
+  getOverAllDonationCash,
   rescueReportBasicSearch,
   submitPublicDonation,
   monthlyTotalExpense,
@@ -4601,11 +4611,7 @@ export {
   getWishlistFood,
   getWishlistMedicine,
   getWishlistSupplies,
-  wishlistFoodData,
-  wishlistMedicineData,
-  wishlistSuppliesData,
-  wishlistBasicSearch,
-  updateWishlist,
+  // updateWishlist,
   addWishlist,
   exportWishlist,
   wishlistPriority,

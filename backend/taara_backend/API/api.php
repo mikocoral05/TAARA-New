@@ -690,6 +690,22 @@ class API
         'count' => count($data),
         'method' => 'GET'
       ]);
+    } else if (array_key_exists("latest_donators", $ref_id)) {
+
+      $this->db->join('tbl_cash_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
+      $this->db->join('tbl_material_donations tbl3', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
+      $this->db->join('tbl_users tbl4', 'tbl1.donor_id = tbl4.user_id', 'LEFT');
+      $this->db->join('tbl_files tbl5', 'tbl4.image_id = tbl5.id', 'LEFT');
+      $this->db->where("tbl1.is_deleted", 0);
+      $this->db->orderBy("RAND()");
+      $columns = "tbl1.*, tbl2.*,tbl5.image_path,tbl4.sex,CONCAT(tbl4.first_name,' ',tbl4.last_name) as name";
+      $data = $this->db->get("tbl_funds tbl1", 10, $columns);
+
+      echo json_encode([
+        'status' => 'success',
+        'data' => $data,
+        'method' => 'GET'
+      ]);
     } else if (array_key_exists("get_donations_this_month", $ref_id)) {
       $month = $ref_id['month'];
       $year = $ref_id['year'];

@@ -4252,6 +4252,18 @@ const getMonthDonationCash = () => {
       })
   })
 }
+const getLatestDonators = () => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('api.php', { params: { latest_donators: 'latest_donators' } })
+      .then((response) => {
+        resolve(response.data.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 let donationsThisMonth = ref([])
 const getDonationsThisMonth = (month, year) => {
   return new Promise((resolve, reject) => {
@@ -4376,6 +4388,7 @@ localStorage.setItem('change', userSettings)
 userSettingChanger.value = JSON.parse(localStorage.getItem('change'))
 
 export {
+  getLatestDonators,
   getOverAllDonationCash,
   rescueReportBasicSearch,
   submitPublicDonation,

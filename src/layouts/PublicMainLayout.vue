@@ -116,6 +116,21 @@
                   <q-item-label>Pet Care</q-item-label>
                 </q-item-section>
               </q-item>
+              <q-item
+                clickable
+                v-close-popup
+                to="/public/donation-channel"
+                @click="headerColor = 'white'"
+                :class="
+                  $route.fullPath == '/public/donation-channel' || ''
+                    ? 'bg-primary text-white'
+                    : 'bg-white text-black'
+                "
+              >
+                <q-item-section>
+                  <q-item-label>Shelter Wishlist</q-item-label>
+                </q-item-section>
+              </q-item>
             </q-list>
           </q-btn-dropdown>
         </div>

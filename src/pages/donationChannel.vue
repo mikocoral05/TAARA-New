@@ -389,7 +389,7 @@
         </q-card>
       </div>
 
-      <div class="walkin-donation q-mt-xl">
+      <div class="walkin-donation q-mt-xl" ref="targetWishlist">
         <div class="donation-container q-pt-xl">
           <h4 class="q-mb-md text-center">We also love Walk In Donation</h4>
           <p class="text-center text-caption">“Every Donation Supports Our Mission”</p>

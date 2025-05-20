@@ -119,10 +119,10 @@
               <q-item
                 clickable
                 v-close-popup
-                to="/public/donation-channel"
+                to="/public/donation-channel?wish=0"
                 @click="headerColor = 'white'"
                 :class="
-                  $route.fullPath == '/public/donation-channel' || ''
+                  $route.fullPath == '/public/donation-channel?wish=0' || ''
                     ? 'bg-primary text-white'
                     : 'bg-white text-black'
                 "
@@ -196,5 +196,5 @@
   </q-layout>
 </template>
 
-<script src="../pages/taara/script/MainLayout"></script>
-<style lang="scss" scoped src="../css/mainlayout.scss"></style>
+<script src="pages/taara/script/MainLayout"></script>
+<style lang="scss" scoped src="pages/css/mainlayout.scss"></style>

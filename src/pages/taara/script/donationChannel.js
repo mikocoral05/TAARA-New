@@ -1,6 +1,7 @@
 import taaraFooter from 'src/components/taaraFooter.vue'
 import donationDialog from 'src/components/donationDialog.vue'
 import { useCounterStore } from 'src/stores/example-store'
+import VueScrollTo from 'vue-scrollto'
 import {
   encodeAnimalId,
   wordifyDate,
@@ -11,12 +12,13 @@ import {
   getWishlistFood,
   getWishlistMedicine,
   getWishlistSupplies,
-  getDonators,
+  getOverallDonators,
   donatorsData,
   getOverAllDonationCash,
   getMonthDonationCash,
 } from 'src/composable/taaraComposable'
 import { onMounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 export default {
   components: {
     taaraFooter,
@@ -29,6 +31,8 @@ export default {
     const countOverallDonors = ref(0)
     const countOverallDonation = ref(0)
     const countThisMonthDonation = ref(0)
+    const targetWishlist = ref(null)
+    const route = useRoute()
     const counterStore = useCounterStore()
     const filterDonator = (amount) => {
       return donatorsData.value.filter((obj) => obj.donation_amount === amount)
@@ -80,7 +84,6 @@ export default {
     }
 
     // Example usage:
-
     onMounted(() => {
       getWishlistFood().then((response) => {
         wishlistFoodData.value = response
@@ -91,7 +94,7 @@ export default {
       getWishlistSupplies().then((response) => {
         wishlistSuppliesData.value = response
       })
-      getDonators().then((response) => {
+      getOverallDonators().then((response) => {
         countOverallDonors.value = response
       })
       getOverAllDonationCash().then((response) => {
@@ -100,8 +103,13 @@ export default {
       getMonthDonationCash().then((response) => {
         countThisMonthDonation.value = response
       })
+      console.log(route.query.wish)
+      if (route.query.wish) {
+        VueScrollTo.scrollTo(targetWishlist.value, 500, { offset: Number(route.query.wish) })
+      }
     })
     return {
+      targetWishlist,
       yearToday,
       countThisMonthDonation,
       countOverallDonation,

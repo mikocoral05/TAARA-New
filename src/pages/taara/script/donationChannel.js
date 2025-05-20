@@ -1,7 +1,12 @@
 import taaraFooter from 'src/components/taaraFooter.vue'
 import donationDialog from 'src/components/donationDialog.vue'
 import { useCounterStore } from 'src/stores/example-store'
-import { encodeAnimalId, wordifyDate, formatNumber } from 'src/composable/simpleComposable'
+import {
+  encodeAnimalId,
+  wordifyDate,
+  formatNumber,
+  yearToday,
+} from 'src/composable/simpleComposable'
 import {
   getWishlistFood,
   getWishlistMedicine,
@@ -9,6 +14,7 @@ import {
   getDonators,
   donatorsData,
   getOverAllDonationCash,
+  getMonthDonationCash,
 } from 'src/composable/taaraComposable'
 import { onMounted, ref } from 'vue'
 export default {
@@ -21,6 +27,8 @@ export default {
     const wishlistMedicineData = ref([])
     const wishlistSuppliesData = ref([])
     const countOverallDonors = ref(0)
+    const countOverallDonation = ref(0)
+    const countThisMonthDonation = ref(0)
     const counterStore = useCounterStore()
     const filterDonator = (amount) => {
       return donatorsData.value.filter((obj) => obj.donation_amount === amount)
@@ -87,10 +95,16 @@ export default {
         countOverallDonors.value = response
       })
       getOverAllDonationCash().then((response) => {
-        console.log(response)
+        countOverallDonation.value = response
+      })
+      getMonthDonationCash().then((response) => {
+        countThisMonthDonation.value = response
       })
     })
     return {
+      yearToday,
+      countThisMonthDonation,
+      countOverallDonation,
       countOverallDonors,
       countUniqueDonators,
       formatNumber,

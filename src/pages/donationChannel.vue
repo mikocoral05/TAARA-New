@@ -360,13 +360,12 @@
 
             <q-card-section class="column items-center justify-center">
               <div class="row no-wrap justify-center items-center text-body1">
-                <q-btn icon="chevron_left" flat dense />
+                <!-- <q-btn icon="chevron_left" flat dense /> -->
                 <p class="q-ma-none">June</p>
-                <q-btn icon="chevron_right" flat dense />
+                <!-- <q-btn icon="chevron_right" flat dense /> -->
               </div>
               <div class="q-mt-md row no-wrap">
-                <span class="text-caption">₱</span>
-                <h4 class="q-ma-none">100</h4>
+                <h4 class="q-ma-none">{{ formatNumber(countThisMonthDonation) }}</h4>
               </div>
             </q-card-section>
           </q-card-section>
@@ -380,11 +379,10 @@
 
             <q-card-section class="column items-center justify-center">
               <div class="text-body1">
-                <p class="q-ma-none">Year 2024</p>
+                <p class="q-ma-none">Year {{ yearToday }}</p>
               </div>
               <div class="q-mt-md row no-wrap">
-                <span class="text-caption">₱</span>
-                <h4 class="q-ma-none">100</h4>
+                <h4 class="q-ma-none">{{ formatNumber(countOverallDonation) }}</h4>
               </div>
             </q-card-section>
           </q-card-section>
@@ -411,7 +409,7 @@
                     <span
                       :class="
                         medicine.is_priority === 1
-                          ? 'text-primary q-ma-none q-px-sm'
+                          ? 'text-red text-bold q-ma-none q-px-sm'
                           : 'text-black  q-ma-none q-px-sm'
                       "
                       style="border-radius: 5px"
@@ -435,7 +433,7 @@
                     <span
                       :class="
                         food.is_priority === 1
-                          ? 'text-primary q-ma-none q-px-sm'
+                          ? 'text-red text-bold q-ma-none q-px-sm'
                           : 'text-black  q-ma-none q-px-sm'
                       "
                       style="border-radius: 5px"
@@ -459,7 +457,7 @@
                     <span
                       :class="
                         supplies.is_priority === 1
-                          ? 'text-primary q-ma-none q-px-sm'
+                          ? 'text-red text-bold q-ma-none q-px-sm'
                           : 'text-black  q-ma-none q-px-sm'
                       "
                       style="border-radius: 5px"

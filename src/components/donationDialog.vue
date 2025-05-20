@@ -11,7 +11,7 @@
 
           <div class="" style="position: relative; height: 300px">
             <q-img
-              :src="`G-dt/GCash-MyQR-${decodeAnimalId(route.query.G)}.jpg`"
+              :src="`G-dt/GCash-MyQR-${route.query.amount}.jpg`"
               class="absolute-center img-qr-code"
               style="width: 280px; height: 280px"
             />
@@ -124,7 +124,7 @@ import { defineComponent, watch, ref } from 'vue'
 import { useCounterStore } from 'src/stores/example-store'
 import { useRoute } from 'vue-router'
 import { createWorker } from 'tesseract.js'
-import { decodeAnimalId, resizeImage, dateToday, timeNow } from 'src/composable/simpleComposable'
+import { resizeImage, dateToday, timeNow } from 'src/composable/simpleComposable'
 import { submitPublicDonation, logInDetails } from 'src/composable/taaraComposable'
 export default defineComponent({
   name: 'donationDialog',
@@ -205,7 +205,6 @@ export default defineComponent({
       submitPublicDonation,
       route,
       desireNumber,
-      decodeAnimalId,
       imgPath,
       donationImage,
       controlSpinner,

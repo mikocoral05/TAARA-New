@@ -346,7 +346,7 @@
                 <p class="q-ma-none">Since start...</p>
               </div>
               <div class="q-mt-md row no-wrap">
-                <h4 class="q-ma-none">{{ countUniqueDonators() }}</h4>
+                <h4 class="q-ma-none">{{ countOverallDonors }}</h4>
               </div>
             </q-card-section>
           </q-card-section>
@@ -405,22 +405,18 @@
                 class="q-px-xl"
                 :thumb-style="thumbStyle"
               >
-                <div
-                  v-for="medicine in wishlistMedicineData"
-                  :key="medicine.wishlist_medicine_id"
-                  class="q-my-xs"
-                >
+                <div v-for="(medicine, index) in wishlistMedicineData" :key="index" class="q-my-xs">
                   <p class="q-ma-none row no-wrap justify-start items-center">
                     <span style="font-size: 22px" class="q-ma-none">•</span>
                     <span
                       :class="
-                        medicine.highlight_important === 1
+                        medicine.is_priority === 1
                           ? 'text-primary q-ma-none q-px-sm'
                           : 'text-black  q-ma-none q-px-sm'
                       "
                       style="border-radius: 5px"
                     >
-                      {{ medicine.wishlist_medicine_name }}</span
+                      {{ medicine.name }}</span
                     >
                   </p>
                 </div>
@@ -433,18 +429,18 @@
                 class="q-px-xl"
                 :thumb-style="thumbStyle"
               >
-                <div v-for="food in wishlistFoodData" :key="food.wishlist_food_id" class="q-my-xs">
+                <div v-for="(food, index) in wishlistFoodData" :key="index" class="q-my-xs">
                   <p class="q-ma-none row no-wrap justify-start items-center">
                     <span style="font-size: 22px" class="q-ma-none">•</span>
                     <span
                       :class="
-                        food.highlight_important === 1
+                        food.is_priority === 1
                           ? 'text-primary q-ma-none q-px-sm'
                           : 'text-black  q-ma-none q-px-sm'
                       "
                       style="border-radius: 5px"
                     >
-                      {{ food.wishlist_food_name }}</span
+                      {{ food.name }}</span
                     >
                   </p>
                 </div>
@@ -457,22 +453,18 @@
                 class="q-px-xl"
                 :thumb-style="thumbStyle"
               >
-                <div
-                  v-for="supplies in wishlistSuppliesData"
-                  :key="supplies.wishlist_supplies_id"
-                  class="q-my-xs"
-                >
+                <div v-for="(supplies, index) in wishlistSuppliesData" :key="index" class="q-my-xs">
                   <p class="q-ma-none row no-wrap justify-start items-center">
                     <span style="font-size: 22px" class="q-ma-none">•</span>
                     <span
                       :class="
-                        supplies.highlight_important === 1
+                        supplies.is_priority === 1
                           ? 'text-primary q-ma-none q-px-sm'
                           : 'text-black  q-ma-none q-px-sm'
                       "
                       style="border-radius: 5px"
                     >
-                      {{ supplies.wishlist_supplies_name }}</span
+                      {{ supplies.name }}</span
                     >
                   </p>
                 </div>

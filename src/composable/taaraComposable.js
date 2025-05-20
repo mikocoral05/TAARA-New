@@ -4240,6 +4240,18 @@ const getOverAllDonationCash = () => {
       })
   })
 }
+const getMonthDonationCash = () => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('api.php', { params: { mont_donation_cash: 'mont_donation_cash' } })
+      .then((response) => {
+        resolve(response.data.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
 let donationsThisMonth = ref([])
 const getDonationsThisMonth = (month, year) => {
   return new Promise((resolve, reject) => {
@@ -4515,6 +4527,7 @@ export {
   addMedicineGroupName,
   updateRescuedStrayAnimals,
   addRescuedStrayAnimals,
+  getMonthDonationCash,
   deleteModalCtrl,
   getPendingInKindDonations,
   pendingInKindDonations,

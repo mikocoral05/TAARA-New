@@ -216,7 +216,7 @@ export default defineComponent({
       },
       {
         title: 'Wishlist',
-        icon: 'calendar_month',
+        icon: 'sym_r_folded_hands',
         nav: '/management/wishlist',
       },
 

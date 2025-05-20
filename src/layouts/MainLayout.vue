@@ -53,7 +53,9 @@
             />
             <div class="column no-wrap">
               <div>{{ store.userData?.first_name + ' ' + store.userData?.last_name }}</div>
-              <div class="text-grey-7">{{ store.userData?.position_title }}</div>
+              <div class="text-grey-7 ellipsis" style="width: 100px">
+                {{ store.userData?.position_title }}
+              </div>
             </div>
           </div>
         </div>
@@ -212,6 +214,11 @@ export default defineComponent({
         icon: 'calendar_month',
         nav: '/management/activities-and-events',
       },
+      {
+        title: 'Wishlist',
+        icon: 'calendar_month',
+        nav: '/management/wishlist',
+      },
 
       {
         title: 'Authorization',
@@ -249,6 +256,7 @@ export default defineComponent({
       '/management/announcement': 'Announcement',
       '/management/rescue-report': 'Rescue Report',
       '/management/analytic-report': 'Report',
+      '/management/wishlist': 'Wishlist',
     }
 
     const tab = ref(routeToTabMap[route.path] || 'Dashboard')

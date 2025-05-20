@@ -4212,7 +4212,7 @@ const getDonations = () => {
   })
 }
 let donatorsData = ref([])
-const getDonators = () => {
+const getOverallDonators = () => {
   return new Promise((resolve, reject) => {
     api
       .get('api.php', { params: { donatorsData: 'donatorsData' } })
@@ -4651,7 +4651,7 @@ export {
   dearUserName,
   dearUserEmail,
   dearUserPhoneNumber,
-  getDonators,
+  getOverallDonators,
   donatorsData,
   originalReportRescueData,
 }

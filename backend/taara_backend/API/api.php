@@ -22,6 +22,14 @@ class API
 
       $query = $this->db->rawQuery("SELECT * FROM tbl_animals_info WHERE  featured = '$answer' ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
+    } else if (array_key_exists("year_donation_cash", $ref_id)) {
+
+      $this->db->where("YEAR(f.created_at)", date('Y'));
+      $this->db->where("f.is_deleted", 0);
+      $this->db->join("tbl_cash_donations c", "f.fund_id = c.fund_id", "LEFT");
+      $max = $this->db->getValue("tbl_funds f", "MAX(c.amount)");
+
+      echo json_encode(array('status' => 'success', 'data' => $max, 'method' => 'GET'));
     } else if (array_key_exists("all_animals", $ref_id)) {
       $this->db->join("tbl_files f", "f.id = tbl_animal_info.primary_image", "LEFT");
       $this->db->where("is_deleted", 1);
@@ -664,18 +672,20 @@ class API
       ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("donatorsData", $ref_id)) {
-      $query = $this->db->rawQuery("SELECT tb1.donation_id, tb1.donation_amount, tb2.image, tb1.donation_date,tb1.donators_id,tb1.walk_in_id
-      FROM tbl_donations tb1
-      LEFT JOIN tbl_users tb2 ON tb1.donators_id = tb2.user_id
-      LEFT JOIN tbl_walk_in_donations tb3 ON tb1.walk_in_id = tb3.id
-      WHERE tb1.donation_status = 2
-      ORDER BY tb1.donation_id DESC;
-      ");
-      if ($query) {
-        echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
-      } else {
-        echo json_encode(array('status' => 'failed', 'method' => 'GET'));
-      }
+
+      $this->db->join('tbl_cash_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
+      $this->db->join('tbl_material_donations tbl3', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
+      $this->db->join('tbl_users tbl4', 'tbl1.donor_id = tbl4.user_id', 'LEFT');
+      $this->db->where("tbl1.is_deleted", 0);
+      $this->db->orderBy("tbl1.fund_id", "desc");
+      $columns = "tbl1.*, tbl2.*";
+      $data = $this->db->get("tbl_funds tbl1", null, $columns);
+
+      echo json_encode([
+        'status' => 'success',
+        'count' => count($data),
+        'method' => 'GET'
+      ]);
     } else if (array_key_exists("get_donations_this_month", $ref_id)) {
       $month = $ref_id['month'];
       $year = $ref_id['year'];

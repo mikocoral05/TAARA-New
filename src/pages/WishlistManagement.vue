@@ -51,178 +51,40 @@
           <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
             <q-menu anchor="bottom left" self="top right">
               <q-list dense style="min-width: 100px">
-                <q-item clickable v-close-popup @click="tableAction(row, 'View')">
-                  <q-item-section>View</q-item-section>
+                <q-item clickable v-close-popup @click="tableAction(row.id, 'Edit', 'prio')">
+                  <q-item-section>Priority</q-item-section>
                   <q-item-section side>
-                    <q-icon name="sym_r_visibility" size="1.2rem" />
+                    <q-icon name="sym_r_flag_circle" size="1.2rem" color="red" />
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="tableAction(row, 'Edit')">
-                  <q-item-section>Edit</q-item-section>
+                <q-item clickable v-close-popup @click="tableAction(row.id, 'Edit', 'not-prio')">
+                  <q-item-section>Not priority</q-item-section>
                   <q-item-section side>
-                    <q-icon name="sym_r_edit" size="1.2rem" />
+                    <q-icon name="sym_r_list" size="1.2rem" />
                   </q-item-section>
                 </q-item>
                 <q-separator />
                 <q-item clickable @click="tableAction(row, 'Archieve')">
                   <q-item-section>Delete</q-item-section>
                   <q-item-section side>
-                    <q-icon name="sym_r_keyboard_arrow_right" size="1.2rem" />
+                    <q-icon name="sym_r_dangerous" size="1.2rem" />
                   </q-item-section>
                 </q-item>
               </q-list>
             </q-menu>
           </q-btn>
         </template>
-        <template #cell-computed="{ row }">
+        <template #cell-is_priority="{ row }">
           <div>
-            {{ formatNumber((Number(totalBalance) * Number(row.percentage_allocated)) / 100) }}
+            {{ row.is_priority == 1 ? 'Yes' : 'No' }}
           </div>
         </template>
         <template #cell-id="{ rowIndex }">
           <div>{{ rowIndex + 1 }}</div>
         </template>
-        <template #cell-expiration_date="{ row }">
-          <div
-            :class="{
-              'bg-warning text-white radius-10': isNearExpiration(row.expiration_date),
-              'bg-negative text-white radius-10': isExpired(row.expiration_date),
-            }"
-          >
-            {{ row.expiration_date }}
-          </div>
-        </template>
       </ReusableTable>
     </div>
-    <q-dialog position="right" full-height v-model="showDialog">
-      <q-card style="min-width: 750px; height: 500px" class="text-black column justify-between">
-        <div class="column no-wrap">
-          <q-card-section class="q-py-md row no-wrap justify-between items-center">
-            <div class="text-body1">{{ mode }} {{ tableConfig.title }}</div>
-            <q-icon name="close" size="1.2rem" @click="showDialog = !showDialog" />
-          </q-card-section>
-          <q-separator />
-          <q-card-section>
-            <div class="text-grey-7" style="font-size: 12px">
-              <span class="text-negative">*</span>All fields are mandatory, except mentioned as
-              (optional).
-            </div>
-          </q-card-section>
-          <q-card-section>
-            <div class="row no-wrap q-mt-md">
-              <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">
-                  {{ obj[tab] }} Name <span class="text-negative">*</span>
-                </div>
-                <q-input
-                  outlined
-                  v-model="dataStorage.item_name"
-                  dense
-                  class="q-mt-sm"
-                  style="width: 300px"
-                />
-              </div>
-              <div class="column no-wrap">
-                <div class="text-capitalize">
-                  {{ obj[tab] }} Group <span class="text-negative">*</span>
-                </div>
-                <q-select
-                  outlined
-                  v-model="dataStorage.group_name"
-                  class="q-mt-sm"
-                  :options="groupNameOptions"
-                  emit-value
-                  map-options
-                  option-label="group_name"
-                  option-value="id"
-                  dense
-                  style="width: 250px"
-                  behavior="menu"
-                />
-              </div>
-            </div>
-            <div class="row no-wrap q-mt-md">
-              <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">Expiry Date<span class="text-negative">*</span></div>
-                <q-input
-                  dense
-                  outlined
-                  class="q-mt-sm"
-                  v-model="dataStorage.expiration_date"
-                  mask="####-##-##"
-                  :rules="[(val) => !!val || '']"
-                  hide-bottom-space
-                >
-                  <template v-slot:append>
-                    <q-icon name="event" class="cursor-pointer">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="dataStorage.expiration_date">
-                          <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" flat />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                    </q-icon>
-                  </template>
-                </q-input>
-              </div>
-              <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">Quantity<span class="text-negative">*</span></div>
-                <q-input
-                  outlined
-                  type="number"
-                  v-model="dataStorage.quantity"
-                  dense
-                  class="q-mt-sm"
-                />
-              </div>
-              <div class="column no-wrap">
-                <div class="text-capitalize">Unit<span class="text-negative">*</span></div>
-                <q-input outlined v-model="dataStorage.unit" dense class="q-mt-sm" />
-              </div>
-            </div>
-            <div class="column no-wrap q-mt-md">
-              <div class="text-capitalize">
-                Description <span class="text-grey-7 text-caption"> (optional)</span>
-              </div>
-              <q-input
-                outlined
-                type="textarea"
-                v-model="dataStorage.description"
-                dense
-                class="q-mt-sm"
-              />
-            </div>
-            <div class="column no-wrap q-mt-md">
-              <div class="text-capitalize">
-                Notes <span class="text-grey-7 text-caption"> (optional)</span>
-              </div>
-              <q-input outlined autogrow v-model="dataStorage.notes" dense class="q-mt-sm" />
-            </div>
-          </q-card-section>
-        </div>
-        <q-card-section>
-          <q-btn
-            outline
-            label="Cancel"
-            v-close-popup
-            color="primary"
-            no-caps
-            class="q-mr-md"
-            style="width: 180px"
-          />
-          <q-btn
-            label="Confirm"
-            unelevated
-            color="primary"
-            no-caps
-            v-close-popup
-            style="width: 180px"
-            @click="saveFn()"
-          />
-        </q-card-section>
-      </q-card>
-    </q-dialog>
+
     <q-dialog v-model="confirm" persistent>
       <q-card class="q-pa-md" style="width: 450px; min-height: 230px">
         <q-card-section class="column items-center">
@@ -293,13 +155,9 @@
 import ReusableTable from 'src/components/ReusableTable.vue'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
 import {
-  getBudgetAllocation,
-  getExpensesSummary,
-  getTotalBalance,
-  getInventoryGroup,
   softDeleteInventoryData,
   addInventoryList,
-  editInventoryList,
+  updateWishlist,
   addGroupName,
   getWishlist,
 } from 'src/composable/latestComposable'
@@ -322,17 +180,17 @@ export default {
     ReusableTable,
   },
   setup() {
-    const obj = { 2: 'medicine', 3: 'vaccine', 4: 'vitamin' }
-    const obj2 = { 1: 'Medicine', 2: 'Group', 3: 'Expired' }
+    const obj = { 1: 'tbl_wishlist_medicine', 2: 'tbl_wishlist_food', 3: 'tbl_wishlist_supplies' }
+
+    const obj2 = { 1: 'Medicine', 2: 'Food', 3: 'Supplies' }
     const obj3 = { Add: 'Adding', Edit: 'Updating', Delete: 'Deleting' }
     const $q = useQuasar()
-    const tab = ref('2')
+    const tab = ref('1')
     const filterTab = ref('1')
     const editTab = ref('1')
     const rows = ref([])
     const confirm = ref(false)
     const search = ref(null)
-    const showDialog = ref(false)
     const groupDialog = ref(false)
     const pages = ref([])
     const dataStorage = ref({})
@@ -350,21 +208,25 @@ export default {
     const scrollListRef = ref(null)
     const arrayOfId = ref([])
     const tableConfig = ref({ title: '', columns: [] })
-
     const groupNameOptions = ref([])
-    const tableAction = (data, modeParam) => {
-      mode.value = modeParam
-      if (['Add', 'Edit', 'View'].includes(modeParam)) {
-        if (filterTab.value !== 2) showDialog.value = !showDialog.value
-        else groupDialog.value = !groupDialog.value
 
-        getInventoryGroup(obj[tab.value]).then((response) => {
-          groupNameOptions.value = response
-        })
+    const fetchData = () => {
+      getWishlist(obj[tab.value]).then((response) => {
+        tableConfig.value.title = `${capitalize(obj2[tab.value])} Wishlist`
+        tableConfig.value.columns = ['id', 'name', 'is_priority', 'btn']
+        rows.value = response
+        console.log(rows.value)
+      })
+    }
+
+    const tableAction = (data, modeParam, action) => {
+      mode.value = modeParam
+      if (['Edit', 'Add'].includes(modeParam)) {
         if (modeParam == 'Add') {
           dataStorage.value = {}
         } else {
-          dataStorage.value = data
+          dataStorage.value = { id: data, status: action == 'prio' ? 1 : 0 }
+          saveFn()
         }
       } else {
         arrayOfId.value.push(data.id)
@@ -412,31 +274,19 @@ export default {
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
-        editInventoryList(dataStorage.value).then((response) => {
-          console.log(response)
+        updateWishlist(obj[tab.value], dataStorage.value).then((response) => {
           $q.loading.show({
             group: 'update',
             message: response.message,
           })
           setTimeout(() => {
             $q.loading.hide()
+            if (response.status == 'success') {
+              fetchData()
+            }
           }, 2000)
         })
       }
-    }
-
-    const updateBudgetAllocationSum = () => {
-      getBudgetAllocation().then((response) => {
-        rows.value = response
-      })
-      getExpensesSummary({ month: selectedMonth.value, year: selectedYear.value }).then(
-        (response) => {
-          totalExpense.value = response?.total
-        },
-      )
-      getTotalBalance({ month: selectedMonth.value, year: selectedYear.value }).then((response) => {
-        totalBalance.value = response?.balance
-      })
     }
 
     const softDeleteFn = () => {
@@ -449,14 +299,7 @@ export default {
     }
 
     watchEffect(() => {
-      const obj = { 1: 'tbl_wishlist_medicine', 2: 'tbl_wishlist_food', 3: 'tbl_wishlist_supplies' }
-
-      getWishlist(obj[tab.value]).then((response) => {
-        tableConfig.value.title = `${capitalize(obj[tab.value])} Wishlist`
-        tableConfig.value.columns = ['id', 'name', 'is_priority', 'btn']
-        rows.value = response
-        console.log(rows.value)
-      })
+      fetchData()
     })
 
     return {
@@ -479,7 +322,6 @@ export default {
       selectedDay,
       dailyExpenseTotal,
       generateYearList,
-      updateBudgetAllocationSum,
       totalBalance,
       formatNumber,
       totalExpense,
@@ -494,7 +336,6 @@ export default {
       nameSuffixes,
       sexOption,
       editTab,
-      showDialog,
       mode,
       dataStorage,
       tableAction,

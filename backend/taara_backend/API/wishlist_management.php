@@ -103,37 +103,25 @@ class API
 
     public function httpPut($payload)
     {
-        if (isset($payload['soft_delete_inventory_data'])) {
-            $id = $payload['soft_delete_inventory_data'];
-            $table = $payload['table'];
+        if (array_key_exists('update_wishlist', $payload)) {
+            $id = $payload['update_wishlist']['data']['id'];
+            $status = $payload['update_wishlist']['data']['status'];
+            $table = $payload['update_wishlist']['table'];
 
-            $ids = is_array($id) ? $id : explode(',', $id);
-
-
-            // Whitelist allowed tables for safety
-            $allowed_tables = ['tbl_inventory', 'tbl_inventory_group'];
-            if (!in_array($table, $allowed_tables)) {
-                echo json_encode(['status' => 'error', 'message' => 'Invalid table name']);
-                return;
-            }
-
-            // Set the update values here in the backend
             $update_values = [
-                'is_deleted' => 0,
-                'deleted_at' => date('Y-m-d H:i:s')
+                'is_priority' => $status,
             ];
 
-            // Update records matching the IDs
-            $this->db->where('id', $ids, 'IN');
+            $this->db->where('id', $id);
             $updated = $this->db->update($table, $update_values);
 
             if ($updated) {
-                echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
+                echo json_encode(['status' => 'success', 'message' => 'Records updated successfully', 'method' => 'PUT']);
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
+                echo json_encode(['status' => 'error', 'message' => 'Failed to updated records', 'method' => 'PUT']);
             }
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Missing soft_delete_inventory_data in the payload']);
+            echo json_encode(['status' => 'error', 'message' => 'Missing updated data in the payload']);
         }
     }
 

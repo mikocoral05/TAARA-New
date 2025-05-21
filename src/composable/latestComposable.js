@@ -811,13 +811,20 @@ const getWishlist = async (table) => {
   })
 
   if (response.data.status === 'success') {
-    return response.data.count
+    return response.data.data
   } else {
     throw new Error(response.data.message || 'Unexpected response status')
   }
 }
+const updateWishlist = async (table, obj) => {
+  const response = await api.put('wishlist_management.php', {
+    update_wishlist: { table: table, data: obj },
+  })
+  return response.data
+}
 
 export {
+  updateWishlist,
   getWishlist,
   getTotalAnimalCount,
   getTotalUser,

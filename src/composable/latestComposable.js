@@ -805,8 +805,20 @@ const getTotalAnimalCount = async () => {
     throw new Error(response.data.message || 'Unexpected response status')
   }
 }
+const getWishlist = async (table) => {
+  const response = await api.get('wishlist_management.php', {
+    params: { get_wishlist: table },
+  })
+
+  if (response.data.status === 'success') {
+    return response.data.count
+  } else {
+    throw new Error(response.data.message || 'Unexpected response status')
+  }
+}
 
 export {
+  getWishlist,
   getTotalAnimalCount,
   getTotalUser,
   addVolunteerRequest,

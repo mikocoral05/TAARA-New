@@ -3,8 +3,8 @@
     <div class="row no-wrap justify-between items-center">
       <q-tabs dense v-model="tab" inline-label flat active-color="primary" active-bg-color="white">
         <q-tab name="2" icon="sym_r_medical_services" label="Medicine" no-caps />
-        <q-tab name="3" icon="sym_r_vaccines" label="Vaccine" no-caps />
-        <q-tab name="4" icon="sym_r_nutrition" label="Vitamin" no-caps />
+        <q-tab name="3" icon="sym_r_restaurant" label="Food" no-caps />
+        <q-tab name="4" icon="sym_r_warehouse" label="Supplies" no-caps />
       </q-tabs>
       <div class="row no-wrap justify-between items-center">
         <div class="row no-wrap">
@@ -30,89 +30,6 @@
       </div>
     </div>
     <q-separator color="grey-3" class="q-mb-md" />
-    <div class="column no-wrap">
-      <div class="row q-mb-md">
-        <q-card class="q-mr-md radius-10" flat>
-          <q-card-section class="q-pb-none">
-            <div class="row no-wrap items-center q-px-lg">
-              <div class="text-grey-7 text-caption q-mr-md">MEDICINE AVAILABLE</div>
-              <q-icon name="sym_r_medical_services" color="blue" size="1.5rem" />
-            </div>
-            <div class="row no-wrap items-center justify-center">
-              <div class="text-h6 text-bold q-my-md text-center">
-                {{ elseSummary.unique_group_count }}
-                <span class="text-caption text-grey-7">Unique</span>
-              </div>
-              <q-separator vertical inset class="q-mx-md" />
-              <div class="text-h6 text-bold q-my-md text-center">
-                {{ formatOrNumber(elseSummary.total_quantity) }}
-                <span class="text-caption text-grey-7"> Pieces</span>
-              </div>
-            </div>
-            <q-separator />
-            <q-btn
-              dense
-              flat
-              :ripple="false"
-              @click="filterInventory(1)"
-              class="q-mt-sm full-width"
-            >
-              <div class="text-blue text-caption flex flex-center">
-                VIEW FULL LIST <q-icon name="sym_r_keyboard_double_arrow_right" size="1.2rem" />
-              </div>
-            </q-btn>
-          </q-card-section>
-        </q-card>
-        <q-card class="q-mr-md radius-10" flat>
-          <q-card-section>
-            <div class="row no-wrap items-center q-px-lg">
-              <div class="text-grey-7 text-caption q-mr-md">MEDICINE GROUPS</div>
-              <q-icon name="sym_r_outpatient_med" color="positive" size="1.5rem" />
-            </div>
-            <div class="text-h6 text-bold q-my-md text-center">
-              {{ elseSummary?.unique_group_count }}
-            </div>
-            <q-separator />
-            <q-btn
-              dense
-              flat
-              :ripple="false"
-              @click="filterInventory(2)"
-              class="q-mt-sm full-width"
-            >
-              <div class="text-positive text-caption flex flex-center">
-                <span>VIEW GROUPS</span>
-                <q-icon name="sym_r_keyboard_double_arrow_right" size="1.2rem" />
-              </div>
-            </q-btn>
-          </q-card-section>
-        </q-card>
-        <q-card class="q-mr-md radius-10" flat>
-          <q-card-section>
-            <div class="row no-wrap items-center q-px-lg">
-              <div class="text-grey-7 text-caption q-mr-md">EXPIRED MEDICINE</div>
-              <q-icon name="sym_r_warning" color="negative" size="1.5rem" />
-            </div>
-            <div class="text-h6 text-bold q-my-md text-center">
-              {{ elseSummary?.expired_count }}
-            </div>
-            <q-separator />
-            <q-btn
-              dense
-              flat
-              :ripple="false"
-              @click="filterInventory(3)"
-              class="q-mt-sm full-width"
-            >
-              <div class="text-negative text-caption flex flex-center">
-                <span>VIEW FULL LIST</span>
-                <q-icon name="sym_r_keyboard_double_arrow_right" size="1.2rem" />
-              </div>
-            </q-btn>
-          </q-card-section>
-        </q-card>
-      </div>
-    </div>
     <div class="row no-wrap">
       <ReusableTable
         style="width: 100%"
@@ -381,8 +298,6 @@ import {
   getTotalBalance,
   getInventoryList,
   getInventoryGroup,
-  getInventoryListSummary,
-  getInventoryExpiredList,
   softDeleteInventoryData,
   addInventoryList,
   editInventoryList,
@@ -524,54 +439,11 @@ export default {
       })
     }
 
-    const filterInventory = (filterNo) => {
-      filterTab.value = filterNo
-      if (filterNo == 1) {
-        getInventoryList(obj[tab.value]).then((response) => {
-          tableConfig.value.title = `${capitalize(obj[tab.value])} List`
-          tableConfig.value.columns = [
-            'id',
-            'item_name',
-            'group_name',
-            'quantity',
-            'unit',
-            'expiration_date',
-            'btn',
-          ]
-          rows.value = response
-        })
-      } else if (filterNo == 2) {
-        getInventoryGroup(obj[tab.value]).then((response) => {
-          rows.value = response
-          tableConfig.value.title = 'Group List'
-          tableConfig.value.columns = ['id', 'group_name', 'count', 'btn']
-          console.log(tableConfig.value.columns)
-        })
-      } else if (filterNo == 3) {
-        getInventoryExpiredList(obj[tab.value]).then((response) => {
-          rows.value = response
-          tableConfig.value.title = 'Expired List'
-          tableConfig.value.columns = [
-            'id',
-            'item_name',
-            'group_name',
-            'quantity',
-            'unit',
-            'expiration_date',
-            'btn',
-          ]
-        })
-      }
-    }
-
     const softDeleteFn = () => {
       const tableName = filterTab.value == 2 ? 'tbl_inventory_group' : 'tbl_inventory'
       softDeleteInventoryData(arrayOfId.value, tableName).then((response) => {
         if (response == 'success') {
-          filterInventory(filterTab.value)
-          getInventoryListSummary(obj[tab.value]).then((response) => {
-            elseSummary.value = response
-          })
+          //
         }
       })
     }
@@ -581,7 +453,7 @@ export default {
         updateBudgetAllocationSum()
       } else {
         getInventoryList(obj[tab.value]).then((response) => {
-          tableConfig.value.title = `${capitalize(obj[tab.value])} List`
+          tableConfig.value.title = `${capitalize(obj[tab.value])} Wishlist`
           tableConfig.value.columns = [
             'id',
             'item_name',
@@ -597,9 +469,6 @@ export default {
           itemsCount.value = rows.value.reduce((total, item) => {
             return total + item.quantity
           }, 0)
-        })
-        getInventoryListSummary(obj[tab.value]).then((response) => {
-          elseSummary.value = response
         })
       }
     })
@@ -618,7 +487,6 @@ export default {
       isNearExpiration,
       formatOrNumber,
       itemsCount,
-      filterInventory,
       tableConfig,
       scrollListRef,
       scrollAreaRef,

@@ -64,7 +64,7 @@
                   </q-item-section>
                 </q-item>
                 <q-separator />
-                <q-item clickable @click="tableAction(row, 'Archieve')">
+                <q-item clickable @click="tableAction(row.id, 'Archieve')">
                   <q-item-section>Delete</q-item-section>
                   <q-item-section side>
                     <q-icon name="sym_r_dangerous" size="1.2rem" />
@@ -120,46 +120,17 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
-    <q-dialog v-model="groupDialog" persistent>
-      <q-card class="q-pa-md" style="width: 450px; min-height: 130px">
-        <q-card-section class="column no-wrap q-px-sm">
-          <div class="text-capitalize text-body1 text0center">
-            Add {{ obj[tab] }} {{ obj2[filterTab] }}
-          </div>
-          <q-input
-            outlined
-            v-model="dataStorage.group_name"
-            placeholder="Ex: Antibiotic"
-            dense
-            class="q-mt-md full-width"
-          />
-        </q-card-section>
-
-        <q-card-actions align="center" class="row no-wrap">
-          <q-btn outline style="width: 100%" label="Cancel" v-close-popup color="primary" no-caps />
-          <q-btn
-            label="Confirm"
-            unelevated
-            color="primary"
-            no-caps
-            style="width: 100%"
-            v-close-popup
-            @click="saveFn()"
-          />
-        </q-card-actions>
-      </q-card>
-    </q-dialog>
   </q-page>
 </template>
 <script>
 import ReusableTable from 'src/components/ReusableTable.vue'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
 import {
-  softDeleteInventoryData,
   addInventoryList,
   updateWishlist,
   addGroupName,
   getWishlist,
+  deleteWishlist,
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -219,17 +190,17 @@ export default {
       })
     }
 
-    const tableAction = (data, modeParam, action) => {
+    const tableAction = (id, modeParam, action) => {
       mode.value = modeParam
       if (['Edit', 'Add'].includes(modeParam)) {
         if (modeParam == 'Add') {
           dataStorage.value = {}
         } else {
-          dataStorage.value = { id: data, status: action == 'prio' ? 1 : 0 }
+          dataStorage.value = { id: id, status: action == 'prio' ? 1 : 0 }
           saveFn()
         }
       } else {
-        arrayOfId.value.push(data.id)
+        arrayOfId.value.push(id)
         confirm.value = !confirm.value
       }
     }
@@ -290,11 +261,21 @@ export default {
     }
 
     const softDeleteFn = () => {
-      const tableName = filterTab.value == 2 ? 'tbl_inventory_group' : 'tbl_inventory'
-      softDeleteInventoryData(arrayOfId.value, tableName).then((response) => {
-        if (response == 'success') {
-          //
-        }
+      $q.loading.show({
+        group: 'update',
+        message: `${obj3[mode.value]}. Please wait...`,
+      })
+      deleteWishlist(obj[tab.value], arrayOfId.value).then((response) => {
+        $q.loading.show({
+          group: 'update',
+          message: response.message,
+        })
+        setTimeout(() => {
+          $q.loading.hide()
+          if (response.status == 'success') {
+            fetchData()
+          }
+        }, 2000)
       })
     }
 

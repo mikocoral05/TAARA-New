@@ -2,9 +2,9 @@
   <q-page>
     <div class="row no-wrap justify-between items-center">
       <q-tabs dense v-model="tab" inline-label flat active-color="primary" active-bg-color="white">
-        <q-tab name="2" icon="sym_r_medical_services" label="Medicine" no-caps />
-        <q-tab name="3" icon="sym_r_restaurant" label="Food" no-caps />
-        <q-tab name="4" icon="sym_r_warehouse" label="Supplies" no-caps />
+        <q-tab name="1" icon="sym_r_medical_services" label="Medicine" no-caps />
+        <q-tab name="2" icon="sym_r_restaurant" label="Food" no-caps />
+        <q-tab name="3" icon="sym_r_warehouse" label="Supplies" no-caps />
       </q-tabs>
       <div class="row no-wrap justify-between items-center">
         <div class="row no-wrap">
@@ -296,12 +296,12 @@ import {
   getBudgetAllocation,
   getExpensesSummary,
   getTotalBalance,
-  getInventoryList,
   getInventoryGroup,
   softDeleteInventoryData,
   addInventoryList,
   editInventoryList,
   addGroupName,
+  getWishlist,
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -449,28 +449,14 @@ export default {
     }
 
     watchEffect(() => {
-      if (tab.value == 1) {
-        updateBudgetAllocationSum()
-      } else {
-        getInventoryList(obj[tab.value]).then((response) => {
-          tableConfig.value.title = `${capitalize(obj[tab.value])} Wishlist`
-          tableConfig.value.columns = [
-            'id',
-            'item_name',
-            'group_name',
-            'quantity',
-            'unit',
-            'expiration_date',
-            'btn',
-          ]
-          rows.value = response
-          console.log(rows.value)
+      const obj = { 1: 'tbl_wishlist_medicine', 2: 'tbl_wishlist_food', 3: 'tbl_wishlist_supplies' }
 
-          itemsCount.value = rows.value.reduce((total, item) => {
-            return total + item.quantity
-          }, 0)
-        })
-      }
+      getWishlist(obj[tab.value]).then((response) => {
+        tableConfig.value.title = `${capitalize(obj[tab.value])} Wishlist`
+        tableConfig.value.columns = ['id', 'name', 'is_priority', 'btn']
+        rows.value = response
+        console.log(rows.value)
+      })
     })
 
     return {
@@ -525,48 +511,13 @@ export default {
           align: 'center',
         },
         {
-          name: 'item_name',
-          label: 'Item Name',
-          field: 'item_name',
-          sortable: true,
-          align: 'center',
-        },
-        {
-          name: 'group_name',
-          label: 'Group Name',
-          field: 'group_name',
-          sortable: true,
-          align: 'center',
-        },
-        {
-          name: 'quantity',
-          label: 'Quantity',
-          field: 'quantity',
-          sortable: true,
-          align: 'center',
-        },
-        {
-          name: 'unit',
-          label: 'Unit',
-          field: 'unit',
-          sortable: true,
-          align: 'center',
-        },
-        {
-          name: 'expiration_date',
-          label: 'Expiration Date',
-          field: 'expiration_date',
+          name: 'is_priority',
+          label: 'Priority',
+          field: 'is_priority',
           sortable: true,
           align: 'center',
         },
 
-        {
-          name: 'count',
-          label: `No. of ${obj[tab.value]}`,
-          field: 'count',
-          sortable: true,
-          align: 'center',
-        },
         {
           name: 'btn',
           label: 'Action',

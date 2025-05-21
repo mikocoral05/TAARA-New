@@ -120,6 +120,24 @@ class API
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to updated records', 'method' => 'PUT']);
             }
+        } else   if (array_key_exists('delete_wishlist', $payload)) {
+            $id = $payload['delete_wishlist']['id'];
+            $table = $payload['delete_wishlist']['table'];
+            $ids = is_array($id) ? $id : explode(',', $id);
+
+            $update_values = [
+                'is_deleted' => 1,
+                'deleted_at' => date('Y-m-d H:i:s')
+            ];
+
+            $this->db->where('id', $ids, 'IN');
+            $updated = $this->db->update($table, $update_values);
+
+            if ($updated) {
+                echo json_encode(['status' => 'success', 'message' => 'Records delete successfully', 'method' => 'PUT']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to delete records', 'method' => 'PUT']);
+            }
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Missing updated data in the payload']);
         }

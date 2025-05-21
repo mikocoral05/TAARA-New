@@ -831,7 +831,15 @@ const deleteWishlist = async (table, arrayId) => {
   return response.data
 }
 
+const addWishlist = async (obj) => {
+  const response = await api.post('wishlist_management.php', {
+    add_wishlist: obj,
+  })
+  return response.data
+}
+
 export {
+  addWishlist,
   deleteWishlist,
   updateWishlist,
   getWishlist,

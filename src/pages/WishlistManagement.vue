@@ -120,17 +120,55 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
+    <q-dialog v-model="addDialog" persistent>
+      <q-card class="q-pa-md" style="width: 450px; min-height: 130px">
+        <q-card-section class="column no-wrap q-px-sm"
+          ><div class="row no-wrap justify-between items-center">
+            <div class="text-capitalize text-body1 text0center">
+              Add {{ obj2[filterTab] }} wishlist
+            </div>
+            <q-toggle
+              v-model="dataStorage.is_priority"
+              color="green"
+              :true-value="1"
+              :false-value="0"
+              :label="dataStorage.is_priority ? 'Priority' : 'Not priority'"
+            />
+          </div>
+          <q-input
+            outlined
+            v-model="dataStorage.name"
+            :placeholder="`${obj2[filterTab]} wishlist`"
+            dense
+            class="q-mt-md full-width"
+          />
+        </q-card-section>
+
+        <q-card-actions align="center" class="row no-wrap">
+          <q-btn outline style="width: 100%" label="Cancel" v-close-popup color="primary" no-caps />
+          <q-btn
+            label="Confirm"
+            unelevated
+            color="primary"
+            no-caps
+            style="width: 100%"
+            v-close-popup
+            @click="saveFn()"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 <script>
 import ReusableTable from 'src/components/ReusableTable.vue'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
 import {
-  addInventoryList,
   updateWishlist,
-  addGroupName,
   getWishlist,
   deleteWishlist,
+  addWishlist,
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -162,7 +200,7 @@ export default {
     const rows = ref([])
     const confirm = ref(false)
     const search = ref(null)
-    const groupDialog = ref(false)
+    const addDialog = ref(false)
     const pages = ref([])
     const dataStorage = ref({})
     const elseSummary = ref({})
@@ -194,7 +232,8 @@ export default {
       mode.value = modeParam
       if (['Edit', 'Add'].includes(modeParam)) {
         if (modeParam == 'Add') {
-          dataStorage.value = {}
+          addDialog.value = true
+          dataStorage.value = { is_priority: 0 }
         } else {
           dataStorage.value = { id: id, status: action == 'prio' ? 1 : 0 }
           saveFn()
@@ -211,35 +250,20 @@ export default {
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
-        dataStorage.value.category = obj[tab.value]
-        if (filterTab.value !== 2) {
-          addInventoryList(dataStorage.value).then((response) => {
-            console.log(response)
-            setTimeout(() => {
-              $q.loading.show({
-                group: 'update',
-                message: response.message,
-              })
-            }, 1000)
-            setTimeout(() => {
-              $q.loading.hide()
-            }, 2000)
-          })
-        } else {
-          addGroupName(dataStorage.value).then((response) => {
-            console.log(response)
-            setTimeout(() => {
-              $q.loading.show({
-                group: 'update',
-                message: response.message,
-              })
-            }, 1000)
-            setTimeout(() => {
-              groupDialog.value = false
-              $q.loading.hide()
-            }, 2000)
-          })
-        }
+        dataStorage.value.table = obj[tab.value]
+        addWishlist(dataStorage.value).then((response) => {
+          console.log(response)
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 1000)
+          setTimeout(() => {
+            $q.loading.hide()
+            fetchData()
+          }, 2000)
+        })
       } else if (mode.value == 'Edit') {
         $q.loading.show({
           group: 'update',
@@ -284,7 +308,7 @@ export default {
     })
 
     return {
-      groupDialog,
+      addDialog,
       groupNameOptions,
       arrayOfId,
       filterTab,

@@ -36,62 +36,24 @@ class API
 
     public function httpPost($payload)
     {
-        if (array_key_exists("volunteer_request", $payload)) {
-            $id = isset($payload['volunteer_request']['user_data']['user_id']) ? (int)$payload['volunteer_request']['user_data']['user_id'] : 0;
-            $user_data = (array) $payload['volunteer_request']['user_data'];
-            $form_data = (array) $payload['volunteer_request']['form_data'];
+        if (array_key_exists("add_wishlist", $payload)) {
+            $table = $payload['add_wishlist']['table']; // Extract table name
+            $data = $payload['add_wishlist'];
+            unset($data['table']); // Remove table key from data before insert
 
-            $response = [
-                'status' => 'error',
-                'message' => 'Unknown error',
-                'method' => 'POST'
-            ];
-
-            if ($id > 0) {
-                $query_compar = $this->db->rawQuery("SELECT * FROM tbl_volunteer_form WHERE user_id = $id");
-                if (count($query_compar) == 0) {
-
-                    $copied_data = $user_data;
-                    unset($copied_data['user_id']);
-
-                    $this->db->where('user_id', $id);
-                    $this->db->update('tbl_users', $copied_data);
-
-                    if ($this->db->insert('tbl_volunteer_form', $form_data)) {
-                        $response = [
-                            'status' => 'success',
-                            'message' => 'Registration successful. Please wait for approval',
-                            'method' => 'POST'
-                        ];
-                    } else {
-                        $response['message'] = 'Failed to insert volunteer form.';
-                    }
-                } else {
-                    $response = [
-                        'status' => 'success',
-                        'message' => 'You have already submitted!',
-                        'method' => 'POST'
-                    ];
-                }
+            if ($this->db->insert($table, $data)) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'successfully add wishlist',
+                    'method' => 'POST'
+                ]);
             } else {
-                if ($this->db->insert('tbl_users', $user_data)) {
-                    $id = $this->db->getInsertId();
-                    $form_data['user_id'] = $id;  // ensure form links to new user
-                    if ($this->db->insert('tbl_volunteer_form', $form_data)) {
-                        $response = [
-                            'status' => 'success',
-                            'message' => 'Registration successful. Please wait for approval',
-                            'method' => 'POST'
-                        ];
-                    } else {
-                        $response['message'] = 'Failed to insert volunteer form.';
-                    }
-                } else {
-                    $response['message'] = 'Failed to insert user data.';
-                }
+                echo json_encode([
+                    'status' => 'failed',
+                    'message' => 'cannot add wishlist',
+                    'method' => 'POST'
+                ]);
             }
-
-            echo json_encode($response);
         } else {
             echo json_encode([
                 'status' => 'error',

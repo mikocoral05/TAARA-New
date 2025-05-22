@@ -219,12 +219,6 @@ export default defineComponent({
         icon: 'sym_r_folded_hands',
         nav: '/management/wishlist',
       },
-
-      {
-        title: 'Authorization',
-        icon: 'manage_accounts',
-        nav: '/management/users',
-      },
     ])
 
     const linksList3 = computed(() => [

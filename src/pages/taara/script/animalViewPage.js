@@ -9,10 +9,10 @@ import {
   resizeImage,
   decodeAnimalId,
   encodeAnimalId,
+  getImageLink,
 } from 'src/composable/simpleComposable'
 import {
   specificAnimalId,
-  allAnimalData6,
   viewSpecificAnimal,
   adoptedAnimalOnProgress,
   likesData,
@@ -20,9 +20,9 @@ import {
   likes,
   removeLikes,
   getLikes,
-  specificAnimal,
   moreAnimalForAdoption,
   submitPublicDonation,
+  getRandomAnimal,
 } from 'src/composable/taaraComposable'
 import { globalStore } from 'src/stores/global-store'
 
@@ -45,7 +45,8 @@ export default {
     let petId = ref()
     let step = ref(1)
     const like = ref()
-
+    const specificAnimal = ref({})
+    const allAnimalData6 = ref([])
     let donatorsInfo = ref({
       donators_id: null,
       animal_id: null,
@@ -61,7 +62,7 @@ export default {
       let temp = []
       for (let i = 0; i < 5; i++) {
         let j = (button + i) % 5
-        temp[i] = specificAnimal.value.image[j].animal_image
+        temp[i] = getImageLink(specificAnimal.value.file[j].name)
       }
       inFront.value = temp
     }
@@ -129,7 +130,9 @@ export default {
     }
 
     watch(petId, (newVal) => {
-      viewSpecificAnimal(decodeAnimalId(newVal))
+      viewSpecificAnimal(decodeAnimalId(newVal)).then((response) => {
+        specificAnimal.value = response
+      })
       inFront.value = []
     })
     watch(
@@ -193,7 +196,12 @@ export default {
     )
     onMounted(() => {
       window.addEventListener('resize', handleWindowResize)
-      viewSpecificAnimal(decodeAnimalId(route.query.pet))
+      viewSpecificAnimal(decodeAnimalId(route.query.pet)).then((response) => {
+        specificAnimal.value = response
+      })
+      getRandomAnimal().then((response) => {
+        allAnimalData6.value = response
+      })
       Object.keys(store.userData).length == 0 ? '' : getSubmitAdoptionForm(store.userData.user_id)
       Object.keys(store.userData).length == 0 ? '' : getLikes(store.userData.user_id)
       moreAnimalForAdoption()
@@ -201,8 +209,8 @@ export default {
     onUnmounted(() => {
       window.removeEventListener('resize', handleWindowResize)
     })
-
     return {
+      getImageLink,
       store,
       petId,
       encodeAnimalId,

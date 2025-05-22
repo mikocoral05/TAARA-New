@@ -2,36 +2,26 @@
   <q-page>
     <div v-for="specific in specificAnimal.data" :key="specific.id">
       <div class="q-pa-md">
-        <q-carousel
-          v-model="slide"
-          control-color="primary"
-          class="rounded-borders"
-        >
+        <q-carousel v-model="slide" control-color="primary" class="rounded-borders">
           <q-carousel-slide
             name="style"
             class="flex justify-center items-center relative bg-black row no-wrap overflow-hidden carosel"
           >
             <img
               class="img-top"
-              :src="
-                inFront[0] ? inFront[0] : specificAnimal.image[0].animal_image
-              "
+              :src="inFront[0] ? inFront[0] : specificAnimal.image[0].animal_image"
               alt=""
               loading="lazy"
             />
             <img
               class="img-top"
-              :src="
-                inFront[1] ? inFront[1] : specificAnimal.image[1].animal_image
-              "
+              :src="inFront[1] ? inFront[1] : specificAnimal.image[1].animal_image"
               alt=""
               loading="lazy"
             />
             <img
               class="ccenters"
-              :src="
-                inFront[2] ? inFront[2] : specificAnimal.image[2].animal_image
-              "
+              :src="inFront[2] ? inFront[2] : specificAnimal.image[2].animal_image"
               alt=""
               style="opacity: none"
               loading="lazy"
@@ -39,17 +29,13 @@
 
             <img
               class="img-top"
-              :src="
-                inFront[3] ? inFront[3] : specificAnimal.image[3].animal_image
-              "
+              :src="inFront[3] ? inFront[3] : specificAnimal.image[3].animal_image"
               alt=""
               loading="lazy"
             />
             <img
               class="img-top"
-              :src="
-                inFront[4] ? inFront[4] : specificAnimal.image[4].animal_image
-              "
+              :src="inFront[4] ? inFront[4] : specificAnimal.image[4].animal_image"
               alt=""
               loading="lazy"
             />
@@ -112,19 +98,12 @@
         </div>
       </div>
       <div class="flex justify-center items-center">
-        <div
-          class="flex row justify-between items-center details-div no-wrap text-body1"
-        >
+        <div class="flex row justify-between items-center details-div no-wrap text-body1">
           <div class="details-left-container q-mt-none q-pt-none">
-            <p
-              class="q-mx-sm q-mb-sm q-pa-none q-mt-none"
-              style="text-transform: capitalize"
-            >
+            <p class="q-mx-sm q-mb-sm q-pa-none q-mt-none" style="text-transform: capitalize">
               <b>Breed:</b> {{ specific.breed }}
             </p>
-            <p class="q-ma-sm q-pa-none">
-              <b>Age:</b> {{ getAge(specific.age) }}
-            </p>
+            <p class="q-ma-sm q-pa-none"><b>Age:</b> {{ getAge(specific.age) }}</p>
             <p class="q-ma-sm q-pa-none" style="text-transform: capitalize">
               <b>Size:</b> {{ specific.size }}
             </p>
@@ -141,9 +120,7 @@
               <b>Care & Behaviour:</b> {{ specific.behaviour }}
             </p>
           </div>
-          <div
-            class="flex column justify-center items-center q-mt-xl story-contianer"
-          >
+          <div class="flex column justify-center items-center q-mt-xl story-contianer">
             <div class="story-contianer-first-child">
               <p class="text-center q-mt-sm q-mb-none animal-story-title">
                 {{ specific.animal_name }}'s Story
@@ -154,15 +131,13 @@
                 </p>
               </div>
             </div>
-            <div
-              class="flex justify-between items-center button-container no-wrap full-width"
-            >
+            <div class="flex justify-between items-center button-container no-wrap full-width">
               <div class="flex row no-wrap full-width">
                 <!-- :disable="
                     accountActive(adoptedAnimalOnProgress, specific.animal_id)
                   " -->
                 <!-- :style="
-                    logInDetails == null
+                    Object.keys(store.userData).length == 0
                       ? {
                           background: '#B157AE',
                         }
@@ -183,7 +158,7 @@
                       : 'pets'
                   "
                   @click="
-                    logInDetails == null
+                    Object.keys(store.userData).length == 0
                       ? (counterStore.showDialog = true)
                       : $router.push({
                           path: '/pet-adoption-form',
@@ -201,7 +176,7 @@
                   label="DONATE"
                   icon-right="volunteer_activism"
                   @click="
-                    logInDetails == null
+                    Object.keys(store.userData).length == 0
                       ? (counterStore.showDialog = true)
                       : (donateDialog = true)
                   "
@@ -212,12 +187,10 @@
 
               <p class="hidden">
                 {{
-                  (like =
-                    logInDetails == null
+                  like =
+                    Object.keys(store.userData).length == 0
                       ? false
-                      : likesData.some(
-                          (obj) => obj.animal_id === specific.animal_id
-                        ))
+                      : likesData.some((obj) => obj.animal_id === specific.animal_id)
                 }}
               </p>
               <q-btn
@@ -226,10 +199,10 @@
                 @click="
                   restrictionHeart(
                     specific.animal_id,
-                    logInDetails,
+                    store.userData,
                     dateToday,
                     specificAnimal.image[0].animal_image,
-                    specific.animal_name
+                    specific.animal_name,
                   )
                 "
                 flat
@@ -254,9 +227,7 @@
           </h5>
         </div>
         <div class="flex justify-center items-center q-px-sm">
-          <div
-            class="flex q-pa-md justify-center items-center more-pets-container"
-          >
+          <div class="flex q-pa-md justify-center items-center more-pets-container">
             <q-card
               class="my-card col more-pets"
               v-for="data in allAnimalData6"
@@ -267,10 +238,10 @@
                 class="qb q-ma-none q-pa-none"
                 flat
                 @click="
-                  (petId = encodeAnimalId(data.animal_id)),
-                    $router.push({
-                      query: { pet: encodeAnimalId(data.animal_id) },
-                    })
+                  ((petId = encodeAnimalId(data.animal_id)),
+                  $router.push({
+                    query: { pet: encodeAnimalId(data.animal_id) },
+                  }))
                 "
                 no-caps
               >
@@ -291,17 +262,10 @@
       </div>
       <q-dialog v-model="donateDialog" persistent>
         <div class="my-div column no-wrap q-pa-md">
-          <q-form
-            @submit="submitPublicDonation(donatorsInfo), (donateDialog = false)"
-          >
+          <q-form @submit="(submitPublicDonation(donatorsInfo), (donateDialog = false))">
             <div class="container-update-icon">
               <div class="text-purple">
-                <q-icon
-                  class="update-icon"
-                  size="1.5rem"
-                  color="primary"
-                  name="wallet"
-                />
+                <q-icon class="update-icon" size="1.5rem" color="primary" name="wallet" />
               </div>
             </div>
 
@@ -312,9 +276,7 @@
                 style="width: 280px; height: 280px"
               />
             </div>
-            <div
-              class="flex column justify-center items-center full-width q-mb-xs"
-            >
+            <div class="flex column justify-center items-center full-width q-mb-xs">
               <h6 class="text-center q-ma-none">Ednalyn Cristo</h6>
               <p class="text-center number q-mb-none">09324710384</p>
             </div>
@@ -327,7 +289,7 @@
                 size="sm"
                 color="accent"
                 class="q-mr-xs"
-                @click="(imageOrReference = true), (reference = null)"
+                @click="((imageOrReference = true), (reference = null))"
               />
               <q-btn
                 label="Reference"
@@ -336,7 +298,7 @@
                 no-caps
                 size="sm"
                 color="accent"
-                @click="(imageOrReference = false), (donationImage = null)"
+                @click="((imageOrReference = false), (donationImage = null))"
               />
             </div>
             <div class="q-mt-sm">
@@ -354,11 +316,7 @@
                 <template v-slot:before>
                   <q-avatar size="md">
                     <img
-                      :src="
-                        inFront[4]
-                          ? inFront[4]
-                          : specificAnimal.image[4].animal_image
-                      "
+                      :src="inFront[4] ? inFront[4] : specificAnimal.image[4].animal_image"
                       class="img-animal"
                     />
                   </q-avatar>
@@ -394,11 +352,7 @@
                 <template v-slot:before>
                   <q-avatar size="md">
                     <img
-                      :src="
-                        inFront[4]
-                          ? inFront[4]
-                          : specificAnimal.image[4].animal_image
-                      "
+                      :src="inFront[4] ? inFront[4] : specificAnimal.image[4].animal_image"
                       class="img-animal"
                     />
                   </q-avatar>
@@ -446,9 +400,5 @@
     <donationDialog />
   </q-page>
 </template>
-<script src="../pages/taara/script/animalViewPage"></script>
-<style
-  lang="scss"
-  scoped
-  src="../pages/taara/style/animalViewPage.scss"
-></style>
+<script src="pages/taara/script/animalViewPage"></script>
+<style lang="scss" scoped src="pages/taara/style/animalViewPage.scss"></style>

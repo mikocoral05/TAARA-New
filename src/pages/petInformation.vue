@@ -416,7 +416,7 @@
               flat
               @click="
                 $router.push({
-                  path: '/view-specific-animal',
+                  path: '/public/view-specific-animal',
                   query: { pet: encodeAnimalId(data.animal_id) },
                 })
               "

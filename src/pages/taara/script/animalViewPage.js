@@ -14,7 +14,6 @@ import {
   specificAnimalId,
   allAnimalData6,
   viewSpecificAnimal,
-  logInDetails,
   adoptedAnimalOnProgress,
   likesData,
   getSubmitAdoptionForm,
@@ -25,12 +24,14 @@ import {
   moreAnimalForAdoption,
   submitPublicDonation,
 } from 'src/composable/taaraComposable'
+import { globalStore } from 'src/stores/global-store'
 
 export default {
   components: {
     taaraFooter,
   },
   setup() {
+    const store = globalStore()
     const route = useRoute()
     const counterStore = useCounterStore()
     let showPorgressAndOther = ref(false)
@@ -66,14 +67,14 @@ export default {
     }
 
     let restrictionHeart = (animal_id, logInDetails, dateToday, animalImage, animalName) => {
-      if (logInDetails == null) {
+      if (Object.keys(store.userData).length == 0) {
         counterStore.showDialog = true
       } else {
         like.value = !like.value
         if (like.value == true) {
-          likes(animal_id, logInDetails[0].user_id, dateToday, animalImage, animalName)
+          likes(animal_id, store.userData.user_id, dateToday, animalImage, animalName)
         } else {
-          removeLikes(animal_id, logInDetails[0].user_id, dateToday, animalImage, animalName)
+          removeLikes(animal_id, store.userData.user_id, dateToday, animalImage, animalName)
         }
       }
     }
@@ -113,10 +114,10 @@ export default {
         return obj.animal_id === pay2
       })
       let checkAdopt =
-        logInDetails.value == null
+        Object.keys(store.userData).length == 0
           ? false
           : pay1.some((obj) => obj.animal_id === pay2) &&
-            pay1.some((obj) => obj.user_id === logInDetails.value[0].user_id)
+            pay1.some((obj) => obj.user_id === store.userData.user_id)
       if (checkAdopt == true) {
         step.value = progressAdotpion[0].review_form
       }
@@ -136,7 +137,7 @@ export default {
       () => {
         ;(async () => {
           let obj = {
-            donators_id: logInDetails.value[0].user_id,
+            donators_id: store.userData.user_id,
             animal_id: specificAnimal.value.data[0].animal_id,
             donation_amount: null,
             image: null,
@@ -193,8 +194,8 @@ export default {
     onMounted(() => {
       window.addEventListener('resize', handleWindowResize)
       viewSpecificAnimal(decodeAnimalId(route.query.pet))
-      logInDetails.value == null ? '' : getSubmitAdoptionForm(logInDetails.value[0].user_id)
-      logInDetails.value == null ? '' : getLikes(logInDetails.value[0].user_id)
+      Object.keys(store.userData).length == 0 ? '' : getSubmitAdoptionForm(store.userData.user_id)
+      Object.keys(store.userData).length == 0 ? '' : getLikes(store.userData.user_id)
       moreAnimalForAdoption()
     })
     onUnmounted(() => {
@@ -202,6 +203,7 @@ export default {
     })
 
     return {
+      store,
       petId,
       encodeAnimalId,
       donatorsInfo,
@@ -226,7 +228,6 @@ export default {
       likesData,
       allAnimalData6,
       specificAnimalId,
-      logInDetails,
       viewSpecificAnimal,
       inFront,
       specificAnimal,

@@ -352,10 +352,91 @@ class API
       ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("specificAnimalId", $ref_id)) {
-      $animal_id = $ref_id['specificAnimalId'];
-      $query1 = $this->db->rawQuery("SELECT animal_id,animal_name,animal_type,animal_image,fur_color,breed,behaviour,good_with,age,sex,size,weight,height ,health,current_state,story FROM tbl_animals_info WHERE animal_id = $animal_id");
-      $query2 = $this->db->rawQuery("SELECT * FROM tbl_animal_image where animal_id = $animal_id");
-      echo json_encode(array('status' => 'success', 'data' => $query1, 'image' => $query2, 'method' => 'GET'));
+      $id = $payload['specificAnimalId'];
+
+      $this->db->join("tbl_files f", "f.id = ai.primary_image", "LEFT");
+      $this->db->where("is_deleted", 1);
+      $this->db->where("animal_id", $id);
+
+      // Fetch a single record
+      $animal = $this->db->getOne("tbl_animal_info ai", "ai.*, f.image_path AS primary_image");
+
+      if ($animal) {
+        $galleryIds = json_decode($animal['image_gallery'], true);
+
+        if (is_array($galleryIds) && count($galleryIds)) {
+          $this->db->where('id', $galleryIds, 'IN');
+          $files = $this->db->get('tbl_files');
+
+          $fileObjects = array_map(function ($file) {
+            return [
+              'name' => $file['image_path'],
+              'type' => $file['type'],
+              'size' => $file['size'],
+              'id' => $file['id']
+            ];
+          }, $files);
+
+          $animal['file'] = $fileObjects;
+        } else {
+          $animal['file'] = [];
+        }
+
+        unset($animal['image_gallery']);
+      }
+
+      echo json_encode([
+        'status' => 'success',
+        'data' => $animal, // directly return the single animal object
+        'method' => 'GET'
+      ]);
+    } else if (array_key_exists("get_random_animal", $ref_id)) {
+
+      // Get total number of rows (filtered by is_deleted = 1)
+      $this->db->where("is_deleted", 1);
+      $total = $this->db->getValue("tbl_animal_info", "count(*)");
+
+      // Compute a safe random offset
+      $offset = rand(0, max(0, $total - 6));
+
+      // Join primary image
+      $this->db->join("tbl_files f", "f.id = tbl_animal_info.primary_image", "LEFT");
+      $this->db->where("is_deleted", 1);
+
+      // Get 6 animals using limit + offset (faster than RAND() for large tables)
+      $animalRows = $this->db->get("tbl_animal_info", [$offset, 6], "tbl_animal_info.*, f.image_path AS primary_image");
+
+      // Map image_gallery to file data
+      foreach ($animalRows as &$animal) {
+        $galleryIds = json_decode($animal['image_gallery'], true);
+
+        if (is_array($galleryIds) && count($galleryIds)) {
+          $this->db->where('id', $galleryIds, 'IN');
+          $files = $this->db->get('tbl_files');
+
+          $fileObjects = array_map(function ($file) {
+            return [
+              'name' => $file['image_path'],
+              'type' => $file['type'],
+              'size' => $file['size'],
+              'id'   => $file['id']
+            ];
+          }, $files);
+
+          $animal['file'] = $fileObjects;
+        } else {
+          $animal['file'] = [];
+        }
+
+        unset($animal['image_gallery']);
+      }
+
+      // Output JSON
+      echo json_encode([
+        'status' => 'success',
+        'data' => $animalRows,
+        'method' => 'GET'
+      ]);
     } else if (array_key_exists("animalImageId", $ref_id)) {
       $animal_id = $ref_id['animalImageId'];
       $img = $this->db->rawQuery("SELECT * FROM tbl_animal_image where animal_id = $animal_id");

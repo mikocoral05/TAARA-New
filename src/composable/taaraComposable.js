@@ -452,19 +452,32 @@ const updatePublicUserPassword = (new_password, user_id) => {
   })
 }
 let specificAnimal = ref([])
-const viewSpecificAnimal = (payload) => {
+const viewSpecificAnimal = (id) => {
   return new Promise((resolve, reject) => {
     api
       .get('api.php', {
         params: {
-          specificAnimalId: payload,
+          specificAnimalId: id,
         },
       })
       .then((response) => {
-        specificAnimal.value = response.data
-        // localStorage.setItem("specificAnimalId", payload);
-        console.log(specificAnimal.value)
-        resolve(response.data)
+        resolve(response.data.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+export const getRandomAnimal = () => {
+  return new Promise((resolve, reject) => {
+    api
+      .get('api.php', {
+        params: {
+          get_random_animal: 'get_random_animal',
+        },
+      })
+      .then((response) => {
+        resolve(response.data.data)
       })
       .catch((error) => {
         reject(error)

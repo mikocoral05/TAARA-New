@@ -159,9 +159,6 @@ export default {
     const chartCanvas = ref(null)
     let chartInstance = null
 
-    const DATA_COUNT = 48 // 52 weeks in a year approx.
-    const WEEKS_PER_MONTH = 4
-
     const monthLabels = [
       'Jan',
       'Feb',
@@ -177,26 +174,31 @@ export default {
       'Dec',
     ]
 
-    const labels = Array.from({ length: DATA_COUNT }, (_, i) => {
-      return monthLabels[Math.floor(i / WEEKS_PER_MONTH)]
-    })
-
-    const generateRandomData = () => {
-      return Array.from({ length: DATA_COUNT }, () => Math.floor(Math.random() * 90000 + 1000))
-    }
+    const generateData = () =>
+      Array.from({ length: 12 }, () => Math.floor(Math.random() * 90000 + 1000))
 
     const data = {
-      labels: labels,
+      labels: monthLabels,
       datasets: [
         {
-          label: 'Dataset 1',
-          data: generateRandomData(),
+          label: 'Dogs',
+          data: generateData(),
           backgroundColor: '#c10015',
         },
         {
-          label: 'Dataset 2',
-          data: generateRandomData(),
+          label: 'Cats',
+          data: generateData(),
           backgroundColor: '#557ff7',
+        },
+        {
+          label: 'Birds',
+          data: generateData(),
+          backgroundColor: '#2ecc71',
+        },
+        {
+          label: 'Others',
+          data: generateData(),
+          backgroundColor: '#f39c12',
         },
       ],
     }
@@ -208,25 +210,23 @@ export default {
         responsive: true,
         plugins: {
           legend: { position: 'top' },
-          title: { display: true, text: 'Chart.js Bar Chart' },
+          title: {
+            display: true,
+            text: 'Monthly Pet Data by Type',
+          },
         },
         scales: {
           x: {
-            grid: { display: false },
-            ticks: {
-              callback: (value, index) => {
-                return index % WEEKS_PER_MONTH === 0 ? labels[index] : ''
-              },
-              autoSkip: false,
-              maxRotation: 0,
-              minRotation: 0,
-            },
             stacked: false,
+            grid: { display: false },
           },
           y: {
-            grid: { display: true },
-            ticks: { display: true },
+            beginAtZero: true,
             stacked: false,
+            title: {
+              display: true,
+              text: 'Count',
+            },
           },
         },
       },

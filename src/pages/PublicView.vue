@@ -2,7 +2,7 @@
   <q-page>
     <q-scroll-observer @scroll="onScroll" />
     <div class="first-layer row justify-center items-center">
-      <div class="row no-wrap q-my-lg first-child">
+      <div class="row no-wrap q-my-lg first-child items-end">
         <div class="intro-layer column no-wrap">
           <div class="heading-1 q-mb-lg fade-in">
             Find Your
@@ -47,8 +47,8 @@
             </div>
           </div>
         </div>
-        <div class="image-layer fade-in-left-right">
-          <img src="../image/home_Image-ai-brush-removebg-yed4fhw.png" alt="" />
+        <div class="image-layer fade-in-left-right row justify-end items-end">
+          <q-img src="~assets/public-image1.png" class="radius-100" width="500px" alt="" />
         </div>
       </div>
     </div>

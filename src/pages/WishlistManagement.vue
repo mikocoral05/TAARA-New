@@ -51,6 +51,12 @@
           <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
             <q-menu anchor="bottom left" self="top right">
               <q-list dense style="min-width: 100px">
+                <q-item clickable v-close-popup @click="tableAction(row, 'EditP')">
+                  <q-item-section>Edit</q-item-section>
+                  <q-item-section side>
+                    <q-icon name="sym_r_edit" size="1.2rem" />
+                  </q-item-section>
+                </q-item>
                 <q-item clickable v-close-popup @click="tableAction(row.id, 'Edit', 'prio')">
                   <q-item-section>Priority</q-item-section>
                   <q-item-section side>
@@ -230,10 +236,14 @@ export default {
 
     const tableAction = (id, modeParam, action) => {
       mode.value = modeParam
-      if (['Edit', 'Add'].includes(modeParam)) {
+      if (['Edit', 'Add', 'EditP'].includes(modeParam)) {
         if (modeParam == 'Add') {
           addDialog.value = true
           dataStorage.value = { is_priority: 0 }
+        } else if (modeParam == 'EditP') {
+          addDialog.value = true
+          dataStorage.value = { ...id } //actually pass data not id
+          console.log(dataStorage.value)
         } else {
           dataStorage.value = { id: id, status: action == 'prio' ? 1 : 0 }
           saveFn()
@@ -252,7 +262,6 @@ export default {
         })
         dataStorage.value.table = obj[tab.value]
         addWishlist(dataStorage.value).then((response) => {
-          console.log(response)
           setTimeout(() => {
             $q.loading.show({
               group: 'update',
@@ -264,11 +273,12 @@ export default {
             fetchData()
           }, 2000)
         })
-      } else if (mode.value == 'Edit') {
+      } else if (['Edit', 'EditP'].includes(mode.value)) {
         $q.loading.show({
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
+
         updateWishlist(obj[tab.value], dataStorage.value).then((response) => {
           $q.loading.show({
             group: 'update',

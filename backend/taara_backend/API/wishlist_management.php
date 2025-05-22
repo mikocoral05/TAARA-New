@@ -67,12 +67,15 @@ class API
     {
         if (array_key_exists('update_wishlist', $payload)) {
             $id = $payload['update_wishlist']['data']['id'];
-            $status = $payload['update_wishlist']['data']['status'];
+            $status = $payload['update_wishlist']['data']['status'] ?? '';
             $table = $payload['update_wishlist']['table'];
-
-            $update_values = [
-                'is_priority' => $status,
-            ];
+            if ($status) {
+                $update_values = [
+                    'is_priority' => $status,
+                ];
+            } else {
+                $update_values = $payload['update_wishlist']['data'];
+            }
 
             $this->db->where('id', $id);
             $updated = $this->db->update($table, $update_values);

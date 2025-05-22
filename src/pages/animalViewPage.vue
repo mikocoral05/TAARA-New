@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <div v-for="specific in specificAnimal.data" :key="specific.id">
+    <div v-for="specific in specificAnimal.file" :key="specific.id">
       <div class="q-pa-md">
         <q-carousel v-model="slide" control-color="primary" class="rounded-borders">
           <q-carousel-slide
@@ -9,19 +9,19 @@
           >
             <img
               class="img-top"
-              :src="inFront[0] ? inFront[0] : specificAnimal.image[0].animal_image"
+              :src="inFront[0] ? inFront[0] : getImageLink(specificAnimal.file[0].name)"
               alt=""
               loading="lazy"
             />
             <img
               class="img-top"
-              :src="inFront[1] ? inFront[1] : specificAnimal.image[1].animal_image"
+              :src="inFront[1] ? inFront[1] : getImageLink(specificAnimal.file[1].name)"
               alt=""
               loading="lazy"
             />
             <img
               class="ccenters"
-              :src="inFront[2] ? inFront[2] : specificAnimal.image[2].animal_image"
+              :src="inFront[2] ? inFront[2] : getImageLink(specificAnimal.file[2].name)"
               alt=""
               style="opacity: none"
               loading="lazy"
@@ -29,13 +29,13 @@
 
             <img
               class="img-top"
-              :src="inFront[3] ? inFront[3] : specificAnimal.image[3].animal_image"
+              :src="inFront[3] ? inFront[3] : getImageLink(specificAnimal.file[3].name)"
               alt=""
               loading="lazy"
             />
             <img
               class="img-top"
-              :src="inFront[4] ? inFront[4] : specificAnimal.image[4].animal_image"
+              :src="inFront[4] ? inFront[4] : getImageLink(specificAnimal.file[4].name)"
               alt=""
               loading="lazy"
             />
@@ -94,47 +94,45 @@
       </div> -->
       <div class="flex justify-center items-center">
         <div class="animal-label" style="text-transform: capitalize">
-          {{ specific.animal_name }}
+          {{ specificAnimal.animal_name }}
         </div>
       </div>
       <div class="flex justify-center items-center">
         <div class="flex row justify-between items-center details-div no-wrap text-body1">
           <div class="details-left-container q-mt-none q-pt-none">
             <p class="q-mx-sm q-mb-sm q-pa-none q-mt-none" style="text-transform: capitalize">
-              <b>Breed:</b> {{ specific.breed }}
+              <b>Breed:</b> {{ specificAnimal.breed }}
             </p>
-            <p class="q-ma-sm q-pa-none"><b>Age:</b> {{ getAge(specific.age) }}</p>
+            <p class="q-ma-sm q-pa-none"><b>Age:</b> {{ getAge(specificAnimal.age) }}</p>
+
             <p class="q-ma-sm q-pa-none" style="text-transform: capitalize">
-              <b>Size:</b> {{ specific.size }}
-            </p>
-            <p class="q-ma-sm q-pa-none" style="text-transform: capitalize">
-              <b>Sex:</b> {{ specific.sex }}
+              <b>Sex:</b> {{ specificAnimal.sex }}
             </p>
             <p class="q-ma-sm q-pa-none" style="text-transform: capitalize">
-              <b>Color:</b> {{ specific.fur_color }}
+              <b>Color:</b> {{ specificAnimal.fur_color }}
             </p>
             <p class="q-ma-sm q-pa-none" style="text-transform: capitalize">
-              <b>Good with:</b> {{ switchCase(specific.good_with) }}
+              <b>Good with:</b> {{ switchCase(specificAnimal.good_with) }}
             </p>
             <p class="q-ma-sm q-pa-none" style="text-transform: capitalize">
-              <b>Care & Behaviour:</b> {{ specific.behaviour }}
+              <b>Care & Behaviour:</b> {{ specificAnimal.behaviour }}
             </p>
           </div>
           <div class="flex column justify-center items-center q-mt-xl story-contianer">
             <div class="story-contianer-first-child">
               <p class="text-center q-mt-sm q-mb-none animal-story-title">
-                {{ specific.animal_name }}'s Story
+                {{ specificAnimal.name }}'s Story
               </p>
               <div class="q-ma-sm story-inner-container">
                 <p class="q-mx-sm q-mb-none story-p">
-                  {{ specific.story }}
+                  {{ specificAnimal.story_background }}
                 </p>
               </div>
             </div>
             <div class="flex justify-between items-center button-container no-wrap full-width">
               <div class="flex row no-wrap full-width">
                 <!-- :disable="
-                    accountActive(adoptedAnimalOnProgress, specific.animal_id)
+                    accountActive(adoptedAnimalOnProgress, specificAnimal.animal_id)
                   " -->
                 <!-- :style="
                     Object.keys(store.userData).length == 0
@@ -143,7 +141,7 @@
                         }
                       : {
                           background: adoptedAnimalOnProgress.some(
-                            (obj) => obj.animal_id === specific.animal_id
+                            (obj) => obj.animal_id === specificAnimal.animal_id
                           )
                             ? 'gray'
                             : '#B157AE',
@@ -153,7 +151,7 @@
                   class="q-my-sm q-px-lg buttons"
                   label="ADOPT "
                   :icon-right="
-                    accountActive(adoptedAnimalOnProgress, specific.animal_id)
+                    accountActive(adoptedAnimalOnProgress, specificAnimal.animal_id)
                       ? 'check_circle'
                       : 'pets'
                   "
@@ -163,7 +161,7 @@
                       : $router.push({
                           path: '/pet-adoption-form',
                           query: {
-                            adopt: encodeAnimalId(specific.animal_id),
+                            adopt: encodeAnimalId(specificAnimal.animal_id),
                           },
                         })
                   "
@@ -190,7 +188,7 @@
                   like =
                     Object.keys(store.userData).length == 0
                       ? false
-                      : likesData.some((obj) => obj.animal_id === specific.animal_id)
+                      : likesData.some((obj) => obj.animal_id === specificAnimal.animal_id)
                 }}
               </p>
               <q-btn
@@ -198,11 +196,11 @@
                 icon="favorite"
                 @click="
                   restrictionHeart(
-                    specific.animal_id,
+                    specificAnimal.animal_id,
                     store.userData,
                     dateToday,
-                    specificAnimal.image[0].animal_image,
-                    specific.animal_name,
+                    specificAnimal.file[0].name,
+                    specificAnimal.animal_name,
                   )
                 "
                 flat
@@ -233,29 +231,23 @@
               v-for="data in allAnimalData6"
               :key="data.animal_id"
               flat
+              @click="
+                ((petId = encodeAnimalId(data.animal_id)),
+                $router.push({
+                  query: { pet: encodeAnimalId(data.animal_id) },
+                }))
+              "
             >
-              <q-btn
-                class="qb q-ma-none q-pa-none"
-                flat
-                @click="
-                  ((petId = encodeAnimalId(data.animal_id)),
-                  $router.push({
-                    query: { pet: encodeAnimalId(data.animal_id) },
-                  }))
-                "
-                no-caps
-              >
-                <img
-                  class="iimg"
-                  :src="data.animal_image"
-                  alt="Looks like image is not available"
-                />
-                <q-card-section class="q-ma-none q-pa-none text-center">
-                  <div class="q-ma-none more-pets-animal-name text-capitalize">
-                    <b>{{ data.animal_name }}</b>
-                  </div>
-                </q-card-section>
-              </q-btn>
+              <img
+                class="iimg"
+                :src="getImageLink(data.primary_image)"
+                alt="Looks like image is not available"
+              />
+              <q-card-section class="q-ma-none q-pa-none text-center">
+                <div class="q-ma-none more-pets-animal-name text-capitalize">
+                  <b>{{ data.name }}</b>
+                </div>
+              </q-card-section>
             </q-card>
           </div>
         </div>
@@ -316,7 +308,7 @@
                 <template v-slot:before>
                   <q-avatar size="md">
                     <img
-                      :src="inFront[4] ? inFront[4] : specificAnimal.image[4].animal_image"
+                      :src="inFront[4] ? inFront[4] : specificAnimal.file[4].name"
                       class="img-animal"
                     />
                   </q-avatar>
@@ -352,7 +344,7 @@
                 <template v-slot:before>
                   <q-avatar size="md">
                     <img
-                      :src="inFront[4] ? inFront[4] : specificAnimal.image[4].animal_image"
+                      :src="inFront[4] ? inFront[4] : specificAnimal.file[4].name"
                       class="img-animal"
                     />
                   </q-avatar>

@@ -25,19 +25,6 @@ class API
             // ✅ Add column selection with alias
             $animalRows = $this->db->get("tbl_animal_info", null, "tbl_animal_info.*, f.image_path AS primary_image");
 
-            // foreach ($animalRows as &$animal) {
-            //     $galleryIds = json_decode($animal['image_gallery'], true);
-
-            //     if (is_array($galleryIds) && count($galleryIds)) {
-            //         $this->db->where('id', $galleryIds, 'IN');
-            //         $files = $this->db->get('tbl_files');
-
-            //         $paths = array_column($files, 'image_path');
-            //         $animal['image_gallery'] = $paths;
-            //     } else {
-            //         $animal['image_gallery'] = [];
-            //     }
-            // }
 
             foreach ($animalRows as &$animal) {
                 $galleryIds = json_decode($animal['image_gallery'], true);

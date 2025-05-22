@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="q-pa-md q-pb-lg">
     <canvas ref="chartCanvas" width="1200" height="400"></canvas>
   </div>
@@ -8,7 +8,6 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { Chart, registerables } from 'chart.js'
 
-// Register Chart.js components
 Chart.register(...registerables)
 
 export default {
@@ -131,6 +130,114 @@ export default {
     })
 
     // Destroy Chart on Unmount
+    onUnmounted(() => {
+      if (chartInstance) {
+        chartInstance.destroy()
+      }
+    })
+
+    return {
+      chartCanvas,
+    }
+  },
+}
+</script> -->
+<template>
+  <div class="q-pa-md q-pb-lg">
+    <canvas ref="chartCanvas" width="1200" height="400"></canvas>
+  </div>
+</template>
+
+<script>
+import { ref, onMounted, onUnmounted } from 'vue'
+import { Chart, registerables } from 'chart.js'
+
+Chart.register(...registerables)
+
+export default {
+  setup() {
+    const chartCanvas = ref(null)
+    let chartInstance = null
+
+    const DATA_COUNT = 48 // 52 weeks in a year approx.
+    const WEEKS_PER_MONTH = 4
+
+    const monthLabels = [
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec',
+    ]
+
+    const labels = Array.from({ length: DATA_COUNT }, (_, i) => {
+      return monthLabels[Math.floor(i / WEEKS_PER_MONTH)]
+    })
+
+    const generateRandomData = () => {
+      return Array.from({ length: DATA_COUNT }, () => Math.floor(Math.random() * 90000 + 1000))
+    }
+
+    const data = {
+      labels: labels,
+      datasets: [
+        {
+          label: 'Dataset 1',
+          data: generateRandomData(),
+          backgroundColor: '#c10015',
+        },
+        {
+          label: 'Dataset 2',
+          data: generateRandomData(),
+          backgroundColor: '#557ff7',
+        },
+      ],
+    }
+
+    const config = {
+      type: 'bar',
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top' },
+          title: { display: true, text: 'Chart.js Bar Chart' },
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: {
+              callback: (value, index) => {
+                return index % WEEKS_PER_MONTH === 0 ? labels[index] : ''
+              },
+              autoSkip: false,
+              maxRotation: 0,
+              minRotation: 0,
+            },
+            stacked: false,
+          },
+          y: {
+            grid: { display: true },
+            ticks: { display: true },
+            stacked: false,
+          },
+        },
+      },
+    }
+
+    onMounted(() => {
+      if (chartCanvas.value) {
+        chartInstance = new Chart(chartCanvas.value, config)
+      }
+    })
+
     onUnmounted(() => {
       if (chartInstance) {
         chartInstance.destroy()

@@ -50,73 +50,55 @@
         <div class="text-div">
           <h4>About Us</h4>
           <p>
-            Welcome to Tabaco Animal Rescue and Adoption! 🐾 We're thrilled that
-            you're interested in learning more about us and the pets we have
-            available for adoption. Our mission is to help animals in need find
-            loving homes. We believe that every animal deserves a chance at a
-            happy and healthy life, and we work tirelessly to make that a
-            reality for the pets in our care.
+            Welcome to Tabaco Animal Rescue and Adoption! 🐾 We're thrilled that you're interested
+            in learning more about us and the pets we have available for adoption. Our mission is to
+            help animals in need find loving homes. We believe that every animal deserves a chance
+            at a happy and healthy life, and we work tirelessly to make that a reality for the pets
+            in our care.
           </p>
-          <q-btn
-            label="Learn More"
-            class="bg-black text-white q-pa-sm q-mt-lg"
-            flat
-            no-caps
-          />
+          <q-btn label="Learn More" class="bg-black text-white q-pa-sm q-mt-lg" flat no-caps />
         </div>
       </div>
-      <div
-        class="second-layer column justify-center items-center relative-position"
-      >
+      <div class="second-layer column justify-center items-center relative-position">
         <div class="text-center">
           <h4>Our Mission</h4>
           <p>
-            "To rescue, rehabilitate and rehome abandoned and neglected animals,
-            ensure healthy pets through education concerning animal welfare and
-            animal care. And to provide affordable services through our partner
-            animal clinics, and most importantly, to inspire a community where
-            people value animals thus intensifying the animal-human bond."
+            "To rescue, rehabilitate and rehome abandoned and neglected animals, ensure healthy pets
+            through education concerning animal welfare and animal care. And to provide affordable
+            services through our partner animal clinics, and most importantly, to inspire a
+            community where people value animals thus intensifying the animal-human bond."
           </p>
           <h4>Our Vission</h4>
           <p>
-            "TAARA is a non-profit animal welfare organization geared towards
-            inspiring a community where all animals are protected and treated
-            with respect and kindness."
+            "TAARA is a non-profit animal welfare organization geared towards inspiring a community
+            where all animals are protected and treated with respect and kindness."
           </p>
         </div>
         <div class="shape-design absolute-left"></div>
       </div>
-      <div
-        class="third-layer row no-wrap justify-end items-center full-width relative-position"
-      >
+      <div class="third-layer row no-wrap justify-end items-center full-width relative-position">
         <div class="right-div q-pa-lg">
           <h5>Our Advocacy</h5>
           <p>
-            "Tabaco Animal Rescue and Adoption (TAARA) is a non-profit animal
-            welfare organization geared towards inspiring a community where all
-            animals are protected and treated with respect and kindness. The
-            organization aims to save, rehabilitate, and rehome animals in need,
-            to support healthy pets through the use of education, advocacy, and
-            low-cost services, and to create a community where the animal-human
-            link is honored and maintained."
+            "Tabaco Animal Rescue and Adoption (TAARA) is a non-profit animal welfare organization
+            geared towards inspiring a community where all animals are protected and treated with
+            respect and kindness. The organization aims to save, rehabilitate, and rehome animals in
+            need, to support healthy pets through the use of education, advocacy, and low-cost
+            services, and to create a community where the animal-human link is honored and
+            maintained."
           </p>
         </div>
       </div>
       <div class="fourth-layer column no-wrap full-width">
-        <div
-          class="our-team column justify-center items-center no-wrap text-center full-width"
-        >
+        <div class="our-team column justify-center items-center no-wrap text-center full-width">
           <h4>Our Team</h4>
           <p>
-            " Our team is made up of dedicated animal lovers who are passionate
-            about animal welfare. We have years of experience in animal rescue,
-            rehabilitation, and adoption, and we bring that expertise to every
-            animal we help."
+            " Our team is made up of dedicated animal lovers who are passionate about animal
+            welfare. We have years of experience in animal rescue, rehabilitation, and adoption, and
+            we bring that expertise to every animal we help."
           </p>
         </div>
-        <div
-          class="team-container row justify-center items-center q-py-xl text-body1"
-        >
+        <div class="team-container row justify-center items-center q-py-xl text-body1">
           <div
             v-for="data in allTaaraOfficialsInfo"
             :key="data"
@@ -124,27 +106,22 @@
           >
             <img :src="data.image" alt="" />
             <p class="text-center q-mt-sm q-mb-none">
-              {{ data.first_name + " " + data.last_name }}
+              {{ data.first_name + ' ' + data.last_name }}
             </p>
             <p class="text-center text-overline text-grey-6 q-mt-none">
               {{ data.position }}
             </p>
           </div>
         </div>
-        <div
-          class="our-team column justify-center items-center no-wrap text-center full-width"
-        >
+        <div class="our-team column justify-center items-center no-wrap text-center full-width">
           <h4>Our Volunteer</h4>
           <p>
-            “Volunteers are the backbone of our organization, bringing their
-            unique skills and boundless passion to support our mission. Their
-            dedication to animal welfare makes a significant difference, helping
-            us rescue, rehabilitate, and rehome animals in need.”
+            “Volunteers are the backbone of our organization, bringing their unique skills and
+            boundless passion to support our mission. Their dedication to animal welfare makes a
+            significant difference, helping us rescue, rehabilitate, and rehome animals in need.”
           </p>
         </div>
-        <div
-          class="team-container row justify-center items-center q-py-xl text-body1"
-        >
+        <div class="team-container row justify-center items-center q-py-xl text-body1">
           <div
             v-for="volunteer in allVolunteersInfo"
             :key="volunteer"
@@ -152,7 +129,7 @@
           >
             <img :src="volunteer.image" alt="" />
             <p class="text-center q-mt-sm q-mb-none">
-              {{ volunteer.first_name + " " + volunteer.last_name }}
+              {{ volunteer.first_name + ' ' + volunteer.last_name }}
             </p>
             <p class="text-center text-overline text-grey-6 q-mt-none">
               {{ volunteer.position }}
@@ -160,16 +137,13 @@
           </div>
         </div>
       </div>
-      <div
-        class="last-layer column justify-center items-center no-wrap text-center full-width"
-      >
+      <div class="last-layer column justify-center items-center no-wrap text-center full-width">
         <h4>Ready to Meet Your New Furry Family Member? 🐾</h4>
         <p>
-          Thank you for taking the time to learn more about us and the pets we
-          have available for adoption. If you have any questions or would like
-          to learn more about our adoption process, please don't hesitate to
-          contact us. We look forward to helping you find your new furry family
-          member!
+          Thank you for taking the time to learn more about us and the pets we have available for
+          adoption. If you have any questions or would like to learn more about our adoption
+          process, please don't hesitate to contact us. We look forward to helping you find your new
+          furry family member!
         </p>
       </div>
     </div>
@@ -178,29 +152,29 @@
 </template>
 
 <script>
-import taaraFooter from "../components/taaraFooter.vue";
-import { onMounted } from "vue";
+import taaraFooter from '../components/taaraFooter.vue'
+import { onMounted } from 'vue'
 import {
   allTaaraOfficials,
   allTaaraOfficialsInfo,
   allVolunteersInfo,
   allVolunteers,
-} from "src/composable/taaraComposable";
+} from 'src/composable/taaraComposable'
 export default {
   components: {
     taaraFooter,
   },
   setup() {
     onMounted(() => {
-      allTaaraOfficials(["first_name", "last_name", "image", "position"]);
-      allVolunteers(["first_name", "last_name", "image", "position"]);
-    });
+      allTaaraOfficials(['first_name', 'last_name', 'image', 'position'])
+      allVolunteers(['first_name', 'last_name', 'image', 'position'])
+    })
     return {
       allTaaraOfficialsInfo,
       allVolunteersInfo,
-    };
+    }
   },
-};
+}
 </script>
 
-<style lang="scss" scoped src="../pages/taara/style/aboutUs.scss"></style>
+<style lang="scss" scoped src="pages/taara/style/aboutUs.scss"></style>

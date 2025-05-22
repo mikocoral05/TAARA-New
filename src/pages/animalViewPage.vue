@@ -1,6 +1,6 @@
 <template>
   <q-page>
-    <div v-for="specific in specificAnimal.file" :key="specific.id">
+    <div>
       <div class="q-pa-md">
         <q-carousel v-model="slide" control-color="primary" class="rounded-borders">
           <q-carousel-slide
@@ -9,19 +9,19 @@
           >
             <img
               class="img-top"
-              :src="inFront[0] ? inFront[0] : getImageLink(specificAnimal.file[0].name)"
+              :src="inFront[0] ? inFront[0] : getImageLink(specificAnimal?.file?.[0].name)"
               alt=""
               loading="lazy"
             />
             <img
               class="img-top"
-              :src="inFront[1] ? inFront[1] : getImageLink(specificAnimal.file[1].name)"
+              :src="inFront[1] ? inFront[1] : getImageLink(specificAnimal?.file?.[1].name)"
               alt=""
               loading="lazy"
             />
             <img
               class="ccenters"
-              :src="inFront[2] ? inFront[2] : getImageLink(specificAnimal.file[2].name)"
+              :src="inFront[2] ? inFront[2] : getImageLink(specificAnimal?.file?.[2].name)"
               alt=""
               style="opacity: none"
               loading="lazy"
@@ -29,13 +29,13 @@
 
             <img
               class="img-top"
-              :src="inFront[3] ? inFront[3] : getImageLink(specificAnimal.file[3].name)"
+              :src="inFront[3] ? inFront[3] : getImageLink(specificAnimal?.file?.[3].name)"
               alt=""
               loading="lazy"
             />
             <img
               class="img-top"
-              :src="inFront[4] ? inFront[4] : getImageLink(specificAnimal.file[4].name)"
+              :src="inFront[4] ? inFront[4] : getImageLink(specificAnimal?.file?.[4].name)"
               alt=""
               loading="lazy"
             />

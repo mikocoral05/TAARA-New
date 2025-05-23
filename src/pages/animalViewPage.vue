@@ -156,14 +156,14 @@
                       : 'pets'
                   "
                   @click="
-                    Object.keys(store.userData).length == 0
-                      ? (counterStore.showDialog = true)
-                      : $router.push({
-                          path: '/pet-adoption-form',
+                    checkUserIfPublic()
+                      ? $router.push({
+                          path: '/public/pet-adoption-form',
                           query: {
                             adopt: encodeAnimalId(specificAnimal.animal_id),
                           },
                         })
+                      : (counterStore.showDialog = true)
                   "
                   flat
                   filled
@@ -174,15 +174,13 @@
                   label="DONATE"
                   icon-right="volunteer_activism"
                   @click="
-                    Object.keys(store.userData).length == 0
-                      ? (counterStore.showDialog = true)
-                      : (donateDialog = true)
+                    checkUserIfPublic() ? (donateDialog = true) : (counterStore.showDialog = true)
                   "
                   flat
                   filled
                 />
               </div>
-
+              <!--
               <p class="hidden">
                 {{
                   like =
@@ -190,7 +188,7 @@
                       ? false
                       : likesData.some((obj) => obj.animal_id === specificAnimal.animal_id)
                 }}
-              </p>
+              </p> -->
               <q-btn
                 class="q-ma-sm q-pa-none button-heart"
                 icon="favorite"

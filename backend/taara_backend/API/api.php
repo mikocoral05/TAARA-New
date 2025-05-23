@@ -530,10 +530,8 @@ class API
       echo json_encode(array('status' => 'success', 'data' => $users, 'method' => 'GET'));
     } else if (array_key_exists("adoption_form_details", $ref_id)) {
       $user_id = $ref_id['adoption_form_details'];
-      $query = $this->db->rawQuery("SELECT tbl_form_adoption.user_id, tbl_form_adoption.animal_id,tbl_form_adoption.review_form
-                FROM tbl_users
-                INNER JOIN tbl_form_adoption ON tbl_users.user_id=tbl_form_adoption.user_id
-                WHERE tbl_users.user_id = $user_id");
+      $this->db->where('user_id', $user_id);
+      $query = $this->db->get("tbl_adoption_form ", null, 'adoption_status,animal_id');
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("check_email", $ref_id)) {
       $cols = array('email_address', 'phone_number', 'first_name');

@@ -1,7 +1,7 @@
 import { defineComponent, ref, onMounted } from 'vue'
 import taaraFooter from 'src/components/taaraFooter'
 import { useRoute } from 'vue-router'
-import { useQuasar, QSpinnerBars } from 'quasar'
+import { useQuasar } from 'quasar'
 import {
   submitAdoptionForm,
   viewSpecificAnimal,
@@ -26,27 +26,21 @@ export default defineComponent({
     let adoptionDetails = ref({
       user_id: store.userData?.user_id,
       animal_id: null,
-
       have_other_pet: null,
-      pet_number: null,
-      behavior_other_animals: null,
-      have_vet: null,
       vet_phone_number: null,
+      pet_number: null,
+      have_vet: null,
       own_or_rent: null,
       have_enough_space: null,
       have_children: null,
       number_of_children: null,
       someone_gonna_takecare_of_pet: null,
       pet_caretaker: null,
-      plans_for_pet_when_away: null,
       easily_trigger_by_pet_noise: null,
       convicted_animal_crime: null,
       valid_id: null,
       pickup_or_delivery: null,
-      date: dateToday,
-      time: timeNow,
       adoption_status: 1,
-      review_form: 1,
     })
     let step = ref(1)
     const images = ref()
@@ -101,36 +95,22 @@ export default defineComponent({
       }
     }
 
-    let submitAdoption = (payload) => {
-      const notif = $q.notify({
-        group: false, // required to be updatable
-        timeout: 0, // we want to be in control when it gets dismissed
-        spinner: QSpinnerBars,
-        message: 'Submitting request...',
-        color: 'primary',
-      })
-      setTimeout(() => {
-        submitAdoptionForm(payload)
-          .then((response) => {
-            notif({
-              spinner: false, // we reset the spinner setting so the icon can be displayed
-              icon: response == 'success' ? 'check_circle' : 'cancel',
-              message: response == 'success' ? 'Submit succesfully !' : 'Submit failed !',
-              timeout: 1000,
-            })
-            if (response == 'success') {
-              formToProgress.value = true
-              stepProgress.value = 2
-              step.value = 3
-            } else {
-              formToProgress.value = false
-              step.value = 2
-            }
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-      }, 1000)
+    let submitAdoption = () => {
+      $q.loading.show({ group: 'sub', message: 'Submitting application. please wait...' })
+      submitAdoptionForm(adoptionDetails.value)
+        .then((response) => {
+          if (response == 'success') {
+            formToProgress.value = true
+            stepProgress.value = 2
+            step.value = 3
+          } else {
+            formToProgress.value = false
+            step.value = 2
+          }
+        })
+        .catch((error) => {
+          console.log(error)
+        })
     }
 
     onMounted(() => {

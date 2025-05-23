@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="column no-wrap all-container items-center">
-      <div class="animal-description row no-wrap q-pa-xl">
+      <div class="animal-description row no-wrap q-pa-xl shadow-1 q-mt-lg">
         <div class="column no-wrap items-center">
           <img :src="getImageLink(animalDetails.primary_image)" alt="" />
           <div class="name-div q-mt-md">
@@ -517,13 +517,7 @@
 
               <div class="flex row justify-around items-center q-my-lg">
                 <q-btn class="back" filled flat label="Back" @click="step = 1" icon="arrow_left" />
-                <q-btn
-                  class="submit"
-                  filled
-                  flat
-                  @click="submitAdoption(adoptionDetails)"
-                  label="Submit"
-                />
+                <q-btn class="submit" filled flat @click="submitAdoption()" label="Submit" />
               </div>
             </q-step>
 

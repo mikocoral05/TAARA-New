@@ -3,14 +3,14 @@ import taaraFooter from 'src/components/taaraFooter'
 import { useRoute } from 'vue-router'
 import { useQuasar, QSpinnerBars } from 'quasar'
 import {
-  logInDetails,
   submitAdoptionForm,
   viewSpecificAnimal,
   specificAnimal,
   getSubmitAdoptionForm,
 } from 'src/composable/taaraComposable'
-import { resizeImage, decodeAnimalId } from 'src/composable/simpleComposable'
+import { resizeImage, decodeAnimalId, getImageLink } from 'src/composable/simpleComposable'
 import { dateToday, timeNow } from 'src/composable/simpleComposable'
+import { globalStore } from 'src/stores/global-store'
 export default defineComponent({
   components: {
     taaraFooter,
@@ -18,12 +18,13 @@ export default defineComponent({
   setup() {
     const $q = useQuasar()
     const route = useRoute()
+    const store = globalStore()
     let animalDetails = ref({})
     let idName = ref(null)
     let stepProgress = ref(1)
     let formToProgress = ref(false)
     let adoptionDetails = ref({
-      user_id: logInDetails.value[0].user_id,
+      user_id: store.userData?.user_id,
       animal_id: null,
 
       have_other_pet: null,
@@ -134,40 +135,41 @@ export default defineComponent({
 
     onMounted(() => {
       viewSpecificAnimal(decodeAnimalId(route.query.adopt))
-        .then((specificAnimal) => {
-          console.log(specificAnimal)
-          animalDetails.value = specificAnimal.data[0]
-          adoptionDetails.value.animal_id = specificAnimal.data[0].animal_id
+        .then((response) => {
+          console.log(response)
+          animalDetails.value = response
+          adoptionDetails.value.animal_id = response.animal_id
         })
         .catch((error) => {
           console.error(error)
         })
-      logInDetails.value == null
-        ? ''
-        : getSubmitAdoptionForm(logInDetails.value[0].user_id)
-            .then((response) => {
-              console.log(response)
-              let findMatchAdoptionReq = response.some(
-                (obj) => obj.animal_id === decodeAnimalId(route.query.adopt),
-              )
-              let formStatus = response
-                .filter((obj) => obj.animal_id === decodeAnimalId(route.query.adopt))
-                .map((obj) => obj.review_form)[0]
-              console.log(formStatus)
-              if (findMatchAdoptionReq == false) {
-                step.value = 1
-                formToProgress.value = false
-              } else {
-                formToProgress.value = true
-                stepProgress.value = formStatus
-              }
-            })
-            .catch((error) => {
-              console.log(error)
-            })
-      logInDetails.value == null ? '' : null
+
+      if (Object.keys(store.userData).length !== 1) {
+        getSubmitAdoptionForm(store.userData.user_id)
+          .then((response) => {
+            console.log(response)
+            let findMatchAdoptionReq = response.some(
+              (obj) => obj.animal_id === decodeAnimalId(route.query.adopt),
+            )
+            let formStatus = response
+              .filter((obj) => obj.animal_id === decodeAnimalId(route.query.adopt))
+              .map((obj) => obj.review_form)[0]
+            console.log(formStatus)
+            if (findMatchAdoptionReq == false) {
+              step.value = 1
+              formToProgress.value = false
+            } else {
+              formToProgress.value = true
+              stepProgress.value = formStatus
+            }
+          })
+          .catch((error) => {
+            console.log(error)
+          })
+      }
     })
     return {
+      getImageLink,
       formToProgress,
       stepProgress,
       idName,

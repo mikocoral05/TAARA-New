@@ -3,10 +3,10 @@
     <div class="column no-wrap all-container items-center">
       <div class="animal-description row no-wrap q-pa-xl">
         <div class="column no-wrap items-center">
-          <img :src="animalDetails.animal_image" alt="" />
+          <img :src="getImageLink(animalDetails.primary_image)" alt="" />
           <div class="name-div q-mt-md">
             <p class="text-center q-mb-none text-primary text-overline">
-              {{ animalDetails.animal_name }}
+              {{ animalDetails.name }}
             </p>
           </div>
         </div>

@@ -207,14 +207,14 @@
                       v-model="adoptionDetails.own_or_rent"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
-                      val="Own"
+                      :val="1"
                       label="Own"
                     />
                     <q-radio
                       v-model="adoptionDetails.own_or_rent"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
-                      val="Rent"
+                      :val="2"
                       label="Rent"
                     />
                   </div>
@@ -447,25 +447,14 @@
                     Please provide valid ID’s for personal references:*
                   </p>
                   <div class="column no-wrap">
-                    <div class="flex row no-wrap items-center justify-center" style="width: 380px">
-                      <q-btn
-                        class="filebtn q-ma-none q-mr-sm q-pa-none q-pr-sm"
-                        @click="pickFile"
-                        icon="add"
-                        no-caps
-                        label="Attached file"
-                        dense
-                        flat
-                        style="border: 1px solid black"
-                      ></q-btn>
-                      <input
-                        id="fileInput"
-                        type="file"
-                        style="display: none"
-                        @change="handleFileUpload"
-                      />
-                    </div>
-                    <p class="text-center">{{ idName }}</p>
+                    <q-file
+                      v-model="adoptionDetails.valid_id"
+                      label="Pick one file"
+                      filled
+                      dense
+                      accept=".jpg, image/*"
+                      style="max-width: 300px"
+                    />
                   </div>
                 </div>
 

@@ -1160,11 +1160,15 @@ const notifUpdate = (concat, idbased) => {
   })
 }
 
-const submitAdoptionForm = (payload) => {
+const submitAdoptionForm = (obj) => {
+  const { valid_id, ...data } = obj
   return new Promise((resolve, reject) => {
     api
-      .post('api.php', { submit_adoption_form: payload })
+      .post('api.php', { submit_adoption_form: data })
       .then((response) => {
+        if (response.data.status == 'success') {
+          console.log(valid_id)
+        }
         resolve(response.data.status)
       })
       .catch((error) => {

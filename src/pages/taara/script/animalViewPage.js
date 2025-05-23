@@ -10,12 +10,12 @@ import {
   decodeAnimalId,
   encodeAnimalId,
   getImageLink,
+  checkUserIfPublic,
 } from 'src/composable/simpleComposable'
 import {
   specificAnimalId,
   viewSpecificAnimal,
   adoptedAnimalOnProgress,
-  likesData,
   getSubmitAdoptionForm,
   likes,
   removeLikes,
@@ -47,6 +47,7 @@ export default {
     const like = ref()
     const specificAnimal = ref({})
     const allAnimalData6 = ref([])
+    const likesData = ref([])
     let donatorsInfo = ref({
       donators_id: null,
       animal_id: null,
@@ -110,19 +111,20 @@ export default {
       }
     }
 
-    let accountActive = (pay1, pay2) => {
-      let progressAdotpion = pay1.filter((obj) => {
-        return obj.animal_id === pay2
-      })
-      let checkAdopt =
-        Object.keys(store.userData).length == 0
-          ? false
-          : pay1.some((obj) => obj.animal_id === pay2) &&
-            pay1.some((obj) => obj.user_id === store.userData.user_id)
-      if (checkAdopt == true) {
-        step.value = progressAdotpion[0].review_form
-      }
-      return checkAdopt
+    let accountActive = () => {
+      // pay1, pay2
+      // let progressAdotpion = pay1.filter((obj) => {
+      //   return obj.animal_id === pay2
+      // })
+      // let checkAdopt =
+      //   Object.keys(store.userData).length == 0
+      //     ? false
+      //     : pay1.some((obj) => obj.animal_id === pay2) &&
+      //       pay1.some((obj) => obj.user_id === store.userData.user_id)
+      // if (checkAdopt == true) {
+      //   step.value = progressAdotpion[0].review_form
+      // }
+      return false
     }
 
     const handleWindowResize = () => {
@@ -202,14 +204,22 @@ export default {
       getRandomAnimal().then((response) => {
         allAnimalData6.value = response
       })
-      Object.keys(store.userData).length == 0 ? '' : getSubmitAdoptionForm(store.userData.user_id)
-      Object.keys(store.userData).length == 0 ? '' : getLikes(store.userData.user_id)
+      if (Object.keys(store.userData).length != 0) {
+        getSubmitAdoptionForm(store.userData.user_id).then((response) => {
+          console.log(response)
+        })
+        getLikes(store.userData.user_id).then((response) => {
+          console.log(response)
+          likesData.value = response
+        })
+      }
       moreAnimalForAdoption()
     })
     onUnmounted(() => {
       window.removeEventListener('resize', handleWindowResize)
     })
     return {
+      checkUserIfPublic,
       getImageLink,
       store,
       petId,

@@ -2,7 +2,6 @@ import { ref, onMounted, watch, computed } from 'vue'
 import taaraFooter from 'src/components/taaraFooter.vue'
 import { useRoute } from 'vue-router'
 import {
-  allAnimalData,
   allAnimalBackUp,
   getAllAnimals,
   specificAnimalId,
@@ -25,7 +24,7 @@ export default {
     let categorizeByWeight = ref(false)
     let categorizeByHeight = ref(false)
     let categorizeByYearRescued = ref(false)
-
+    const allAnimalData = ref([])
     let search = ref(null)
     const stringOptions = ['Name', 'Sex', 'Twitter', 'Apple', 'Oracle']
     const options = ref()
@@ -42,6 +41,7 @@ export default {
       const end = start + itemsPerPage.value
       return allAnimalData.value.slice(start, end)
     })
+
     let categorizeByNameFn = () => {}
     let sortByName = (array) => {
       categorizeByName.value = !categorizeByName.value
@@ -163,7 +163,9 @@ export default {
     })
 
     onMounted(() => {
-      getAllAnimals()
+      getAllAnimals().then((response) => {
+        allAnimalData.value = response
+      })
       if (window.innerWidth <= 581) {
         drawer.value = false
       }

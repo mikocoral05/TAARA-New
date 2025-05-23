@@ -70,22 +70,13 @@ const getFeaturedAnimals = () => {
       })
   })
 }
-let shuffleOne = ref()
 const getAllAnimals = () => {
   return new Promise((resolve, reject) => {
     api
       .get('api.php', { params: { all_animals: 'all_animals' } })
       .then((response) => {
         console.log(response.data.data)
-
-        allAnimalBackUp.value = response.data.data
-        allAnimalData.value = response.data.data
-        allAnimalData.value.forEach((obj) => {
-          obj.age = calculateAge(obj.age)
-        })
-        const shuffled1 = [...response.data.data].sort(() => 0.5 - Math.random()).slice(0, 1)
-        localStorage.setItem('one', JSON.stringify(shuffled1))
-        shuffleOne.value = JSON.parse(localStorage.getItem('one'))
+        resolve(response.data.data)
       })
       .catch((error) => {
         reject(error)
@@ -1099,8 +1090,7 @@ const getLikes = (user_id) => {
     api
       .get('api.php', { params: { get_likes: 'get_likes', user_id: user_id } })
       .then((response) => {
-        localStorage.setItem('animalLikes', JSON.stringify(response.data.data))
-        likesData.value = JSON.parse(localStorage.getItem('animalLikes'))
+        resolve(response.data.data)
       })
       .catch((error) => {
         reject(error)

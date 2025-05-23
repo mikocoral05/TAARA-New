@@ -1217,8 +1217,6 @@ const getSubmitAdoptionForm = (payload) => {
     api
       .get('api.php', { params: { adoption_form_details: payload } })
       .then((response) => {
-        adoptedAnimalOnProgress.value = response.data.data
-        console.log(adoptedAnimalOnProgress.value)
         resolve(response.data.data)
       })
       .catch((error) => {

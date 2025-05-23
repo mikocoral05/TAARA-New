@@ -58,14 +58,16 @@ export default defineComponent({
       $q.loading.show({ group: 'sub', message: 'Submitting application. please wait...' })
       submitAdoptionForm(adoptionDetails.value)
         .then((response) => {
-          if (response == 'success') {
-            formToProgress.value = true
-            stepProgress.value = 2
-            step.value = 3
-          } else {
-            formToProgress.value = false
-            step.value = 2
-          }
+          setTimeout(() => {
+            if (response == 'success') {
+              formToProgress.value = true
+              stepProgress.value = 2
+              step.value = 3
+            } else {
+              formToProgress.value = false
+              step.value = 2
+            }
+          }, 1500)
         })
         .catch((error) => {
           console.log(error)

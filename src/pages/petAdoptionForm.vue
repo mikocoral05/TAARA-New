@@ -26,7 +26,11 @@
               caption="Please answer the question truthfuly"
               :done="step > 1"
             >
-              <q-form @submit="nextInfo(adoptionDetails)" class="q-ma-none q-pa-none">
+              <q-form
+                @submit="nextInfo(adoptionDetails)"
+                class="q-ma-none q-pa-none"
+                style="width: 100%; width: 600px"
+              >
                 <div class="flex row justify-start items-center">
                   <div class="q-ma-sm" style="width: 230px">
                     <p>Do you own any pets?*</p>

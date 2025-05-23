@@ -54,6 +54,25 @@ let deleteModalCtrl = ref(false)
 let animalDataBackUp = ref()
 animalDataBackUp.value = JSON.parse(localStorage.getItem('allAnimal'))
 
+export const uploadFiles = (fileArray, record_id, table, id_column, column_name) => {
+  const formData = new FormData()
+
+  // Append files
+  fileArray.forEach((fileObj) => {
+    formData.append('files[]', fileObj) // 📌 The actual File
+  })
+
+  // Append necessary data for server processing
+  formData.append('record_id', record_id)
+  formData.append('table', table)
+  formData.append('id_column', id_column)
+  formData.append('column_to_update', column_name)
+
+  return api.post('file-upload.php', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+}
+
 const getFeaturedAnimals = () => {
   //unused
   return new Promise((resolve, reject) => {
@@ -1167,7 +1186,7 @@ const submitAdoptionForm = (obj) => {
       .post('api.php', { submit_adoption_form: data })
       .then((response) => {
         if (response.data.status == 'success') {
-          console.log(valid_id)
+          uploadFiles([valid_id], response.data.id, 'tbl_adoption_form', 'id', 'valid_id')
         }
         resolve(response.data.status)
       })

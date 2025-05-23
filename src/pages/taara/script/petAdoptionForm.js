@@ -77,7 +77,6 @@ export default defineComponent({
     onMounted(() => {
       viewSpecificAnimal(decodeAnimalId(route.query.adopt))
         .then((response) => {
-          console.log(response)
           animalDetails.value = response
           adoptionDetails.value.animal_id = response.animal_id
         })
@@ -88,21 +87,15 @@ export default defineComponent({
       if (Object.keys(store.userData).length !== 1) {
         getSubmitAdoptionForm(store.userData.user_id)
           .then((response) => {
-            console.log(response)
             let findMatchAdoptionReq = response.some(
               (obj) => obj.animal_id === decodeAnimalId(route.query.adopt),
             )
-            let formStatus = response
+            formToProgress.value = findMatchAdoptionReq
+            console.log(findMatchAdoptionReq)
+
+            step.value = response
               .filter((obj) => obj.animal_id === decodeAnimalId(route.query.adopt))
-              .map((obj) => obj.review_form)[0]
-            console.log(formStatus)
-            if (findMatchAdoptionReq == false) {
-              step.value = 1
-              formToProgress.value = false
-            } else {
-              formToProgress.value = true
-              stepProgress.value = formStatus
-            }
+              .map((obj) => obj.adoption_status)[0]
           })
           .catch((error) => {
             console.log(error)

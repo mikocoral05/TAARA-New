@@ -111,7 +111,7 @@
                       "
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
-                      val="Yes"
+                      val="yes"
                       label="Yes"
                     />
                     <q-radio
@@ -129,7 +129,7 @@
                       "
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
-                      val="No"
+                      val="no"
                       label="No"
                     />
                   </div>

@@ -453,7 +453,7 @@ const intervalOptions = [
 
 export const checkUserIfPublic = () => {
   if (Object.keys(store.userData).length != 0) {
-    return store.userData?.user_Type == 1
+    return store.userData?.user_type == 1
   }
   return false
 }

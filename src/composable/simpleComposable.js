@@ -1,4 +1,5 @@
 import { expressServer } from 'src/boot/axios'
+import { globalStore } from 'src/stores/global-store'
 import { ref } from 'vue'
 
 let date = new Date()
@@ -11,7 +12,7 @@ let hours = date.getHours().toString().padStart(2, '0')
 let minutes = date.getMinutes().toString().padStart(2, '0')
 let seconds = date.getSeconds().toString().padStart(2, '0')
 let timeNow = `${hours}:${minutes}:${seconds}`
-
+const store = globalStore()
 function wordifyDate(param) {
   if (param != null) {
     var date = new Date(param)
@@ -450,6 +451,12 @@ const intervalOptions = [
   { label: 'Every 3 Years', value: 1095 },
 ]
 
+export const checkUserIfPublic = () => {
+  if (Object.keys(store.userData).length != 0) {
+    return store.userData?.user_Type == 1
+  }
+  return false
+}
 export {
   intervalOptions,
   convertDaysToInterval,

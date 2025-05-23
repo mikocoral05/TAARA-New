@@ -863,17 +863,12 @@ class API
         echo json_encode(array('status' => 'fail', 'data' => "You submitted already!", 'method' => 'POST'));
       }
     } else if (array_key_exists("submit_adoption_form", $arr)) {
-      $animal_id = $arr['submit_adoption_form']['animal_id'];
+      $adoption_data = $arr["submit_adoption_form"];
+      $query = $this->db->insert('tbl_adoption_form', $adoption_data);
+      $id = $this->db->getInsertId();
 
-      // $query_compar = $this->db->rawQuery("SELECT * FROM tbl_volunteer_form  WHERE volunteer_id = $id ");
-      // if(Count($query_compar) == 0){
-      $query = $this->db->insert('tbl_form_adoption', $arr["submit_adoption_form"]);
-      // $query = $this->db->rawQuery("SELECT tbl_form_adoption.user_id, tbl_form_adoption.animal_id
-      //   FROM tbl_users
-      //   INNER JOIN tbl_form_adoption ON tbl_users.user_id=tbl_form_adoption.user_id
-      //   WHERE tbl_users.user_id = 2");
       if ($query) {
-        echo json_encode(array('status' => 'success',  'method' => 'POST'));
+        echo json_encode(array('status' => 'success', 'id' => $id,  'method' => 'POST'));
       } else {
         echo json_encode(array('status' => 'failed',  'method' => 'POST'));
       }

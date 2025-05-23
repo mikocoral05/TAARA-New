@@ -67,6 +67,7 @@ export default defineComponent({
               formToProgress.value = false
               step.value = 2
             }
+            $q.loading.hide()
           }, 1500)
         })
         .catch((error) => {
@@ -91,7 +92,6 @@ export default defineComponent({
               (obj) => obj.animal_id === decodeAnimalId(route.query.adopt),
             )
             formToProgress.value = findMatchAdoptionReq
-            console.log(findMatchAdoptionReq)
 
             step.value = response
               .filter((obj) => obj.animal_id === decodeAnimalId(route.query.adopt))

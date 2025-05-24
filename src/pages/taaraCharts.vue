@@ -3,7 +3,7 @@
     <div class="first-layer text-body1">
       <div class="background-image absolute-top"></div>
       <h3 class="text-center q-my-md q-pt-lg text-white">
-        {{ filteredDate.month.label }} {{ filteredDate.year }}
+        {{ formattedString }}
       </h3>
       <p class="text-center text-white">“Uncover patterns in rescues, adoptions, and donations.”</p>
       <div class="flex row justify-center items-center">
@@ -64,12 +64,7 @@
             <div class="flex row justify-center items-center text-white q-mx-md">
               <div class="flex column q-ma-md q-mx-md q-mr-xl total-container">
                 <h2 class="q-my-sm total-number">
-                  {{
-                    formatNumber(
-                      filterAllYearTransaction(result, month + 1, 'totalDonation'),
-                      'noDecimal',
-                    )
-                  }}
+                  {{ formatNumber(thisMonthDonation, 'noDecimal') }}
                 </h2>
                 <p class="box-label">Total of Donations</p>
               </div>
@@ -97,7 +92,7 @@
             <div>
               <p class="text-zize-left q-ml-xl">We Have Received</p>
               <p class="text-zize-left q-ml-xl">
-                {{ formatNumber(filterAllYearTransaction(result, month + 1, 'totalDonation')) }}
+                {{ formatNumber(0) }}
               </p>
             </div>
             <div>
@@ -125,5 +120,5 @@
     <taaraFooter class="footer full-width"></taaraFooter>
   </q-page>
 </template>
-<script src="./taara/script/taaraCharts.js"></script>
-<style lang="scss" scoped src="../pages/taara/style/taaraCharts.scss"></style>
+<script src="pages/taara/script/taaraCharts.js"></script>
+<style lang="scss" scoped src="pages/taara/style/taaraCharts.scss"></style>

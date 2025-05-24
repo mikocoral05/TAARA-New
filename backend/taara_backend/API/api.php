@@ -225,7 +225,7 @@ class API
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("get_monthly_adoption", $ref_id)) {
       $year = $ref_id['get_monthly_adoption'];
-      $query = $this->db->rawQuery("SELECT months.month, IFNULL(COUNT(tbl_animals_info.date_adopted), 0) AS Number_of_Adoption
+      $query = $this->db->rawQuery("SELECT months.month, IFNULL(COUNT(af.updated_at), 0) AS Number_of_Adoption
           FROM (
             SELECT 1 AS month
             UNION ALL SELECT 2
@@ -240,9 +240,9 @@ class API
             UNION ALL SELECT 11
             UNION ALL SELECT 12
           ) AS months
-          LEFT JOIN tbl_animals_info
-          ON months.month = MONTH(tbl_animals_info.date_adopted)
-          AND YEAR(tbl_animals_info.date_adopted) =$year
+          LEFT JOIN tbl_adoption_form as af
+          ON months.month = MONTH(af.updated_at)
+          AND YEAR(af.updated_at) = $year AND af.adoption_status = 4
           GROUP BY months.month;
 
     ");
@@ -572,27 +572,7 @@ class API
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("get_all_monthly_expenses", $ref_id)) {
       $year = $ref_id['year'];
-      // $query = $this->db->rawQuery("SELECT months.month, IFNULL(SUM(expenses.expense_total), 0) AS total_expense
-      // FROM (
-      //    SELECT 1 AS month
-      //    UNION ALL SELECT 2
-      //    UNION ALL SELECT 3
-      //    UNION ALL SELECT 4
-      //    UNION ALL SELECT 5
-      //    UNION ALL SELECT 6
-      //    UNION ALL SELECT 7
-      //    UNION ALL SELECT 8
-      //    UNION ALL SELECT 9
-      //    UNION ALL SELECT 10
-      //    UNION ALL SELECT 11
-      //    UNION ALL SELECT 12
-      // ) AS months
-      // LEFT JOIN tbl_expenses AS expenses
-      // ON months.month = MONTH(expenses.date)
-      // AND YEAR(expenses.date) = $year
-      // GROUP BY months.month;
 
-      // ");
       $query = $this->db->rawQuery("SELECT all_dates.year, all_dates.month, IFNULL(SUM(expenses.expense_total), 0) AS total_expense
       FROM (
           SELECT year, month FROM
@@ -610,22 +590,36 @@ class API
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("get_monthly_donation", $ref_id)) {
       $year = $ref_id['year'];
-      $query = $this->db->rawQuery("SELECT all_dates.year, all_dates.month, IFNULL(SUM(donations.donation_amount), 0) AS month_donation
-      FROM (
-          SELECT year, month FROM
-          (SELECT (SELECT YEAR(MIN(donation_date)) FROM tbl_donations) + a AS year FROM
-          (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b) years,
-          (SELECT 1 AS month UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12) months
-      ) as all_dates
-      LEFT JOIN tbl_donations AS donations
-      ON all_dates.year = YEAR(donations.donation_date)
-      AND all_dates.month = MONTH(donations.donation_date)
-      AND donations.donation_status = 2
-      WHERE all_dates.year <= YEAR(CURDATE())
-      GROUP BY all_dates.year, all_dates.month;
-
-
+      $query = $this->db->rawQuery("
+        SELECT 
+          all_dates.year, 
+          all_dates.month, 
+          IFNULL(SUM(cd.amount), 0) AS month_donation
+        FROM (
+          SELECT y.year, m.month
+          FROM (
+            SELECT (SELECT YEAR(MIN(received_date)) FROM tbl_funds) + a AS year
+            FROM (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 
+                  UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) a
+          ) y
+          CROSS JOIN (
+            SELECT 1 AS month UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 
+            UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 
+            UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12
+          ) m
+        ) AS all_dates
+        LEFT JOIN tbl_funds AS f 
+          ON all_dates.year = YEAR(f.received_date) 
+          AND all_dates.month = MONTH(f.received_date) 
+          AND f.donation_status = 2
+        LEFT JOIN tbl_cash_donations AS cd 
+          ON cd.fund_id = f.fund_id
+        WHERE all_dates.year <= YEAR(CURDATE()) 
+        GROUP BY all_dates.year, all_dates.month
+        ORDER BY all_dates.year, all_dates.month
       ");
+
+
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("get_animal_schedule", $ref_id)) {
       $animal_id = $ref_id['get_animal_schedule'];

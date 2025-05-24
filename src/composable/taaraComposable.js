@@ -1322,6 +1322,7 @@ const getAllMonthlyExpenses = (date, text) => {
       })
   })
 }
+
 let monthlyDonationData = ref([])
 const getMonthlyDonation = (date, text) => {
   let year
@@ -1344,10 +1345,10 @@ const getMonthlyDonation = (date, text) => {
         },
       })
       .then((response) => {
+        console.log(response.data)
         if (response.data.status == 'success') {
           if (response.data.data.length > 0) {
             monthlyDonationData.value = response.data.data
-            // monthlyDonationData.value = response.data.data[0].month_donation;
           }
           resolve(response.data.data)
         }
@@ -1357,6 +1358,7 @@ const getMonthlyDonation = (date, text) => {
       })
   })
 }
+
 const addExpenses = (payload) => {
   delete payload.expense_id
 
@@ -3059,7 +3061,6 @@ const getMonthlyRescuedAnimal = (date) => {
 }
 let monthlyAdoption = ref([])
 const getMonthlyAdoption = (date) => {
-  console.log(date)
   return new Promise((resolve, reject) => {
     api
       .get('api.php', {
@@ -3068,10 +3069,7 @@ const getMonthlyAdoption = (date) => {
         },
       })
       .then((response) => {
-        if (response.data.status == 'success') {
-          monthlyAdoption.value = response.data.data
-          resolve(monthlyAdoption.value)
-        }
+        resolve(response.data.data)
       })
       .catch((error) => {
         reject(error)

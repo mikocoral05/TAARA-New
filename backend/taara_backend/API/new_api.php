@@ -58,6 +58,32 @@ class API
                 'data' => count($total_adopted),
                 'method' => 'GET'
             ]);
+        } else if (array_key_exists("get_monthly_donation", $payload)) {
+            $year = $payload['year'];
+
+            $query = $this->db->rawQuery("
+            SELECT all_dates.year, all_dates.month, IFNULL(SUM(cd.amount), 0) AS total_donation
+            FROM (
+                SELECT year, month FROM
+                (SELECT (SELECT YEAR(MIN(received_date)) FROM tbl_funds) + a AS year FROM
+                (SELECT 0 AS a UNION ALL SELECT 1 UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 
+                        UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 UNION ALL SELECT 9) b) years,
+                (SELECT 1 AS month UNION ALL SELECT 2 UNION ALL SELECT 3 UNION ALL SELECT 4 
+                        UNION ALL SELECT 5 UNION ALL SELECT 6 UNION ALL SELECT 7 UNION ALL SELECT 8 
+                        UNION ALL SELECT 9 UNION ALL SELECT 10 UNION ALL SELECT 11 UNION ALL SELECT 12) months
+            ) AS all_dates
+            LEFT JOIN tbl_funds AS f 
+            ON all_dates.year = YEAR(f.received_date) 
+            AND all_dates.month = MONTH(f.received_date) 
+            AND f.donation_status = 2
+            LEFT JOIN tbl_cash_donations AS cd 
+            ON cd.fund_id = f.fund_id
+            WHERE all_dates.year = ?
+            GROUP BY all_dates.year, all_dates.month
+            ORDER BY all_dates.year, all_dates.month;
+        ", [$year]);
+
+            echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
         } else {
             // Return error if 'get_user_by_type' is not provided
             echo json_encode([

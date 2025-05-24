@@ -201,7 +201,7 @@ class API
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("get_monthly_rescued_animal", $ref_id)) {
       $year = $ref_id['get_monthly_rescued_animal'];
-      $query = $this->db->rawQuery("SELECT months.month, IFNULL(COUNT(tbl_animals_info.care_start_date), 0) AS Number_of_Rescues
+      $query = $this->db->rawQuery("SELECT months.month, IFNULL(COUNT(ai.updated_at), 0) AS Number_of_Rescues
       FROM (
          SELECT 1 AS month
          UNION ALL SELECT 2
@@ -216,9 +216,9 @@ class API
          UNION ALL SELECT 11
          UNION ALL SELECT 12
       ) AS months
-      LEFT JOIN tbl_animals_info
-      ON months.month = MONTH(tbl_animals_info.care_start_date)
-      AND YEAR(tbl_animals_info.care_start_date) = $year
+      LEFT JOIN tbl_rescue_report as ai
+      ON months.month = MONTH(ai.updated_at)
+      AND YEAR(ai.updated_at) = $year
       GROUP BY months.month;
 
     ");

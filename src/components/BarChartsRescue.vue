@@ -1,45 +1,35 @@
 <template>
   <div class="canvased">
-    <!-- <canvas id="acquisitions" width="800" height="400"></canvas> -->
     <canvas ref="acquisitions" class="text"></canvas>
   </div>
 </template>
 <script>
-import { onMounted, defineComponent, ref, onUnmounted } from "vue";
-import {
-  getMonthlyRescuedAnimal,
-  monthlyRescuedAnimal,
-} from "src/composable/taaraComposable";
-import {
-  yearToday,
-  threeWordsAbbMonth,
-  twoWordsAbbMonth,
-} from "src/composable/simpleComposable";
-import Chart from "chart.js/auto";
+import { onMounted, defineComponent, ref, onUnmounted } from 'vue'
+import { getMonthlyRescuedAnimal } from 'src/composable/taaraComposable'
+import { yearToday, threeWordsAbbMonth, twoWordsAbbMonth } from 'src/composable/simpleComposable'
+import Chart from 'chart.js/auto'
 export default defineComponent({
-  name: "BarChartsRescue",
+  name: 'BarChartsRescue',
   setup() {
-    let acquisitions = ref();
-    let dataShow = null;
-
-    let chart = null;
+    let acquisitions = ref()
+    let dataShow = null
+    const monthlyRescuedAnimal = ref([])
+    let chart = null
 
     function createChart() {
       if (chart) {
-        chart.destroy();
+        chart.destroy()
       }
 
       chart = new Chart(acquisitions.value, {
-        type: "bar",
+        type: 'bar',
         data: {
           labels: dataShow.map((row) => row.month),
           datasets: [
             {
-              label: "Rescued Animal by Month ",
-              data: monthlyRescuedAnimal.value.map(
-                (row) => row.Number_of_Rescues
-              ),
-              backgroundColor: "#B157AE",
+              label: 'Rescued Animal by Month ',
+              data: monthlyRescuedAnimal.value.map((row) => row.Number_of_Rescues),
+              backgroundColor: '#B157AE',
             },
           ],
         },
@@ -50,48 +40,49 @@ export default defineComponent({
             },
           },
         },
-      });
+      })
     }
 
-    let resizeTimeout = null;
+    let resizeTimeout = null
 
     function onWindowResize() {
-      clearTimeout(resizeTimeout);
+      clearTimeout(resizeTimeout)
       resizeTimeout = setTimeout(() => {
         if (window.innerWidth >= 365 && window.innerWidth <= 420) {
-          dataShow = twoWordsAbbMonth;
+          dataShow = twoWordsAbbMonth
         } else if (window.innerWidth <= 364) {
           let newData = threeWordsAbbMonth.map((item) => {
-            return { month: item.month.charAt(0) };
-          });
-          dataShow = newData;
+            return { month: item.month.charAt(0) }
+          })
+          dataShow = newData
         } else {
-          dataShow = threeWordsAbbMonth;
+          dataShow = threeWordsAbbMonth
         }
-        createChart();
-      }, 250);
+        createChart()
+      }, 250)
     }
 
     onMounted(() => {
-      window.addEventListener("resize", onWindowResize);
-      onWindowResize();
+      window.addEventListener('resize', onWindowResize)
+      onWindowResize()
       getMonthlyRescuedAnimal(yearToday)
-        .then(() => {
-          createChart();
+        .then((response) => {
+          monthlyRescuedAnimal.value = response
+          createChart()
         })
         .catch((error) => {
-          console.log(error);
-        });
-    });
+          console.log(error)
+        })
+    })
     onUnmounted(() => {
-      window.removeEventListener("resize", onWindowResize);
-    });
+      window.removeEventListener('resize', onWindowResize)
+    })
 
     return {
       acquisitions,
-    };
+    }
   },
-});
+})
 </script>
 <style scoped lang="scss">
 .canvased {

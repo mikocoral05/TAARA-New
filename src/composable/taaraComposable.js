@@ -3039,7 +3039,6 @@ const getRescuedAnimal = (date) => {
 }
 let monthlyRescuedAnimal = ref([])
 const getMonthlyRescuedAnimal = (date) => {
-  console.log(date)
   return new Promise((resolve, reject) => {
     api
       .get('api.php', {
@@ -3049,9 +3048,8 @@ const getMonthlyRescuedAnimal = (date) => {
       })
       .then((response) => {
         if (response.data.status == 'success') {
-          monthlyRescuedAnimal.value = response.data.data
-
-          resolve(monthlyRescuedAnimal.value)
+          console.log(response.data.data)
+          resolve(response.data.data)
         }
       })
       .catch((error) => {

@@ -73,6 +73,7 @@ export default {
     })
     let objectsWeeklyRescue = ref({})
     let totalRescue = ref(0)
+
     onMounted(() => {
       getRescuedAnimal(filteredDate.value)
         .then((totalOfRescue) => {

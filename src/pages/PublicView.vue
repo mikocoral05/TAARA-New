@@ -88,7 +88,7 @@
       <div class="second-child row no-wrap justify-between">
         <div class="column no-wrap">
           <img
-            src="../image/adoption-image.jpg"
+            src="~assets/adoption-image.jpg"
             alt=""
             class="q-mb-lg"
             :class="maxScrollTop >= 700 ? 'fade-in' : ''"
@@ -104,7 +104,7 @@
         </div>
         <div class="column no-wrap">
           <img
-            src="../image/community-image.jpg"
+            src="~assets/community-image.jpg"
             alt=""
             class="q-mb-lg"
             :class="maxScrollTop >= 700 ? 'fade-in' : ''"
@@ -120,7 +120,7 @@
         </div>
         <div class="column no-wrap" @click="$router.push('/rescue-reports')">
           <img
-            src="../image/rescue-image.jpg"
+            src="~assets/rescue-image.jpg"
             alt=""
             class="q-mb-lg"
             :class="maxScrollTop >= 700 ? 'fade-in' : ''"
@@ -136,7 +136,7 @@
         </div>
         <div class="column no-wrap" @click="$router.push('/pet-transfer')">
           <img
-            src="../image/transfer-image.jpg"
+            src="~assets/transfer-image.jpg"
             alt=""
             class="q-mb-lg"
             :class="maxScrollTop >= 700 ? 'fade-in' : ''"

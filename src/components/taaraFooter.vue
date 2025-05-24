@@ -16,26 +16,34 @@
     <div class="row no-wrap justify-between items-center second-layer">
       <div class="colum no-wrap justify-start items-center">
         <p class="paragraph1">Contact</p>
-        <p class="paragraph2">123 Main Street, Tabaco City, Philippines</p>
-        <p class="paragraph2">General Inquiries: info@taara.org</p>
+        <p class="paragraph2">P-3 Burac St., San Lorenzo, Tabaco, Philippines</p>
+        <p class="paragraph2">
+          General Inquiries: <br />
+          0905-523-8105
+        </p>
         <p class="paragraph2">Donations: donate@taara.org</p>
-        <p class="paragraph2">Volunteer Opportunities: volunteer@taara.org</p>
       </div>
       <div class="colum no-wrap justify-start items-center">
         <p class="paragraph1">Quick Links</p>
-        <p class="paragraph2"><u>Adoption Process</u></p>
-        <p class="paragraph2" @click="$router.push('/donation-channel')">
+        <p class="paragraph2" @click="$router.push('/public/volunteer-form')">
+          <u>Become a Volunteer</u>
+        </p>
+        <p class="paragraph2" @click="$router.push('/public/donation-channel')">
           <u>Donation Channel</u>
         </p>
-        <p class="paragraph2" @click="$router.push('/termsAndConditions')">
+        <p class="paragraph2" @click="$router.push('/public/termsAndConditions')">
           <u>Terms & Conditions</u>
         </p>
-        <p class="paragraph2" @click="$router.push('/privacyPolicy')">
+        <p class="paragraph2" @click="$router.push('/public/privacyPolicy')">
           <u>Privacy Policy</u>
         </p>
       </div>
       <div class="colum no-wrap justify-start items-center">
         <p class="paragraph1">Donate</p>
+        <p class="paragraph2">Gcash Number: 0905-523-8105</p>
+        <p class="paragraph2">BDO: 005150343294</p>
+        <p class="paragraph2">PayPal: 0905-523-8105</p>
+        <p class="paragraph2">Account Name: EDNALYN C.</p>
         <p class="paragraph2">Sign up to get the latest updates on our mission and activities.</p>
       </div>
       <div class="column no-wrap justify-start items-center">
@@ -52,18 +60,19 @@
 
 <script>
 import { defineComponent } from 'vue'
-import { logInDetails, specificVolunteerFormData } from 'src/composable/taaraComposable'
+import { specificVolunteerFormData } from 'src/composable/taaraComposable'
 import { useCounterStore } from 'src/stores/example-store'
 import { useRouter } from 'vue-router'
+import { globalStore } from 'src/stores/global-store'
 export default defineComponent({
   name: 'TaaraFooter',
 
   setup() {
+    const store = globalStore()
     const counterStore = useCounterStore()
     const router = useRouter()
-    logInDetails.value = JSON.parse(localStorage.getItem('logInDetails'))
     let restriction = () => {
-      if (logInDetails.value == null) {
+      if (Object.keys(store.userData).length == 0) {
         counterStore.showDialog = true
       } else {
         router.push('volunteer-form')
@@ -72,7 +81,6 @@ export default defineComponent({
     return {
       router,
       restriction,
-      logInDetails,
       specificVolunteerFormData,
     }
   },

@@ -1,4 +1,4 @@
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 import taaraFooter from 'src/components/taaraFooter.vue'
 import BarChartsRescue from 'src/components/BarChartsRescue.vue'
 import { formatNumber } from 'src/composable/simpleComposable'
@@ -19,12 +19,19 @@ export default {
     const month = date.getMonth() + 1
     const year = date.getFullYear()
 
-    const amountGoal = ref(50000)
-    const percentage = ref(0)
-
     const totalRescue = ref(0)
     const totalAdopted = ref(0)
     const thisMonthDonation = ref(0)
+
+    const amountGoal = ref(50000)
+    const percentage = computed(() => {
+      const goal = amountGoal.value
+      const donation = thisMonthDonation.value
+
+      if (goal === 0) return 0 // Prevent division by zero
+
+      return (donation / goal) * 100
+    })
 
     onMounted(() => {
       getMonthlyDonation(month, year).then((response) => {

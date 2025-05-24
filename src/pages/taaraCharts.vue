@@ -92,7 +92,7 @@
             <div>
               <p class="text-zize-left q-ml-xl">We Have Received</p>
               <p class="text-zize-left q-ml-xl">
-                {{ formatNumber(0) }}
+                {{ formatNumber(thisMonthDonation) }}
               </p>
             </div>
             <div>

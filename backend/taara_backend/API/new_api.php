@@ -28,23 +28,37 @@ class API
                 'data' => $totalCashDonations,
                 'method' => 'GET'
             ]);
-        }else {
-             if (array_key_exists('get_monthly_donation', $payload)) {
-            $month = $payload['get_monthly_donation']['month'];
-            $year = $payload['get_monthly_donation']['year'];
+        } else if (array_key_exists('get_monthly_rescue', $payload)) {
+            $month = $payload['get_monthly_rescue']['month'];
+            $year = $payload['get_monthly_rescue']['year'];
 
-            $this->db->where("MONTH(f.received_date)", $month);
-            $this->db->where("YEAR(f.received_date)", $year);
-            $this->db->join("tbl_cash_donations cd", "cd.fund_id = f.fund_id", "LEFT");
-            $totalCashDonations = $this->db->getValue('tbl_funds f', 'SUM(cd.amount)') ?? 0;
+            $this->db->where("MONTH(report_date)", $month);
+            $this->db->where("YEAR(report_date)", $year);
+            $this->db->where("is_deleted", 0);
+            $total_rescue = $this->db->get('tbl_rescue_report');
 
             echo json_encode([
                 'status' => 'success',
-                'data' => $totalCashDonations,
+                'data' => count($total_rescue),
                 'method' => 'GET'
             ]);
-        } 
-        }  else {
+        } else if (array_key_exists('get_monthly_adoption', $payload)) {
+            $month = $payload['get_monthly_adoption']['month'];
+            $year = $payload['get_monthly_adoption']['year'];
+
+            $this->db->where("MONTH(af.updated_at)", $month);
+            $this->db->where("YEAR(af.updated_at)", $year);
+            $this->db->where("af.adoption_status", 4);
+            $this->db->where("ai.is_deleted", 1);
+            $this->db->join('tbl_animal_info ai', 'ai.animal_id = af.animal_id', 'left');
+            $total_adopted = $this->db->get('tbl_adoption_form af');
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => count($total_adopted),
+                'method' => 'GET'
+            ]);
+        } else {
             // Return error if 'get_user_by_type' is not provided
             echo json_encode([
                 'status' => 'failed',

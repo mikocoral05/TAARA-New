@@ -318,7 +318,7 @@
       />
     </div>
     <div id="footerDiv" ref="footerDiv">
-      <taaraFooter />
+      <TaaraFooter />
     </div>
   </q-page>
 </template>

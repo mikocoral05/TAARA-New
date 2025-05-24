@@ -463,7 +463,7 @@
       </div>
     </div>
   </div>
-  <taaraFooter></taaraFooter>
+  <TaaraFooter></TaaraFooter>
 </template>
 <script src="./taara/script/accountSettings.js"></script>
 <style lang="scss" scope src="../pages/taara/style/accountSettings.scss"></style>

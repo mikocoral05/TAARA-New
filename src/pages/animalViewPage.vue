@@ -385,7 +385,7 @@
           </q-form>
         </div>
       </q-dialog>
-      <taaraFooter />
+      <TaaraFooter />
     </div>
     <donationDialog />
   </q-page>

@@ -615,7 +615,7 @@
       </div>
     </div>
 
-    <!-- <taaraFooter></taaraFooter> -->
+    <!-- <TaaraFooter></TaaraFooter> -->
   </q-page>
 </template>
 <script src="./taara/script/petAdoptionForm.js"></script>

@@ -1,4 +1,4 @@
-import taaraFooter from 'src/components/taaraFooter.vue'
+import TaaraFooter from 'src/components/TaaraFooter.vue'
 import donationDialog from 'src/components/donationDialog.vue'
 import { useCounterStore } from 'src/stores/example-store'
 import VueScrollTo from 'vue-scrollto'
@@ -23,7 +23,7 @@ import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
 export default {
   components: {
-    taaraFooter,
+    TaaraFooter,
     donationDialog,
   },
   setup() {

@@ -11,9 +11,7 @@
               {{ filteredDate.year }}
             </h3>
           </div>
-          <div
-            class="row justify-center items-center q-ml-xl total-rescue-container"
-          >
+          <div class="row justify-center items-center q-ml-xl total-rescue-container">
             <div
               class="column justify-center items-center q-mr-xl total-label-container q-pa-none q-mt-md"
             >
@@ -37,12 +35,8 @@
             <p class="q-ma-sm">{{ week }} Week</p>
             <p class="q-ma-sm">Total rescue</p>
             <div>
-              <p class="q-ma-sm">
-                {{ value.dog }} {{ value.dog < 2 ? "Dog" : "Dogs" }}
-              </p>
-              <p class="q-ma-sm">
-                {{ value.cat }} {{ value.cat < 2 ? "Cat" : "Cats" }}
-              </p>
+              <p class="q-ma-sm">{{ value.dog }} {{ value.dog < 2 ? 'Dog' : 'Dogs' }}</p>
+              <p class="q-ma-sm">{{ value.cat }} {{ value.cat < 2 ? 'Cat' : 'Cats' }}</p>
             </div>
           </div>
         </div>
@@ -57,85 +51,67 @@
       >
         <BarChartsRescue />
       </div>
-      <PageFooter class="footer"></PageFooter>
+      <TaaraFooter class="footer full-width"></TaaraFooter>
     </div>
   </q-page>
 </template>
 <script>
-import BarChartsRescue from "src/components/BarChartsRescue.vue";
-import PageFooter from "src/components/PageFooter.vue";
-import { ref, onMounted } from "vue";
-import {
-  getRescuedAnimal,
-  allRescuedAnimal,
-} from "src/composable/taaraComposable";
-import {
-  weekCount,
-  monthToday,
-  yearToday,
-  monthNames,
-} from "src/composable/simpleComposable";
+import BarChartsRescue from 'src/components/BarChartsRescue.vue'
+import { ref, onMounted } from 'vue'
+import { getRescuedAnimal, allRescuedAnimal } from 'src/composable/taaraComposable'
+import { weekCount, monthToday, yearToday, monthNames } from 'src/composable/simpleComposable'
+import TaaraFooter from 'src/components/TaaraFooter.vue'
 export default {
   components: {
     BarChartsRescue,
-    PageFooter,
+    TaaraFooter,
   },
   setup() {
     let filteredDate = ref({
       month: monthNames[monthToday],
       year: yearToday,
-    });
-    let objectsWeeklyRescue = ref({});
-    let totalRescue = ref(0);
+    })
+    let objectsWeeklyRescue = ref({})
+    let totalRescue = ref(0)
     onMounted(() => {
       getRescuedAnimal(filteredDate.value)
         .then((totalOfRescue) => {
-          let count = weekCount(
-            filteredDate.value.year,
-            filteredDate.value.month.value
-          );
-          const weeklySummary = {};
-          let allRescue = 0;
+          let count = weekCount(filteredDate.value.year, filteredDate.value.month.value)
+          const weeklySummary = {}
+          let allRescue = 0
           // Initialize weekly summary object
           for (let week = 1; week <= count; week++) {
-            weeklySummary[week] = { cat: 0, dog: 0 };
+            weeklySummary[week] = { cat: 0, dog: 0 }
           }
 
           // Process each rescue entry
           for (const entry of totalOfRescue) {
-            const rescueDate = new Date(entry.care_start_date); // Assuming 'date' is the key for rescue date
-            const weekNumber = weekCount(
-              rescueDate.getFullYear(),
-              rescueDate.getMonth() + 1
-            );
+            const rescueDate = new Date(entry.care_start_date) // Assuming 'date' is the key for rescue date
+            const weekNumber = weekCount(rescueDate.getFullYear(), rescueDate.getMonth() + 1)
 
             // Increment the count for the corresponding animal type
-            if (entry.animal_type === "cat") {
-              weeklySummary[weekNumber].cat++;
-              allRescue++;
-            } else if (entry.animal_type === "dog") {
-              weeklySummary[weekNumber].dog++;
-              allRescue++;
+            if (entry.animal_type === 'cat') {
+              weeklySummary[weekNumber].cat++
+              allRescue++
+            } else if (entry.animal_type === 'dog') {
+              weeklySummary[weekNumber].dog++
+              allRescue++
             }
           }
-          objectsWeeklyRescue.value = weeklySummary;
-          totalRescue.value = allRescue;
+          objectsWeeklyRescue.value = weeklySummary
+          totalRescue.value = allRescue
         })
         .catch((error) => {
-          console.log(error);
-        });
-    });
+          console.log(error)
+        })
+    })
     return {
       totalRescue,
       objectsWeeklyRescue,
       filteredDate,
       allRescuedAnimal,
-    };
+    }
   },
-};
+}
 </script>
-<style
-  lang="scss"
-  scoped
-  src="../pages/taara/style/totalOfRescueAdoptionDonation.scss"
-></style>
+<style lang="scss" scoped src="pages/taara/style/totalOfRescueAdoptionDonation.scss"></style>

@@ -25,15 +25,15 @@
       </div>
     </div>
   </q-page>
-  <taaraFooter />
+  <TaaraFooter />
 </template>
 <script>
 import { ref } from 'vue'
-import taaraFooter from 'src/components/taaraFooter.vue'
+import TaaraFooter from 'src/components/TaaraFooter.vue'
 
 export default {
   components: {
-    taaraFooter,
+    TaaraFooter,
   },
   setup() {
     let tabReference = ref(1)

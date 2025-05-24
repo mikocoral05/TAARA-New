@@ -453,7 +453,7 @@
         />
       </div>
     </div>
-    <taaraFooter class="footer" />
+    <TaaraFooter class="footer" />
   </q-page>
 </template>
 <script src="pages/taara/script/petInformation.js"></script>

@@ -1,5 +1,5 @@
 import { ref, onMounted, watch, computed } from 'vue'
-import taaraFooter from 'src/components/taaraFooter.vue'
+import TaaraFooter from 'src/components/TaaraFooter.vue'
 import { useRoute } from 'vue-router'
 import {
   allAnimalBackUp,
@@ -10,7 +10,7 @@ import {
 import { calculateAge, encodeAnimalId, getImageLink } from 'src/composable/simpleComposable'
 
 export default {
-  components: { taaraFooter },
+  components: { TaaraFooter },
 
   setup() {
     const miniState = ref(false)

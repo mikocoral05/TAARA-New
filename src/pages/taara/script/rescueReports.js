@@ -18,12 +18,12 @@ import {
 import TextClamp from 'vue3-text-clamp'
 
 import { useCounterStore } from 'src/stores/example-store'
-import taaraFooter from 'src/components/taaraFooter.vue'
+import TaaraFooter from 'src/components/TaaraFooter.vue'
 import donationDialog from 'src/components/donationDialog.vue'
 export default {
   components: {
     TextClamp,
-    taaraFooter,
+    TaaraFooter,
     donationDialog,
   },
   setup() {

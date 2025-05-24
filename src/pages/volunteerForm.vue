@@ -1244,7 +1244,7 @@
       <div class="text-caption text-grey-7">We appreciate your interest and understanding.</div>
     </div>
 
-    <taaraFooter class="footer"></taaraFooter>
+    <TaaraFooter class="footer"></TaaraFooter>
   </q-page>
 </template>
 <script src="pages/taara/script/volunteerForm"></script>

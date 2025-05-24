@@ -117,7 +117,7 @@
     </div>
     <!-- <div class="second-layer column no-wrap items-center q-mt-xl"></div> -->
 
-    <taaraFooter class="footer full-width"></taaraFooter>
+    <TaaraFooter class="footer full-width"></TaaraFooter>
   </q-page>
 </template>
 <script src="pages/taara/script/taaraCharts.js"></script>

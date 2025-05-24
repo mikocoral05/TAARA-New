@@ -1,5 +1,5 @@
 import { defineComponent, ref, onMounted } from 'vue'
-import taaraFooter from 'src/components/taaraFooter'
+import TaaraFooter from 'src/components/TaaraFooter'
 import { useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
 import {
@@ -12,7 +12,7 @@ import { decodeAnimalId, getImageLink } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 export default defineComponent({
   components: {
-    taaraFooter,
+    TaaraFooter,
   },
   setup() {
     const $q = useQuasar()
@@ -114,7 +114,7 @@ export default defineComponent({
       alert,
       nextInfo,
       images,
-      taaraFooter,
+      TaaraFooter,
       adoptionDetails,
     }
   },

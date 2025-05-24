@@ -5,20 +5,16 @@
       <div>
         <h3 class="text-left title">Terms & Conditions</h3>
         <p>
-          At TAARA, we believe in transparency and accountability. Our Terms &
-          Conditions outline the rules and regulations for the use of our
-          website. By accessing our website, we assume you accept these terms
-          and conditions. Do not continue to use TAARA's website if you do not
-          agree to take all of the terms and conditions stated on this page.
+          At TAARA, we believe in transparency and accountability. Our Terms & Conditions outline
+          the rules and regulations for the use of our website. By accessing our website, we assume
+          you accept these terms and conditions. Do not continue to use TAARA's website if you do
+          not agree to take all of the terms and conditions stated on this page.
         </p>
         <h6 class="q-mb-sm q-mt-md questions">
           In general, our Terms & Conditions cover the following:
         </h6>
         <ul>
-          <li>
-            Who can use our website and the requirements to create an account
-            (if relevant)
-          </li>
+          <li>Who can use our website and the requirements to create an account (if relevant)</li>
           <li>Key information about our adoption process</li>
           <li>Rights and responsibilities for adopters</li>
           <li>Ownership of content and logos</li>
@@ -31,22 +27,22 @@
       </div>
     </div>
   </q-page>
-  <taaraFooter />
+  <TaaraFooter />
 </template>
 <script>
-import { ref } from "vue";
-import taaraFooter from "src/components/taaraFooter.vue";
+import { ref } from 'vue'
+import TaaraFooter from 'src/components/TaaraFooter.vue'
 
 export default {
   components: {
-    taaraFooter,
+    TaaraFooter,
   },
   setup() {
-    let tabReference = ref(1);
+    let tabReference = ref(1)
     return {
       tabReference,
-    };
+    }
   },
-};
+}
 </script>
 <style lang="scss" scoped src="../pages/taara/style/taaraFaqs.scss"></style>

@@ -1,11 +1,11 @@
 import { defineComponent, onMounted, ref } from 'vue'
-import taaraFooter from 'src/components/taaraFooter.vue'
+import TaaraFooter from 'src/components/TaaraFooter.vue'
 import { globalStore } from 'src/stores/global-store'
 import { useQuasar } from 'quasar'
 import { addVolunteerRequest, checkIfVolunteer } from 'src/composable/latestComposable'
 export default defineComponent({
   components: {
-    taaraFooter,
+    TaaraFooter,
   },
   setup() {
     const $q = useQuasar()

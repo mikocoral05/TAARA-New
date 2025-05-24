@@ -147,12 +147,12 @@
         </p>
       </div>
     </div>
-    <taaraFooter class="footer" />
+    <TaaraFooter class="footer" />
   </q-page>
 </template>
 
 <script>
-import taaraFooter from '../components/taaraFooter.vue'
+import TaaraFooter from '../components/TaaraFooter.vue'
 import { onMounted } from 'vue'
 import {
   allTaaraOfficials,
@@ -162,7 +162,7 @@ import {
 } from 'src/composable/taaraComposable'
 export default {
   components: {
-    taaraFooter,
+    TaaraFooter,
   },
   setup() {
     onMounted(() => {

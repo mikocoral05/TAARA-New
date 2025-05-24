@@ -56,7 +56,7 @@ import { logInDetails, specificVolunteerFormData } from 'src/composable/taaraCom
 import { useCounterStore } from 'src/stores/example-store'
 import { useRouter } from 'vue-router'
 export default defineComponent({
-  name: 'taaraFooter',
+  name: 'TaaraFooter',
 
   setup() {
     const counterStore = useCounterStore()

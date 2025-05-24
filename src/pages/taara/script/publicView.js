@@ -1,6 +1,6 @@
 import { ref, onMounted, watch } from 'vue'
 import PageFooter from 'src/components/PageFooter.vue'
-import taaraFooter from 'src/components/taaraFooter.vue'
+import TaaraFooter from 'src/components/TaaraFooter.vue'
 import { useRouter } from 'vue-router'
 import { useCounterStore } from 'src/stores/example-store'
 import VueScrollTo from 'vue-scrollto'
@@ -22,7 +22,7 @@ import { wordifyTime, wordifyDate, formatNumber } from 'src/composable/simpleCom
 export default {
   components: {
     PageFooter,
-    taaraFooter,
+    TaaraFooter,
   },
 
   setup() {

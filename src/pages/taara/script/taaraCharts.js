@@ -1,5 +1,5 @@
 import { ref, onMounted, computed } from 'vue'
-import taaraFooter from 'src/components/taaraFooter.vue'
+import TaaraFooter from 'src/components/TaaraFooter.vue'
 import BarChartsRescue from 'src/components/BarChartsRescue.vue'
 import { formatNumber } from 'src/composable/simpleComposable'
 import { allRescuedAnimal, animalsAdopted } from 'src/composable/taaraComposable'
@@ -11,7 +11,7 @@ import {
 
 export default {
   components: {
-    taaraFooter,
+    TaaraFooter,
     BarChartsRescue,
   },
   setup() {
@@ -54,7 +54,7 @@ export default {
       percentage,
       amountGoal,
       formatNumber,
-      taaraFooter,
+      TaaraFooter,
     }
   },
 }

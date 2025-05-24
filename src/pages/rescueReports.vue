@@ -31,11 +31,11 @@
           label="All"
           no-caps
           unelevated
-          @click="(sortReport = true), filterReport('All')"
+          @click="((sortReport = true), filterReport('All'))"
           :ripple="false"
         />
         <q-btn
-          @click="(sortReport = false), filterReport('MyReport')"
+          @click="((sortReport = false), filterReport('MyReport'))"
           class="q-ml-md"
           :class="sortReport == false ? 'text-primary' : ''"
           label="My Report"
@@ -46,10 +46,7 @@
         />
       </div>
     </div>
-    <div
-      class="flex justify-center items-center q-pa-sm report-container"
-      ref="myElement"
-    >
+    <div class="flex justify-center items-center q-pa-sm report-container" ref="myElement">
       <div
         v-for="data in getReportRescueData.data"
         :key="data.report_id"
@@ -57,9 +54,7 @@
         :id="'report-' + data.report_id"
       >
         <div class="row no-wrap justify-center items-start">
-          <div
-            class="column justify-start items-start report-description q-pt-lg q-px-lg"
-          >
+          <div class="column justify-start items-start report-description q-pt-lg q-px-lg">
             <div class="row no-wrap justify-between items-center full-width">
               <div class="row no-wrap justify-start items-center">
                 <img :src="data.reporter_image" class="bg-amber" />
@@ -82,14 +77,10 @@
               <TextClamp :max-lines="3" :text="data.report_details">
               </TextClamp>
             </div> -->
-            <q-scroll-area
-              class="q-my-md details q-px-sm full-width text-weight-light"
-            >
+            <q-scroll-area class="q-my-md details q-px-sm full-width text-weight-light">
               {{ data.report_details }}
             </q-scroll-area>
-            <div
-              class="row no-wrap justify-between items-center full-width q-px-sm q-mt-md"
-            >
+            <div class="row no-wrap justify-between items-center full-width q-px-sm q-mt-md">
               <div class="row no-wrap text-weight-light text-caption">
                 <p class="q-ma-none q-mr-md">{{ wordifyDate(data.date) }}</p>
                 <p class="q-ma-none">{{ wordifyTime(data.time) }}</p>
@@ -102,12 +93,12 @@
                 flat
                 dense
                 @click="
-                  (counterStore.donationDialog = true),
-                    $router.push({
-                      query: {
-                        G: encodeAnimalId(0),
-                      },
-                    })
+                  ((counterStore.donationDialog = true),
+                  $router.push({
+                    query: {
+                      G: encodeAnimalId(0),
+                    },
+                  }))
                 "
                 v-if="step == 4"
               />
@@ -120,26 +111,11 @@
               animated
               flat
             >
-              <q-step
-                :name="1"
-                title="Reported"
-                icon="add_task"
-                :done="step > 1"
-              />
+              <q-step :name="1" title="Reported" icon="add_task" :done="step > 1" />
 
               <q-step :name="2" title="Rescued" icon="pets" :done="step > 2" />
-              <q-step
-                :name="3"
-                title="Arrive at Vet"
-                icon="medication"
-                :done="step > 3"
-              />
-              <q-step
-                :name="4"
-                title="Released"
-                icon="corporate_fare"
-                :done="step > 4"
-              />
+              <q-step :name="3" title="Arrive at Vet" icon="medication" :done="step > 3" />
+              <q-step :name="4" title="Released" icon="corporate_fare" :done="step > 4" />
             </q-stepper>
           </div>
           <div class="column report-image">
@@ -169,24 +145,15 @@
           </div>
         </div>
       </div>
-      <div
-        class="q-mb-xl q-mt-sm no-report column no-wrap flex-center"
-        v-if="noReport"
-      >
+      <div class="q-mb-xl q-mt-sm no-report column no-wrap flex-center" v-if="noReport">
         <q-icon name="mood" size="xl" color="grey" />
         <h6 class="text-grey-6 q-mt-none">You don't have any Report!</h6>
       </div>
       <q-dialog v-model="addReport" persistent>
         <q-card class="my-card" style="width: 450px">
-          <q-form
-            class="q-ma-none q-pa-none"
-            @submit="addReportManagement(reportDetails, images)"
-          >
+          <q-form class="q-ma-none q-pa-none" @submit="addReportManagement(reportDetails, images)">
             <q-card-section class="row justify-end relative-position">
-              <div
-                class="text-weight-medium absolute-center"
-                style="font-size: 17px"
-              ></div>
+              <div class="text-weight-medium absolute-center" style="font-size: 17px"></div>
               <q-icon
                 name="close"
                 class="bg-blue-grey-1 q-pa-xs"
@@ -197,27 +164,15 @@
               />
             </q-card-section>
             <q-separator />
-            <q-card-section
-              class="q-pa-sm q-px-md row no-wrap justify-between items-center"
-            >
+            <q-card-section class="q-pa-sm q-px-md row no-wrap justify-between items-center">
               <div class="row no-wrap">
-                <q-img
-                  src="../image/TAARA_Logo.jpg"
-                  width="40px"
-                  style="border-radius: 100%"
-                />
+                <q-img src="../image/TAARA_Logo.jpg" width="40px" style="border-radius: 100%" />
                 <div class="column q-ml-sm">
                   <p class="no-margin text-subtitle2">TAARA Community</p>
                   <p class="no-margin text-caption">Report</p>
                 </div>
               </div>
-              <q-btn
-                flat
-                color="primary"
-                round
-                icon="image"
-                @click="addImage = true"
-              />
+              <q-btn flat color="primary" round icon="image" @click="addImage = true" />
             </q-card-section>
             <q-card-section class="q-ma-md q-pa-none">
               <div class="row no-wrap full-width" v-if="logInDetails == null">
@@ -266,12 +221,7 @@
               <div
                 v-if="images.length == 0"
                 class="row absolute-center justify-center items-center bg-grey-2"
-                style="
-                  flex-direction: column;
-                  height: 100%;
-                  width: 100%;
-                  border-radius: 5px;
-                "
+                style="flex-direction: column; height: 100%; width: 100%; border-radius: 5px"
                 @click="pickFile()"
               >
                 <q-icon name="add_photo_alternate" size="md" />
@@ -310,7 +260,7 @@
                   size="xs"
                   style="border-radius: 100%"
                   color="white"
-                  @click="(addImage = false), (images = [])"
+                  @click="((addImage = false), (images = []))"
                 />
                 <q-btn
                   label="Add photo"
@@ -347,9 +297,7 @@
 
             <q-separator />
 
-            <q-card-actions
-              class="row justify-center items-center add-update-container"
-            >
+            <q-card-actions class="row justify-center items-center add-update-container">
               <q-btn
                 v-close-popup
                 label="Post"
@@ -365,7 +313,7 @@
       </q-dialog>
       <donationDialog />
     </div>
-    <taaraFooter class="q-mt-xl full-width"></taaraFooter>
+    <TaaraFooter class="q-mt-xl full-width"></TaaraFooter>
   </q-page>
 </template>
 

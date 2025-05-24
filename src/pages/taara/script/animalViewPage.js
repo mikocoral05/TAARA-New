@@ -1,5 +1,5 @@
 import { ref, onMounted, watch, onUnmounted } from 'vue'
-import taaraFooter from 'src/components/taaraFooter.vue'
+import TaaraFooter from 'src/components/TaaraFooter.vue'
 import { useCounterStore } from 'src/stores/example-store'
 import { createWorker } from 'tesseract.js'
 import { useRoute } from 'vue-router'
@@ -28,7 +28,7 @@ import { globalStore } from 'src/stores/global-store'
 
 export default {
   components: {
-    taaraFooter,
+    TaaraFooter,
   },
   setup() {
     const store = globalStore()

@@ -1,5 +1,5 @@
 import { ref, onMounted } from 'vue'
-import taaraFooter from 'src/components/taaraFooter.vue'
+import TaaraFooter from 'src/components/TaaraFooter.vue'
 import {
   logInDetails,
   getPublicUser,
@@ -11,7 +11,7 @@ import { resizeImage, Email, sendTelerivetSms } from 'src/composable/simpleCompo
 
 export default {
   components: {
-    taaraFooter,
+    TaaraFooter,
   },
   setup() {
     let more = ref(false)
@@ -220,7 +220,7 @@ export default {
       imageShow,
       more,
       tab,
-      taaraFooter,
+      TaaraFooter,
       logInDetails,
       updatePublicUserDetails,
       dummyPassword,

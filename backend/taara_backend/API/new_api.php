@@ -58,9 +58,8 @@ class API
                 'data' => count($total_adopted),
                 'method' => 'GET'
             ]);
-        } else if (array_key_exists("get_monthly_donation", $payload)) {
-            $year = $payload['year'];
-
+        } else if (array_key_exists("get_monthly_donation_by_year", $payload)) {
+            $year = $payload['get_monthly_donation_by_year']['year'];
             $query = $this->db->rawQuery("
             SELECT all_dates.year, all_dates.month, IFNULL(SUM(cd.amount), 0) AS total_donation
             FROM (
@@ -75,7 +74,7 @@ class API
             LEFT JOIN tbl_funds AS f 
             ON all_dates.year = YEAR(f.received_date) 
             AND all_dates.month = MONTH(f.received_date) 
-            AND f.donation_status = 2
+            AND f.is_deleted = 0
             LEFT JOIN tbl_cash_donations AS cd 
             ON cd.fund_id = f.fund_id
             WHERE all_dates.year = ?

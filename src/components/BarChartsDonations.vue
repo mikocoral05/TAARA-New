@@ -27,7 +27,7 @@ export default defineComponent({
           datasets: [
             {
               label: 'Rescued Animal by Month ',
-              data: monthlyDonationData.value.map((row) => row.month_donation),
+              data: monthlyDonationData.value.map((row) => row.total_donation),
               backgroundColor: '#B157AE',
             },
           ],
@@ -64,7 +64,7 @@ export default defineComponent({
     onMounted(() => {
       window.addEventListener('resize', onWindowResize)
       onWindowResize()
-      getMonthlyDonationByYear(yearToday, 'budget_allocation')
+      getMonthlyDonationByYear(yearToday)
         .then((response) => {
           monthlyDonationData.value = response
           createChart()

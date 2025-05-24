@@ -27,10 +27,9 @@ export const getTotalAdoption = async (month, year) => {
   return response.data
 }
 export const getMonthlyDonationByYear = async (date) => {
-  const response = await api.get('api.php', {
+  const response = await api.get('new_api.php', {
     params: {
-      get_monthly_donation: 'get_monthly_donation',
-      year: date,
+      get_monthly_donation_by_year: { year: date },
     },
   })
   console.log(response.data)

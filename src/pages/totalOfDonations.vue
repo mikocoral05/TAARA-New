@@ -11,14 +11,12 @@
               {{ filteredDate.year }}
             </h3>
           </div>
-          <div
-            class="row justify-center items-center q-ml-xl total-donation-container"
-          >
+          <div class="row justify-center items-center q-ml-xl total-donation-container">
             <div
               class="column justify-center items-center q-mr-xl total-label-container q-pa-none q-mt-md"
             >
               <h3 class="q-pa-none q-ma-none q-mb-sm">
-                {{ formatNumber(totalDonation, "noDecimal") }}
+                {{ formatNumber(totalDonation, 'noDecimal') }}
               </h3>
               <p class="q-mb-none total-label q-mt-none">Total of Donations</p>
             </div>
@@ -53,80 +51,70 @@
       >
         <BarChartsDonations />
       </div>
-      <PageFooter class="footer"></PageFooter>
+      <TaaraFooter class="footer full-width"></TaaraFooter>
     </div>
   </q-page>
 </template>
 <script>
-import BarChartsDonations from "src/components/BarChartsDonations.vue";
-import PageFooter from "src/components/PageFooter.vue";
-import { ref, onMounted } from "vue";
+import BarChartsDonations from 'src/components/BarChartsDonations.vue'
+import { ref, onMounted } from 'vue'
 import {
   weekCount,
   yearToday,
   monthToday,
   formatNumber,
   monthNames,
-} from "src/composable/simpleComposable";
-import { getMonthDonation } from "../composable/taaraComposable";
+} from 'src/composable/simpleComposable'
+import { getMonthDonation } from '../composable/taaraComposable'
+import TaaraFooter from 'src/components/TaaraFooter.vue'
 export default {
   components: {
     BarChartsDonations,
-    PageFooter,
+    TaaraFooter,
   },
   setup() {
     let filteredDate = ref({
       month: monthNames[monthToday],
       year: yearToday,
-    });
-    let totalDonation = ref(0);
-    let objectsWeeklyDonation = ref({});
+    })
+    let totalDonation = ref(0)
+    let objectsWeeklyDonation = ref({})
     onMounted(() => {
       getMonthDonation(filteredDate.value.month.value, yearToday)
         .then((donationThisMonth) => {
-          console.log(donationThisMonth);
-          let count = weekCount(
-            filteredDate.value.year,
-            filteredDate.value.month.value
-          );
-          const weeklySummary = {};
-          let allDonation = 0;
+          console.log(donationThisMonth)
+          let count = weekCount(filteredDate.value.year, filteredDate.value.month.value)
+          const weeklySummary = {}
+          let allDonation = 0
           // Initialize weekly summary object
           for (let week = 1; week <= count; week++) {
-            weeklySummary[week] = { donation: 0 };
+            weeklySummary[week] = { donation: 0 }
           }
 
           // Process each rescue entry
           for (const entry of donationThisMonth) {
-            const rescueDate = new Date(entry.donation_date); // Assuming 'date' is the key for rescue date
-            const weekNumber = weekCount(
-              rescueDate.getFullYear(),
-              rescueDate.getMonth() + 1
-            );
+            const rescueDate = new Date(entry.donation_date) // Assuming 'date' is the key for rescue date
+            const weekNumber = weekCount(rescueDate.getFullYear(), rescueDate.getMonth() + 1)
 
             // Increment the count for the corresponding animal type
-            weeklySummary[weekNumber].donation += entry.donation_amount;
-            allDonation += entry.donation_amount;
+            weeklySummary[weekNumber].donation += entry.donation_amount
+            allDonation += entry.donation_amount
           }
-          objectsWeeklyDonation.value = weeklySummary;
-          totalDonation.value = allDonation;
-          console.log(weeklySummary);
+          objectsWeeklyDonation.value = weeklySummary
+          totalDonation.value = allDonation
+          console.log(weeklySummary)
         })
         .catch((error) => {
-          console.log(error);
-        });
-    });
+          console.log(error)
+        })
+    })
     return {
       objectsWeeklyDonation,
       filteredDate,
       totalDonation,
       formatNumber,
-    };
+    }
   },
-};
+}
 </script>
-<style
-  lang="scss"
-  scoped
-  src="../pages/taara/style/totalOfRescueAdoptionDonation.scss"
-></style>
+<style lang="scss" scoped src="../pages/taara/style/totalOfRescueAdoptionDonation.scss"></style>

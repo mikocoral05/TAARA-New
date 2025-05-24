@@ -27,7 +27,7 @@
                 border-bottom-left-radius: 10px;
                 border-bottom-right-radius: 10px;
               "
-              to="totalOfRescue"
+              to="/public/totalOfRescue"
               >Click for more info <q-icon name="arrow_circle_right" class="click-for-more-icon"
             /></q-btn>
           </div>
@@ -45,7 +45,7 @@
               <q-img src="../image/pet-adoption.png" class="images" />
             </div>
             <q-btn
-              to="totalOfAdoption"
+              to="/public/totalOfAdoption"
               no-caps
               flat
               class="text-white text-center q-pa-sm click-for-more"
@@ -71,7 +71,7 @@
               <q-img src="../image/handheart.png" class="images" />
             </div>
             <q-btn
-              to="totalOfDonations"
+              to="/public/totalOfDonations"
               flat
               no-caps
               class="text-white text-center q-pa-sm click-for-more"

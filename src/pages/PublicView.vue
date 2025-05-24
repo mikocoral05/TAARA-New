@@ -48,7 +48,12 @@
           </div>
         </div>
         <div class="image-layer fade-in-left-right row justify-end items-end">
-          <q-img src="~assets/public-image1.png" class="radius-100" width="500px" alt="" />
+          <q-img
+            src="http://77.37.74.195/images/public-image1.png"
+            class="radius-100"
+            width="500px"
+            alt=""
+          />
         </div>
       </div>
     </div>
@@ -88,7 +93,7 @@
       <div class="second-child row no-wrap justify-between">
         <div class="column no-wrap">
           <img
-            src="~assets/adoption-image.jpg"
+            src="http://77.37.74.195/images/adoption-image.jpg"
             alt=""
             class="q-mb-lg"
             :class="maxScrollTop >= 700 ? 'fade-in' : ''"
@@ -104,7 +109,7 @@
         </div>
         <div class="column no-wrap">
           <img
-            src="~assets/community-image.jpg"
+            src="http://77.37.74.195/images/community-image.jpg"
             alt=""
             class="q-mb-lg"
             :class="maxScrollTop >= 700 ? 'fade-in' : ''"
@@ -120,7 +125,7 @@
         </div>
         <div class="column no-wrap" @click="$router.push('/rescue-reports')">
           <img
-            src="~assets/rescue-image.jpg"
+            src="http://77.37.74.195/images/rescue-image.jpg"
             alt=""
             class="q-mb-lg"
             :class="maxScrollTop >= 700 ? 'fade-in' : ''"
@@ -136,7 +141,7 @@
         </div>
         <div class="column no-wrap" @click="$router.push('/pet-transfer')">
           <img
-            src="~assets/transfer-image.jpg"
+            src="http://77.37.74.195/images/transfer-image.jpg"
             alt=""
             class="q-mb-lg"
             :class="maxScrollTop >= 700 ? 'fade-in' : ''"
@@ -323,6 +328,6 @@
   </q-page>
 </template>
 
-<script src="../pages/taara/script/publicView"></script>
+<script src="pages/taara/script/publicView"></script>
 
-<style lang="scss" src="../pages/taara/style/publicView.scss" scoped></style>
+<style lang="scss" src="pages/taara/style/publicView.scss" scoped></style>

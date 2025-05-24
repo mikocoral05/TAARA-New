@@ -12,7 +12,7 @@
             <div class="flex row justify-center items-center text-white q-mx-md">
               <div class="flex column q-ma-md q-mx-md q-mr-xl total-container">
                 <h2 class="q-my-sm total-number">
-                  {{ allRescuedAnimal?.length ?? 0 }}
+                  {{ totalRescue }}
                 </h2>
                 <p class="box-label">Total of Rescue</p>
               </div>
@@ -38,7 +38,7 @@
             <div class="flex row justify-center items-center text-white q-mx-md">
               <div class="flex column q-ma-md q-mx-md q-mr-xl total-container">
                 <h2 class="q-my-sm total-number">
-                  {{ animalsAdopted?.length ?? 0 }}
+                  {{ totalAdopted }}
                 </h2>
                 <p class="box-label">Total of Adoption</p>
               </div>

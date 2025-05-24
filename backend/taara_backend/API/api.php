@@ -610,28 +610,6 @@ class API
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("get_monthly_donation", $ref_id)) {
       $year = $ref_id['year'];
-      // $query = $this->db->rawQuery("SELECT months.month, IFNULL(SUM(donations.donation_amount), 0) AS month_donation
-      // FROM (
-      //    SELECT 1 AS month
-      //    UNION ALL SELECT 2
-      //    UNION ALL SELECT 3
-      //    UNION ALL SELECT 4
-      //    UNION ALL SELECT 5
-      //    UNION ALL SELECT 6
-      //    UNION ALL SELECT 7
-      //    UNION ALL SELECT 8
-      //    UNION ALL SELECT 9
-      //    UNION ALL SELECT 10
-      //    UNION ALL SELECT 11
-      //    UNION ALL SELECT 12
-      // ) AS months
-      // LEFT JOIN tbl_donations AS donations
-      // ON months.month = MONTH(donations.donation_date)
-      // AND YEAR(donations.donation_date) = $year
-      // AND donations.donation_status = 2
-      // GROUP BY months.month;
-
-      // ");
       $query = $this->db->rawQuery("SELECT all_dates.year, all_dates.month, IFNULL(SUM(donations.donation_amount), 0) AS month_donation
       FROM (
           SELECT year, month FROM

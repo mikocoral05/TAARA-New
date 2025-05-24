@@ -1,0 +1,201 @@
+<?php
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE");
+header("Access-Control-Allow-Headers: Content-Type");
+require_once('../MysqliDb.php');
+
+class API
+{
+    public function __construct()
+    {
+        $this->db = new MysqliDB('localhost', 'root', '', 'capstone');
+    }
+
+    public function httpGet($payload)
+    {
+        if (array_key_exists('get_monthly_donation', $payload)) {
+            $month = $payload['get_monthly_donation']['month'];
+            $year = $payload['get_monthly_donation']['year'];
+
+            $this->db->where("MONTH(f.received_date)", $month);
+            $this->db->where("YEAR(f.received_date)", $year);
+            $this->db->join("tbl_cash_donations cd", "cd.fund_id = f.fund_id", "LEFT");
+            $totalCashDonations = $this->db->getValue('tbl_funds f', 'SUM(cd.amount)') ?? 0;
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => $totalCashDonations,
+                'method' => 'GET'
+            ]);
+        }else {
+             if (array_key_exists('get_monthly_donation', $payload)) {
+            $month = $payload['get_monthly_donation']['month'];
+            $year = $payload['get_monthly_donation']['year'];
+
+            $this->db->where("MONTH(f.received_date)", $month);
+            $this->db->where("YEAR(f.received_date)", $year);
+            $this->db->join("tbl_cash_donations cd", "cd.fund_id = f.fund_id", "LEFT");
+            $totalCashDonations = $this->db->getValue('tbl_funds f', 'SUM(cd.amount)') ?? 0;
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => $totalCashDonations,
+                'method' => 'GET'
+            ]);
+        } 
+        }  else {
+            // Return error if 'get_user_by_type' is not provided
+            echo json_encode([
+                'status' => 'failed',
+                'message' => 'A error occured while performing action!'
+            ]);
+        }
+    }
+
+
+    public function httpPost($payload)
+    {
+        if (isset($payload['add_schedule'])) {
+            $data = $payload['add_schedule'];
+
+            $insertData = [
+                'animal_id'            => $data['animal_id'] ?? null,
+                'schedule_name'               => $data['schedule_name'] ?? null,
+                'dose_number'              => $data['dose_number'] ?? null,
+                'dose_taken'      => $data['dose_taken'] ?? null,
+                'scheduled_date'          => $data['scheduled_date'] ?? null,
+                'next_due_interval'          => $data['next_due_interval'] ?? null,
+                'next_due_date'                => $data['next_due_date'] ?? null,
+                'amount'             => $data['amount'] ?? null,
+                'notes'             => $data['notes'] ?? null,
+                'added_by'   => $data['added_by'] ?? null,
+            ];
+
+            $insert = $this->db->insert('tbl_animal_schedule', $insertData);
+
+            if ($insert) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'New Schedule successfully added',
+                    'method' => 'POST',
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to new schedule',
+                    'method' => 'POST'
+                ]);
+            }
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Missing Data in the payload',
+                'method' => 'POST'
+            ]);
+        }
+    }
+
+
+    public function httpPut($payload)
+    {
+        if (isset($payload['soft_delete_schedule'])) {
+            $id = $payload['soft_delete_schedule'];
+
+            $ids = is_array($id) ? $id : explode(',', $id);
+
+            // Set the update values here in the backend
+            $update_values = [
+                'is_deleted' => 1,
+                'deleted_at' => date('Y-m-d H:i:s')
+            ];
+
+            // Update records matching the IDs
+            $this->db->where('id', $ids, 'IN');
+            $updated = $this->db->update('tbl_animal_schedule', $update_values);
+
+            if ($updated) {
+                echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
+            }
+        } else if (isset($payload['edit_animal_info'])) {
+            $obj = $payload['edit_animal_info'];
+
+            $update_values = [
+                'name' => $obj['name'] ?? null,
+                'species' => $obj['species'] ?? null,
+                'breed' => $obj['breed'] ?? null,
+                'fur_color' => $obj['fur_color'] ?? null,
+                'eye_color' => $obj['eye_color'] ?? null,
+                'date_of_birth' => $obj['date_of_birth'] ?? null,
+                'weight' => $obj['weight'] ?? null,
+                'height' => $obj['height'] ?? null,
+                'sex' => $obj['sex'] ?? null,
+                'spayed_neutered' => $obj['spayed_neutered'] ?? null,
+                'vaccination_status' => $obj['vaccination_status'] ?? null,
+                'temperament' => $obj['temperament'] ?? null, // stored as JSON string
+                'skills' => $obj['skills'] ?? null,           // stored as JSON string
+                'favorite_food' => $obj['favorite_food'] ?? null,
+                'story_background' => $obj['story_background'] ?? null,
+                'rescue_status' => $obj['rescue_status'] ?? null,
+                'health_status' => $obj['health_status'] ?? null,
+                'medical_needs' => $obj['medical_needs'] ?? null,
+                'date_rescued' => $obj['date_rescued'] ?? null,
+                'primary_image' => $obj['primary_image'] ?? 0,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+
+            $animal_id = $obj['animal_id'];
+
+            $this->db->where('animal_id', $animal_id);
+            $updated = $this->db->update('tbl_animal_info', $update_values);
+
+            if ($updated) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Animal info updated successfully',
+                    'method' => 'PUT'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to update animal info',
+                    'method' => 'PUT'
+                ]);
+            }
+        } else {
+            echo json_encode(['status' => 'error', 'message' => 'Missing Animal info in the payload']);
+        }
+    }
+
+
+    public function httpDelete($payload) {}
+}
+
+/* END OF CLASS */
+
+
+$received_data = json_decode(file_get_contents('php://input'), true);
+
+$request_method = $_SERVER['REQUEST_METHOD'];
+
+
+$api = new API;
+
+
+if ($request_method == 'GET') {
+    $api->httpGet($_GET);
+}
+
+if ($request_method == 'POST') {
+    $api->httpPost($received_data);
+}
+
+if ($request_method == 'PUT') {
+    $api->httpPut($received_data);
+}
+
+if ($request_method == 'DELETE') {
+    $api->httpDelete($received_data);
+}

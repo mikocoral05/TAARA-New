@@ -53,6 +53,7 @@
             class="radius-100"
             width="500px"
             alt=""
+            loading="eager"
           />
         </div>
       </div>
@@ -163,7 +164,7 @@
         class="left-image column justify-center items-center relative-position"
       >
         <div class="absolute-left blue-circle"></div>
-        <img src="../image/dedicated-team.jpg" alt="" />
+        <img src="http://77.37.74.195/images/dedicated-team.jpg" alt="" />
         <div class="absolute square"></div>
       </div>
       <div class="right-description column justify-center items-center">

@@ -175,6 +175,40 @@ const updateUser = (data) => {
   })
 }
 
+export const updateBudgetAllocation = (data) => {
+  return new Promise((resolve, reject) => {
+    api
+      .put('budget_expenses.php', {
+        update_buget_allocation: data,
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          resolve(response.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
+export const addBudgetAllocation = (data) => {
+  return new Promise((resolve, reject) => {
+    api
+      .post('budget_expenses.php', {
+        add_budget_allocation: data,
+      })
+      .then((response) => {
+        if (response.data.status == 'success') {
+          resolve(response.data)
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
 const getPageAccess = () => {
   return new Promise((resolve, reject) => {
     api

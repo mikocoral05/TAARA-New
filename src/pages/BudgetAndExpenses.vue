@@ -416,6 +416,7 @@ export default {
     const $q = useQuasar()
     const tab = ref('1')
     const obj = { 1: 'Budget Allocation', 2: 'Expenses' }
+    const obj2 = { Add: 'Adding', Edit: 'Updating' }
     const editTab = ref('1')
     const rows = ref([])
     const confirm = ref(false)
@@ -458,13 +459,15 @@ export default {
 
     const saveFn = () => {
       $q.loading.show({
-        message: 'Updating. Please wait...',
+        message: `${obj2[mode.value]}. Please wait...`,
       })
       if (tab.value == 1) {
         addBudgetAllocation(expenseData.value).then((response) => {
-          console.log(response)
-
           setTimeout(() => {
+            if (response.status == 'success') {
+              fetchFn()
+              allocationDialog.value
+            }
             $q.loading.hide()
           }, 2000)
         })
@@ -497,7 +500,7 @@ export default {
         return text
       }
     }
-    watchEffect(() => {
+    const fetchFn = () => {
       if (tab.value == 1) {
         updateBudgetAllocationSum()
       } else {
@@ -528,6 +531,9 @@ export default {
           })
         })
       }
+    }
+    watchEffect(() => {
+      fetchFn()
     })
 
     return {

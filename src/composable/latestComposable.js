@@ -192,21 +192,11 @@ export const updateBudgetAllocation = (data) => {
   })
 }
 
-export const addBudgetAllocation = (data) => {
-  return new Promise((resolve, reject) => {
-    api
-      .post('budget_expenses.php', {
-        add_budget_allocation: data,
-      })
-      .then((response) => {
-        if (response.data.status == 'success') {
-          resolve(response.data)
-        }
-      })
-      .catch((error) => {
-        reject(error)
-      })
+export const addBudgetAllocation = async (data) => {
+  const response = await api.post('budget_expenses.php', {
+    add_budget_allocation: data,
   })
+  return response.data
 }
 
 const getPageAccess = () => {

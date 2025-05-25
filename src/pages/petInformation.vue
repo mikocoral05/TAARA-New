@@ -422,9 +422,12 @@
               "
               no-caps
             >
-              <img
+              <q-img
+                class="q-img radius-10"
                 :src="getImageLink(data.primary_image)"
-                alt="Looks like image is not available"
+                height="250px"
+                width="240px"
+                alt="Image is not available"
               />
               <q-card-section class="q-ma-none q-pa-none text-center text-capitalize">
                 <div class="q-ma-none animal-name text-weight-regular">

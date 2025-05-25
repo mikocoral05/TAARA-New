@@ -22,6 +22,7 @@ class API
             $this->db->where("DAY(`expense_date`) = ?", [$day]);
             $this->db->where("MONTH(`expense_date`) = ?", [$month]);
             $this->db->where("YEAR(`expense_date`) = ?", [$year]);
+            $this->db->where('is_deleted', 0);
             $query = $this->db->get("tbl_expenses");
 
             echo json_encode([
@@ -30,6 +31,7 @@ class API
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_budget_allocation', $payload)) {
+            $this->db->where('is_deleted', 0);
             $query = $this->db->get("tbl_budget_allocation");
             // Respond with success and the query data
             echo json_encode([
@@ -153,25 +155,32 @@ class API
             }
         } else if (array_key_exists('soft_delete_budget_expenses', $payload)) {
             // Extract the user data
-            $id = $payload['update_buget_allocation']['id'];
-            $data = $payload['update_buget_allocation']['data'];
+            $id = $payload['soft_delete_budget_expenses'];
+            $table = $payload['table'];
 
-            $this->db->where('id', $id);
-            $update_success = $this->db->update('tbl_budget_allocation', $data);
+            $ids = is_array($id) ? $id : explode(',', $id);
 
-            // Return a response based on whether the update was successful
-            if ($update_success) {
-                echo json_encode([
-                    'status' => 'success',
-                    'message' => 'Budget allocation updated successfully.',
-                    'method' => 'PUT',
-                ]);
+
+            $allowed_tables = ['tbl_expenses', 'tbl_budget_allocation'];
+            if (!in_array($table, $allowed_tables)) {
+                echo json_encode(['status' => 'error', 'message' => 'Invalid table name']);
+                return;
+            }
+
+            // Set the update values here in the backend
+            $update_values = [
+                'is_deleted' => 1,
+                'deleted_at' => date('Y-m-d H:i:s')
+            ];
+
+            // Update records matching the IDs
+            $this->db->where('id', $ids, 'IN');
+            $updated = $this->db->update($table, $update_values);
+
+            if ($updated) {
+                echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
             } else {
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'Failed to update Budget allocation.',
-                    'method' => 'PUT',
-                ]);
+                echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
             }
         } else {
             // Handle the case where 'updateUser' key is missing

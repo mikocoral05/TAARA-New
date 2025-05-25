@@ -147,16 +147,10 @@
                   </q-item-section>
                 </q-item>
                 <q-separator />
-                <q-item clickable @click="tableAction(row, 'Archieve')">
-                  <q-item-section>Archieve</q-item-section>
+                <q-item clickable @click="tableAction(row, 'Delete')">
+                  <q-item-section>Delete</q-item-section>
                   <q-item-section side>
                     <q-icon name="sym_r_keyboard_arrow_right" size="1.2rem" />
-                  </q-item-section>
-                </q-item>
-                <q-item clickable @click="tableAction(row, 'Page Access')">
-                  <q-item-section>Access</q-item-section>
-                  <q-item-section side>
-                    <q-icon name="sym_r_key" size="1.2rem" />
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -358,7 +352,7 @@
         <q-card-section class="column items-center">
           <q-icon name="sym_r_person_remove" color="primary" size="2.5rem" />
           <span class="q-ml-sm text-black text-body1 q-mt-md">
-            Are you sure you want to archive this account?
+            Are you sure you want to delete this data?
           </span>
           <span class="q-ml-sm text-caption text-grey-7 q-mt-sm">
             This action is irreversible.
@@ -383,6 +377,7 @@
             dense
             v-close-popup
             style="width: 180px"
+            @click="softDeleteFn()"
           />
         </q-card-actions>
       </q-card>
@@ -421,7 +416,7 @@ export default {
     const $q = useQuasar()
     const tab = ref('1')
     const obj = { 1: 'Budget Allocation', 2: 'Expenses' }
-    const obj2 = { Add: 'Adding', Edit: 'Updating' }
+    const obj2 = { Add: 'Adding', Edit: 'Updating', Delete: 'Deleting' }
     const editTab = ref('1')
     const rows = ref([])
     const confirm = ref(false)
@@ -462,6 +457,7 @@ export default {
           expenseData.value = data
         }
       } else {
+        arrayOfId.value.push(data.id)
         confirm.value = !confirm.value
       }
     }
@@ -484,7 +480,7 @@ export default {
                 allocationDialog.value = false
               }
               $q.loading.hide()
-            }, 2000)
+            }, 1000)
           })
         else {
           updateBudgetAllocation(expenseData.value).then((response) => {
@@ -498,18 +494,29 @@ export default {
                 allocationDialog.value = false
               }
               $q.loading.hide()
-            }, 2000)
+            }, 1000)
           })
         }
       }
     }
 
     const softDeleteFn = () => {
+      $q.loading.show({
+        group: 'save',
+        message: `${obj2[mode.value]}. Please wait...`,
+      })
       const tableName = tab.value == 1 ? 'tbl_budget_allocation' : 'tbl_expenses'
       softDeleteBudgetAndExpenses(arrayOfId.value, tableName).then((response) => {
-        if (response.status == 'success') {
-          fetchFn()
-        }
+        $q.loading.show({
+          group: 'save',
+          message: response.message,
+        })
+        setTimeout(() => {
+          if (response.status == 'success') {
+            fetchFn()
+          }
+          $q.loading.hide()
+        }, 1500)
       })
     }
 
@@ -612,6 +619,7 @@ export default {
       mode,
       expenseData,
       tableAction,
+
       rows,
       tab,
       showingTooltip: ref(false),

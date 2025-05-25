@@ -29,8 +29,8 @@ export default {
       const donation = thisMonthDonation.value
 
       if (goal === 0) return 0 // Prevent division by zero
-
-      return (donation / goal) * 100
+      const result = (donation / goal) * 100
+      return result > 100 ? 100 : result
     })
 
     onMounted(() => {

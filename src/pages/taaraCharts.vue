@@ -87,7 +87,9 @@
       </div>
       <div class="flex justify-center items-center q-mb-xl almost-container">
         <div class="bottom-div flex justify-center items-center column q-mb-xl q-ma-md">
-          <h2 class="text-center almost-there q-my-sm">We're Almost There!</h2>
+          <h2 class="text-center almost-there q-my-sm">
+            {{ percentage == 100 ? 'Thank you for your support!' : `We're Almost There!` }}
+          </h2>
           <div style="width: 100%" class="flex justify-between items-center">
             <div>
               <p class="text-zize-left q-ml-xl">We Have Received</p>

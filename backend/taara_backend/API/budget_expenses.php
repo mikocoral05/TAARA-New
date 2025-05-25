@@ -134,7 +134,6 @@ class API
             $id = $payload['update_buget_allocation']['id'];
             $data = $payload['update_buget_allocation']['data'];
 
-            // Perform the database update based on user_id
             $this->db->where('id', $id);
             $update_success = $this->db->update('tbl_budget_allocation', $data);
 
@@ -142,13 +141,13 @@ class API
             if ($update_success) {
                 echo json_encode([
                     'status' => 'success',
-                    'message' => 'User information updated successfully.',
+                    'message' => 'Budget allocation updated successfully.',
                     'method' => 'PUT',
                 ]);
             } else {
                 echo json_encode([
                     'status' => 'error',
-                    'message' => 'Failed to update user information.',
+                    'message' => 'Failed to update Budget allocation.',
                     'method' => 'PUT',
                 ]);
             }

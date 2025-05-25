@@ -402,7 +402,12 @@ const isExpired = (expirationDate) => {
 }
 
 const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+
 const getImageLink = (img) => {
+  if (!img) return ''
+  if (img.startsWith('http')) {
+    return img // Already a full URL
+  }
   return `http://localhost/TAARA-Capstone/backend/taara_backend/files/${img}`
 }
 

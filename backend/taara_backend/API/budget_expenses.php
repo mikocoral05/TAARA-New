@@ -100,68 +100,43 @@ class API
 
     public function httpPost($payload)
     {
-        $datas = json_encode($payload);
-        $ref_id = json_decode($datas, true);
+        if (isset($payload['add_budget_allocation'])) {
+            $data = $payload['add_budget_allocation'];
+
+            $insert = $this->db->insert('tbl_budget_allocation', $data);
+
+            if ($insert) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Inventory list successfully added',
+                    'method' => 'POST'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to create inventory list',
+                    'method' => 'POST'
+                ]);
+            }
+        } else {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Missing add_inventory_list data in the payload',
+                'method' => 'POST'
+            ]);
+        }
     }
 
     public function httpPut($payload)
     {
-        if (array_key_exists('updateUser', $payload)) {
+        if (array_key_exists('update_buget_allocation', $payload)) {
             // Extract the user data
-            $user_data = $payload['updateUser'];
-
-            // Ensure user_id is provided
-            if (!isset($user_data['user_id'])) {
-                echo json_encode(['status' => 'error', 'message' => 'Missing user_id']);
-                return;
-            }
-
-            // Prepare the array to hold the fields that will be updated
-            $update_values = [];
-
-            // Define the allowed fields for update (columns that can be updated)
-            $allowed_fields = [
-                'user_type',
-                'image_path',
-                'first_name',
-                'middle_name',
-                'last_name',
-                'suffix',
-                'Bio',
-                'birth_date',
-                'email_address',
-                'phone_number',
-                'civil_status',
-                'occupation',
-                'street',
-                'brgy_name',
-                'city_municipality',
-                'province',
-                'sex',
-                'date_created',
-                'date_archieve',
-                'username',
-                'password',
-                'page_access',
-            ];
-
-            // Loop through the allowed fields and check if they exist in the user data
-            foreach ($allowed_fields as $field) {
-                if (array_key_exists($field, $user_data) && $user_data[$field] !== null) {
-                    // Only add fields that exist in the payload and are not null
-                    $update_values[$field] = $user_data[$field];
-                }
-            }
-
-            // Check if we have any fields to update
-            if (empty($update_values)) {
-                echo json_encode(['status' => 'error', 'message' => 'No valid fields to update']);
-                return;
-            }
+            $id = $payload['update_buget_allocation']['id'];
+            $data = $payload['update_buget_allocation']['data'];
 
             // Perform the database update based on user_id
-            $this->db->where('user_id', $user_data['user_id']);
-            $update_success = $this->db->update('tbl_users', $update_values);
+            $this->db->where('id', $id);
+            $update_success = $this->db->update('tbl_budget_allocation', $data);
 
             // Return a response based on whether the update was successful
             if ($update_success) {

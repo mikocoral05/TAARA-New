@@ -399,6 +399,7 @@ import {
   getMonthlyFundAndExpenses,
   // updateBudgetAllocation,
   addBudgetAllocation,
+  updateBudgetAllocation,
 } from 'src/composable/latestComposable'
 import {
   formatNumber,
@@ -448,6 +449,9 @@ export default {
             //
           }
           //
+        } else if (modeParam == 'Edit') {
+          allocationDialog.value = true
+          expenseData.value = { ...data }
         } else {
           editDialog.value = true
           expenseData.value = data
@@ -462,15 +466,27 @@ export default {
         message: `${obj2[mode.value]}. Please wait...`,
       })
       if (tab.value == 1) {
-        addBudgetAllocation(expenseData.value).then((response) => {
-          setTimeout(() => {
-            if (response.status == 'success') {
-              fetchFn()
-              allocationDialog.value
-            }
-            $q.loading.hide()
-          }, 2000)
-        })
+        if (mode.value == 'Add')
+          addBudgetAllocation(expenseData.value).then((response) => {
+            setTimeout(() => {
+              if (response.status == 'success') {
+                fetchFn()
+                allocationDialog.value
+              }
+              $q.loading.hide()
+            }, 2000)
+          })
+        else {
+          updateBudgetAllocation(expenseData.value).then((response) => {
+            setTimeout(() => {
+              if (response.status == 'success') {
+                fetchFn()
+                allocationDialog.value
+              }
+              $q.loading.hide()
+            }, 2000)
+          })
+        }
       }
     }
 
@@ -500,6 +516,7 @@ export default {
         return text
       }
     }
+
     const fetchFn = () => {
       if (tab.value == 1) {
         updateBudgetAllocationSum()

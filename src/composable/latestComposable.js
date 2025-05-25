@@ -175,23 +175,13 @@ const updateUser = (data) => {
   })
 }
 
-export const updateBudgetAllocation = (data) => {
-  return new Promise((resolve, reject) => {
-    api
-      .put('budget_expenses.php', {
-        update_buget_allocation: data,
-      })
-      .then((response) => {
-        if (response.data.status == 'success') {
-          resolve(response.data)
-        }
-      })
-      .catch((error) => {
-        reject(error)
-      })
+export const updateBudgetAllocation = async (obj) => {
+  const { id, ...data } = obj
+  const response = await api.pus('budget_expenses.php', {
+    update_buget_allocation: { id: id, data: data },
   })
+  return response.data
 }
-
 export const addBudgetAllocation = async (data) => {
   const response = await api.post('budget_expenses.php', {
     add_budget_allocation: data,

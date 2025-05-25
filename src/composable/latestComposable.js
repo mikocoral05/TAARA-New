@@ -177,7 +177,7 @@ const updateUser = (data) => {
 
 export const updateBudgetAllocation = async (obj) => {
   const { id, ...data } = obj
-  const response = await api.pus('budget_expenses.php', {
+  const response = await api.put('budget_expenses.php', {
     update_buget_allocation: { id: id, data: data },
   })
   return response.data

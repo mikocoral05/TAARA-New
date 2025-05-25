@@ -463,25 +463,34 @@ export default {
 
     const saveFn = () => {
       $q.loading.show({
+        group: 'save',
         message: `${obj2[mode.value]}. Please wait...`,
       })
       if (tab.value == 1) {
         if (mode.value == 'Add')
           addBudgetAllocation(expenseData.value).then((response) => {
+            $q.loading.show({
+              group: 'save',
+              message: response.message,
+            })
             setTimeout(() => {
               if (response.status == 'success') {
                 fetchFn()
-                allocationDialog.value
+                allocationDialog.value = false
               }
               $q.loading.hide()
             }, 2000)
           })
         else {
           updateBudgetAllocation(expenseData.value).then((response) => {
+            $q.loading.show({
+              group: 'save',
+              message: response.message,
+            })
             setTimeout(() => {
               if (response.status == 'success') {
                 fetchFn()
-                allocationDialog.value
+                allocationDialog.value = false
               }
               $q.loading.hide()
             }, 2000)

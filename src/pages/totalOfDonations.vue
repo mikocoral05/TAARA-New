@@ -58,21 +58,18 @@
 <script>
 import BarChartsDonations from 'src/components/BarChartsDonations.vue'
 import { ref, onMounted } from 'vue'
-import {
-  weekCount,
-  yearToday,
-  monthToday,
-  formatNumber,
-  monthNames,
-} from 'src/composable/simpleComposable'
-import { getMonthDonation } from '../composable/taaraComposable'
+import { yearToday, monthToday, formatNumber, monthNames } from 'src/composable/simpleComposable'
 import TaaraFooter from 'src/components/TaaraFooter.vue'
+import { getMonthlyDonation } from 'src/composable/latestPublicComposable'
 export default {
   components: {
     BarChartsDonations,
     TaaraFooter,
   },
   setup() {
+    const date = new Date()
+    const month = date.getMonth() + 1
+    const year = date.getFullYear()
     let filteredDate = ref({
       month: monthNames[monthToday],
       year: yearToday,
@@ -80,33 +77,9 @@ export default {
     let totalDonation = ref(0)
     let objectsWeeklyDonation = ref({})
     onMounted(() => {
-      getMonthDonation(filteredDate.value.month.value, yearToday)
-        .then((donationThisMonth) => {
-          console.log(donationThisMonth)
-          let count = weekCount(filteredDate.value.year, filteredDate.value.month.value)
-          const weeklySummary = {}
-          let allDonation = 0
-          // Initialize weekly summary object
-          for (let week = 1; week <= count; week++) {
-            weeklySummary[week] = { donation: 0 }
-          }
-
-          // Process each rescue entry
-          for (const entry of donationThisMonth) {
-            const rescueDate = new Date(entry.donation_date) // Assuming 'date' is the key for rescue date
-            const weekNumber = weekCount(rescueDate.getFullYear(), rescueDate.getMonth() + 1)
-
-            // Increment the count for the corresponding animal type
-            weeklySummary[weekNumber].donation += entry.donation_amount
-            allDonation += entry.donation_amount
-          }
-          objectsWeeklyDonation.value = weeklySummary
-          totalDonation.value = allDonation
-          console.log(weeklySummary)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+      getMonthlyDonation(month, year).then((response) => {
+        totalDonation.value = response.data
+      })
     })
     return {
       objectsWeeklyDonation,

@@ -106,6 +106,9 @@
         row-key="id"
         :rows-per-page-options="[10]"
         v-model="search"
+        v-model:selected="arrayOfId"
+        v-model:confirm="confirm"
+        v-model:dialog="showDialog"
         :tableAction="tableAction"
         :title="
           tab == 1
@@ -172,7 +175,7 @@
         <div class="column no-wrap">
           <q-card-section class="q-py-md row no-wrap justify-between items-center">
             <div class="text-body1">{{ mode }} {{ tableConfig?.title }}</div>
-            <q-icon name="close" size="1.2rem" @click="showDialog = !showDialog" />
+            <q-icon name="close" size="1.2rem" @click="editDialog = !editDialog" />
           </q-card-section>
           <q-separator />
           <q-card-section>
@@ -300,7 +303,7 @@
       <q-card class="q-pa-md" style="width: 450px; min-height: 130px">
         <q-form @submit="saveFn()">
           <q-card-section class="column no-wrap q-px-sm">
-            <div class="text-capitalize text-body1 text0center">Add {{ obj[tab] }}</div>
+            <div class="text-capitalize text-body1 text0center">{{ mode }} {{ obj[tab] }}</div>
             <q-input
               outlined
               v-model="expenseData.name"
@@ -400,6 +403,7 @@ import {
   // updateBudgetAllocation,
   addBudgetAllocation,
   updateBudgetAllocation,
+  softDeleteBudgetAndExpenses,
 } from 'src/composable/latestComposable'
 import {
   formatNumber,
@@ -437,6 +441,7 @@ export default {
     const scrollListRef = ref(null)
     const dayName = ref(null)
     const tableConfig = ref({})
+    const arrayOfId = ref([])
     const percentageAvailable = ref(0)
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
@@ -499,6 +504,15 @@ export default {
       }
     }
 
+    const softDeleteFn = () => {
+      const tableName = tab.value == 1 ? 'tbl_budget_allocation' : 'tbl_expenses'
+      softDeleteBudgetAndExpenses(arrayOfId.value, tableName).then((response) => {
+        if (response.status == 'success') {
+          fetchFn()
+        }
+      })
+    }
+
     const updateBudgetAllocationSum = () => {
       getBudgetAllocation().then((response) => {
         rows.value = response
@@ -558,11 +572,14 @@ export default {
         })
       }
     }
+
     watchEffect(() => {
       fetchFn()
     })
 
     return {
+      arrayOfId,
+      softDeleteFn,
       percentageAvailable,
       getPercentage,
       allocationDialog,

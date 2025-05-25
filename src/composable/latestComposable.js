@@ -189,6 +189,14 @@ export const addBudgetAllocation = async (data) => {
   return response.data
 }
 
+export const softDeleteBudgetAndExpenses = async (arrayId, tableName) => {
+  const response = await api.put('budget_expenses.php', {
+    soft_delete_budget_expenses: arrayId,
+    table: tableName,
+  })
+  return response.data
+}
+
 const getPageAccess = () => {
   return new Promise((resolve, reject) => {
     api

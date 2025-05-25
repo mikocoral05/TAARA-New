@@ -151,6 +151,28 @@ class API
                     'method' => 'PUT',
                 ]);
             }
+        } else if (array_key_exists('soft_delete_budget_expenses', $payload)) {
+            // Extract the user data
+            $id = $payload['update_buget_allocation']['id'];
+            $data = $payload['update_buget_allocation']['data'];
+
+            $this->db->where('id', $id);
+            $update_success = $this->db->update('tbl_budget_allocation', $data);
+
+            // Return a response based on whether the update was successful
+            if ($update_success) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Budget allocation updated successfully.',
+                    'method' => 'PUT',
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to update Budget allocation.',
+                    'method' => 'PUT',
+                ]);
+            }
         } else {
             // Handle the case where 'updateUser' key is missing
             echo json_encode(['status' => 'error', 'message' => 'Missing updateUser key in the payload']);

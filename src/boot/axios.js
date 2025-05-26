@@ -15,6 +15,9 @@ const api = axios.create({
 const expressServer = axios.create({
   baseURL: 'http://localhost:3000/',
 })
+const imageUrl = axios.create({
+  baseURL: 'http://77.37.74.195/upload',
+})
 
 export default defineBoot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
@@ -28,4 +31,4 @@ export default defineBoot(({ app }) => {
   //       so you can easily perform requests against your app's API
 })
 
-export { api, expressServer }
+export { api, expressServer, imageUrl }

@@ -165,7 +165,6 @@ class API
                 'health_status' => $obj['health_status'] ?? null,
                 'medical_needs' => $obj['medical_needs'] ?? null,
                 'date_rescued' => $obj['date_rescued'] ?? null,
-                'primary_image' => $obj['primary_image'] ?? 0,
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
 

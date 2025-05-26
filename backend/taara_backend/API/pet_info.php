@@ -187,6 +187,43 @@ class API
                     'method' => 'PUT'
                 ]);
             }
+        } else if (isset($payload['update_image'])) {
+            $imgs = $payload['update_image'];
+            $id = $payload['id'];
+
+            $file_ids = [];
+
+            foreach ($imgs as $img) {
+                $insertData = ['image_path' => $img];  // Replace 'file_url' with your actual column name
+                $this->db->insert('tbl_files', $insertData);
+                $insert_id = $this->db->getInsertId();
+                if ($insert_id) {
+                    $file_ids[] = $insert_id;
+                }
+            }
+
+            $update_values = [
+                'image_gallery' => json_encode($file_ids),
+                'primary_image' => $file_ids[0] ?? [],
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+
+            $this->db->where('animal_id', $id);
+            $updated = $this->db->update('tbl_animal_info', $update_values);
+
+            if ($updated) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Animal info updated successfully',
+                    'method' => 'PUT'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to update animal info',
+                    'method' => 'PUT'
+                ]);
+            }
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Missing Animal info in the payload']);
         }

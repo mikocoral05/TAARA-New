@@ -181,29 +181,25 @@
           <q-card-section>
             <div class="row no-wrap q-mt-md">
               <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">
-                  {{ obj[tab] }} Name <span class="text-negative">*</span>
-                </div>
+                <div class="text-capitalize">Expense Name <span class="text-negative">*</span></div>
                 <q-input
                   outlined
-                  v-model="expenseData.item_name"
+                  v-model="expenseData.expense_title"
                   dense
                   class="q-mt-sm"
                   style="width: 300px"
                 />
               </div>
               <div class="column no-wrap">
-                <div class="text-capitalize">
-                  {{ obj[tab] }} Group <span class="text-negative">*</span>
-                </div>
+                <div class="text-capitalize">Category <span class="text-negative">*</span></div>
                 <q-select
                   outlined
-                  v-model="expenseData.group_name"
+                  v-model="expenseData.category_id"
                   class="q-mt-sm"
-                  :options="groupNameOptions"
+                  :options="categoryOptions"
                   emit-value
                   map-options
-                  option-label="group_name"
+                  option-label="name"
                   option-value="id"
                   dense
                   style="width: 250px"
@@ -213,12 +209,12 @@
             </div>
             <div class="row no-wrap q-mt-md">
               <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">Expiry Date<span class="text-negative">*</span></div>
+                <div class="text-capitalize">Expense Date<span class="text-negative">*</span></div>
                 <q-input
                   dense
                   outlined
                   class="q-mt-sm"
-                  v-model="expenseData.expiration_date"
+                  v-model="expenseData.expense_date"
                   mask="####-##-##"
                   :rules="[(val) => !!val || '']"
                   hide-bottom-space
@@ -226,7 +222,7 @@
                   <template v-slot:append>
                     <q-icon name="event" class="cursor-pointer">
                       <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="expenseData.expiration_date">
+                        <q-date v-model="expenseData.expense_date">
                           <div class="row items-center justify-end">
                             <q-btn v-close-popup label="Close" color="primary" flat />
                           </div>
@@ -237,18 +233,20 @@
                 </q-input>
               </div>
               <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">Quantity<span class="text-negative">*</span></div>
+                <div class="text-capitalize">Amount<span class="text-negative">*</span></div>
                 <q-input
                   outlined
                   type="number"
-                  v-model="expenseData.quantity"
+                  v-model="expenseData.amount"
                   dense
                   class="q-mt-sm"
                 />
               </div>
               <div class="column no-wrap">
-                <div class="text-capitalize">Unit<span class="text-negative">*</span></div>
-                <q-input outlined v-model="expenseData.unit" dense class="q-mt-sm" />
+                <div class="text-capitalize">
+                  Payment method<span class="text-negative">*</span>
+                </div>
+                <q-input outlined v-model="expenseData.payment_method" dense class="q-mt-sm" />
               </div>
             </div>
             <div class="column no-wrap q-mt-md">
@@ -262,12 +260,6 @@
                 dense
                 class="q-mt-sm"
               />
-            </div>
-            <div class="column no-wrap q-mt-md">
-              <div class="text-capitalize">
-                Notes <span class="text-grey-7 text-caption"> (optional)</span>
-              </div>
-              <q-input outlined autogrow v-model="expenseData.notes" dense class="q-mt-sm" />
             </div>
           </q-card-section>
         </div>
@@ -395,10 +387,10 @@ import {
   getExpenses,
   getTotalBalance,
   getMonthlyFundAndExpenses,
-  // updateBudgetAllocation,
   addBudgetAllocation,
   updateBudgetAllocation,
   softDeleteBudgetAndExpenses,
+  addExpense,
 } from 'src/composable/latestComposable'
 import {
   formatNumber,
@@ -413,6 +405,8 @@ export default {
     ReusableTable,
   },
   setup() {
+    const timeStamp = Date.now()
+    const formattedString = date.formatDate(timeStamp, 'YYYY-MM-DD')
     const $q = useQuasar()
     const tab = ref('1')
     const obj = { 1: 'Budget Allocation', 2: 'Expenses' }
@@ -437,16 +431,27 @@ export default {
     const dayName = ref(null)
     const tableConfig = ref({})
     const arrayOfId = ref([])
+    const categoryOptions = ref([])
     const percentageAvailable = ref(0)
+
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
       if (['Edit', 'View', 'Add'].includes(modeParam)) {
         if (modeParam == 'Add') {
           tableConfig.value.title = tab.value == 1 ? 'Budget Allocation' : 'Expense'
           if (tab.value == 1) {
+            expenseData.value = {}
             allocationDialog.value = true
           } else {
-            //
+            console.log(formattedString)
+
+            expenseData.value = { expense_date: formattedString }
+            if (categoryOptions.value.length == 0) {
+              getBudgetAllocation().then((response) => {
+                categoryOptions.value = response
+              })
+            }
+            editDialog.value = true
           }
           //
         } else if (modeParam == 'Edit') {
@@ -497,6 +502,20 @@ export default {
             }, 1000)
           })
         }
+      } else {
+        addExpense(expenseData.value).then((response) => {
+          $q.loading.show({
+            group: 'save',
+            message: response.message,
+          })
+          setTimeout(() => {
+            if (response.status == 'success') {
+              fetchFn()
+              editDialog.value = false
+            }
+            $q.loading.hide()
+          }, 1000)
+        })
       }
     }
 
@@ -523,6 +542,7 @@ export default {
     const updateBudgetAllocationSum = () => {
       getBudgetAllocation().then((response) => {
         rows.value = response
+        categoryOptions.value = response
       })
       getExpensesSummary({ month: selectedMonth.value, year: selectedYear.value }).then(
         (response) => {
@@ -586,6 +606,7 @@ export default {
 
     return {
       arrayOfId,
+      categoryOptions,
       softDeleteFn,
       percentageAvailable,
       getPercentage,

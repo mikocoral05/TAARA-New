@@ -110,13 +110,31 @@ class API
             if ($insert) {
                 echo json_encode([
                     'status' => 'success',
-                    'message' => 'Inventory list successfully added',
+                    'message' => 'Budget allocation successfully added',
                     'method' => 'POST'
                 ]);
             } else {
                 echo json_encode([
                     'status' => 'error',
-                    'message' => 'Failed to create inventory list',
+                    'message' => 'Failed to create budget allocation list',
+                    'method' => 'POST'
+                ]);
+            }
+        } else if (isset($payload['add_expense'])) {
+            $data = $payload['add_expense'];
+
+            $insert = $this->db->insert('tbl_expenses', $data);
+
+            if ($insert) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Expense list successfully added',
+                    'method' => 'POST'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to create Add expense list',
                     'method' => 'POST'
                 ]);
             }

@@ -607,7 +607,7 @@ const editAnimalInfo = (obj) => {
             console.log(file)
           }
         }
-        resolve(response.data.status)
+        resolve(response.data)
       })
       .catch((error) => {
         reject(error)

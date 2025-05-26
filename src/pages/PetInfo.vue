@@ -462,7 +462,7 @@
                     <q-input
                       :readonly="mode == 'View'"
                       outlined
-                      type="textarea"
+                      autogrow
                       placeholder="Create a story that touch the heart of people."
                       v-model="dataStorage.story_background"
                       dense
@@ -691,7 +691,7 @@ export default {
           dataStorage.value = {}
           step.value = 1
         } else {
-          dataStorage.value = data
+          dataStorage.value = { ...data }
           if (dataStorage.value?.file.length > 0) {
             dataStorage.value?.file.forEach((element) => {
               previewImage.value.push(getImageLink(element.name))
@@ -718,7 +718,7 @@ export default {
               group: 'update',
               message: response.message,
             })
-          }, 1000)
+          }, 500)
           setTimeout(() => {
             showDialog.value = false
             $q.loading.hide()
@@ -737,7 +737,7 @@ export default {
               rows.value = response
               console.log(rows.value)
             })
-          }, 2000)
+          }, 1000)
         })
       } else if (mode.value == 'Edit') {
         $q.loading.show({
@@ -746,12 +746,12 @@ export default {
         })
         dataStorage.value.toRemoveId = idToRemove.value
         editAnimalInfo(dataStorage.value).then((response) => {
-          console.log(response)
           $q.loading.show({
             group: 'update',
             message: response.message,
           })
           setTimeout(() => {
+            showDialog.value = false
             $q.loading.hide()
           }, 2000)
         })

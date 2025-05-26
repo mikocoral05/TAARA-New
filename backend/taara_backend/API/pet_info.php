@@ -189,6 +189,7 @@ class API
         } else if (isset($payload['update_image'])) {
             $imgs = $payload['update_image'];
             $id = $payload['id'];
+            $existing_primary_id = $payload['existing_id'] ?? [];
 
             $file_ids = [];
 
@@ -202,8 +203,8 @@ class API
             }
 
             $update_values = [
-                'image_gallery' => json_encode($file_ids),
-                'primary_image' => $file_ids[0] ?? [],
+                'image_gallery' => json_encode(array_merge($file_ids, $existing_primary_id)),
+                'primary_image' => $file_ids[0] ?? ($existing_primary_id[0] ?? null),
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
 

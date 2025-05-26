@@ -522,7 +522,6 @@
                           width="100px"
                           class="radius-10"
                         />
-                        <div>{{ props.row.name }}</div>
                       </q-td>
                     </template>
 
@@ -684,14 +683,16 @@ export default {
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
+        step.value = 1
         if (filterTab.value !== 2) showDialog.value = !showDialog.value
 
         if (modeParam == 'Add') {
           idToRemove.value = []
           dataStorage.value = {}
-          step.value = 1
         } else {
           dataStorage.value = { ...data }
+          console.log(dataStorage.value)
+          previewImage.value = []
           if (dataStorage.value?.file.length > 0) {
             dataStorage.value?.file.forEach((element) => {
               previewImage.value.push(getImageLink(element.name))
@@ -722,21 +723,7 @@ export default {
           setTimeout(() => {
             showDialog.value = false
             $q.loading.hide()
-            getAnimalList(tab.value).then((response) => {
-              tableConfig.value.title = `${obj[tab.value]} Pet`
-              tableConfig.value.columns = [
-                'animal_id',
-                'name',
-                'species',
-                'breed',
-                'date_of_birth',
-                'sex',
-                'rescue_status',
-                'btn',
-              ]
-              rows.value = response
-              console.log(rows.value)
-            })
+            fetchFn()
           }, 1000)
         })
       } else if (mode.value == 'Edit') {
@@ -753,6 +740,7 @@ export default {
           setTimeout(() => {
             showDialog.value = false
             $q.loading.hide()
+            fetchFn()
           }, 2000)
         })
       }
@@ -820,6 +808,8 @@ export default {
 
       // Replace the array with normalized and clean data
       dataStorage.value.file = updatedFiles
+      console.log(dataStorage.value.file)
+      console.log(idToRemove.value)
     }
 
     const idToRemove = ref([])
@@ -831,7 +821,7 @@ export default {
       previewImage.value.splice(indexp, 1)
     }
 
-    watchEffect(() => {
+    const fetchFn = () => {
       getAnimalList(tab.value).then((response) => {
         tableConfig.value.title = `${obj[tab.value]} Pet`
         tableConfig.value.columns = [
@@ -847,6 +837,9 @@ export default {
         rows.value = response
         console.log(rows.value)
       })
+    }
+    watchEffect(() => {
+      fetchFn()
     })
 
     const columnsImage = [

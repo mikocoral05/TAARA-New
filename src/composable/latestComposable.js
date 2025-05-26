@@ -450,12 +450,42 @@ const saveAnimalDetail = (obj) => {
   })
 }
 
-export const updateImage = async (array, id) => {
+export const updateImage = async (array, id, arrayOfId) => {
   const response = await api.put('pet_info.php', {
     update_image: array,
     id: id,
+    existing_id: arrayOfId,
   })
   return response.data.status
+}
+
+export const editAnimalInfo = (obj) => {
+  const { file, toRemoveId, ...animal_data } = obj
+  return new Promise((resolve, reject) => {
+    api
+      .put('pet_info.php', {
+        edit_animal_info: animal_data,
+      })
+      .then(async (response) => {
+        if (response.data.status == 'success') {
+          if (toRemoveId?.length > 0) {
+            const getFileId = file.filter((obj) => obj.id != null).map((obj) => obj.id)
+            if (getFileId?.length > 0) {
+              const getNewFile = file.filter((obj) => obj.id == null)
+              const res = await uploadImages(getNewFile)
+              const status = await updateImage(res.data.images, obj.animal_id, getFileId)
+              console.log(status)
+              resolve({ status: status, message: response.data.message })
+              console.log(res)
+            }
+          }
+        }
+        resolve(response.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
 }
 
 const saveActivitiesAndEvents = (obj) => {
@@ -586,27 +616,6 @@ const softDeleteSchedule = (arrayId) => {
         soft_delete_schedule: arrayId,
       })
       .then((response) => {
-        resolve(response.data)
-      })
-      .catch((error) => {
-        reject(error)
-      })
-  })
-}
-
-const editAnimalInfo = (obj) => {
-  const { file, toRemoveId, ...animal_data } = obj
-  return new Promise((resolve, reject) => {
-    api
-      .put('pet_info.php', {
-        edit_animal_info: animal_data,
-      })
-      .then((response) => {
-        if (response.data.status == 'success') {
-          if (toRemoveId?.length > 0) {
-            console.log(file)
-          }
-        }
         resolve(response.data)
       })
       .catch((error) => {
@@ -935,7 +944,6 @@ export {
   addSchedule,
   getSchedule,
   getAnimalOption,
-  editAnimalInfo,
   saveAnimalDetail,
   getAnimalList,
   softDeleteUser,

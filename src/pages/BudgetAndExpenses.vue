@@ -166,123 +166,140 @@
     </div>
     <q-dialog position="right" maximized full-height v-model="editDialog">
       <q-card style="min-width: 750px; height: 500px" class="text-black column justify-between">
-        <div class="column no-wrap">
-          <q-card-section class="q-py-md row no-wrap justify-between items-center">
-            <div class="text-body1">{{ mode }} {{ tableConfig?.title }}</div>
-            <q-icon name="close" size="1.2rem" @click="editDialog = !editDialog" />
-          </q-card-section>
-          <q-separator />
-          <q-card-section>
-            <div class="text-grey-7" style="font-size: 12px">
-              <span class="text-negative">*</span>All fields are mandatory, except mentioned as
-              (optional).
-            </div>
-          </q-card-section>
-          <q-card-section>
-            <div class="row no-wrap q-mt-md">
-              <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">Expense Name <span class="text-negative">*</span></div>
-                <q-input
-                  outlined
-                  v-model="expenseData.expense_title"
-                  dense
-                  class="q-mt-sm"
-                  style="width: 300px"
-                />
+        <q-form @submit="saveFn()">
+          <div class="column no-wrap">
+            <q-card-section class="q-py-md row no-wrap justify-between items-center">
+              <div class="text-body1">{{ mode }} {{ tableConfig?.title }}</div>
+              <q-icon name="close" size="1.2rem" @click="editDialog = !editDialog" />
+            </q-card-section>
+            <q-separator />
+            <q-card-section>
+              <div class="text-grey-7" style="font-size: 12px">
+                <span class="text-negative">*</span>All fields are mandatory, except mentioned as
+                (optional).
               </div>
-              <div class="column no-wrap">
-                <div class="text-capitalize">Category <span class="text-negative">*</span></div>
-                <q-select
-                  outlined
-                  v-model="expenseData.category_id"
-                  class="q-mt-sm"
-                  :options="categoryOptions"
-                  emit-value
-                  map-options
-                  option-label="name"
-                  option-value="id"
-                  dense
-                  style="width: 250px"
-                  behavior="menu"
-                />
-              </div>
-            </div>
-            <div class="row no-wrap q-mt-md">
-              <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">Expense Date<span class="text-negative">*</span></div>
-                <q-input
-                  dense
-                  outlined
-                  class="q-mt-sm"
-                  v-model="expenseData.expense_date"
-                  mask="####-##-##"
-                  :rules="[(val) => !!val || '']"
-                  hide-bottom-space
-                >
-                  <template v-slot:append>
-                    <q-icon name="event" class="cursor-pointer">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="expenseData.expense_date">
-                          <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" flat />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                    </q-icon>
-                  </template>
-                </q-input>
-              </div>
-              <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">Amount<span class="text-negative">*</span></div>
-                <q-input
-                  outlined
-                  type="number"
-                  v-model="expenseData.amount"
-                  dense
-                  class="q-mt-sm"
-                />
-              </div>
-              <div class="column no-wrap">
-                <div class="text-capitalize">
-                  Payment method<span class="text-negative">*</span>
+            </q-card-section>
+            <q-card-section>
+              <div class="row no-wrap q-mt-md">
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Expense Name <span class="text-negative">*</span>
+                  </div>
+                  <q-input
+                    outlined
+                    v-model="expenseData.expense_title"
+                    dense
+                    class="q-mt-sm"
+                    style="width: 300px"
+                    :rules="[(val) => !!val || 'Expense name is required!']"
+                  />
                 </div>
-                <q-input outlined v-model="expenseData.payment_method" dense class="q-mt-sm" />
+                <div class="column no-wrap">
+                  <div class="text-capitalize">Category <span class="text-negative">*</span></div>
+                  <q-select
+                    outlined
+                    v-model="expenseData.category_id"
+                    class="q-mt-sm"
+                    :options="categoryOptions"
+                    emit-value
+                    map-options
+                    option-label="name"
+                    option-value="id"
+                    dense
+                    style="width: 250px"
+                    behavior="menu"
+                    :rules="[(val) => !!val || 'Category is required!']"
+                  />
+                </div>
               </div>
-            </div>
-            <div class="column no-wrap q-mt-md">
-              <div class="text-capitalize">
-                Description <span class="text-grey-7 text-caption"> (optional)</span>
+              <div class="row no-wrap q-mt-sm">
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Expense Date<span class="text-negative">*</span>
+                  </div>
+                  <q-input
+                    dense
+                    outlined
+                    class="q-mt-sm"
+                    v-model="expenseData.expense_date"
+                    mask="####-##-##"
+                    :rules="[(val) => !!val || '']"
+                  >
+                    <template v-slot:append>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-date v-model="expenseData.expense_date">
+                            <div class="row items-center justify-end">
+                              <q-btn v-close-popup label="Close" color="primary" flat />
+                            </div>
+                          </q-date>
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input>
+                </div>
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Amount<span class="text-negative">*</span></div>
+                  <q-input
+                    outlined
+                    type="number"
+                    v-model="expenseData.amount"
+                    dense
+                    class="q-mt-sm"
+                    :rules="[(val) => !!val || 'Amount is required!']"
+                  />
+                </div>
+                <div class="column no-wrap">
+                  <div class="text-capitalize">
+                    Payment method<span class="text-negative">*</span>
+                  </div>
+                  <q-select
+                    outlined
+                    v-model="expenseData.payment_method"
+                    class="q-mt-sm"
+                    :options="['Cash', 'Online']"
+                    dense
+                    style="width: 200px"
+                    behavior="menu"
+                    :rules="[(val) => !!val || 'Category is required!']"
+                  />
+                </div>
               </div>
-              <q-input
-                outlined
-                type="textarea"
-                v-model="expenseData.description"
-                dense
-                class="q-mt-sm"
-              />
-            </div>
+              <div class="column no-wrap q-mt-sm">
+                <div class="text-capitalize">
+                  Description <span class="text-grey-7 text-caption"> (optional)</span>
+                </div>
+                <q-input
+                  outlined
+                  type="textarea"
+                  v-model="expenseData.description"
+                  dense
+                  class="q-mt-sm"
+                />
+              </div>
+            </q-card-section>
+          </div>
+
+          <q-card-section>
+            <q-btn
+              outline
+              label="Cancel"
+              v-close-popup
+              color="primary"
+              no-caps
+              class="q-mr-md"
+              style="width: 180px"
+            />
+            <q-btn
+              label="Confirm"
+              unelevated
+              color="primary"
+              no-caps
+              style="width: 180px"
+              type="submit"
+            />
           </q-card-section>
-        </div>
-        <q-card-section>
-          <q-btn
-            outline
-            label="Cancel"
-            v-close-popup
-            color="primary"
-            no-caps
-            class="q-mr-md"
-            style="width: 180px"
-          />
-          <q-btn
-            label="Confirm"
-            unelevated
-            color="primary"
-            no-caps
-            v-close-popup
-            style="width: 180px"
-            @click="saveFn()"
-          />
-        </q-card-section>
+        </q-form>
       </q-card>
     </q-dialog>
     <q-dialog v-model="allocationDialog">

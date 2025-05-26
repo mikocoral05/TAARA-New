@@ -1,4 +1,4 @@
-import axios, { api } from 'src/boot/axios'
+import { api, imageUrl } from 'src/boot/axios'
 import { dateToday } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 const store = globalStore()
@@ -466,10 +466,14 @@ export const uploadImages = (fileArray) => {
   const formData = new FormData()
 
   fileArray.forEach((file) => {
-    formData.append('images', file) // 'images' matches backend field
+    formData.append('images', file) // Must match backend field name
   })
 
-  return axios.post('http://77.37.74.195:3005/upload', formData)
+  return imageUrl.post('', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data', // Let browser handle boundary
+    },
+  })
 }
 
 const uploadFiles = (fileArray, record_id, table, id_column, column_name) => {

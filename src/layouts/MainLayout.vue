@@ -160,7 +160,7 @@ export default defineComponent({
         nav: '/management',
       },
       {
-        title: 'User Management',
+        title: 'Account Maintenance',
         icon: 'groups',
         nav: '/management/users',
         pending: store.pendingVolunteer,
@@ -237,7 +237,7 @@ export default defineComponent({
 
     const routeToTabMap = {
       '/management/': 'Dashboard',
-      '/management/users': 'User Management',
+      '/management/users': 'Account Maintenance',
       '/management/report': 'Report',
       '/management/pets': 'Pets',
       '/management/budget-and-expenses': 'Budget & Expenses',

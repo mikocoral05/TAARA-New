@@ -108,8 +108,8 @@
         </template>
       </ReusableTable>
     </div>
-    <q-dialog position="right" full-height v-model="showDialog">
-      <q-card style="min-width: 750px; height: 500px" class="text-black column justify-between">
+    <q-dialog position="right" full-height maximized v-model="showDialog">
+      <q-card style="width: 50vw; height: 500px" class="text-black column justify-between">
         <div class="column no-wrap">
           <q-card-section class="q-py-md row no-wrap justify-between items-center">
             <div class="text-body1">{{ mode }} {{ tableConfig.title }}</div>
@@ -654,7 +654,7 @@ export default {
     const filterTab = ref('1')
     const editTab = ref('1')
     const showDialog = ref(false)
-    const step = ref(4)
+    const step = ref(1)
     const rows = ref([])
     const confirm = ref(false)
     const search = ref(null)
@@ -689,6 +689,7 @@ export default {
         if (modeParam == 'Add') {
           idToRemove.value = []
           dataStorage.value = {}
+          step.value = 1
         } else {
           dataStorage.value = data
           if (dataStorage.value?.file.length > 0) {

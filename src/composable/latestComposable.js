@@ -1,4 +1,4 @@
-import { api } from 'src/boot/axios'
+import axios, { api } from 'src/boot/axios'
 import { dateToday } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 const store = globalStore()
@@ -460,6 +460,16 @@ const uploadAnimalImages = (fileArray, animal_id) => {
   return api.post('image-upload.php', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
+}
+
+export const uploadImages = (fileArray) => {
+  const formData = new FormData()
+
+  fileArray.forEach((file) => {
+    formData.append('images', file) // 'images' matches backend field
+  })
+
+  return axios.post('http://77.37.74.195:3005/upload', formData)
 }
 
 const uploadFiles = (fileArray, record_id, table, id_column, column_name) => {

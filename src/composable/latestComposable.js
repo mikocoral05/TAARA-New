@@ -190,6 +190,7 @@ export const updateExpense = async (obj) => {
   })
   return response.data
 }
+
 export const addBudgetAllocation = async (data) => {
   const response = await api.post('budget_expenses.php', {
     add_budget_allocation: data,
@@ -405,6 +406,28 @@ const getAnimalOption = () => {
   })
 }
 
+export const uploadImages = async (fileArray) => {
+  const formData = new FormData()
+  console.log('Uploading files:', fileArray)
+
+  fileArray.forEach((metaFile) => {
+    // Check if `file` is a File instance
+    if (metaFile.file instanceof File) {
+      formData.append('images', metaFile.file)
+    }
+    // If the object itself is a File instance (rare here)
+    else if (metaFile instanceof File) {
+      formData.append('images', metaFile)
+    } else {
+      console.warn('Skipping invalid file entry:', metaFile)
+    }
+  })
+
+  return await imageUrl.post('', formData, {
+    headers: { 'Content-Type': 'multipart/form-data' },
+  })
+}
+
 const saveAnimalDetail = (obj) => {
   const { file, ...animalData } = obj // separate the files
   return new Promise((resolve, reject) => {
@@ -412,19 +435,27 @@ const saveAnimalDetail = (obj) => {
       .post('pet_info.php', {
         save_animal_list: animalData,
       })
-      .then((response) => {
+      .then(async (response) => {
         if (response.data.status == 'success') {
-          console.log(file)
-          uploadAnimalImages(file, response.data.id).then((res) => {
-            console.log(res.data)
-          })
-          resolve(response.data)
+          const idToUpdate = response.data.id
+          const res = await uploadImages(file)
+          const status = await updateImage(res.data.images, idToUpdate)
+          console.log(status)
+          resolve({ status: status, message: response.data.message })
         }
       })
       .catch((error) => {
         reject(error)
       })
   })
+}
+
+export const updateImage = async (array, id) => {
+  const response = await api.put('pet_info.php', {
+    update_image: array,
+    id: id,
+  })
+  return response.data.status
 }
 
 const saveActivitiesAndEvents = (obj) => {
@@ -450,7 +481,7 @@ const saveActivitiesAndEvents = (obj) => {
   })
 }
 
-const uploadAnimalImages = (fileArray, animal_id) => {
+export const uploadAnimalImages = (fileArray, animal_id) => {
   const formData = new FormData()
   fileArray.forEach((fileObj) => {
     formData.append('files[]', fileObj) // 👈 FIXED: the File itself
@@ -459,20 +490,6 @@ const uploadAnimalImages = (fileArray, animal_id) => {
   formData.append('animal_id', animal_id) // 👈 include animal_id
   return api.post('image-upload.php', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
-  })
-}
-
-export const uploadImages = (fileArray) => {
-  const formData = new FormData()
-
-  fileArray.forEach((file) => {
-    formData.append('images', file) // Must match backend field name
-  })
-
-  return imageUrl.post('', formData, {
-    headers: {
-      'Content-Type': 'multipart/form-data', // Let browser handle boundary
-    },
   })
 }
 

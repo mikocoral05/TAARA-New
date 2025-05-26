@@ -44,6 +44,7 @@ class API
             $year = $payload['get_expenses_summary']['year'];
 
             $this->db->where('expense_date', "$year-$month%", 'LIKE');
+            $this->db->where('is_deleted', 0);
             $totalAmount = $this->db->getValue("tbl_expenses", "SUM(amount)");
 
             echo json_encode([
@@ -59,10 +60,12 @@ class API
             // Get total donations
             $this->db->join('tbl_cash_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
             $this->db->where('tbl1.received_date', $likeDate, 'LIKE');
+            $this->db->where('tbl1.is_deleted', 0);
             $totalCashDonations = $this->db->getValue('tbl_funds tbl1', 'SUM(tbl2.amount)');
 
             // Get total expenses up to selected date
             $this->db->where('expense_date', "$year-$month-31", '<=');
+            $this->db->where('is_deleted', 0);
             $totalExpenses = $this->db->getValue('tbl_expenses', 'SUM(amount)');
 
             // Calculate balance
@@ -83,6 +86,7 @@ class API
 
             $this->db->where("MONTH(`expense_date`) = ?", [$month]);
             $this->db->where("YEAR(`expense_date`) = ?", [$year]);
+            $this->db->where('is_deleted', 0);
             $query = $this->db->get("tbl_expenses");
 
             echo json_encode(array(

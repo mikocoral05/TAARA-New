@@ -182,6 +182,14 @@ export const updateBudgetAllocation = async (obj) => {
   })
   return response.data
 }
+
+export const updateExpense = async (obj) => {
+  const { id, ...data } = obj
+  const response = await api.put('budget_expenses.php', {
+    update_expense: { id: id, data: data },
+  })
+  return response.data
+}
 export const addBudgetAllocation = async (data) => {
   const response = await api.post('budget_expenses.php', {
     add_budget_allocation: data,

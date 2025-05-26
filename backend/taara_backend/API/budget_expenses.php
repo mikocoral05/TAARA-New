@@ -171,6 +171,28 @@ class API
                     'method' => 'PUT',
                 ]);
             }
+        } else if (array_key_exists('update_expense', $payload)) {
+            // Extract the user data
+            $id = $payload['update_expense']['id'];
+            $data = $payload['update_expense']['data'];
+
+            $this->db->where('id', $id);
+            $update_success = $this->db->update('tbl_expenses', $data);
+
+            // Return a response based on whether the update was successful
+            if ($update_success) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Expense updated successfully.',
+                    'method' => 'PUT',
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to update Expense.',
+                    'method' => 'PUT',
+                ]);
+            }
         } else if (array_key_exists('soft_delete_budget_expenses', $payload)) {
             // Extract the user data
             $id = $payload['soft_delete_budget_expenses'];

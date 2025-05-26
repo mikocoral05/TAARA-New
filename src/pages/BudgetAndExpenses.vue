@@ -166,7 +166,7 @@
     </div>
     <q-dialog position="right" maximized full-height v-model="editDialog">
       <q-card style="min-width: 750px; height: 500px" class="text-black column justify-between">
-        <q-form @submit="saveFn()">
+        <q-form @submit="saveFn()" class="column justify-between full-height">
           <div class="column no-wrap">
             <q-card-section class="q-py-md row no-wrap justify-between items-center">
               <div class="text-body1">{{ mode }} {{ tableConfig?.title }}</div>
@@ -396,7 +396,7 @@
 <script>
 import ReusableTable from 'src/components/ReusableTable.vue'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
-import { nextTick, ref, watchEffect } from 'vue'
+import { computed, nextTick, ref, watchEffect } from 'vue'
 import { date, useQuasar } from 'quasar'
 import {
   getBudgetAllocation,
@@ -408,6 +408,7 @@ import {
   updateBudgetAllocation,
   softDeleteBudgetAndExpenses,
   addExpense,
+  updateExpense,
 } from 'src/composable/latestComposable'
 import {
   formatNumber,
@@ -422,8 +423,6 @@ export default {
     ReusableTable,
   },
   setup() {
-    const timeStamp = Date.now()
-    const formattedString = date.formatDate(timeStamp, 'YYYY-MM-DD')
     const $q = useQuasar()
     const tab = ref('1')
     const obj = { 1: 'Budget Allocation', 2: 'Expenses' }
@@ -436,9 +435,21 @@ export default {
     const pages = ref([])
     const expenseData = ref({})
     const mode = ref('')
+    const selectedDay = ref(dayToday)
     const selectedMonth = ref(monthToday)
     const selectedYear = ref(yearToday)
-    const selectedDay = ref(dayToday)
+    const timeStamp = computed(() => {
+      return new Date(
+        selectedYear.value,
+        selectedMonth.value - 1, // JS Date months are 0-based
+        selectedDay.value,
+      ).getTime()
+    })
+
+    const formattedString = computed(() => {
+      return date.formatDate(timeStamp.value, 'YYYY-MM-DD')
+    })
+
     const totalExpense = ref(null)
     const totalBalance = ref(null)
     const allocationDialog = ref(false)
@@ -454,8 +465,8 @@ export default {
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
       if (['Edit', 'View', 'Add'].includes(modeParam)) {
+        tableConfig.value.title = tab.value == 1 ? 'Budget Allocation' : 'Expense'
         if (modeParam == 'Add') {
-          tableConfig.value.title = tab.value == 1 ? 'Budget Allocation' : 'Expense'
           if (tab.value == 1) {
             expenseData.value = {}
             allocationDialog.value = true
@@ -472,8 +483,12 @@ export default {
           }
           //
         } else if (modeParam == 'Edit') {
-          allocationDialog.value = true
           expenseData.value = { ...data }
+          if (tab.value == 1) {
+            allocationDialog.value = true
+          } else {
+            editDialog.value = true
+          }
         } else {
           editDialog.value = true
           expenseData.value = data
@@ -520,19 +535,35 @@ export default {
           })
         }
       } else {
-        addExpense(expenseData.value).then((response) => {
-          $q.loading.show({
-            group: 'save',
-            message: response.message,
+        if (mode.value == 'Add') {
+          addExpense(expenseData.value).then((response) => {
+            $q.loading.show({
+              group: 'save',
+              message: response.message,
+            })
+            setTimeout(() => {
+              if (response.status == 'success') {
+                fetchFn()
+                editDialog.value = false
+              }
+              $q.loading.hide()
+            }, 1000)
           })
-          setTimeout(() => {
-            if (response.status == 'success') {
-              fetchFn()
-              editDialog.value = false
-            }
-            $q.loading.hide()
-          }, 1000)
-        })
+        } else {
+          updateExpense(expenseData.value).then((response) => {
+            $q.loading.show({
+              group: 'save',
+              message: response.message,
+            })
+            setTimeout(() => {
+              if (response.status == 'success') {
+                fetchFn()
+                editDialog.value = false
+              }
+              $q.loading.hide()
+            }, 1000)
+          })
+        }
       }
     }
 

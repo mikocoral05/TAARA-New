@@ -72,22 +72,39 @@
         </div>
       </div>
       <div class="row no-wrap justify-between items-center">
-        <q-btn icon="sym_r_add" dense unelevated class="q-mr-md" />
-        <q-btn icon="sym_r_upload" dense unelevated />
+        <q-btn icon="sym_r_download" dense unelevated />
+        <q-btn icon="sym_r_more_vert" dense unelevated>
+          <q-menu>
+            <q-list style="min-width: 100px">
+              <q-item clickable v-close-popup>
+                <q-item-section>Pet Report</q-item-section>
+              </q-item>
+              <q-item clickable v-close-popup>
+                <q-item-section>Budget Report</q-item-section>
+              </q-item>
+            </q-list>
+          </q-menu>
+        </q-btn>
       </div>
     </div>
     <div class="radius-10 q-mb-md row no-wrap">
       <DoughnutChart style="width: 300px" class="bg-white q-mr-md radius-10" />
-      <div class="bg-white full-width radius-10">
+      <div class="bg-white full-width radius-10 q-pa-md">
         <q-table :rows="rows" :columns="columns" row-key="name" :rows-per-page-options="[4]" flat>
           <template v-slot:top>
             <div class="text-body1 q-mb-md">
               Geographical Hotspots <q-icon class="q-ml-sm" size="1.2rem" name="sym_r_language" />
             </div>
           </template>
+          <template v-slot:body-cell-btn="props">
+            <q-td :props="props">
+              <q-btn flat dense no-caps :ripple="false" class="q-px-md">
+                <span class="q-mr-sm text-caption">Show </span>
+                <q-icon name="sym_r_location_on" size="1.2rem" class="cursor-pointer" />
+              </q-btn>
+            </q-td>
+          </template>
         </q-table>
-
-        <LeafletMap v-if="showMap" />
       </div>
     </div>
     <div class="bg-white radius-10">
@@ -97,13 +114,12 @@
 </template>
 <script>
 import DoughnutChart from 'src/components/DoughnutChart.vue'
-import LeafletMap from 'src/components/LeafletMap.vue'
 import StackBarLine from 'src/components/StackBarLine.vue'
 import { formatNumber, formatOrNumber } from 'src/composable/simpleComposable'
 import { ref } from 'vue'
 
 export default {
-  components: { StackBarLine, DoughnutChart, LeafletMap },
+  components: { StackBarLine, DoughnutChart },
   setup() {
     const columns = [
       {
@@ -111,130 +127,29 @@ export default {
         required: true,
         label: '#',
         align: 'left',
-        field: (row) => row.name,
+        field: (row) => row.id,
         format: (val) => `${val}`,
         sortable: true,
       },
       {
-        name: 'Address',
+        name: 'address',
         required: true,
-        label: 'Dessert (100g serving)',
+        label: 'Address',
         align: 'left',
-        field: (row) => row.name,
-        format: (val) => `${val}`,
+        field: 'address',
         sortable: true,
       },
-      { name: 'calories', align: 'center', label: 'Calories', field: 'calories', sortable: true },
-      { name: 'fat', label: 'Fat (g)', field: 'fat', sortable: true },
+      { name: 'btn', align: 'center', label: 'Map' },
     ]
 
     const rows = [
-      {
-        id: 1,
-        name: 'Frozen Yogurt',
-        calories: 159,
-        fat: 6.0,
-        carbs: 24,
-        protein: 4.0,
-        sodium: 87,
-        calcium: '14%',
-        iron: '1%',
-      },
-      {
-        id: 2,
-        name: 'Ice cream sandwich',
-        calories: 237,
-        fat: 9.0,
-        carbs: 37,
-        protein: 4.3,
-        sodium: 129,
-        calcium: '8%',
-        iron: '1%',
-      },
-      {
-        id: 3,
-        name: 'Eclair',
-        calories: 262,
-        fat: 16.0,
-        carbs: 23,
-        protein: 6.0,
-        sodium: 337,
-        calcium: '6%',
-        iron: '7%',
-      },
-      {
-        name: 'Cupcake',
-        calories: 305,
-        fat: 3.7,
-        carbs: 67,
-        protein: 4.3,
-        sodium: 413,
-        calcium: '3%',
-        iron: '8%',
-      },
-      {
-        name: 'Gingerbread',
-        calories: 356,
-        fat: 16.0,
-        carbs: 49,
-        protein: 3.9,
-        sodium: 327,
-        calcium: '7%',
-        iron: '16%',
-      },
-      {
-        name: 'Jelly bean',
-        calories: 375,
-        fat: 0.0,
-        carbs: 94,
-        protein: 0.0,
-        sodium: 50,
-        calcium: '0%',
-        iron: '0%',
-      },
-      {
-        name: 'Lollipop',
-        calories: 392,
-        fat: 0.2,
-        carbs: 98,
-        protein: 0,
-        sodium: 38,
-        calcium: '0%',
-        iron: '2%',
-      },
-      {
-        name: 'Honeycomb',
-        calories: 408,
-        fat: 3.2,
-        carbs: 87,
-        protein: 6.5,
-        sodium: 562,
-        calcium: '0%',
-        iron: '45%',
-      },
-      {
-        name: 'Donut',
-        calories: 452,
-        fat: 25.0,
-        carbs: 51,
-        protein: 4.9,
-        sodium: 326,
-        calcium: '2%',
-        iron: '22%',
-      },
-      {
-        name: 'KitKat',
-        calories: 518,
-        fat: 26.0,
-        carbs: 65,
-        protein: 7,
-        sodium: 54,
-        calcium: '12%',
-        iron: '6%',
-      },
+      { id: 1, address: 'Centro, Sto. Domingo, Albay, Philippines' },
+      { id: 2, address: 'Barangay Salvacion, Sto. Domingo, Albay' },
+      { id: 3, address: 'Barangay Lidong, Sto. Domingo, Albay' },
+      { id: 4, address: 'Barangay Buhatan, Sto. Domingo, Albay' },
     ]
-    const showMap = ref(false)
-    return { columns, rows, showMap, formatOrNumber, formatNumber }
+
+    return { columns, rows, formatOrNumber, formatNumber }
   },
 }
 </script>

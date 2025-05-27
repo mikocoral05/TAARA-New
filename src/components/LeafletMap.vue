@@ -1,5 +1,5 @@
 <template>
-  <div class="q-pa-md">
+  <div>
     <div id="map" class="leaflet-map"></div>
   </div>
 </template>
@@ -9,11 +9,12 @@ import { defineComponent, onMounted, onUnmounted } from 'vue'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 
-// Fix marker icon issue with Webpack/Vite
 import markerIcon from 'leaflet/dist/images/marker-icon.png'
+import markerRetina from 'leaflet/dist/images/marker-icon-2x.png'
 import markerShadow from 'leaflet/dist/images/marker-shadow.png'
 
 L.Icon.Default.mergeOptions({
+  iconRetinaUrl: markerRetina,
   iconUrl: markerIcon,
   shadowUrl: markerShadow,
 })
@@ -25,7 +26,7 @@ export default defineComponent({
 
     onMounted(() => {
       // Initialize the map
-      map = L.map('map').setView([51.505, -0.09], 5)
+      map = L.map('map').setView([13.2653, 123.7877], 13)
 
       // Add OpenStreetMap tile layer
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -35,15 +36,18 @@ export default defineComponent({
 
       // Define 4 locations with labels
       const locations = [
-        { coords: [51.505, -0.09], label: 'London' },
-        { coords: [48.8566, 2.3522], label: 'Paris' },
-        { coords: [52.52, 13.405], label: 'Berlin' },
-        { coords: [41.9028, 12.4964], label: 'Rome' },
+        { coords: [13.2653, 123.7877], label: 'Sto. Domingo Town Proper' },
+        { coords: [13.2715, 123.7969], label: 'Barangay Lidong' },
+        { coords: [13.2602, 123.7745], label: 'Barangay Buhatan' },
+        { coords: [13.2781, 123.782], label: 'Mayon Resthouse Viewpoint' },
       ]
 
-      // Add markers
+      const defaultIcon = new L.Icon.Default()
+
       locations.forEach((loc) => {
-        L.marker(loc.coords).addTo(map).bindPopup(`<b>${loc.label}</b>`)
+        L.marker(loc.coords, { icon: defaultIcon }) // explicitly assign default icon here
+          .addTo(map)
+          .bindPopup(`<b>${loc.label}</b>`)
       })
     })
 
@@ -59,7 +63,7 @@ export default defineComponent({
 <style scoped>
 .leaflet-map {
   width: 100%;
-  height: 500px;
+  height: 310px;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
 }

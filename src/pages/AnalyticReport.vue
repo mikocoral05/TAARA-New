@@ -75,12 +75,20 @@
         <q-btn icon="sym_r_download" dense unelevated />
         <q-btn icon="sym_r_more_vert" dense unelevated>
           <q-menu>
-            <q-list style="min-width: 100px">
-              <q-item clickable v-close-popup>
-                <q-item-section>Pet Report <q-icon name="" /></q-item-section>
+            <q-list style="min-width: 160px">
+              <q-item clickable v-close-popup class="row no-wrap items-center">
+                <q-item-section>Pet Report </q-item-section>
+                <q-item-section avatar>
+                  <q-icon name="sym_r_pets" />
+                </q-item-section>
               </q-item>
-              <q-item clickable v-close-popup>
-                <q-item-section>Budget Report</q-item-section>
+
+              <q-separator></q-separator>
+              <q-item clickable v-close-popup class="row no-wrap items-center">
+                <q-item-section>Budget Report </q-item-section>
+                <q-item-section avatar>
+                  <q-icon name="sym_r_bar_chart" />
+                </q-item-section>
               </q-item>
             </q-list>
           </q-menu>

@@ -5,12 +5,13 @@
 </template>
 
 <script>
-import { ref, onMounted, onUnmounted } from 'vue'
+import { ref, onMounted, onUnmounted, defineComponent } from 'vue'
 import { Chart, registerables } from 'chart.js'
 
 Chart.register(...registerables)
 
-export default {
+export default defineComponent({
+  name: 'StackBarLine',
   setup() {
     const chartCanvas = ref(null)
     let chartInstance = null
@@ -65,7 +66,7 @@ export default {
 
     // === End Utils Replacement ===
 
-    const DATA_COUNT = 7
+    const DATA_COUNT = 12
     const NUMBER_CFG = { count: DATA_COUNT, min: 0, max: 100 }
 
     const labels = months({ count: DATA_COUNT })
@@ -181,5 +182,5 @@ export default {
       actions,
     }
   },
-}
+})
 </script>

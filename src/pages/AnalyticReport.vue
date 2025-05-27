@@ -77,7 +77,7 @@
           <q-menu>
             <q-list style="min-width: 100px">
               <q-item clickable v-close-popup>
-                <q-item-section>Pet Report</q-item-section>
+                <q-item-section>Pet Report <q-icon name="" /></q-item-section>
               </q-item>
               <q-item clickable v-close-popup>
                 <q-item-section>Budget Report</q-item-section>
@@ -92,10 +92,17 @@
       <div class="bg-white full-width radius-10 q-pa-md">
         <q-table :rows="rows" :columns="columns" row-key="name" :rows-per-page-options="[4]" flat>
           <template v-slot:top>
-            <div class="text-body1 q-mb-md">
-              Geographical Hotspots <q-icon class="q-ml-sm" size="1.2rem" name="sym_r_language" />
+            <div class="row no-wrap q-mb-md items-center">
+              <div class="text-body1">
+                Geographical Hotspots
+                <q-icon class="q-ml-sm" size="1.2rem" name="sym_r_language" />
+              </div>
+              <div class="text-grey-7 q-ml-md text-caption">
+                Most frequently reported rescue locations
+              </div>
             </div>
           </template>
+
           <template v-slot:body-cell-btn="props">
             <q-td :props="props">
               <q-btn flat dense no-caps :ripple="false" class="q-px-md">
@@ -116,7 +123,6 @@
 import DoughnutChart from 'src/components/DoughnutChart.vue'
 import StackBarLine from 'src/components/StackBarLine.vue'
 import { formatNumber, formatOrNumber } from 'src/composable/simpleComposable'
-import { ref } from 'vue'
 
 export default {
   components: { StackBarLine, DoughnutChart },

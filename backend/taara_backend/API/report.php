@@ -53,6 +53,21 @@ class API
                 'data' => count($query),
                 'method' => 'GET'
             ]);
+        } else if (array_key_exists('get_classification', $payload)) {
+            $this->db->where('is_deleted', 1);
+            $this->db->where('	classification', 'stray');
+            $query1 = $this->db->get("tbl_animal_info");
+
+            $this->db->where('is_deleted', 1);
+            $this->db->where('classification', 'surrendered');
+            $query2 = $this->db->get("tbl_animal_info");
+
+            echo json_encode([
+                'status' => 'success',
+                'data1' => count($query1),
+                'data2' => count($query2),
+                'method' => 'GET'
+            ]);
         } else if (array_key_exists('get_frequent_location', $payload)) {
             $topLocations = $this->db->rawQuery("
             SELECT location, latitude, longitude, COUNT(*) AS total_reports

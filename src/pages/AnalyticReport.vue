@@ -114,7 +114,7 @@
       <div class="radius-10 q-mb-md row no-wrap">
         <DoughnutChart style="width: 300px" class="bg-white q-mr-md radius-10" />
         <div class="bg-white full-width radius-10 q-pa-md">
-          <q-table :rows="rows" :columns="columns" row-key="name" :rows-per-page-options="[4]" flat>
+          <q-table :rows="rows" :columns="columns" row-key="name" :rows-per-page-options="[3]" flat>
             <template v-slot:top>
               <div class="row no-wrap q-mb-md items-center">
                 <div class="text-body1">
@@ -133,6 +133,11 @@
                   <span class="q-mr-sm text-caption">Show </span>
                   <q-icon name="sym_r_location_on" size="1.2rem" class="cursor-pointer" />
                 </q-btn>
+              </q-td>
+            </template>
+            <template v-slot:body-cell-id="{ rowIndex }">
+              <q-td>
+                {{ rowIndex + 1 }}
               </q-td>
             </template>
           </q-table>
@@ -331,6 +336,7 @@ import DoughnutChart from 'src/components/DoughnutChart.vue'
 import StackBarLine from 'src/components/StackBarLine.vue'
 import {
   getAnimalByHealtStatus,
+  getFrequentLocation,
   getOverallRescue,
   getPetAvailable,
   getTotalAdopted,
@@ -347,6 +353,7 @@ export default {
     const petAvailable = ref(0)
     const totalAdopted = ref(0)
     const overallRescue = ref(0)
+    const mostReportedPlace = ref([])
     const columns = [
       {
         name: 'id',
@@ -358,22 +365,25 @@ export default {
         sortable: true,
       },
       {
-        name: 'address',
+        name: 'location',
         required: true,
         label: 'Full Address',
         align: 'left',
-        field: 'address',
+        field: 'location',
+        sortable: true,
+      },
+      {
+        name: 'total_reports',
+        required: true,
+        label: 'No. of reports',
+        align: 'left',
+        field: 'total_reports',
         sortable: true,
       },
       { name: 'btn', align: 'center', label: 'Map' },
     ]
 
-    const rows = [
-      { id: 1, address: 'Centro, Sto. Domingo, Albay, Philippines' },
-      { id: 2, address: 'Barangay Salvacion, Sto. Domingo, Albay' },
-      { id: 3, address: 'Barangay Lidong, Sto. Domingo, Albay' },
-      { id: 4, address: 'Barangay Buhatan, Sto. Domingo, Albay' },
-    ]
+    const rows = ref([])
 
     const tab = ref(1)
     const printPage = () => {
@@ -383,11 +393,14 @@ export default {
         window.print()
       }, 100)
     }
+
     onMounted(async () => {
       inMedication.value = await getAnimalByHealtStatus(3)
       totalAdopted.value = await getTotalAdopted()
       petAvailable.value = await getPetAvailable()
       overallRescue.value = await getOverallRescue()
+      rows.value = await getFrequentLocation()
+      console.log(mostReportedPlace.value)
 
       window.onafterprint = () => {
         store.showLayout = true
@@ -398,6 +411,7 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
+      mostReportedPlace,
       petAvailable,
       totalAdopted,
       overallRescue,

@@ -37,6 +37,7 @@ class API
             ]);
         } else if (array_key_exists('get_pet_available', $payload)) {
             $this->db->where('is_deleted', 1);
+            $this->db->where('health_status', 4, '!=');
             $query = $this->db->get("tbl_animal_info");
             // Respond with success and the query data
             echo json_encode([
@@ -50,6 +51,20 @@ class API
             echo json_encode([
                 'status' => 'success',
                 'data' => count($query),
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists('get_frequent_location', $payload)) {
+            $topLocations = $this->db->rawQuery("
+            SELECT location, latitude, longitude, COUNT(*) AS total_reports
+            FROM tbl_rescue_report
+            GROUP BY latitude, longitude
+            ORDER BY total_reports DESC
+            LIMIT 10
+            ");
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => $topLocations,
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_expenses_summary', $payload)) {

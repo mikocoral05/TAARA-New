@@ -400,6 +400,13 @@ export const getOverallRescue = async () => {
 
   return reponse.data.data
 }
+export const getFrequentLocation = async () => {
+  const reponse = await api.get('report.php', {
+    params: { get_frequent_location: 'get_frequent_location' },
+  })
+
+  return reponse.data.data
+}
 
 const getSchedule = () => {
   return new Promise((resolve, reject) => {

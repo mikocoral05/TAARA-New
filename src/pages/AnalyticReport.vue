@@ -292,11 +292,13 @@
 import DoughnutChart from 'src/components/DoughnutChart.vue'
 import StackBarLine from 'src/components/StackBarLine.vue'
 import { formatNumber, formatOrNumber } from 'src/composable/simpleComposable'
-import { ref } from 'vue'
+import { globalStore } from 'src/stores/global-store'
+import { onMounted, onUnmounted, ref } from 'vue'
 
 export default {
   components: { StackBarLine, DoughnutChart },
   setup() {
+    const store = globalStore()
     const columns = [
       {
         name: 'id',
@@ -326,9 +328,20 @@ export default {
     ]
     const tab = ref(2)
     const printPage = () => {
-      window.print()
+      store.leftDrawerOpen = false
+      setTimeout(() => {
+        window.print()
+      }, 100)
     }
-    return { tab, printPage, columns, rows, formatOrNumber, formatNumber }
+    onMounted(() => {
+      window.onafterprint = () => {
+        store.leftDrawerOpen = true
+      }
+    })
+    onUnmounted(() => {
+      window.onafterprint = null // Clean up
+    })
+    return { store, tab, printPage, columns, rows, formatOrNumber, formatNumber }
   },
 }
 </script>

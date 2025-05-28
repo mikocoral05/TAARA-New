@@ -112,7 +112,12 @@
         </div>
       </div>
       <div class="radius-10 q-mb-md row no-wrap">
-        <DoughnutChart style="width: 300px" class="bg-white q-mr-md radius-10" />
+        <DoughnutChart
+          style="width: 300px"
+          class="bg-white q-mr-md radius-10"
+          :data1="classification.data1 || 0"
+          :data2="classification.data2 || 0"
+        />
         <div class="bg-white full-width radius-10 q-pa-md">
           <q-table :rows="rows" :columns="columns" row-key="name" :rows-per-page-options="[3]" flat>
             <template v-slot:top>
@@ -336,6 +341,7 @@ import DoughnutChart from 'src/components/DoughnutChart.vue'
 import StackBarLine from 'src/components/StackBarLine.vue'
 import {
   getAnimalByHealtStatus,
+  getClassification,
   getFrequentLocation,
   getOverallRescue,
   getPetAvailable,
@@ -354,6 +360,7 @@ export default {
     const totalAdopted = ref(0)
     const overallRescue = ref(0)
     const mostReportedPlace = ref([])
+    const classification = ref([])
     const columns = [
       {
         name: 'id',
@@ -401,6 +408,8 @@ export default {
       overallRescue.value = await getOverallRescue()
       rows.value = await getFrequentLocation()
       console.log(mostReportedPlace.value)
+      classification.value = await getClassification()
+      console.log(classification.value)
 
       window.onafterprint = () => {
         store.showLayout = true
@@ -411,6 +420,7 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
+      classification,
       mostReportedPlace,
       petAvailable,
       totalAdopted,

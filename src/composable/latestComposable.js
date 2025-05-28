@@ -407,6 +407,13 @@ export const getFrequentLocation = async () => {
 
   return reponse.data.data
 }
+export const getClassification = async () => {
+  const reponse = await api.get('report.php', {
+    params: { get_classification: 'get_classification' },
+  })
+
+  return reponse.data
+}
 
 const getSchedule = () => {
   return new Promise((resolve, reject) => {

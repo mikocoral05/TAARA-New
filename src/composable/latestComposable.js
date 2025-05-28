@@ -372,6 +372,35 @@ const getAnimalList = (healt_status) => {
   })
 }
 
+export const getAnimalByHealtStatus = async (healt_status) => {
+  const reponse = await api.get('report.php', {
+    params: { get_animal_list: healt_status },
+  })
+
+  return reponse.data.data
+}
+export const getTotalAdopted = async () => {
+  const reponse = await api.get('report.php', {
+    params: { get_total_adopted: 'get_total_adopted' },
+  })
+
+  return reponse.data.data
+}
+export const getPetAvailable = async () => {
+  const reponse = await api.get('report.php', {
+    params: { get_pet_available: 'get_pet_available' },
+  })
+
+  return reponse.data.data
+}
+export const getOverallRescue = async () => {
+  const reponse = await api.get('report.php', {
+    params: { get_overall_rescue: 'get_overall_rescue' },
+  })
+
+  return reponse.data.data
+}
+
 const getSchedule = () => {
   return new Promise((resolve, reject) => {
     api

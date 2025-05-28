@@ -14,29 +14,42 @@ class API
 
     public function httpGet($payload)
     {
-        if (isset($payload["get_expenses"])) {
-            $month = $payload['get_expenses']['month'];
-            $year = $payload['get_expenses']['year'];
-            $day = $payload['get_expenses']['day'];
+        if (isset($payload["get_animal_list"])) {
+            $health_status = $payload['get_animal_list'];
 
-            $this->db->where("DAY(`expense_date`) = ?", [$day]);
-            $this->db->where("MONTH(`expense_date`) = ?", [$month]);
-            $this->db->where("YEAR(`expense_date`) = ?", [$year]);
+            $this->db->where('health_status', $health_status);
             $this->db->where('is_deleted', 0);
-            $query = $this->db->get("tbl_expenses");
+            $query = $this->db->get("tbl_animal_info");
 
             echo json_encode([
                 'status' => 'success',
-                'data' => $query,
+                'data' => count($query),
                 'method' => 'GET'
             ]);
-        } else if (array_key_exists('get_budget_allocation', $payload)) {
-            $this->db->where('is_deleted', 0);
-            $query = $this->db->get("tbl_budget_allocation");
+        } else if (array_key_exists('get_total_adopted', $payload)) {
+            $this->db->where('adoption_status', 4);
+            $query = $this->db->get("tbl_adoption_form");
             // Respond with success and the query data
             echo json_encode([
                 'status' => 'success',
-                'data' => $query,
+                'data' => count($query),
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists('get_pet_available', $payload)) {
+            $this->db->where('is_deleted', 1);
+            $query = $this->db->get("tbl_animal_info");
+            // Respond with success and the query data
+            echo json_encode([
+                'status' => 'success',
+                'data' => count($query),
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists('get_overall_rescue', $payload)) {
+            $this->db->where('is_deleted', 1);
+            $query = $this->db->get("tbl_animal_info");
+            echo json_encode([
+                'status' => 'success',
+                'data' => count($query),
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_expenses_summary', $payload)) {

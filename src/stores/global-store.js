@@ -12,6 +12,7 @@ export const globalStore = defineStore('store', {
     userData: {},
     pendingRescueReport: 0,
     pendingVolunteer: 0,
+    leftDrawerOpen: false,
   }),
   getters: {
     doubleCount: (state) => state.counter * 2,

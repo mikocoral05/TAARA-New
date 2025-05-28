@@ -65,7 +65,14 @@
       </q-toolbar>
     </q-header>
 
-    <q-drawer v-model="leftDrawerOpen" v-if="showLayout" show-if-above bordered :width="270">
+    <q-drawer
+      v-model="store.leftDrawerOpen"
+      v-if="showLayout"
+      show-if-above
+      bordered
+      :width="270"
+      class="q-drawer"
+    >
       <q-scroll-area
         :thumb-style="{ width: '0px' }"
         :bar-style="{ width: '0px' }"
@@ -142,7 +149,7 @@ export default defineComponent({
     const scrollPosition = ref(0)
     const language = ref('English')
     const pathExclude = ref(['/management/user-login', '/management/user-registration'])
-    const leftDrawerOpen = ref(false)
+    // const leftDrawerOpen = ref(store.leftDrawerOpen)
     const $q = useQuasar()
     let logOuts = () => {
       $q.loading.show({
@@ -284,9 +291,8 @@ export default defineComponent({
       linksList2,
       linksList3,
       linksList,
-      leftDrawerOpen,
       toggleLeftDrawer() {
-        leftDrawerOpen.value = !leftDrawerOpen.value
+        store.leftDrawerOpen = !store.leftDrawerOpen
       },
     }
   },

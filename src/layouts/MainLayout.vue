@@ -55,6 +55,9 @@
               <div>{{ store.userData?.first_name + ' ' + store.userData?.last_name }}</div>
               <div class="text-grey-7 ellipsis" style="width: 100px">
                 {{ store.userData?.position_title }}
+                <q-tooltip class="bg-primary" :offset="[10, 10]">
+                  {{ store.userData?.position_title }}
+                </q-tooltip>
               </div>
             </div>
           </div>

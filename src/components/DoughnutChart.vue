@@ -7,17 +7,29 @@
 <script>
 import { ref, onMounted, onUnmounted, defineComponent } from 'vue'
 import { Chart, ArcElement, Tooltip, Legend } from 'chart.js'
+import { watch } from 'vue'
 
 // Register only necessary chart components
 Chart.register(ArcElement, Tooltip, Legend)
 
 export default defineComponent({
   name: 'DoughnutChart',
-  setup() {
+  props: {
+    data1: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+    data2: {
+      type: Number,
+      required: true,
+      default: 0,
+    },
+  },
+  setup(props) {
     const chartCanvas = ref(null)
     let chartInstance = null
 
-    // === Utils ===
     const CHART_COLORS = {
       red: 'rgb(255, 99, 132)',
       orange: 'rgb(255, 159, 64)',
@@ -31,8 +43,8 @@ export default defineComponent({
       labels: ['Stray', 'Surrendered'],
       datasets: [
         {
-          label: 'Dataset 1',
-          data: [300, 100],
+          label: 'Total of',
+          data: [props.data1, props.data2],
           backgroundColor: [CHART_COLORS.red, CHART_COLORS.blue, CHART_COLORS.yellow],
           hoverOffset: 4,
         },
@@ -55,6 +67,16 @@ export default defineComponent({
         },
       },
     }
+
+    watch(
+      () => [props.data1, props.data2],
+      ([newData1, newData2]) => {
+        if (chartInstance) {
+          chartInstance.data.datasets[0].data = [newData1, newData2]
+          chartInstance.update()
+        }
+      },
+    )
 
     // === Lifecycle ===
     onMounted(() => {

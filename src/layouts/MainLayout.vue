@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header class="bg-white text-black" v-if="showLayout">
+    <q-header class="bg-white text-black" v-if="store.showLayout">
       <q-toolbar style="height: 60px" class="q-px-lg row no-wrap justify-between items-center">
         <div class="row no-wrap">
           <q-btn
@@ -67,7 +67,7 @@
 
     <q-drawer
       v-model="store.leftDrawerOpen"
-      v-if="showLayout"
+      v-if="store.showLayout"
       show-if-above
       bordered
       :width="270"
@@ -144,7 +144,6 @@ export default defineComponent({
     const store = globalStore()
     const route = useRoute()
     const router = useRouter()
-    const showLayout = ref(true)
     const myScrollArea = ref(null)
     const scrollPosition = ref(0)
     const language = ref('English')
@@ -271,7 +270,7 @@ export default defineComponent({
     }
 
     watchEffect(() => {
-      showLayout.value = !pathExclude.value.includes(route.path)
+      store.showLayout = !pathExclude.value.includes(route.path)
     })
 
     onMounted(() => {
@@ -285,7 +284,6 @@ export default defineComponent({
       scrollPosition,
       myScrollArea,
       scrollFn,
-      showLayout,
       tab,
       language,
       linksList2,

@@ -73,7 +73,8 @@
           </div>
         </div>
         <div class="row no-wrap justify-between items-center">
-          <q-btn icon="sym_r_download" dense unelevated />
+          <q-btn icon="sym_r_event" dense unelevated />
+          <q-btn icon="sym_r_download" dense unelevated @click="printPage()" />
           <q-btn icon="sym_r_more_vert" dense unelevated>
             <q-menu>
               <q-list style="min-width: 160px">
@@ -136,7 +137,41 @@
         </div>
       </div>
       <div class="bg-white radius-10">
-        <StackBarLine title="Budget vs Expense" />
+        <StackBarLine
+          title="Budget vs Expense"
+          :chartLabels="[
+            'January',
+            'February',
+            'March',
+            'April',
+            'May',
+            'June',
+            'July',
+            'August',
+            'September',
+            'October',
+            'November',
+            'December',
+          ]"
+          :chartDatasets="[
+            {
+              label: 'Budget',
+              data: [100, 120, 150, 180, 200, 220, 250, 270, 290, 310, 330, 350],
+              borderColor: 'rgb(75, 192, 192)',
+              backgroundColor: 'rgba(75, 192, 192, 0.5)',
+              stack: 'combined',
+              type: 'bar',
+            },
+            {
+              label: 'Expense',
+              data: [50, 60, 70, 90, 110, 130, 140, 160, 170, 180, 190, 200],
+              borderColor: 'rgb(255, 99, 132)',
+              backgroundColor: 'rgba(255, 99, 132, 0.5)',
+              stack: 'combined',
+              type: 'line',
+            },
+          ]"
+        />
       </div>
     </div>
     <div class="column no-wrap" v-if="tab == 2">
@@ -212,7 +247,8 @@
           </div>
         </div>
         <div class="row no-wrap justify-between items-center">
-          <q-btn icon="sym_r_download" dense unelevated @click="printPage" />
+          <q-btn icon="sym_r_event" dense unelevated />
+          <q-btn icon="sym_r_download" dense unelevated @click="printPage()" />
           <q-btn icon="sym_r_more_vert" dense unelevated>
             <q-menu>
               <q-list style="min-width: 160px">
@@ -326,15 +362,17 @@ export default {
       { id: 3, address: 'Barangay Lidong, Sto. Domingo, Albay' },
       { id: 4, address: 'Barangay Buhatan, Sto. Domingo, Albay' },
     ]
-    const tab = ref(2)
+    const tab = ref(1)
     const printPage = () => {
       store.leftDrawerOpen = false
+      store.showLayout = false
       setTimeout(() => {
         window.print()
       }, 100)
     }
     onMounted(() => {
       window.onafterprint = () => {
+        store.showLayout = true
         store.leftDrawerOpen = true
       }
     })

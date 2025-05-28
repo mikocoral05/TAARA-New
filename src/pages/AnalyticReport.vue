@@ -147,7 +147,7 @@
               <q-card-section>
                 <div class="row no-wrap justify-between">
                   <div class="text-grey-7 text-caption">AVAILABLE BUDGET</div>
-                  <q-icon name="sym_r_fire_truck" size="1.5rem" color="red" />
+                  <q-icon name="sym_r_savings" size="1.5rem" color="positive" />
                 </div>
                 <div class="text-h6 text-bold q-mt-lg">
                   {{ formatOrNumber(23235) }}
@@ -165,7 +165,7 @@
               <q-card-section>
                 <div class="row no-wrap justify-between">
                   <div class="text-grey-7 text-caption">TOTAL EXPENSE</div>
-                  <q-icon name="sym_r_pets" size="1.5rem" color="primary" />
+                  <q-icon name="sym_r_attach_money" size="1.5rem" color="red" />
                 </div>
                 <div class="text-h6 text-bold q-mt-lg">{{ formatOrNumber(4534) }}</div>
                 <div class="text-grey-7 text-caption q-mt-sm">
@@ -181,7 +181,7 @@
               <q-card-section>
                 <div class="row no-wrap justify-between">
                   <div class="text-grey-7 text-caption">REMAINING BALANCE</div>
-                  <q-icon name="sym_r_diversity_1" size="1.5rem" color="positive" />
+                  <q-icon name="sym_r_payments" size="1.5rem" color="primary" />
                 </div>
                 <div class="text-h6 text-bold q-mt-lg">{{ formatOrNumber(3734) }}</div>
                 <div class="text-grey-7 text-caption q-mt-sm">
@@ -212,7 +212,7 @@
           </div>
         </div>
         <div class="row no-wrap justify-between items-center">
-          <q-btn icon="sym_r_download" dense unelevated />
+          <q-btn icon="sym_r_download" dense unelevated @click="printPage" />
           <q-btn icon="sym_r_more_vert" dense unelevated>
             <q-menu>
               <q-list style="min-width: 160px">
@@ -267,7 +267,7 @@
           ]"
           :chartDatasets="[
             {
-              label: 'Revenue',
+              label: 'Budget',
               data: [100, 120, 150, 180, 200, 220, 250, 270, 290, 310, 330, 350],
               borderColor: 'rgb(75, 192, 192)',
               backgroundColor: 'rgba(75, 192, 192, 0.5)',
@@ -275,7 +275,7 @@
               type: 'bar',
             },
             {
-              label: 'Profit',
+              label: 'Expense',
               data: [50, 60, 70, 90, 110, 130, 140, 160, 170, 180, 190, 200],
               borderColor: 'rgb(255, 99, 132)',
               backgroundColor: 'rgba(255, 99, 132, 0.5)',
@@ -325,7 +325,11 @@ export default {
       { id: 4, address: 'Barangay Buhatan, Sto. Domingo, Albay' },
     ]
     const tab = ref(2)
-    return { tab, columns, rows, formatOrNumber, formatNumber }
+    const printPage = () => {
+      window.print()
+    }
+    return { tab, printPage, columns, rows, formatOrNumber, formatNumber }
   },
 }
 </script>
+<style lang="scss" scoped></style>

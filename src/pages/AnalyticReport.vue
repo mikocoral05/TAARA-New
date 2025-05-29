@@ -350,7 +350,8 @@
         />
       </div>
     </div>
-    <q-dialog v-model="filterDialog" position="right">
+
+    <q-dialog v-model="filterDialog" position="top">
       <q-card style="min-width: 350px">
         <q-linear-progress :value="1" color="pink" />
         <q-card-section class="column no-wrap">
@@ -365,7 +366,9 @@
               dense
               outlined
               v-model="selectedMonth"
-              :options="['d', 'd']"
+              :options="monthNames"
+              emit-value
+              map-options
               style="width: 200px"
               class="q-mr-sm"
             />
@@ -374,8 +377,8 @@
               dense
               outlined
               style="width: 200px"
-              v-model="selectedMonth"
-              :options="['d', 'd']"
+              v-model="seletedYear"
+              :options="generateYearList"
             />
           </div>
         </q-card-section>
@@ -398,7 +401,14 @@ import {
   getPetAvailable,
   getTotalAdopted,
 } from 'src/composable/latestComposable'
-import { formatNumber, formatOrNumber, yearToday } from 'src/composable/simpleComposable'
+import {
+  formatNumber,
+  formatOrNumber,
+  generateYearList,
+  monthNames,
+  monthToday,
+  yearToday,
+} from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 import { onMounted, onUnmounted, ref } from 'vue'
 
@@ -409,8 +419,8 @@ export default {
     const inMedication = ref(0)
     const petAvailable = ref(0)
     const totalAdopted = ref(0)
-    const filterDialog = ref(true)
-    const selectedMonth = ref('')
+    const filterDialog = ref(false)
+    const selectedMonth = ref(monthToday)
     const overallRescue = ref(0)
     const mostReportedPlace = ref([])
     const classification = ref([])
@@ -419,6 +429,7 @@ export default {
     const monthlyPetAdopted = ref([])
     const monthlyDeceased = ref([])
     const seletedYear = ref(yearToday)
+    const seletedMonth = ref(monthToday)
     const columns = [
       {
         name: 'id',
@@ -449,7 +460,6 @@ export default {
     ]
 
     const rows = ref([])
-
     const tab = ref(1)
     const printPage = () => {
       store.leftDrawerOpen = false
@@ -480,6 +490,9 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
+      generateYearList,
+      seletedMonth,
+      monthNames,
       selectedMonth,
       filterDialog,
       monthlyDeceased,

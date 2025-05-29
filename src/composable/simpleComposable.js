@@ -194,6 +194,7 @@ export const switchCaseSize = (payload) => {
     }
   }
 }
+
 export const wordifySex = (payload) => {
   if (payload == 1) {
     return 'Male'
@@ -201,6 +202,7 @@ export const wordifySex = (payload) => {
     return 'Female'
   }
 }
+
 export const wordifyCurrentState = (payload) => {
   if (payload == 1) {
     return 'Ready for Adoption'
@@ -210,6 +212,7 @@ export const wordifyCurrentState = (payload) => {
     return 'Under Medication'
   }
 }
+
 export const wordifyGoodWith = (payload) => {
   if (payload == 1) {
     return 'People'
@@ -219,6 +222,7 @@ export const wordifyGoodWith = (payload) => {
     return 'Bothh Animals and People '
   }
 }
+
 export const goodWith = (payload) => {
   if (payload == 1) {
     return 'People'

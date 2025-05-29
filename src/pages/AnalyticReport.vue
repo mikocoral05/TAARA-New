@@ -167,7 +167,15 @@
           ]"
           :chartDatasets="[
             {
-              label: 'Living',
+              label: 'Rescue',
+              data: monthlyRescue,
+              borderColor: 'rgb(193, 0, 21)',
+              backgroundColor: 'rgba(193, 0, 21, 0.5)',
+              stack: 'combined',
+              type: 'bar',
+            },
+            {
+              label: 'Pet available',
               data: [100, 120, 150, 180, 200, 220, 250, 270, 290, 310, 330, 350],
               borderColor: 'rgb(75, 192, 192)',
               backgroundColor: 'rgba(75, 192, 192, 0.5)',
@@ -175,12 +183,20 @@
               type: 'bar',
             },
             {
-              label: 'Deceased',
+              label: 'Adotped',
               data: [50, 60, 70, 90, 110, 130, 140, 160, 170, 180, 190, 200],
-              borderColor: 'rgb(255, 99, 132)',
-              backgroundColor: 'rgba(255, 99, 132, 0.5)',
+              borderColor: 'rgb(33, 186, 69)',
+              backgroundColor: 'rgba(33, 186, 69, 0.5)',
               stack: 'combined',
               type: 'line',
+            },
+            {
+              label: 'Deceased', // Label shown in the legend
+              data: [10, 20, 70, 30, 10, 30, 40, 60, 70, 80, 90, 100], // Data points for each month (likely Jan to Dec)
+              borderColor: 'rgb(255, 99, 132)', // Line color
+              backgroundColor: 'rgba(255, 99, 132, 0.5)', // Fill under the line (if `fill` is enabled)
+              stack: 'combined', // Stack ID (used in mixed charts with multiple datasets)
+              type: 'line', // Defines this dataset as a line (can be mixed with bar datasets)
             },
           ]"
         />
@@ -343,11 +359,12 @@ import {
   getAnimalByHealtStatus,
   getClassification,
   getFrequentLocation,
+  getMonthlyRescue,
   getOverallRescue,
   getPetAvailable,
   getTotalAdopted,
 } from 'src/composable/latestComposable'
-import { formatNumber, formatOrNumber } from 'src/composable/simpleComposable'
+import { formatNumber, formatOrNumber, yearToday } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 import { onMounted, onUnmounted, ref } from 'vue'
 
@@ -361,6 +378,8 @@ export default {
     const overallRescue = ref(0)
     const mostReportedPlace = ref([])
     const classification = ref([])
+    const monthlyRescue = ref([])
+    const seletedYear = ref(yearToday)
     const columns = [
       {
         name: 'id',
@@ -407,9 +426,8 @@ export default {
       petAvailable.value = await getPetAvailable()
       overallRescue.value = await getOverallRescue()
       rows.value = await getFrequentLocation()
-      console.log(mostReportedPlace.value)
       classification.value = await getClassification()
-      console.log(classification.value)
+      monthlyRescue.value = await getMonthlyRescue(seletedYear.value)
 
       window.onafterprint = () => {
         store.showLayout = true
@@ -420,6 +438,7 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
+      monthlyRescue,
       classification,
       mostReportedPlace,
       petAvailable,

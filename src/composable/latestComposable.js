@@ -415,6 +415,14 @@ export const getClassification = async () => {
   return reponse.data
 }
 
+export const getMonthlyRescue = async (year) => {
+  const reponse = await api.get('report.php', {
+    params: { get_monthly_rescue: year },
+  })
+
+  return reponse.data.data
+}
+
 const getSchedule = () => {
   return new Promise((resolve, reject) => {
     api

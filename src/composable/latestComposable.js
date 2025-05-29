@@ -431,6 +431,14 @@ export const getMonthlyPetAvailble = async (year) => {
   return reponse.data.data
 }
 
+export const getMonthlyAdopted = async (year) => {
+  const reponse = await api.get('report.php', {
+    params: { get_monthly_adopted: year },
+  })
+
+  return reponse.data.data
+}
+
 const getSchedule = () => {
   return new Promise((resolve, reject) => {
     api

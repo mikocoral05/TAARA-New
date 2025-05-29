@@ -147,15 +147,14 @@ class API
         } else if (array_key_exists('get_monthly_adopted', $payload)) {
             $year = isset($payload['get_monthly_adopted']) ? intval($payload['get_monthly_adopted']) : date('Y');
 
-            $this->db->where('is_deleted', 1);
-            $this->db->where('health_status', 4, '!=');
-            $this->db->where('YEAR(date_rescued)', $year);
-            $this->db->groupBy('MONTH(date_rescued)');
-            $this->db->orderBy('MONTH(date_rescued)', 'ASC');
+            $this->db->where('adoption_status', 8);
+            $this->db->where('YEAR(updated_at)', $year);
+            $this->db->groupBy('MONTH(updated_at)');
+            $this->db->orderBy('MONTH(updated_at)', 'ASC');
 
-            $query = $this->db->get('tbl_animal_info', null, [
+            $query = $this->db->get('tbl_adoption_form', null, [
                 'COUNT(*) as count',
-                'MONTH(date_rescued) as month'
+                'MONTH(updated_at) as month'
             ]);
 
             // Initialize array with 0 counts for each month

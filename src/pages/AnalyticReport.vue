@@ -184,7 +184,7 @@
             },
             {
               label: 'Adotped',
-              data: [50, 60, 70, 90, 110, 130, 140, 160, 170, 180, 190, 200],
+              data: monthlyPetAdopted,
               borderColor: 'rgb(33, 186, 69)',
               backgroundColor: 'rgba(33, 186, 69, 0.5)',
               stack: 'combined',
@@ -359,6 +359,7 @@ import {
   getAnimalByHealtStatus,
   getClassification,
   getFrequentLocation,
+  getMonthlyAdopted,
   getMonthlyPetAvailble,
   getMonthlyRescue,
   getOverallRescue,
@@ -381,6 +382,7 @@ export default {
     const classification = ref([])
     const monthlyRescue = ref([])
     const monthlyPetAvailable = ref([])
+    const monthlyPetAdopted = ref([])
     const seletedYear = ref(yearToday)
     const columns = [
       {
@@ -431,6 +433,7 @@ export default {
       classification.value = await getClassification()
       monthlyRescue.value = await getMonthlyRescue(seletedYear.value)
       monthlyPetAvailable.value = await getMonthlyPetAvailble(seletedYear.value)
+      monthlyPetAdopted.value = await getMonthlyAdopted(seletedYear.value)
 
       window.onafterprint = () => {
         store.showLayout = true
@@ -441,6 +444,7 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
+      monthlyPetAdopted,
       monthlyPetAvailable,
       monthlyRescue,
       classification,

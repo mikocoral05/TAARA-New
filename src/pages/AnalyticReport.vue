@@ -75,7 +75,7 @@
           </div>
         </div>
         <div class="row no-wrap justify-between items-center">
-          <q-btn icon="sym_r_event" dense unelevated />
+          <q-btn icon="sym_r_event" dense unelevated @click="filterDialog = !filterDialog" />
           <q-btn icon="sym_r_download" dense unelevated @click="printPage()" />
           <q-btn icon="sym_r_more_vert" dense unelevated>
             <q-menu>
@@ -350,6 +350,24 @@
         />
       </div>
     </div>
+    <q-dialog v-model="filterDialog" position="right">
+      <q-card style="width: 350px">
+        <q-linear-progress :value="0.6" color="pink" />
+
+        <q-card-section class="row items-center no-wrap">
+          <div>
+            <div class="text-weight-bold">The Walker</div>
+            <div class="text-grey">Fitz & The Tantrums</div>
+          </div>
+
+          <q-space />
+
+          <q-btn flat round icon="fast_rewind" />
+          <q-btn flat round icon="pause" />
+          <q-btn flat round icon="fast_forward" />
+        </q-card-section>
+      </q-card>
+    </q-dialog>
   </q-page>
 </template>
 <script>
@@ -378,6 +396,7 @@ export default {
     const inMedication = ref(0)
     const petAvailable = ref(0)
     const totalAdopted = ref(0)
+    const filterDialog = ref(false)
     const overallRescue = ref(0)
     const mostReportedPlace = ref([])
     const classification = ref([])
@@ -447,6 +466,7 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
+      filterDialog,
       monthlyDeceased,
       monthlyPetAdopted,
       monthlyPetAvailable,

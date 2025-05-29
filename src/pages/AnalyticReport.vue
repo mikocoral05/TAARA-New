@@ -150,7 +150,7 @@
       </div>
       <div class="bg-white radius-10">
         <StackBarLine
-          title="Budget vs Expense"
+          title="Population Status Overview"
           :chartLabels="[
             'January',
             'February',
@@ -167,7 +167,7 @@
           ]"
           :chartDatasets="[
             {
-              label: 'Budget',
+              label: 'Living',
               data: [100, 120, 150, 180, 200, 220, 250, 270, 290, 310, 330, 350],
               borderColor: 'rgb(75, 192, 192)',
               backgroundColor: 'rgba(75, 192, 192, 0.5)',
@@ -175,7 +175,7 @@
               type: 'bar',
             },
             {
-              label: 'Expense',
+              label: 'Deceased',
               data: [50, 60, 70, 90, 110, 130, 140, 160, 170, 180, 190, 200],
               borderColor: 'rgb(255, 99, 132)',
               backgroundColor: 'rgba(255, 99, 132, 0.5)',

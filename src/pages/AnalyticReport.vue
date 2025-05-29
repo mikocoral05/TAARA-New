@@ -171,7 +171,7 @@
               data: monthlyRescue,
               borderColor: 'rgb(193, 0, 21)',
               backgroundColor: 'rgba(193, 0, 21, 0.5)',
-              stack: 'barStack',
+              stack: 'combined',
               type: 'bar',
             },
             {
@@ -378,7 +378,7 @@
               outlined
               style="width: 200px"
               v-model="seletedYear"
-              :options="generateYearList"
+              :options="generateYearList()"
             />
           </div>
         </q-card-section>
@@ -490,6 +490,7 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
+      seletedYear,
       generateYearList,
       seletedMonth,
       monthNames,

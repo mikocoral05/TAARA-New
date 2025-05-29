@@ -244,7 +244,7 @@ export default defineComponent({
           },
           scales: {
             y: {
-              stacked: true,
+              stacked: false,
             },
           },
         },

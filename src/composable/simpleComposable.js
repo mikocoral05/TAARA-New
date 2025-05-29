@@ -13,7 +13,8 @@ let minutes = date.getMinutes().toString().padStart(2, '0')
 let seconds = date.getSeconds().toString().padStart(2, '0')
 let timeNow = `${hours}:${minutes}:${seconds}`
 const store = globalStore()
-function wordifyDate(param) {
+
+export const wordifyDate = (param) => {
   if (param != null) {
     var date = new Date(param)
     var d = date.getDate()
@@ -39,7 +40,7 @@ function wordifyDate(param) {
   }
 }
 
-function wordifyTime(time) {
+export const wordifyTime = (time) => {
   if (time != null && time.includes(':')) {
     let timeString = time
     let timeParts = timeString.split(':')
@@ -60,7 +61,7 @@ function wordifyTime(time) {
   }
 }
 
-function timeAgo(date, time) {
+export const timeAgo = (date, time) => {
   var dateTimeString = date + 'T' + time
   var givenDate = new Date(dateTimeString)
   var currentDate = new Date()
@@ -89,7 +90,7 @@ function timeAgo(date, time) {
   }
 }
 
-const threeWordsAbbMonth = [
+export const threeWordsAbbMonth = [
   { month: 'Jan' },
   { month: 'Feb' },
   { month: 'Mar' },
@@ -104,7 +105,7 @@ const threeWordsAbbMonth = [
   { month: 'Dec' },
 ]
 
-const twoWordsAbbMonth = [
+export const twoWordsAbbMonth = [
   { month: 'Jn' },
   { month: 'Fb' },
   { month: 'Mr' },
@@ -119,7 +120,7 @@ const twoWordsAbbMonth = [
   { month: 'Dc' },
 ]
 
-let monthNames = [
+export const monthNames = [
   { label: 'January', value: 1 },
   { label: 'February', value: 2 },
   { label: 'March', value: 3 },
@@ -134,7 +135,7 @@ let monthNames = [
   { label: 'December', value: 12 },
 ]
 
-function getAge(birthDate) {
+export const getAge = (birthDate) => {
   const today = new Date()
   const birthDateObj = new Date(birthDate)
   const ageInMonths = (today - birthDateObj) / (1000 * 60 * 60 * 24 * 30.44) // Approximate months
@@ -148,7 +149,7 @@ function getAge(birthDate) {
   }
 }
 
-function resizeImage(file, maxWidth, maxHeight) {
+export const resizeImage = (file, maxWidth, maxHeight) => {
   return new Promise((resolve, reject) => {
     var img = document.createElement('img')
     var canvas = document.createElement('canvas')
@@ -181,7 +182,8 @@ function resizeImage(file, maxWidth, maxHeight) {
     reader.readAsDataURL(file)
   })
 }
-let switchCaseSize = (payload) => {
+
+export const switchCaseSize = (payload) => {
   if (Number.isInteger(payload)) {
     if (payload == 1) {
       return 'Small'
@@ -192,14 +194,14 @@ let switchCaseSize = (payload) => {
     }
   }
 }
-let wordifySex = (payload) => {
+export const wordifySex = (payload) => {
   if (payload == 1) {
     return 'Male'
   } else {
     return 'Female'
   }
 }
-let wordifyCurrentState = (payload) => {
+export const wordifyCurrentState = (payload) => {
   if (payload == 1) {
     return 'Ready for Adoption'
   } else if (payload == 2) {
@@ -208,7 +210,7 @@ let wordifyCurrentState = (payload) => {
     return 'Under Medication'
   }
 }
-let wordifyGoodWith = (payload) => {
+export const wordifyGoodWith = (payload) => {
   if (payload == 1) {
     return 'People'
   } else if (payload == 2) {
@@ -217,7 +219,7 @@ let wordifyGoodWith = (payload) => {
     return 'Bothh Animals and People '
   }
 }
-let goodWith = (payload) => {
+export const goodWith = (payload) => {
   if (payload == 1) {
     return 'People'
   } else if (payload == 2) {
@@ -227,7 +229,7 @@ let goodWith = (payload) => {
   }
 }
 
-const formatNumber = (number, based = '') => {
+export const formatNumber = (number, based = '') => {
   number = Number(number)
 
   if (based === 'noDecimal') {
@@ -243,7 +245,7 @@ const formatNumber = (number, based = '') => {
   )
 }
 
-const formatOrNumber = (number) => {
+export const formatOrNumber = (number) => {
   number = Number(number)
   return number.toLocaleString('en-US', {
     minimumFractionDigits: 0,
@@ -251,7 +253,7 @@ const formatOrNumber = (number) => {
   })
 }
 
-function weekCount(year, month_number, startDayOfWeek) {
+export const weekCount = (year, month_number, startDayOfWeek) => {
   // month_number is in the range 1..12
   // Get the first day of the week (0: Sunday, 1: Monday, ...)
   const firstDayOfWeek = startDayOfWeek || 0
@@ -262,7 +264,8 @@ function weekCount(year, month_number, startDayOfWeek) {
   const used = firstWeekDay + numberOfDaysInMonth
   return Math.ceil(used / 7)
 }
-function calculateAge(birthDate) {
+
+export const calculateAge = (birthDate) => {
   birthDate = new Date(birthDate)
   let today = new Date()
 
@@ -287,6 +290,7 @@ function calculateAge(birthDate) {
     return years == 1 ? months + ' year old' : months + ' years old'
   }
 }
+
 var Email = {
   send: function (a) {
     return new Promise(function (n) {
@@ -322,7 +326,7 @@ var Email = {
   },
 }
 
-const removeNumSymbols = (num) => {
+export const removeNumSymbols = (num) => {
   const inputNumber = num
   const cleanedNumber = inputNumber.replace(/[^\d]/g, '') // Remove non-digit characters
   const formattedNumber = `+63${cleanedNumber}`
@@ -330,7 +334,7 @@ const removeNumSymbols = (num) => {
   return formattedNumber
 }
 
-const sendTelerivetSms = async (phone_number, message) => {
+export const sendTelerivetSms = async (phone_number, message) => {
   try {
     const recipientNumber = removeNumSymbols(phone_number)
     const messageContent = message
@@ -354,18 +358,18 @@ const sendTelerivetSms = async (phone_number, message) => {
   }
 }
 
-let encodeAnimalId = (id) => {
+export const encodeAnimalId = (id) => {
   const encoded = btoa(id.toString()) // Convert to Base64
   return encoded
 }
 
-let decodeAnimalId = (encoded) => {
+export const decodeAnimalId = (encoded) => {
   const decoded = atob(encoded) // Convert from Base64
 
   return parseInt(decoded, 10)
 }
 
-const generateYearList = () => {
+export const generateYearList = () => {
   const years = []
   for (let year = 2016; year <= yearToday; year++) {
     years.push(year)
@@ -373,7 +377,7 @@ const generateYearList = () => {
   return years
 }
 
-const isNearExpiration = (expirationDate) => {
+export const isNearExpiration = (expirationDate) => {
   const now = new Date()
   const expiry = new Date(expirationDate)
 
@@ -383,7 +387,7 @@ const isNearExpiration = (expirationDate) => {
   return diffInDays >= 0 && diffInDays <= 7
 }
 
-const isExpired = (expirationDate) => {
+export const isExpired = (expirationDate) => {
   // Normalize today's date (midnight, no time)
   const today = new Date()
   today.setHours(0, 0, 0, 0)
@@ -401,9 +405,9 @@ const isExpired = (expirationDate) => {
   return expiry < today
 }
 
-const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
+export const capitalize = (str) => str.charAt(0).toUpperCase() + str.slice(1).toLowerCase()
 
-const getImageLink = (img) => {
+export const getImageLink = (img) => {
   if (!img) return ''
   if (img.startsWith('http')) {
     return img // Already a full URL
@@ -411,7 +415,7 @@ const getImageLink = (img) => {
   return `http://localhost/TAARA-Capstone/backend/taara_backend/files/${img}`
 }
 
-const convertDaysToInterval = (days) => {
+export const convertDaysToInterval = (days) => {
   if (!days) return ''
   days = parseInt(days)
   if (isNaN(days) || days < 1) return 'Invalid interval'
@@ -434,7 +438,7 @@ const convertDaysToInterval = (days) => {
   return `Every ${days} days`
 }
 
-const intervalOptions = [
+export const intervalOptions = [
   { label: 'Every Day', value: 1 },
   { label: 'Every 2 Days', value: 2 },
   { label: 'Every 3 Days', value: 3 },
@@ -462,39 +466,4 @@ export const checkUserIfPublic = () => {
   }
   return false
 }
-export {
-  intervalOptions,
-  convertDaysToInterval,
-  getImageLink,
-  isExpired,
-  capitalize,
-  isNearExpiration,
-  formatOrNumber,
-  generateYearList,
-  decodeAnimalId,
-  encodeAnimalId,
-  sendTelerivetSms,
-  removeNumSymbols,
-  Email,
-  getAge,
-  calculateAge,
-  weekCount,
-  dateToday,
-  monthToday,
-  yearToday,
-  timeNow,
-  threeWordsAbbMonth,
-  twoWordsAbbMonth,
-  wordifyDate,
-  wordifyTime,
-  timeAgo,
-  resizeImage,
-  switchCaseSize,
-  formatNumber,
-  monthNames,
-  wordifySex,
-  goodWith,
-  wordifyCurrentState,
-  wordifyGoodWith,
-  dayToday,
-}
+export { Email, dateToday, monthToday, yearToday, timeNow, dayToday }

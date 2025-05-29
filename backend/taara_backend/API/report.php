@@ -148,6 +148,7 @@ class API
             $year = isset($payload['get_monthly_adopted']) ? intval($payload['get_monthly_adopted']) : date('Y');
 
             $this->db->where('adoption_status', 8);
+            $this->db->where('health_status', 4, '!=');
             $this->db->where('YEAR(updated_at)', $year);
             $this->db->groupBy('MONTH(updated_at)');
             $this->db->orderBy('MONTH(updated_at)', 'ASC');

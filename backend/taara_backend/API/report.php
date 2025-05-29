@@ -113,6 +113,68 @@ class API
                 'data' => $monthlyCounts, // [2, 2, 2, 1, ...]
                 'method' => 'GET'
             ]);
+        } else if (array_key_exists('get_monthly_pet_available', $payload)) {
+            $year = isset($payload['get_monthly_pet_available']) ? intval($payload['get_monthly_pet_available']) : date('Y');
+
+            $this->db->where('is_deleted', 1);
+            $this->db->where('health_status', 4, '!=');
+            $this->db->where('YEAR(date_rescued)', $year);
+            $this->db->groupBy('MONTH(date_rescued)');
+            $this->db->orderBy('MONTH(date_rescued)', 'ASC');
+
+            $query = $this->db->get('tbl_animal_info', null, [
+                'COUNT(*) as count',
+                'MONTH(date_rescued) as month'
+            ]);
+
+            // Initialize array with 0 counts for each month
+            $monthlyCounts = array_fill(1, 12, 0);
+
+            // Replace counts with actual data
+            foreach ($query as $row) {
+                $monthlyCounts[intval($row['month'])] = intval($row['count']);
+            }
+
+            // Reset array keys to 0-based index for JSON output
+            $monthlyCounts = array_values($monthlyCounts);
+
+            echo json_encode([
+                'status' => 'success',
+                'year' => $year,
+                'data' => $monthlyCounts, // [2, 2, 2, 1, ...]
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists('get_monthly_adopted', $payload)) {
+            $year = isset($payload['get_monthly_adopted']) ? intval($payload['get_monthly_adopted']) : date('Y');
+
+            $this->db->where('is_deleted', 1);
+            $this->db->where('health_status', 4, '!=');
+            $this->db->where('YEAR(date_rescued)', $year);
+            $this->db->groupBy('MONTH(date_rescued)');
+            $this->db->orderBy('MONTH(date_rescued)', 'ASC');
+
+            $query = $this->db->get('tbl_animal_info', null, [
+                'COUNT(*) as count',
+                'MONTH(date_rescued) as month'
+            ]);
+
+            // Initialize array with 0 counts for each month
+            $monthlyCounts = array_fill(1, 12, 0);
+
+            // Replace counts with actual data
+            foreach ($query as $row) {
+                $monthlyCounts[intval($row['month'])] = intval($row['count']);
+            }
+
+            // Reset array keys to 0-based index for JSON output
+            $monthlyCounts = array_values($monthlyCounts);
+
+            echo json_encode([
+                'status' => 'success',
+                'year' => $year,
+                'data' => $monthlyCounts, // [2, 2, 2, 1, ...]
+                'method' => 'GET'
+            ]);
         } else if (array_key_exists('get_expenses_summary', $payload)) {
             $month = str_pad($payload['get_expenses_summary']['month'], 2, '0', STR_PAD_LEFT);
             $year = $payload['get_expenses_summary']['year'];

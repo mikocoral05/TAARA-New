@@ -176,7 +176,7 @@
             },
             {
               label: 'Pet available',
-              data: [100, 120, 150, 180, 200, 220, 250, 270, 290, 310, 330, 350],
+              data: monthlyPetAvailable,
               borderColor: 'rgb(75, 192, 192)',
               backgroundColor: 'rgba(75, 192, 192, 0.5)',
               stack: 'combined',
@@ -359,6 +359,7 @@ import {
   getAnimalByHealtStatus,
   getClassification,
   getFrequentLocation,
+  getMonthlyPetAvailble,
   getMonthlyRescue,
   getOverallRescue,
   getPetAvailable,
@@ -379,6 +380,7 @@ export default {
     const mostReportedPlace = ref([])
     const classification = ref([])
     const monthlyRescue = ref([])
+    const monthlyPetAvailable = ref([])
     const seletedYear = ref(yearToday)
     const columns = [
       {
@@ -428,6 +430,7 @@ export default {
       rows.value = await getFrequentLocation()
       classification.value = await getClassification()
       monthlyRescue.value = await getMonthlyRescue(seletedYear.value)
+      monthlyPetAvailable.value = await getMonthlyPetAvailble(seletedYear.value)
 
       window.onafterprint = () => {
         store.showLayout = true
@@ -438,6 +441,7 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
+      monthlyPetAvailable,
       monthlyRescue,
       classification,
       mostReportedPlace,

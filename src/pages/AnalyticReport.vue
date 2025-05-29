@@ -171,7 +171,7 @@
               data: monthlyRescue,
               borderColor: 'rgb(193, 0, 21)',
               backgroundColor: 'rgba(193, 0, 21, 0.5)',
-              stack: 'combined',
+              stack: 'barStack',
               type: 'bar',
             },
             {
@@ -179,7 +179,7 @@
               data: monthlyPetAvailable,
               borderColor: 'rgb(75, 192, 192)',
               backgroundColor: 'rgba(75, 192, 192, 0.5)',
-              stack: 'combined',
+              stack: 'barStack',
               type: 'bar',
             },
             {
@@ -187,16 +187,16 @@
               data: monthlyPetAdopted,
               borderColor: 'rgb(33, 186, 69)',
               backgroundColor: 'rgba(33, 186, 69, 0.5)',
-              stack: 'combined',
+              stack: 'lineStack',
               type: 'line',
             },
             {
-              label: 'Deceased', // Label shown in the legend
-              data: [10, 20, 70, 30, 10, 30, 40, 60, 70, 80, 90, 100], // Data points for each month (likely Jan to Dec)
-              borderColor: 'rgb(255, 99, 132)', // Line color
-              backgroundColor: 'rgba(255, 99, 132, 0.5)', // Fill under the line (if `fill` is enabled)
-              stack: 'combined', // Stack ID (used in mixed charts with multiple datasets)
-              type: 'line', // Defines this dataset as a line (can be mixed with bar datasets)
+              label: 'Deceased',
+              data: monthlyDeceased,
+              borderColor: 'rgb(255, 99, 132)',
+              backgroundColor: 'rgba(255, 99, 132, 0.5)',
+              stack: 'lineStack',
+              type: 'line',
             },
           ]"
         />
@@ -360,6 +360,7 @@ import {
   getClassification,
   getFrequentLocation,
   getMonthlyAdopted,
+  getMonthlyDeceased,
   getMonthlyPetAvailble,
   getMonthlyRescue,
   getOverallRescue,
@@ -383,6 +384,7 @@ export default {
     const monthlyRescue = ref([])
     const monthlyPetAvailable = ref([])
     const monthlyPetAdopted = ref([])
+    const monthlyDeceased = ref([])
     const seletedYear = ref(yearToday)
     const columns = [
       {
@@ -434,6 +436,7 @@ export default {
       monthlyRescue.value = await getMonthlyRescue(seletedYear.value)
       monthlyPetAvailable.value = await getMonthlyPetAvailble(seletedYear.value)
       monthlyPetAdopted.value = await getMonthlyAdopted(seletedYear.value)
+      monthlyDeceased.value = await getMonthlyDeceased(seletedYear.value)
 
       window.onafterprint = () => {
         store.showLayout = true
@@ -444,6 +447,7 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
+      monthlyDeceased,
       monthlyPetAdopted,
       monthlyPetAvailable,
       monthlyRescue,

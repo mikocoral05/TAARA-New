@@ -439,6 +439,14 @@ export const getMonthlyAdopted = async (year) => {
   return reponse.data.data
 }
 
+export const getMonthlyDeceased = async (year) => {
+  const reponse = await api.get('report.php', {
+    params: { get_monthly_deceased: year },
+  })
+
+  return reponse.data.data
+}
+
 const getSchedule = () => {
   return new Promise((resolve, reject) => {
     api

@@ -18,7 +18,7 @@ class API
             $health_status = $payload['get_animal_list'];
 
             $this->db->where('health_status', $health_status);
-            $this->db->where('is_deleted', 0);
+            $this->db->where('is_deleted', 1);
             $query = $this->db->get("tbl_animal_info");
 
             echo json_encode([
@@ -153,6 +153,36 @@ class API
             $this->db->orderBy('MONTH(updated_at)', 'ASC');
 
             $query = $this->db->get('tbl_adoption_form', null, [
+                'COUNT(*) as count',
+                'MONTH(updated_at) as month'
+            ]);
+
+            // Initialize array with 0 counts for each month
+            $monthlyCounts = array_fill(1, 12, 0);
+
+            // Replace counts with actual data
+            foreach ($query as $row) {
+                $monthlyCounts[intval($row['month'])] = intval($row['count']);
+            }
+
+            // Reset array keys to 0-based index for JSON output
+            $monthlyCounts = array_values($monthlyCounts);
+
+            echo json_encode([
+                'status' => 'success',
+                'year' => $year,
+                'data' => $monthlyCounts, // [2, 2, 2, 1, ...]
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists('get_monthly_deceased', $payload)) {
+            $year = isset($payload['get_monthly_deceased']) ? intval($payload['get_monthly_deceased']) : date('Y');
+
+            $this->db->where('is_deleted', 1);
+            $this->db->where('health_status', 4);
+            $this->db->where('YEAR(deceased_date)', $year);
+            $this->db->groupBy('MONTH(deceased_date)');
+            $this->db->orderBy('MONTH(deceased_date)', 'ASC');
+            $query = $this->db->get('tbl_animal_info', null, [
                 'COUNT(*) as count',
                 'MONTH(updated_at) as month'
             ]);

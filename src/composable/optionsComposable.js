@@ -24,6 +24,7 @@ const nameSuffixes = [
   'PE',
 ]
 const civilStatusOption = ref(['Single', 'Married', 'Divorced', 'Widowed', 'Separated', 'Annulled'])
+
 const sexOption = ref([
   { label: 'Male', value: 1 },
   { label: 'Female', value: 2 },

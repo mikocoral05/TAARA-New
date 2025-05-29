@@ -351,20 +351,33 @@
       </div>
     </div>
     <q-dialog v-model="filterDialog" position="right">
-      <q-card style="width: 350px">
-        <q-linear-progress :value="0.6" color="pink" />
-
-        <q-card-section class="row items-center no-wrap">
-          <div>
-            <div class="text-weight-bold">The Walker</div>
-            <div class="text-grey">Fitz & The Tantrums</div>
+      <q-card style="min-width: 350px">
+        <q-linear-progress :value="1" color="pink" />
+        <q-card-section class="column no-wrap">
+          <div class="text-weight-bold">
+            Filter Report
+            <span class="text-grey-7 text-caption q-ml-sm">(Filter by date to view report)</span>
           </div>
 
-          <q-space />
-
-          <q-btn flat round icon="fast_rewind" />
-          <q-btn flat round icon="pause" />
-          <q-btn flat round icon="fast_forward" />
+          <div class="row no-wrap q-mt-sm">
+            <q-select
+              hint="Select month"
+              dense
+              outlined
+              v-model="selectedMonth"
+              :options="['d', 'd']"
+              style="width: 200px"
+              class="q-mr-sm"
+            />
+            <q-select
+              hint="Select year"
+              dense
+              outlined
+              style="width: 200px"
+              v-model="selectedMonth"
+              :options="['d', 'd']"
+            />
+          </div>
         </q-card-section>
       </q-card>
     </q-dialog>
@@ -396,7 +409,8 @@ export default {
     const inMedication = ref(0)
     const petAvailable = ref(0)
     const totalAdopted = ref(0)
-    const filterDialog = ref(false)
+    const filterDialog = ref(true)
+    const selectedMonth = ref('')
     const overallRescue = ref(0)
     const mostReportedPlace = ref([])
     const classification = ref([])
@@ -466,6 +480,7 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
+      selectedMonth,
       filterDialog,
       monthlyDeceased,
       monthlyPetAdopted,

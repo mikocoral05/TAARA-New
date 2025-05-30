@@ -2,7 +2,8 @@ import { api, imageUrl } from 'src/boot/axios'
 import { dateToday } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 const store = globalStore()
-const getUserByType = (type) => {
+
+export const getUserByType = (type) => {
   return new Promise((resolve, reject) => {
     api
       .get('authorization.php', {
@@ -19,7 +20,7 @@ const getUserByType = (type) => {
   })
 }
 
-const getPendingRescueReport = () => {
+export const getPendingRescueReport = () => {
   return new Promise((resolve, reject) => {
     api
       .get('rescue_report.php', {
@@ -37,7 +38,7 @@ const getPendingRescueReport = () => {
   })
 }
 
-const getPendingVolunteer = () => {
+export const getPendingVolunteer = () => {
   return new Promise((resolve, reject) => {
     api
       .get('authorization.php', {
@@ -55,7 +56,7 @@ const getPendingVolunteer = () => {
   })
 }
 
-const checkIfVolunteer = (user_id) => {
+export const checkIfVolunteer = (user_id) => {
   return new Promise((resolve, reject) => {
     api
       .get('volunteer_public.php', {
@@ -72,7 +73,7 @@ const checkIfVolunteer = (user_id) => {
   })
 }
 
-const addVolunteerRequest = (volunteer_form, userVolunteerData) => {
+export const addVolunteerRequest = (volunteer_form, userVolunteerData) => {
   return new Promise((resolve, reject) => {
     api
       .post('volunteer_public.php', {
@@ -87,7 +88,7 @@ const addVolunteerRequest = (volunteer_form, userVolunteerData) => {
   })
 }
 
-const getActivitiesAndEvents = () => {
+export const getActivitiesAndEvents = () => {
   return new Promise((resolve, reject) => {
     api
       .get('activities_and_events.php', {
@@ -105,7 +106,7 @@ const getActivitiesAndEvents = () => {
   })
 }
 
-const getDonation = (type) => {
+export const getDonation = (type) => {
   return new Promise((resolve, reject) => {
     api
       .get('donation.php', {
@@ -122,7 +123,7 @@ const getDonation = (type) => {
   })
 }
 
-const getAnnouncement = () => {
+export const getAnnouncement = () => {
   return new Promise((resolve, reject) => {
     api
       .get('announcement.php', {
@@ -139,7 +140,7 @@ const getAnnouncement = () => {
   })
 }
 
-const getRescueReport = () => {
+export const getRescueReport = () => {
   return new Promise((resolve, reject) => {
     api
       .get('rescue_report.php', {
@@ -156,7 +157,7 @@ const getRescueReport = () => {
   })
 }
 
-const updateUser = (data) => {
+export const updateUser = (data) => {
   const clone = { ...data }
   clone.page_access = JSON.stringify(clone.page_access)
   return new Promise((resolve, reject) => {
@@ -213,7 +214,7 @@ export const softDeleteBudgetAndExpenses = async (arrayId, tableName) => {
   return response.data
 }
 
-const getPageAccess = () => {
+export const getPageAccess = () => {
   return new Promise((resolve, reject) => {
     api
       .get('authorization.php', {
@@ -230,7 +231,7 @@ const getPageAccess = () => {
   })
 }
 
-const getBudgetAllocation = () => {
+export const getBudgetAllocation = () => {
   return new Promise((resolve, reject) => {
     api
       .get('budget_expenses.php', {
@@ -247,7 +248,7 @@ const getBudgetAllocation = () => {
   })
 }
 
-const getExpenses = (obj) => {
+export const getExpenses = (obj) => {
   return new Promise((resolve, reject) => {
     api
       .get('budget_expenses.php', {
@@ -264,7 +265,7 @@ const getExpenses = (obj) => {
   })
 }
 
-const getExpensesSummary = (obj) => {
+export const getExpensesSummary = (obj) => {
   return new Promise((resolve, reject) => {
     api
       .get('budget_expenses.php', {
@@ -281,7 +282,7 @@ const getExpensesSummary = (obj) => {
   })
 }
 
-const getTotalBalance = (obj) => {
+export const getTotalBalance = (obj) => {
   return new Promise((resolve, reject) => {
     api
       .get('budget_expenses.php', {
@@ -298,7 +299,7 @@ const getTotalBalance = (obj) => {
   })
 }
 
-const getMonthlyFundAndExpenses = (obj) => {
+export const getMonthlyFundAndExpenses = (obj) => {
   return new Promise((resolve, reject) => {
     api
       .get('budget_expenses.php', {
@@ -338,7 +339,7 @@ const getMonthlyFundAndExpenses = (obj) => {
   })
 }
 
-const getInventoryList = (category) => {
+export const getInventoryList = (category) => {
   return new Promise((resolve, reject) => {
     api
       .get('inventory.php', {
@@ -355,7 +356,7 @@ const getInventoryList = (category) => {
   })
 }
 
-const getAnimalList = (healt_status) => {
+export const getAnimalList = (healt_status) => {
   return new Promise((resolve, reject) => {
     api
       .get('pet_info.php', {
@@ -477,7 +478,7 @@ export const getExpenseSummary = async (year, month, operation) => {
   return reponse.data.data
 }
 
-const getSchedule = () => {
+export const getSchedule = () => {
   return new Promise((resolve, reject) => {
     api
       .get('schedule.php', {
@@ -494,7 +495,7 @@ const getSchedule = () => {
   })
 }
 
-const getAnimalOption = () => {
+export const getAnimalOption = () => {
   return new Promise((resolve, reject) => {
     api
       .get('schedule.php', {
@@ -533,12 +534,34 @@ export const uploadImages = async (fileArray) => {
   })
 }
 
-const saveAnimalDetail = (obj) => {
+export const saveAnimalDetail = (obj) => {
   const { file, ...animalData } = obj // separate the files
   return new Promise((resolve, reject) => {
     api
       .post('pet_info.php', {
         save_animal_list: animalData,
+      })
+      .then(async (response) => {
+        if (response.data.status == 'success') {
+          const idToUpdate = response.data.id
+          const res = await uploadImages(file)
+          const status = await updateImage(res.data.images, idToUpdate)
+          console.log(status)
+          resolve({ status: status, message: response.data.message })
+        }
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
+export const saveDonation = (obj) => {
+  const { file, ...donationData } = obj // separate the files
+  return new Promise((resolve, reject) => {
+    api
+      .post('donation.php', {
+        add_donation: donationData,
       })
       .then(async (response) => {
         if (response.data.status == 'success') {
@@ -593,7 +616,7 @@ export const editAnimalInfo = (obj) => {
   })
 }
 
-const saveActivitiesAndEvents = (obj) => {
+export const saveActivitiesAndEvents = (obj) => {
   const { file, ...data } = obj // separate the files
   return new Promise((resolve, reject) => {
     api
@@ -647,7 +670,7 @@ const uploadFiles = (fileArray, record_id, table, id_column, column_name) => {
   })
 }
 
-const getInventoryExpiredList = (category) => {
+export const getInventoryExpiredList = (category) => {
   return new Promise((resolve, reject) => {
     api
       .get('inventory.php', {
@@ -664,7 +687,7 @@ const getInventoryExpiredList = (category) => {
   })
 }
 
-const getInventoryListSummary = (category) => {
+export const getInventoryListSummary = (category) => {
   return new Promise((resolve, reject) => {
     api
       .get('inventory.php', {
@@ -681,7 +704,7 @@ const getInventoryListSummary = (category) => {
   })
 }
 
-const getInventoryGroup = (category) => {
+export const getInventoryGroup = (category) => {
   return new Promise((resolve, reject) => {
     api
       .get('inventory.php', {
@@ -698,7 +721,7 @@ const getInventoryGroup = (category) => {
   })
 }
 
-const softDeleteInventoryData = (arrayId, tableName) => {
+export const softDeleteInventoryData = (arrayId, tableName) => {
   return new Promise((resolve, reject) => {
     api
       .put('inventory.php', {
@@ -714,7 +737,7 @@ const softDeleteInventoryData = (arrayId, tableName) => {
   })
 }
 
-const softDeleteSchedule = (arrayId) => {
+export const softDeleteSchedule = (arrayId) => {
   return new Promise((resolve, reject) => {
     api
       .put('schedule.php', {
@@ -729,7 +752,7 @@ const softDeleteSchedule = (arrayId) => {
   })
 }
 
-const softDeleteUser = (arrayId) => {
+export const softDeleteUser = (arrayId) => {
   return new Promise((resolve, reject) => {
     api
       .put('authorization.php', {
@@ -744,7 +767,7 @@ const softDeleteUser = (arrayId) => {
   })
 }
 
-const softDeleteAnimal = (arrayId) => {
+export const softDeleteAnimal = (arrayId) => {
   return new Promise((resolve, reject) => {
     api
       .put('pet_info.php', {
@@ -759,7 +782,7 @@ const softDeleteAnimal = (arrayId) => {
   })
 }
 
-const addInventoryList = (obj) => {
+export const addInventoryList = (obj) => {
   obj.date_received = dateToday
   return new Promise((resolve, reject) => {
     api
@@ -775,7 +798,7 @@ const addInventoryList = (obj) => {
   })
 }
 
-const addSchedule = (obj) => {
+export const addSchedule = (obj) => {
   return new Promise((resolve, reject) => {
     api
       .post('schedule.php', {
@@ -790,7 +813,7 @@ const addSchedule = (obj) => {
   })
 }
 
-const addAnnouncement = (obj) => {
+export const addAnnouncement = (obj) => {
   const { file, ...data } = obj
   return new Promise((resolve, reject) => {
     api
@@ -815,7 +838,7 @@ const addAnnouncement = (obj) => {
   })
 }
 
-const addRescueRerport = (obj) => {
+export const addRescueRerport = (obj) => {
   const { file, ...data } = obj
   return new Promise((resolve, reject) => {
     api
@@ -841,7 +864,7 @@ const addRescueRerport = (obj) => {
   })
 }
 
-const editAnnouncement = (obj) => {
+export const editAnnouncement = (obj) => {
   const { file, ...data } = obj
   return new Promise((resolve, reject) => {
     api
@@ -864,7 +887,7 @@ const editAnnouncement = (obj) => {
   })
 }
 
-const editRescueReport = (obj) => {
+export const editRescueReport = (obj) => {
   const { file, ...data } = obj
   return new Promise((resolve, reject) => {
     api
@@ -888,7 +911,7 @@ const editRescueReport = (obj) => {
   })
 }
 
-const softDeleteAnnouncement = (arrayId) => {
+export const softDeleteAnnouncement = (arrayId) => {
   return new Promise((resolve, reject) => {
     api
       .put('announcement.php', {
@@ -903,7 +926,7 @@ const softDeleteAnnouncement = (arrayId) => {
   })
 }
 
-const softDeleteRescueReport = (arrayId) => {
+export const softDeleteRescueReport = (arrayId) => {
   return new Promise((resolve, reject) => {
     api
       .put('rescue_report.php', {
@@ -918,7 +941,7 @@ const softDeleteRescueReport = (arrayId) => {
   })
 }
 
-const addGroupName = (obj) => {
+export const addGroupName = (obj) => {
   console.log(obj)
 
   return new Promise((resolve, reject) => {
@@ -935,7 +958,7 @@ const addGroupName = (obj) => {
   })
 }
 
-const editInventoryList = (obj) => {
+export const editInventoryList = (obj) => {
   return new Promise((resolve, reject) => {
     api
       .put('inventory.php', {
@@ -950,7 +973,7 @@ const editInventoryList = (obj) => {
   })
 }
 
-const logIn = (obj) => {
+export const logIn = (obj) => {
   return new Promise((resolve, reject) => {
     api
       .get('login.php', {
@@ -965,7 +988,7 @@ const logIn = (obj) => {
   })
 }
 
-const getTotalUser = async () => {
+export const getTotalUser = async () => {
   const response = await api.get('dashboard.php', {
     params: { get_user_sum: 'get_user_sum' },
   })
@@ -977,7 +1000,7 @@ const getTotalUser = async () => {
   }
 }
 
-const getTotalAnimalCount = async () => {
+export const getTotalAnimalCount = async () => {
   const response = await api.get('dashboard.php', {
     params: { get_count_animals: 'get_user_sum' },
   })
@@ -989,7 +1012,7 @@ const getTotalAnimalCount = async () => {
   }
 }
 
-const getWishlist = async (table) => {
+export const getWishlist = async (table) => {
   const response = await api.get('wishlist_management.php', {
     params: { get_wishlist: table },
   })
@@ -1001,72 +1024,23 @@ const getWishlist = async (table) => {
   }
 }
 
-const updateWishlist = async (table, obj) => {
+export const updateWishlist = async (table, obj) => {
   const response = await api.put('wishlist_management.php', {
     update_wishlist: { table: table, data: obj },
   })
   return response.data
 }
 
-const deleteWishlist = async (table, arrayId) => {
+export const deleteWishlist = async (table, arrayId) => {
   const response = await api.put('wishlist_management.php', {
     delete_wishlist: { table: table, id: arrayId },
   })
   return response.data
 }
 
-const addWishlist = async (obj) => {
+export const addWishlist = async (obj) => {
   const response = await api.post('wishlist_management.php', {
     add_wishlist: obj,
   })
   return response.data
-}
-
-export {
-  addWishlist,
-  deleteWishlist,
-  updateWishlist,
-  getWishlist,
-  getTotalAnimalCount,
-  getTotalUser,
-  addVolunteerRequest,
-  checkIfVolunteer,
-  getPendingVolunteer,
-  logIn,
-  saveActivitiesAndEvents,
-  getActivitiesAndEvents,
-  getPendingRescueReport,
-  editRescueReport,
-  addRescueRerport,
-  softDeleteRescueReport,
-  getRescueReport,
-  softDeleteAnnouncement,
-  editAnnouncement,
-  addAnnouncement,
-  getAnnouncement,
-  getDonation,
-  softDeleteSchedule,
-  addSchedule,
-  getSchedule,
-  getAnimalOption,
-  saveAnimalDetail,
-  getAnimalList,
-  softDeleteUser,
-  addGroupName,
-  editInventoryList,
-  addInventoryList,
-  softDeleteInventoryData,
-  getInventoryExpiredList,
-  getInventoryListSummary,
-  getInventoryGroup,
-  softDeleteAnimal,
-  getInventoryList,
-  getMonthlyFundAndExpenses,
-  getTotalBalance,
-  getExpenses,
-  getBudgetAllocation,
-  getPageAccess,
-  getUserByType,
-  updateUser,
-  getExpensesSummary,
 }

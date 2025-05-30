@@ -83,129 +83,184 @@
     </div>
     <q-dialog position="right" full-height maximized v-model="showDialog">
       <q-card style="width: 50vw; height: 500px" class="text-black column justify-between">
-        <div class="column no-wrap">
-          <q-card-section class="q-py-md row no-wrap justify-between items-center">
-            <div class="text-body1">{{ mode }} {{ tableConfig.title }}</div>
-            <q-icon name="close" size="1.2rem" @click="showDialog = !showDialog" />
-          </q-card-section>
-          <q-separator />
-          <q-card-section>
-            <div class="text-grey-7" style="font-size: 12px">
-              <span class="text-negative">*</span>All fields are mandatory, except mentioned as
-              (optional).
-            </div>
-          </q-card-section>
-          <q-card-section>
-            <div class="row no-wrap q-mt-md">
-              <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">Donor Name <span class="text-negative">*</span></div>
-                <q-input
-                  outlined
-                  v-model="dataStorage.item_name"
-                  dense
-                  class="q-mt-sm"
-                  style="width: 300px"
-                />
+        <q-form class="full-height column justify-between no-wrap" @submit="saveFn()">
+          <div class="column no-wrap">
+            <q-card-section class="q-py-md row no-wrap justify-between items-center">
+              <div class="text-body1">{{ mode }} {{ tableConfig.title }}</div>
+              <q-icon name="close" size="1.2rem" @click="showDialog = !showDialog" />
+            </q-card-section>
+            <q-separator />
+            <q-card-section>
+              <div class="text-grey-7" style="font-size: 12px">
+                <span class="text-negative">*</span>All fields are mandatory, except mentioned as
+                (optional).
               </div>
-              <div class="column no-wrap">
-                <div class="text-capitalize">
-                  {{ obj[tab] }} Group <span class="text-negative">*</span>
+            </q-card-section>
+            <q-card-section>
+              <div class="row no-wrap q-mt-md">
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Donor Name <span class="text-grey-7 text-caption">( optional )</span>
+                  </div>
+                  <q-input
+                    outlined
+                    v-model="dataStorage.donor_name"
+                    dense
+                    class="q-mt-sm"
+                    style="width: 200px"
+                  />
                 </div>
-                <q-select
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Amount <span class="text-negative">*</span></div>
+                  <q-input
+                    outlined
+                    type="number"
+                    v-model="dataStorage.amount"
+                    dense
+                    class="q-mt-sm"
+                    :rules="[(val) => !!val || 'Amount is required!']"
+                  />
+                </div>
+                <div class="column no-wrap">
+                  <div class="text-capitalize">
+                    Upload image <span class="text-grey-7 text-caption">( optional )</span>
+                  </div>
+                  <q-file
+                    class="q-mt-sm"
+                    v-model="dataStorage.file"
+                    hint="Try uploading image first, will analyse"
+                    outlined
+                    dense
+                    style="max-width: 300px"
+                  >
+                    <template v-slot:append>
+                      <q-icon name="sym_r_attach_file" />
+                    </template>
+                  </q-file>
+                </div>
+              </div>
+              <div class="row no-wrap q-mt-md">
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Method<span class="text-negative"> *</span></div>
+                  <q-select
+                    outlined
+                    v-model="dataStorage.method"
+                    class="q-mt-sm"
+                    :rules="[(val) => !!val || 'Method is required!']"
+                    :options="[
+                      { label: 'Onsite', value: 'onsite' },
+                      { label: 'Online', value: 'online' },
+                    ]"
+                    dense
+                    style="width: 150px"
+                    behavior="menu"
+                  />
+                </div>
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Reference code<span class="text-grey-7 text-caption">( optional )</span>
+                  </div>
+                  <q-input
+                    outlined
+                    type="number"
+                    v-model="dataStorage.reference_code"
+                    dense
+                    class="q-mt-sm"
+                  />
+                </div>
+                <div class="column no-wrap">
+                  <div class="text-capitalize">
+                    Be anonymous<span class="text-negative"> *</span>
+                  </div>
+                  <q-select
+                    outlined
+                    v-model="dataStorage.anonymous"
+                    class="q-mt-sm"
+                    :options="[
+                      { label: 'Yes', value: 'yes' },
+                      { label: 'No', value: 'no' },
+                    ]"
+                    :rules="[(val) => !!val || 'This feild is required!']"
+                    dense
+                    style="width: 150px"
+                    behavior="menu"
+                  />
+                </div>
+              </div>
+              <div class="row no-wrap">
+                <div class="column no-wrap q-mt-sm q-mr-md">
+                  <div class="text-capitalize">
+                    Allocated for<span class="text-grey-7 text-caption"> (optional)</span>
+                  </div>
+                  <q-input
+                    outlined
+                    v-model="dataStorage.allocated_for"
+                    style="width: 300px"
+                    dense
+                    class="q-mt-sm"
+                  />
+                </div>
+                <div class="column no-wrap q-mt-sm">
+                  <div class="text-capitalize">
+                    Received date<span class="text-negative"> *</span>
+                  </div>
+                  <q-input
+                    dense
+                    outlined
+                    class="q-mt-sm"
+                    v-model="dataStorage.received_date"
+                    mask="####-##-##"
+                    :rules="[(val) => !!val || '']"
+                    hide-bottom-space
+                  >
+                    <template v-slot:append>
+                      <q-icon name="event" class="cursor-pointer">
+                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                          <q-date v-model="dataStorage.expiration_date">
+                            <div class="row items-center justify-end">
+                              <q-btn v-close-popup label="Close" color="primary" flat />
+                            </div>
+                          </q-date>
+                        </q-popup-proxy>
+                      </q-icon>
+                    </template>
+                  </q-input>
+                </div>
+              </div>
+              <div class="column no-wrap q-mt-lg">
+                <div class="text-capitalize">
+                  Notes <span class="text-grey-7 text-caption"> (optional)</span>
+                </div>
+                <q-input
                   outlined
-                  v-model="dataStorage.group_name"
-                  class="q-mt-sm"
-                  :options="groupNameOptions"
-                  emit-value
-                  map-options
-                  option-label="group_name"
-                  option-value="id"
+                  type="textarea"
+                  v-model="dataStorage.notes"
                   dense
-                  style="width: 250px"
-                  behavior="menu"
+                  class="q-mt-sm"
                 />
               </div>
-            </div>
-            <div class="row no-wrap q-mt-md">
-              <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">Expiry Date<span class="text-negative">*</span></div>
-                <q-input
-                  dense
-                  outlined
-                  class="q-mt-sm"
-                  v-model="dataStorage.expiration_date"
-                  mask="####-##-##"
-                  :rules="[(val) => !!val || '']"
-                  hide-bottom-space
-                >
-                  <template v-slot:append>
-                    <q-icon name="event" class="cursor-pointer">
-                      <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                        <q-date v-model="dataStorage.expiration_date">
-                          <div class="row items-center justify-end">
-                            <q-btn v-close-popup label="Close" color="primary" flat />
-                          </div>
-                        </q-date>
-                      </q-popup-proxy>
-                    </q-icon>
-                  </template>
-                </q-input>
-              </div>
-              <div class="column no-wrap q-mr-md">
-                <div class="text-capitalize">Quantity<span class="text-negative">*</span></div>
-                <q-input
-                  outlined
-                  type="number"
-                  v-model="dataStorage.quantity"
-                  dense
-                  class="q-mt-sm"
-                />
-              </div>
-              <div class="column no-wrap">
-                <div class="text-capitalize">Unit<span class="text-negative">*</span></div>
-                <q-input outlined v-model="dataStorage.unit" dense class="q-mt-sm" />
-              </div>
-            </div>
-            <div class="column no-wrap q-mt-md">
-              <div class="text-capitalize">
-                Description <span class="text-grey-7 text-caption"> (optional)</span>
-              </div>
-              <q-input
-                outlined
-                type="textarea"
-                v-model="dataStorage.description"
-                dense
-                class="q-mt-sm"
-              />
-            </div>
-            <div class="column no-wrap q-mt-md">
-              <div class="text-capitalize">
-                Notes <span class="text-grey-7 text-caption"> (optional)</span>
-              </div>
-              <q-input outlined autogrow v-model="dataStorage.notes" dense class="q-mt-sm" />
-            </div>
+            </q-card-section>
+          </div>
+          <q-card-section>
+            <q-btn
+              outline
+              label="Cancel"
+              v-close-popup
+              color="primary"
+              no-caps
+              class="q-mr-md"
+              style="width: 180px"
+            />
+            <q-btn
+              label="Confirm"
+              unelevated
+              color="primary"
+              no-caps
+              style="width: 180px"
+              type="submit"
+            />
           </q-card-section>
-        </div>
-        <q-card-section>
-          <q-btn
-            outline
-            label="Cancel"
-            v-close-popup
-            color="primary"
-            no-caps
-            class="q-mr-md"
-            style="width: 180px"
-          />
-          <q-btn
-            label="Confirm"
-            unelevated
-            color="primary"
-            no-caps
-            v-close-popup
-            style="width: 180px"
-            @click="saveFn()"
-          />
-        </q-card-section>
+        </q-form>
       </q-card>
     </q-dialog>
 
@@ -255,9 +310,9 @@ import {
   getTotalBalance,
   softDeleteAnimal,
   getAnimalList,
-  saveAnimalDetail,
   editAnimalInfo,
   getDonation,
+  saveDonation,
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -272,6 +327,7 @@ import {
   isNearExpiration,
   isExpired,
   getImageLink,
+  dateToday,
 } from 'src/composable/simpleComposable'
 export default {
   components: {
@@ -291,7 +347,7 @@ export default {
     const search = ref(null)
     const showDialog = ref(true)
     const pages = ref([])
-    const dataStorage = ref({ file: [] })
+    const dataStorage = ref({ file: [], received_date: dateToday })
     const elseSummary = ref({})
     const mode = ref('')
     const selectedMonth = ref(monthToday)
@@ -343,8 +399,8 @@ export default {
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
-        dataStorage.value.health_status = Number(tab.value)
-        saveAnimalDetail(dataStorage.value).then((response) => {
+        dataStorage.value.donation_type = tab.value == 1 ? 'cash' : 'material'
+        saveDonation(dataStorage.value).then((response) => {
           console.log(response)
           setTimeout(() => {
             $q.loading.show({

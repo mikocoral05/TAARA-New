@@ -556,6 +556,11 @@ export const saveAnimalDetail = (obj) => {
   })
 }
 
+const updateDonationFileId = async (arrayLink, id) => {
+  const reponse = await api.put('donation.php', { update_image: arrayLink, id })
+  console.log(reponse.data.data)
+}
+
 export const saveDonation = (obj) => {
   const { file, ...donationData } = obj // separate the files
   return new Promise((resolve, reject) => {
@@ -567,7 +572,7 @@ export const saveDonation = (obj) => {
         if (response.data.status == 'success') {
           const idToUpdate = response.data.id
           const res = await uploadImages(file)
-          const status = await updateImage(res.data.images, idToUpdate)
+          const status = await updateDonationFileId(res.data.images, idToUpdate)
           console.log(status)
           resolve({ status: status, message: response.data.message })
         }

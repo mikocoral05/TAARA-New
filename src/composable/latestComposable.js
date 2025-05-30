@@ -447,6 +447,21 @@ export const getMonthlyDeceased = async (year) => {
   return reponse.data.data
 }
 
+export const getExpenseSummary = async (year, month, operation) => {
+  const reponse = await api.get('report.php', {
+    params: { get_expense_summary: { year, month, operation } },
+  })
+
+  return reponse.data.data
+}
+export const getTotalExpense = async (year, month, operation) => {
+  const reponse = await api.get('report.php', {
+    params: { get_total_expense: { year, month, operation } },
+  })
+
+  return reponse.data.data
+}
+
 const getSchedule = () => {
   return new Promise((resolve, reject) => {
     api

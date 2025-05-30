@@ -15,24 +15,47 @@ class API
     public function httpGet($payload)
     {
         if (isset($payload["get_animal_list"])) {
-            $health_status = $payload['get_animal_list'];
+            $year = $payload['get_animal_list']['year'];
+            $month = $payload['get_animal_list']['month'];
+            $operation = $payload['get_animal_list']['operation'];
+            $health_status = $payload['get_animal_list']['health_status'];
 
-            $this->db->where('health_status', $health_status);
-            $this->db->where('is_deleted', 1);
-            $query = $this->db->get("tbl_animal_info");
+            $allowed_operations = ['=', '<', '<=', '>', '>='];
+            if (!in_array($operation, $allowed_operations)) {
+                echo json_encode(['status' => 'error', 'message' => 'Invalid operation']);
+                exit;
+            }
+
+            $where = "YEAR(date_rescued) $operation ? AND MONTH(date_rescued) $operation ? AND is_deleted = 1 AND health_status = $health_status";
+            $params = [$year, $month];
+
+            $results = $this->db->rawQuery("SELECT * FROM tbl_animal_info WHERE $where", $params);
 
             echo json_encode([
                 'status' => 'success',
-                'data' => count($query),
+                'data' => count($results),
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_total_adopted', $payload)) {
-            $this->db->where('adoption_status', 4);
-            $query = $this->db->get("tbl_adoption_form");
-            // Respond with success and the query data
+
+            $year = $payload['get_total_adopted']['year'];
+            $month = $payload['get_total_adopted']['month'];
+            $operation = $payload['get_total_adopted']['operation'];
+
+            $allowed_operations = ['=', '<', '<=', '>', '>='];
+            if (!in_array($operation, $allowed_operations)) {
+                echo json_encode(['status' => 'error', 'message' => 'Invalid operation']);
+                exit;
+            }
+
+            $where = "YEAR(updated_at) $operation ? AND MONTH(updated_at) $operation ?  AND adoption_status = 4";
+            $params = [$year, $month];
+
+            $results = $this->db->rawQuery("SELECT * FROM tbl_adoption_form WHERE $where", $params);
+
             echo json_encode([
                 'status' => 'success',
-                'data' => count($query),
+                'data' => count($results),
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_pet_available', $payload)) {
@@ -80,18 +103,35 @@ class API
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_classification', $payload)) {
-            $this->db->where('is_deleted', 1);
-            $this->db->where('	classification', 'stray');
-            $query1 = $this->db->get("tbl_animal_info");
 
-            $this->db->where('is_deleted', 1);
-            $this->db->where('classification', 'surrendered');
-            $query2 = $this->db->get("tbl_animal_info");
+            $year = $payload['get_classification']['year'];
+            $month = $payload['get_classification']['month'];
+            $operation = $payload['get_classification']['operation'];
+
+            $allowed_operations = ['=', '<', '<=', '>', '>='];
+            if (!in_array($operation, $allowed_operations)) {
+                echo json_encode(['status' => 'error', 'message' => 'Invalid operation']);
+                exit;
+            }
+
+            // Base WHERE clause except classification
+            $whereBase = "YEAR(date_rescued) $operation ? AND MONTH(date_rescued) $operation ? AND is_deleted = 1 ";
+
+            // Params for base filters
+            $paramsBase = [$year, $month];
+
+            // Query 1: classification = 'stray'
+            $whereStray = $whereBase . " AND classification = 'stray'";
+            $resultsStray = $this->db->rawQuery("SELECT * FROM tbl_animal_info WHERE $whereStray", $paramsBase);
+
+            // Query 2: classification = 'surrendered'
+            $whereSurrendered = $whereBase . " AND classification = 'surrendered'";
+            $resultsSurrendered = $this->db->rawQuery("SELECT * FROM tbl_animal_info WHERE $whereSurrendered", $paramsBase);
 
             echo json_encode([
                 'status' => 'success',
-                'data1' => count($query1),
-                'data2' => count($query2),
+                'data1' => count($resultsStray),
+                'data2' => count($resultsSurrendered),
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_frequent_location', $payload)) {

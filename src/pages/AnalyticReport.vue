@@ -373,12 +373,21 @@
               class="q-mr-sm"
             />
             <q-select
+              class="q-mr-sm"
               hint="Select year"
               dense
               outlined
               style="width: 200px"
               v-model="seletedYear"
               :options="generateYearList()"
+            />
+            <q-select
+              hint="Opertaion"
+              dense
+              outlined
+              style="width: 100px"
+              v-model="seletedOperation"
+              :options="['<=', '=']"
             />
           </div>
         </q-card-section>
@@ -429,6 +438,7 @@ export default {
     const monthlyPetAdopted = ref([])
     const monthlyDeceased = ref([])
     const seletedYear = ref(yearToday)
+    const seletedOperation = ref('<=')
     const seletedMonth = ref(monthToday)
     const columns = [
       {
@@ -514,6 +524,7 @@ export default {
       rows,
       formatOrNumber,
       formatNumber,
+      seletedOperation,
     }
   },
 }

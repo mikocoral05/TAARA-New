@@ -291,16 +291,18 @@ class API
             $year = $payload['get_expense_summary']['year'];
             $month = str_pad($payload['get_expense_summary']['month'], 2, '0', STR_PAD_LEFT);
             $operation = $payload['get_expense_summary']['operation'];
-            $cutoffDate = "$year-$month-31"; // Final day of the selected month
 
             // Get total donations for the selected month (still using LIKE to match month)
             $this->db->join('tbl_cash_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
-            $this->db->where('tbl1.received_date', "$year-$month%", 'LIKE');
+            $this->db->where('YEAR(tbl1.received_date)', $year);
+            $this->db->where('MONTH(tbl1.received_date)', $month);
+
             $this->db->where('tbl1.is_deleted', 0);
             $totalCashDonations = $this->db->getValue('tbl_funds tbl1', 'SUM(tbl2.amount)');
 
             // Get total expenses up to (or for) the selected date, using the dynamic operation
-            $this->db->where('expense_date', $cutoffDate, $operation);
+            $this->db->where('MONTH(expense_date)', $month);
+            $this->db->where('YEAR(expense_date)', $year);
             $this->db->where('is_deleted', 0);
             $totalExpenses = $this->db->getValue('tbl_expenses', 'SUM(amount)');
 

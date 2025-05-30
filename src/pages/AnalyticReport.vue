@@ -331,7 +331,15 @@
               data: [50, 60, 70, 90, 110, 130, 140, 160, 170, 180, 190, 200],
               borderColor: 'rgb(255, 99, 132)',
               backgroundColor: 'rgba(255, 99, 132, 0.5)',
-              stack: 'combined',
+              stack: 'barStack',
+              type: 'bar',
+            },
+            {
+              label: 'Balance',
+              data: [10, 20, 30, 40, 10, 30, 40, 60, 70, 80, 90, 100],
+              borderColor: 'rgb(33, 186, 69)',
+              backgroundColor: 'rgba(33, 186, 69, 0.5)',
+              stack: 'barStack',
               type: 'line',
             },
           ]"
@@ -420,7 +428,7 @@ export default {
     const totalAdopted = ref(0)
     const filterDialog = ref(false)
     const overallRescue = ref(0)
-    const expenseSummary = ref([])
+    const expenseSummary = ref({ donations: 0, expenses: 0, balance: 0 })
     const mostReportedPlace = ref([])
     const classification = ref([])
     const monthlyRescue = ref([])
@@ -516,12 +524,10 @@ export default {
     })
 
     onMounted(async () => {
-      if (tab.value == 1) {
-        monthlyRescue.value = await getMonthlyRescue(selectedYear.value)
-        monthlyPetAvailable.value = await getMonthlyPetAvailble(selectedYear.value)
-        monthlyPetAdopted.value = await getMonthlyAdopted(selectedYear.value)
-        monthlyDeceased.value = await getMonthlyDeceased(selectedYear.value)
-      }
+      monthlyRescue.value = await getMonthlyRescue(selectedYear.value)
+      monthlyPetAvailable.value = await getMonthlyPetAvailble(selectedYear.value)
+      monthlyPetAdopted.value = await getMonthlyAdopted(selectedYear.value)
+      monthlyDeceased.value = await getMonthlyDeceased(selectedYear.value)
       window.onafterprint = () => {
         store.showLayout = true
         store.leftDrawerOpen = true

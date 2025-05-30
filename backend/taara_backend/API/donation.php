@@ -50,44 +50,60 @@ class API
 
     public function httpPost($payload)
     {
-        if (isset($payload['save_animal_list'])) {
-            $data = $payload['save_animal_list'];
+        if (isset($payload['add_donation'])) {
+            $data = $payload['add_donation'];
+            $table = $payload['donation_type'] == 'cash' ? 'tbl_cash_donations' : 'tbl_material_donations';
 
             $insertData = [
-                'name'               => $data['name'] ?? null,
-                'species'            => $data['species'] ?? null,
-                'breed'              => $data['breed'] ?? null,
-                'date_of_birth'      => $data['date_of_birth'] ?? null,
-                'fur_color'          => $data['fur_color'] ?? null,
-                'eye_color'          => $data['eye_color'] ?? null,
-                'sex'                => $data['sex'] ?? null,
-                'weight'             => $data['weight'] ?? null,
-                'height'             => $data['height'] ?? null,
-                'temperament'        => $data['temperament'] ?? null,
-                'skills'             => $data['skills'] ?? null,
-                'favorite_food'      => $data['favorite_food'] ?? null,
-                'health_status'      => $data['health_status'] ?? null,
-                'medical_needs'      => $data['medical_needs'] ?? null,
-                'spayed_neutered'    => $data['spayed_neutered'] ?? null,
-                'vaccination_status' => $data['vaccination_status'] ?? null,
-                'rescue_status'      => $data['rescue_status'] ?? null,
-                'story_background'   => $data['story_background'] ?? null,
+                'donor_name'         => $data['donor_name'] ?? null,
+                'donation_type	'    => $data['donation_type'],
+                'allocated_for'      => $data['allocated_for'] ?? null,
+                'received_date'      => $data['received_date'] ?? null,
+                'anonymous'          => $data['anonymous'] ?? null,
             ];
 
-            $insert = $this->db->insert('tbl_animal_info', $insertData);
+            $insertMain = $this->db->insert('tbl_funds', $insertData);
             $id = $this->db->getInsertId();
 
-            if ($insert) {
+            $insertData2 = [];
+
+            if ($payload['donation_type'] === 'cash') {
+                $insertData2 = [
+                    'fund_id'        => $id,
+                    'amount'         => $data['amount'],
+                    'method'         => $data['method'] ?? null,
+                    'reference_code' => $data['reference_code'] ?? null,
+                    'received_by'    => $data['received_by'] ?? null,
+                    'notes'          => $data['notes'] ?? null,
+                ];
+            } else {
+                $insertData2 = [
+                    'fund_id'        => $id,
+                    'item_name'      => $data['item_name'],
+                    'quantity'       => $data['quantity'] ?? null,
+                    'unit'           => $data['unit'] ?? null,
+                    'estimated_value' => $data['estimated_value'] ?? null,
+                    'received_by'     => $data['received_by'] ?? null,
+                    'item_condition'  => $data['item_condition'] ?? null,
+                    'notes'          => $data['notes'] ?? null,
+                ];
+            }
+
+
+            $this->db->insert($table, $insertData2);
+
+
+            if ($insertMain) {
                 echo json_encode([
                     'status' => 'success',
-                    'message' => 'Animal info successfully added',
+                    'message' => 'Donation info successfully added',
                     'method' => 'POST',
                     'id' => $id
                 ]);
             } else {
                 echo json_encode([
                     'status' => 'error',
-                    'message' => 'Failed to save animal info',
+                    'message' => 'Failed to save Donation info',
                     'method' => 'POST'
                 ]);
             }

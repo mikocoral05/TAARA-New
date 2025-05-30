@@ -311,7 +311,7 @@ import {
   getDonation,
   saveDonation,
 } from 'src/composable/latestComposable'
-import { ref, watchEffect } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
 import {
   formatNumber,
@@ -325,6 +325,7 @@ import {
   isExpired,
   getImageLink,
   dateToday,
+  parseDonationFromImage,
 } from 'src/composable/simpleComposable'
 export default {
   components: {
@@ -344,7 +345,7 @@ export default {
     const search = ref(null)
     const showDialog = ref(false)
     const pages = ref([])
-    const dataStorage = ref({ file: [], received_date: dateToday })
+    const dataStorage = ref({ file: null, received_date: dateToday })
     const elseSummary = ref({})
     const mode = ref('')
     const selectedMonth = ref(monthToday)
@@ -459,6 +460,7 @@ export default {
         })
       }
     }
+
     const fetchFn = () => {
       const objW = { 1: 'cash', 2: 'material' }
       getDonation(objW[tab.value]).then((response) => {
@@ -498,6 +500,20 @@ export default {
         console.log(rows.value)
       })
     }
+
+    watch(
+      () => dataStorage.value.file,
+      async (newValue, oldValue) => {
+        console.log('New file:', newValue)
+        console.log('Old file:', oldValue)
+
+        if (!newValue) return // guard clause
+
+        const response = await parseDonationFromImage(newValue)
+        console.log('Extracted text:', response)
+      },
+    )
+
     watchEffect(() => {
       fetchFn()
     })

@@ -177,8 +177,8 @@
         </template>
       </ReusableTable>
     </div>
-    <q-dialog position="right" full-height v-model="showDialog">
-      <q-card style="min-width: 750px; height: 500px" class="text-black column justify-between">
+    <q-dialog position="right" full-height maximized v-model="showDialog">
+      <q-card style="width: 50vw; height: 500px" class="text-black column justify-between">
         <div class="column no-wrap">
           <q-card-section class="q-py-md row no-wrap justify-between items-center">
             <div class="text-body1">{{ mode }} {{ tableConfig.title }}</div>

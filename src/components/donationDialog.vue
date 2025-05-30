@@ -125,12 +125,14 @@ import { useCounterStore } from 'src/stores/example-store'
 import { useRoute } from 'vue-router'
 import { createWorker } from 'tesseract.js'
 import { resizeImage, dateToday, timeNow } from 'src/composable/simpleComposable'
-import { submitPublicDonation, logInDetails } from 'src/composable/taaraComposable'
+import { submitPublicDonation } from 'src/composable/taaraComposable'
+import { globalStore } from 'src/stores/global-store'
 export default defineComponent({
   name: 'donationDialog',
 
   setup() {
     const route = useRoute()
+    const store = globalStore()
     const counterStore = useCounterStore()
     let donatorsInfo = ref({})
     let reference = ref(null)
@@ -146,7 +148,7 @@ export default defineComponent({
       () => {
         ;(async () => {
           let obj = {
-            donators_id: logInDetails.value[0].user_id,
+            donators_id: store.userData.user_id,
             donation_amount: null,
             image: null,
             reference: null,

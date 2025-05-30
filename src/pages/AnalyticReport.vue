@@ -438,8 +438,8 @@ export default {
     const monthlyPetAdopted = ref([])
     const monthlyDeceased = ref([])
     const seletedYear = ref(yearToday)
-    const seletedOperation = ref('<=')
     const seletedMonth = ref(monthToday)
+    const seletedOperation = ref('<=')
     const columns = [
       {
         name: 'id',
@@ -480,12 +480,20 @@ export default {
     }
 
     onMounted(async () => {
-      inMedication.value = await getAnimalByHealtStatus(3)
-      totalAdopted.value = await getTotalAdopted()
-      petAvailable.value = await getPetAvailable()
-      overallRescue.value = await getOverallRescue()
-      rows.value = await getFrequentLocation()
-      classification.value = await getClassification()
+      inMedication.value = await getAnimalByHealtStatus(
+        seletedYear.value,
+        seletedOperation.value,
+        3,
+      )
+      totalAdopted.value = await getTotalAdopted(seletedYear.value, seletedOperation.value)
+      petAvailable.value = await getPetAvailable(seletedYear.value, seletedOperation.value)
+      overallRescue.value = await getOverallRescue(
+        seletedYear.value,
+        seletedMonth.value,
+        seletedOperation.value,
+      )
+      rows.value = await getFrequentLocation(seletedYear.value)
+      classification.value = await getClassification(seletedYear.value)
       monthlyRescue.value = await getMonthlyRescue(seletedYear.value)
       monthlyPetAvailable.value = await getMonthlyPetAvailble(seletedYear.value)
       monthlyPetAdopted.value = await getMonthlyAdopted(seletedYear.value)

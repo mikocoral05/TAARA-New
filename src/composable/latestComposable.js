@@ -393,9 +393,9 @@ export const getPetAvailable = async () => {
 
   return reponse.data.data
 }
-export const getOverallRescue = async () => {
+export const getOverallRescue = async (year, month, operation) => {
   const reponse = await api.get('report.php', {
-    params: { get_overall_rescue: 'get_overall_rescue' },
+    params: { get_overall_rescue: { year, month, operation } },
   })
 
   return reponse.data.data

@@ -470,4 +470,61 @@ export const checkUserIfPublic = () => {
   }
   return false
 }
+
+import { createWorker } from 'tesseract.js'
+
+export const parseDonationFromImage = async (imageFile, fallbackReference = '') => {
+  if (!imageFile) {
+    return {
+      donation_amount: null,
+      reference: `Ref No. ${fallbackReference}`,
+      image: null,
+      rawText: '',
+    }
+  }
+
+  // TODO: Implement image resizing here if needed before OCR
+
+  const worker = await createWorker('eng')
+
+  try {
+    const {
+      data: { text },
+    } = await worker.recognize(imageFile)
+
+    // Regex to capture amounts with commas and decimals
+    const amountRegex = /(Total Amount Sent|Amount|Php)\s*([\d,.]+)/gi
+    let match
+    const amounts = []
+
+    while ((match = amountRegex.exec(text)) !== null) {
+      // Remove commas for correct parsing
+      const normalizedAmount = match[2].replace(/,/g, '').trim()
+      amounts.push(normalizedAmount)
+    }
+
+    // Regex to capture reference number (Ref No.)
+    // Matches "Ref No. 0028 843 266741" - capture digits and spaces only
+    const refNoRegex = /Ref No\.\s*([\d\s]+)/i
+    const refMatch = refNoRegex.exec(text)
+
+    return {
+      donation_amount: amounts.length > 0 ? Number(amounts[0]) : null,
+      reference: refMatch ? refMatch[1].trim() : `Ref No. ${fallbackReference}`,
+      image: null, // Add image data URL here if resizing/processing is implemented
+      rawText: text, // For debugging or further processing
+    }
+  } catch (error) {
+    console.error('OCR extraction failed:', error)
+    return {
+      donation_amount: null,
+      reference: `Ref No. ${fallbackReference}`,
+      image: null,
+      rawText: '',
+    }
+  } finally {
+    await worker.terminate()
+  }
+}
+
 export { Email, dateToday, monthToday, yearToday, timeNow, dayToday }

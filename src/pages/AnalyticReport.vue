@@ -213,7 +213,7 @@
                   <q-icon name="sym_r_savings" size="1.5rem" color="positive" />
                 </div>
                 <div class="text-h6 text-bold q-mt-lg">
-                  {{ formatOrNumber(23235) }}
+                  {{ formatNumber(23235) }}
                 </div>
                 <div class="text-grey-7 text-caption q-mt-sm">
                   <q-icon name="sym_r_north_east" class="text-positive text-bold q-mr-xs" /><span
@@ -230,7 +230,7 @@
                   <div class="text-grey-7 text-caption">TOTAL EXPENSE</div>
                   <q-icon name="sym_r_attach_money" size="1.5rem" color="red" />
                 </div>
-                <div class="text-h6 text-bold q-mt-lg">{{ formatOrNumber(4534) }}</div>
+                <div class="text-h6 text-bold q-mt-lg">{{ formatNumber(totalExepense) }}</div>
                 <div class="text-grey-7 text-caption q-mt-sm">
                   <q-icon name="sym_r_south_west" class="text-negative text-bold q-mr-xs" /><span
                     class="text-negative text-bold"
@@ -246,7 +246,7 @@
                   <div class="text-grey-7 text-caption">REMAINING BALANCE</div>
                   <q-icon name="sym_r_payments" size="1.5rem" color="primary" />
                 </div>
-                <div class="text-h6 text-bold q-mt-lg">{{ formatOrNumber(3734) }}</div>
+                <div class="text-h6 text-bold q-mt-lg">{{ formatNumber(3734) }}</div>
                 <div class="text-grey-7 text-caption q-mt-sm">
                   <q-icon name="sym_r_north_east" class="text-positive text-bold q-mr-xs" /><span
                     class="text-positive text-bold"
@@ -256,26 +256,10 @@
                 </div>
               </q-card-section>
             </q-card>
-            <!-- <q-card class="q-mr-md radius-10 q-px-md" flat style="width: 250px">
-              <q-card-section>
-                <div class="row no-wrap justify-between">
-                  <div class="text-grey-7 text-caption">IN MEDICATION</div>
-                  <q-icon name="sym_r_monitor_heart" size="1.5rem" color="blue" />
-                </div>
-                <div class="text-h6 text-bold q-mt-lg">{{ formatOrNumber(1734) }}</div>
-                <div class="text-grey-7 text-caption q-mt-sm">
-                  <q-icon name="sym_r_north_east" class="text-positive text-bold q-mr-xs" /><span
-                    class="text-positive text-bold"
-                    >15%</span
-                  >
-                  vs last month
-                </div>
-              </q-card-section>
-            </q-card> -->
           </div>
         </div>
         <div class="row no-wrap justify-between items-center">
-          <q-btn icon="sym_r_event" dense unelevated />
+          <q-btn icon="sym_r_event" dense unelevated @click="filterDialog = !filterDialog" />
           <q-btn icon="sym_r_download" dense unelevated @click="printPage()" />
           <q-btn icon="sym_r_more_vert" dense unelevated>
             <q-menu>
@@ -401,6 +385,7 @@ import StackBarLine from 'src/components/StackBarLine.vue'
 import {
   getAnimalByHealtStatus,
   getClassification,
+  getExpenseSummary,
   getFrequentLocation,
   getMonthlyAdopted,
   getMonthlyDeceased,
@@ -409,6 +394,7 @@ import {
   getOverallRescue,
   getPetAvailable,
   getTotalAdopted,
+  getTotalExpense,
 } from 'src/composable/latestComposable'
 import {
   formatNumber,
@@ -431,6 +417,8 @@ export default {
     const totalAdopted = ref(0)
     const filterDialog = ref(false)
     const overallRescue = ref(0)
+    const totalExepense = ref(0)
+    const expenseSummary = ref([])
     const mostReportedPlace = ref([])
     const classification = ref([])
     const monthlyRescue = ref([])
@@ -441,7 +429,7 @@ export default {
     const selectedMonth = ref(monthToday)
     const seletedOperation = ref('<=')
     const rows = ref([])
-    const tab = ref(1)
+    const tab = ref(2)
     const columns = [
       {
         name: 'id',
@@ -509,15 +497,34 @@ export default {
       )
     }
 
+    const fetchFn2 = async () => {
+      totalExepense.value = await getTotalExpense(
+        selectedYear.value,
+        selectedMonth.value,
+        seletedOperation.value,
+      )
+      expenseSummary.value = await getExpenseSummary(
+        selectedYear.value,
+        selectedMonth.value,
+        seletedOperation.value,
+      )
+      console.log(expenseSummary.value)
+    }
     watchEffect(() => {
-      fetchFn()
+      if (tab.value == 1) {
+        fetchFn()
+      } else {
+        fetchFn2()
+      }
     })
 
     onMounted(async () => {
-      monthlyRescue.value = await getMonthlyRescue(selectedYear.value)
-      monthlyPetAvailable.value = await getMonthlyPetAvailble(selectedYear.value)
-      monthlyPetAdopted.value = await getMonthlyAdopted(selectedYear.value)
-      monthlyDeceased.value = await getMonthlyDeceased(selectedYear.value)
+      if (tab.value == 1) {
+        monthlyRescue.value = await getMonthlyRescue(selectedYear.value)
+        monthlyPetAvailable.value = await getMonthlyPetAvailble(selectedYear.value)
+        monthlyPetAdopted.value = await getMonthlyAdopted(selectedYear.value)
+        monthlyDeceased.value = await getMonthlyDeceased(selectedYear.value)
+      }
       window.onafterprint = () => {
         store.showLayout = true
         store.leftDrawerOpen = true
@@ -527,6 +534,7 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
+      totalExepense,
       selectedYear,
       generateYearList,
       selectedMonth,

@@ -485,8 +485,16 @@ export default {
         seletedOperation.value,
         3,
       )
-      totalAdopted.value = await getTotalAdopted(seletedYear.value, seletedOperation.value)
-      petAvailable.value = await getPetAvailable(seletedYear.value, seletedOperation.value)
+      totalAdopted.value = await getTotalAdopted(
+        seletedYear.value,
+        seletedMonth.value,
+        seletedOperation.value,
+      )
+      petAvailable.value = await getPetAvailable(
+        seletedYear.value,
+        seletedMonth.value,
+        seletedOperation.value,
+      )
       overallRescue.value = await getOverallRescue(
         seletedYear.value,
         seletedMonth.value,

@@ -36,28 +36,29 @@ class API
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_pet_available', $payload)) {
-            $this->db->where('is_deleted', 1);
-            $this->db->where('health_status', 4, '!=');
-            $query = $this->db->get("tbl_animal_info");
-            // Respond with success and the query data
+
+            $year = $payload['get_pet_available']['year'];
+            $month = $payload['get_pet_available']['month'];
+            $operation = $payload['get_pet_available']['operation'];
+
+            $allowed_operations = ['=', '<', '<=', '>', '>='];
+            if (!in_array($operation, $allowed_operations)) {
+                echo json_encode(['status' => 'error', 'message' => 'Invalid operation']);
+                exit;
+            }
+
+            $where = "YEAR(date_rescued) $operation ? AND MONTH(date_rescued) $operation ? AND is_deleted = 1 AND health_status != 4";
+            $params = [$year, $month];
+
+            $results = $this->db->rawQuery("SELECT * FROM tbl_animal_info WHERE $where", $params);
+
             echo json_encode([
                 'status' => 'success',
-                'data' => count($query),
+                'data' => count($results),
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_overall_rescue', $payload)) {
-            // $year = $payload['get_overall_rescue']['year'];
-            // $month = $payload['get_overall_rescue']['month'];
-            // $operation = $payload['get_overall_rescue']['operation'];
-            // $this->db->where('YEAR(date_rescued)', $year, $operation);
-            // $this->db->where('MONTH(date_rescued)', $month, $operation);
-            // $this->db->where('is_deleted', 1);
-            // $query = $this->db->get("tbl_animal_info");
-            // echo json_encode([
-            //     'status' => 'success',
-            //     'data' => count($query),
-            //     'method' => 'GET'
-            // ]);
+
             $year = $payload['get_overall_rescue']['year'];      // e.g., 2024
             $month = $payload['get_overall_rescue']['month'];    // e.g., 5
             $operation = $payload['get_overall_rescue']['operation']; // '=', '<=', '>='

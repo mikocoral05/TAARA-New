@@ -379,16 +379,16 @@ export const getAnimalByHealtStatus = async (healt_status) => {
 
   return reponse.data.data
 }
-export const getTotalAdopted = async () => {
+export const getTotalAdopted = async (year, month, operation) => {
   const reponse = await api.get('report.php', {
-    params: { get_total_adopted: 'get_total_adopted' },
+    params: { get_total_adopted: { year, month, operation } },
   })
 
   return reponse.data.data
 }
-export const getPetAvailable = async () => {
+export const getPetAvailable = async (year, month, operation) => {
   const reponse = await api.get('report.php', {
-    params: { get_pet_available: 'get_pet_available' },
+    params: { get_pet_available: { year, month, operation } },
   })
 
   return reponse.data.data

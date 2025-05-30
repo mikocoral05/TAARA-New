@@ -305,9 +305,6 @@
 import ReusableTable from 'src/components/ReusableTable.vue'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
 import {
-  getBudgetAllocation,
-  getExpensesSummary,
-  getTotalBalance,
   softDeleteAnimal,
   getAnimalList,
   editAnimalInfo,
@@ -345,7 +342,7 @@ export default {
     const rows = ref([])
     const confirm = ref(false)
     const search = ref(null)
-    const showDialog = ref(true)
+    const showDialog = ref(false)
     const pages = ref([])
     const dataStorage = ref({ file: [], received_date: dateToday })
     const elseSummary = ref({})
@@ -407,26 +404,12 @@ export default {
               group: 'update',
               message: response.message,
             })
-          }, 1000)
+          }, 500)
           setTimeout(() => {
-            getAnimalList(tab.value).then((response) => {
-              tableConfig.value.title = `${obj[tab.value]} Pet`
-              tableConfig.value.columns = [
-                'animal_id',
-                'name',
-                'species',
-                'breed',
-                'date_of_birth',
-                'sex',
-                'rescue_status',
-                'btn',
-              ]
-              rows.value = response
-              console.log(rows.value)
-            })
+            fetchFn()
             showDialog.value = false
             $q.loading.hide()
-          }, 2000)
+          }, 1000)
         })
       } else if (mode.value == 'Edit') {
         $q.loading.show({
@@ -444,20 +427,6 @@ export default {
           }, 2000)
         })
       }
-    }
-
-    const updateBudgetAllocationSum = () => {
-      getBudgetAllocation().then((response) => {
-        rows.value = response
-      })
-      getExpensesSummary({ month: selectedMonth.value, year: selectedYear.value }).then(
-        (response) => {
-          totalExpense.value = response?.total
-        },
-      )
-      getTotalBalance({ month: selectedMonth.value, year: selectedYear.value }).then((response) => {
-        totalBalance.value = response?.balance
-      })
     }
 
     const softDeleteFn = () => {
@@ -490,8 +459,7 @@ export default {
         })
       }
     }
-
-    watchEffect(() => {
+    const fetchFn = () => {
       const objW = { 1: 'cash', 2: 'material' }
       getDonation(objW[tab.value]).then((response) => {
         tableConfig.value.title = `${obj[tab.value]}`
@@ -529,6 +497,9 @@ export default {
         rows.value = response
         console.log(rows.value)
       })
+    }
+    watchEffect(() => {
+      fetchFn()
     })
 
     return {
@@ -557,7 +528,6 @@ export default {
       selectedDay,
       dailyExpenseTotal,
       generateYearList,
-      updateBudgetAllocationSum,
       totalBalance,
       formatNumber,
       totalExpense,

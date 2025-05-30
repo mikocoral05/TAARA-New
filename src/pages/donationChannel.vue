@@ -364,5 +364,5 @@
   <donationDialog />
   <TaaraFooter style="margin-top: 100px" />
 </template>
-<script src="./taara/script/donationChannel.js"></script>
+<script src="pages/taara/script/donationChannel.js"></script>
 <style lang="scss" scoped src="./taara/style/donationChannel.scss"></style>

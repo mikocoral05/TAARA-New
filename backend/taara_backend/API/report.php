@@ -271,20 +271,79 @@ class API
                 'data' => $monthlyCounts, // [2, 2, 2, 1, ...]
                 'method' => 'GET'
             ]);
-        } else if (array_key_exists('get_total_expense', $payload)) {
-            $month = str_pad($payload['get_total_expense']['month'], 2, '0', STR_PAD_LEFT);
-            $year = $payload['get_total_expense']['year'];
-            $operation = $payload['get_total_expense']['operation'];
+        } else if (array_key_exists('get_monthly_donation', $payload)) {
+            $year = isset($payload['get_monthly_donation']) ? intval($payload['get_monthly_donation']) : date('Y');
 
-            $cutoffDate = "$year-$month-31";  // Use 31 to cover whole month (assuming valid date)
+            // Apply filters
+            $this->db->where('f.is_deleted', 0);
+            $this->db->where('f.donation_type', 'cash');
+            $this->db->where('YEAR(f.received_date)', $year);
 
-            $this->db->where('expense_date', $cutoffDate, $operation);
-            $this->db->where('is_deleted', 0);
-            $totalAmount = $this->db->getValue("tbl_expenses", "SUM(amount)");
+            // Group and sort by month
+            $this->db->groupBy('MONTH(f.received_date)');
+            $this->db->orderBy('MONTH(f.received_date)', 'ASC');
 
+            // Join donations table
+            $this->db->join('tbl_cash_donations cd', 'f.fund_id = cd.fund_id', 'LEFT');
+
+            // Select total amount per month instead of count
+            $query = $this->db->get('tbl_funds f', null, [
+                'SUM(cd.amount) as total',
+                'MONTH(f.received_date) as month'
+            ]);
+
+            // Initialize array with 0 totals for each month
+            $monthlyTotals = array_fill(1, 12, 0.0);
+
+            // Populate with actual totals
+            foreach ($query as $row) {
+                $monthlyTotals[intval($row['month'])] = floatval($row['total']);
+            }
+
+            // Reset array keys to 0-based index
+            $monthlyTotals = array_values($monthlyTotals);
+
+            // Return response
             echo json_encode([
                 'status' => 'success',
-                'data' => $totalAmount,
+                'year' => $year,
+                'data' => $monthlyTotals, // Example: [0, 200.00, 150.00, 0, ...]
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists('get_monthly_expense', $payload)) {
+            $year = isset($payload['get_monthly_expense']) ? intval($payload['get_monthly_expense']) : date('Y');
+
+            // Apply filters
+            $this->db->where('is_deleted', 0);
+            $this->db->where('YEAR(expense_date)', $year);
+
+            // Group and sort by month
+            $this->db->groupBy('MONTH(expense_date)');
+            $this->db->orderBy('MONTH(expense_date)', 'ASC');
+
+
+            // Select total amount per month instead of count
+            $query = $this->db->get('tbl_expenses', null, [
+                'SUM(amount) as total',
+                'MONTH(expense_date) as month'
+            ]);
+
+            // Initialize array with 0 totals for each month
+            $monthlyTotals = array_fill(1, 12, 0.0);
+
+            // Populate with actual totals
+            foreach ($query as $row) {
+                $monthlyTotals[intval($row['month'])] = floatval($row['total']);
+            }
+
+            // Reset array keys to 0-based index
+            $monthlyTotals = array_values($monthlyTotals);
+
+            // Return response
+            echo json_encode([
+                'status' => 'success',
+                'year' => $year,
+                'data' => $monthlyTotals, // Example: [0, 200.00, 150.00, 0, ...]
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_expense_summary', $payload)) {
@@ -318,20 +377,57 @@ class API
                 ],
                 'method' => 'GET'
             ]);
-        } else if (array_key_exists("get_monthly_funds_and_expenses", $payload)) {
-            $month = $payload['get_monthly_funds_and_expenses']['month'];
-            $year = $payload['get_monthly_funds_and_expenses']['year'];
+        } else if (array_key_exists('get_monthly_balance', $payload)) {
+            $year = isset($payload['get_monthly_balance']['year']) ? intval($payload['get_monthly_balance']['year']) : date('Y');
 
-            $this->db->where("MONTH(`expense_date`) = ?", [$month]);
-            $this->db->where("YEAR(`expense_date`) = ?", [$year]);
+            // --- Get Monthly Donations ---
+            $this->db->where('f.is_deleted', 0);
+            $this->db->where('f.donation_type', 'cash');
+            $this->db->where('YEAR(f.received_date)', $year);
+            $this->db->groupBy('MONTH(f.received_date)');
+            $this->db->orderBy('MONTH(f.received_date)', 'ASC');
+            $this->db->join('tbl_cash_donations cd', 'f.fund_id = cd.fund_id', 'LEFT');
+
+            $donationsQuery = $this->db->get('tbl_funds f', null, [
+                'SUM(cd.amount) as total',
+                'MONTH(f.received_date) as month'
+            ]);
+
+            $monthlyDonations = array_fill(1, 12, 0.0);
+            foreach ($donationsQuery as $row) {
+                $monthlyDonations[intval($row['month'])] = floatval($row['total']);
+            }
+
+            // --- Get Monthly Expenses ---
             $this->db->where('is_deleted', 0);
-            $query = $this->db->get("tbl_expenses");
+            $this->db->where('YEAR(expense_date)', $year);
+            $this->db->groupBy('MONTH(expense_date)');
+            $this->db->orderBy('MONTH(expense_date)', 'ASC');
 
-            echo json_encode(array(
+            $expensesQuery = $this->db->get('tbl_expenses', null, [
+                'SUM(amount) as total',
+                'MONTH(expense_date) as month'
+            ]);
+
+            $monthlyExpenses = array_fill(1, 12, 0.0);
+            foreach ($expensesQuery as $row) {
+                $monthlyExpenses[intval($row['month'])] = floatval($row['total']);
+            }
+
+            // --- Calculate Monthly Balance (Donations - Expenses Only) ---
+            $monthlyBalances = [];
+            for ($i = 1; $i <= 12; $i++) {
+                $balance = $monthlyDonations[$i] - $monthlyExpenses[$i];
+                $monthlyBalances[] = $balance;
+            }
+
+            // --- Output JSON ---
+            echo json_encode([
                 'status' => 'success',
-                'data' => $query,
+                'year' => $year,
+                'data' => $monthlyBalances, // Example: [500, -200, 0, 1000, ...]
                 'method' => 'GET'
-            ));
+            ]);
         } else {
             // Return error if 'get_user_by_type' is not provided
             echo json_encode([

@@ -423,6 +423,28 @@ export const getMonthlyRescue = async (year) => {
   return reponse.data.data
 }
 
+export const getMonthlyDonation = async (year) => {
+  const reponse = await api.get('report.php', {
+    params: { get_monthly_donation: year },
+  })
+
+  return reponse.data.data
+}
+export const getMonthlyExpense = async (year) => {
+  const reponse = await api.get('report.php', {
+    params: { get_monthly_expense: year },
+  })
+
+  return reponse.data.data
+}
+export const getMonthlyBalance = async (year) => {
+  const reponse = await api.get('report.php', {
+    params: { get_monthly_balance: year },
+  })
+
+  return reponse.data.data
+}
+
 export const getMonthlyPetAvailble = async (year) => {
   const reponse = await api.get('report.php', {
     params: { get_monthly_pet_available: year },
@@ -450,13 +472,6 @@ export const getMonthlyDeceased = async (year) => {
 export const getExpenseSummary = async (year, month, operation) => {
   const reponse = await api.get('report.php', {
     params: { get_expense_summary: { year, month, operation } },
-  })
-
-  return reponse.data.data
-}
-export const getTotalExpense = async (year, month, operation) => {
-  const reponse = await api.get('report.php', {
-    params: { get_total_expense: { year, month, operation } },
   })
 
   return reponse.data.data

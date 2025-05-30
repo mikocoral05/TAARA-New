@@ -320,7 +320,7 @@
           :chartDatasets="[
             {
               label: 'Budget',
-              data: [100, 120, 150, 180, 200, 220, 250, 270, 290, 310, 330, 350],
+              data: monthlyDonation,
               borderColor: 'rgb(75, 192, 192)',
               backgroundColor: 'rgba(75, 192, 192, 0.5)',
               stack: 'combined',
@@ -328,7 +328,7 @@
             },
             {
               label: 'Expense',
-              data: [50, 60, 70, 90, 110, 130, 140, 160, 170, 180, 190, 200],
+              data: monthlyExpense,
               borderColor: 'rgb(255, 99, 132)',
               backgroundColor: 'rgba(255, 99, 132, 0.5)',
               stack: 'barStack',
@@ -336,7 +336,7 @@
             },
             {
               label: 'Balance',
-              data: [10, 20, 30, 40, 10, 30, 40, 60, 70, 80, 90, 100],
+              data: monthlyBalance,
               borderColor: 'rgb(33, 186, 69)',
               backgroundColor: 'rgba(33, 186, 69, 0.5)',
               stack: 'barStack',
@@ -383,7 +383,16 @@
               outlined
               style="width: 100px"
               v-model="seletedOperation"
-              :options="['<=', '=']"
+              :options="[
+                {
+                  label: `From the beginning up to ${monthNames.find((obj) => obj.value == selectedMonth)?.label} ${selectedYear}`,
+                  value: '<=',
+                },
+                {
+                  label: `Only ${monthNames.find((obj) => obj.value == selectedMonth)?.label} ${selectedYear}`,
+                  value: '=',
+                },
+              ]"
             />
           </div>
         </q-card-section>
@@ -400,7 +409,10 @@ import {
   getExpenseSummary,
   getFrequentLocation,
   getMonthlyAdopted,
+  getMonthlyBalance,
   getMonthlyDeceased,
+  getMonthlyDonation,
+  getMonthlyExpense,
   getMonthlyPetAvailble,
   getMonthlyRescue,
   getOverallRescue,
@@ -432,9 +444,12 @@ export default {
     const mostReportedPlace = ref([])
     const classification = ref([])
     const monthlyRescue = ref([])
+    const monthlyDonation = ref([])
+    const monthlyBalance = ref([])
     const monthlyPetAvailable = ref([])
     const monthlyPetAdopted = ref([])
     const monthlyDeceased = ref([])
+    const monthlyExpense = ref([])
     const selectedYear = ref(yearToday)
     const selectedMonth = ref(monthToday)
     const seletedOperation = ref('<=')
@@ -513,7 +528,8 @@ export default {
         selectedMonth.value,
         seletedOperation.value,
       )
-      console.log(expenseSummary.value)
+      monthlyDonation.value = await getMonthlyDonation(selectedYear.value)
+      monthlyExpense.value = await getMonthlyExpense(selectedYear.value)
     }
     watchEffect(() => {
       if (tab.value == 1) {
@@ -528,6 +544,9 @@ export default {
       monthlyPetAvailable.value = await getMonthlyPetAvailble(selectedYear.value)
       monthlyPetAdopted.value = await getMonthlyAdopted(selectedYear.value)
       monthlyDeceased.value = await getMonthlyDeceased(selectedYear.value)
+      monthlyBalance.value = await getMonthlyBalance(selectedYear.value)
+      console.log(monthlyBalance.value)
+
       window.onafterprint = () => {
         store.showLayout = true
         store.leftDrawerOpen = true
@@ -537,6 +556,9 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
+      monthlyBalance,
+      monthlyExpense,
+      monthlyDonation,
       expenseSummary,
       selectedYear,
       generateYearList,

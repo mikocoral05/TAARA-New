@@ -185,7 +185,7 @@ class API
             $this->db->orderBy('MONTH(deceased_date)', 'ASC');
             $query = $this->db->get('tbl_animal_info', null, [
                 'COUNT(*) as count',
-                'MONTH(updated_at) as month'
+                'MONTH(deceased_date) as month'
             ]);
 
             // Initialize array with 0 counts for each month

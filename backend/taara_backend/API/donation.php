@@ -184,6 +184,35 @@ class API
                     'method' => 'PUT'
                 ]);
             }
+        } else if (isset($payload['update_image'])) {
+            $array_link = $payload['update_image']['arrayLink'];
+            $fund_id = $payload['update_image']['id'];
+
+            // Get the first value of the array
+            $first_file_id = is_array($array_link) ? reset($array_link) : null;
+
+            $update_values = [
+                'file_id'     => $first_file_id,
+                'updated_at'  => date('Y-m-d H:i:s') // Correct timestamp format
+            ];
+
+
+            $this->db->where('fund_id', $fund_id);
+            $updated = $this->db->update('tbl_funds', $update_values);
+
+            if ($updated) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Donation updated successfully',
+                    'method' => 'PUT'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to update Donation info',
+                    'method' => 'PUT'
+                ]);
+            }
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Missing Animal info in the payload']);
         }

@@ -271,32 +271,36 @@ class API
                 'data' => $monthlyCounts, // [2, 2, 2, 1, ...]
                 'method' => 'GET'
             ]);
-        } else if (array_key_exists('get_expenses_summary', $payload)) {
-            $month = str_pad($payload['get_expenses_summary']['month'], 2, '0', STR_PAD_LEFT);
-            $year = $payload['get_expenses_summary']['year'];
+        } else if (array_key_exists('get_total_expense', $payload)) {
+            $month = str_pad($payload['get_total_expense']['month'], 2, '0', STR_PAD_LEFT);
+            $year = $payload['get_total_expense']['year'];
+            $operation = $payload['get_total_expense']['operation'];
 
-            $this->db->where('expense_date', "$year-$month%", 'LIKE');
+            $cutoffDate = "$year-$month-31";  // Use 31 to cover whole month (assuming valid date)
+
+            $this->db->where('expense_date', $cutoffDate, $operation);
             $this->db->where('is_deleted', 0);
             $totalAmount = $this->db->getValue("tbl_expenses", "SUM(amount)");
 
             echo json_encode([
                 'status' => 'success',
-                'data' => ['total' => $totalAmount],
+                'data' => $totalAmount,
                 'method' => 'GET'
             ]);
-        } else if (array_key_exists('get_total_balance', $payload)) {
-            $month = str_pad($payload['get_total_balance']['month'], 2, '0', STR_PAD_LEFT);
-            $year = $payload['get_total_balance']['year'];
-            $likeDate = "$year-$month%";
+        } else if (array_key_exists('get_expense_summary', $payload)) {
+            $year = $payload['get_expense_summary']['year'];
+            $month = str_pad($payload['get_expense_summary']['month'], 2, '0', STR_PAD_LEFT);
+            $operation = $payload['get_expense_summary']['operation'];
+            $cutoffDate = "$year-$month-31"; // Final day of the selected month
 
-            // Get total donations
+            // Get total donations for the selected month (still using LIKE to match month)
             $this->db->join('tbl_cash_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
-            $this->db->where('tbl1.received_date', $likeDate, 'LIKE');
+            $this->db->where('tbl1.received_date', "$year-$month%", 'LIKE');
             $this->db->where('tbl1.is_deleted', 0);
             $totalCashDonations = $this->db->getValue('tbl_funds tbl1', 'SUM(tbl2.amount)');
 
-            // Get total expenses up to selected date
-            $this->db->where('expense_date', "$year-$month-31", '<=');
+            // Get total expenses up to (or for) the selected date, using the dynamic operation
+            $this->db->where('expense_date', $cutoffDate, $operation);
             $this->db->where('is_deleted', 0);
             $totalExpenses = $this->db->getValue('tbl_expenses', 'SUM(amount)');
 

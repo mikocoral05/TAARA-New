@@ -213,7 +213,7 @@
                   <q-icon name="sym_r_savings" size="1.5rem" color="positive" />
                 </div>
                 <div class="text-h6 text-bold q-mt-lg">
-                  {{ formatNumber(23235) }}
+                  {{ formatNumber(expenseSummary.donations) }}
                 </div>
                 <div class="text-grey-7 text-caption q-mt-sm">
                   <q-icon name="sym_r_north_east" class="text-positive text-bold q-mr-xs" /><span
@@ -230,7 +230,9 @@
                   <div class="text-grey-7 text-caption">TOTAL EXPENSE</div>
                   <q-icon name="sym_r_attach_money" size="1.5rem" color="red" />
                 </div>
-                <div class="text-h6 text-bold q-mt-lg">{{ formatNumber(totalExepense) }}</div>
+                <div class="text-h6 text-bold q-mt-lg">
+                  {{ formatNumber(expenseSummary.expenses) }}
+                </div>
                 <div class="text-grey-7 text-caption q-mt-sm">
                   <q-icon name="sym_r_south_west" class="text-negative text-bold q-mr-xs" /><span
                     class="text-negative text-bold"
@@ -246,7 +248,9 @@
                   <div class="text-grey-7 text-caption">REMAINING BALANCE</div>
                   <q-icon name="sym_r_payments" size="1.5rem" color="primary" />
                 </div>
-                <div class="text-h6 text-bold q-mt-lg">{{ formatNumber(3734) }}</div>
+                <div class="text-h6 text-bold q-mt-lg">
+                  {{ formatNumber(expenseSummary.balance) }}
+                </div>
                 <div class="text-grey-7 text-caption q-mt-sm">
                   <q-icon name="sym_r_north_east" class="text-positive text-bold q-mr-xs" /><span
                     class="text-positive text-bold"
@@ -394,7 +398,6 @@ import {
   getOverallRescue,
   getPetAvailable,
   getTotalAdopted,
-  getTotalExpense,
 } from 'src/composable/latestComposable'
 import {
   formatNumber,
@@ -417,7 +420,6 @@ export default {
     const totalAdopted = ref(0)
     const filterDialog = ref(false)
     const overallRescue = ref(0)
-    const totalExepense = ref(0)
     const expenseSummary = ref([])
     const mostReportedPlace = ref([])
     const classification = ref([])
@@ -498,11 +500,6 @@ export default {
     }
 
     const fetchFn2 = async () => {
-      totalExepense.value = await getTotalExpense(
-        selectedYear.value,
-        selectedMonth.value,
-        seletedOperation.value,
-      )
       expenseSummary.value = await getExpenseSummary(
         selectedYear.value,
         selectedMonth.value,
@@ -534,7 +531,7 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
-      totalExepense,
+      expenseSummary,
       selectedYear,
       generateYearList,
       selectedMonth,

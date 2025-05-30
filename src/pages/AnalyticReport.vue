@@ -378,7 +378,7 @@
               dense
               outlined
               style="width: 200px"
-              v-model="seletedYear"
+              v-model="selectedYear"
               :options="generateYearList()"
             />
             <q-select
@@ -419,6 +419,7 @@ import {
   yearToday,
 } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
+import { watchEffect } from 'vue'
 import { onMounted, onUnmounted, ref } from 'vue'
 
 export default {
@@ -429,7 +430,6 @@ export default {
     const petAvailable = ref(0)
     const totalAdopted = ref(0)
     const filterDialog = ref(false)
-    const selectedMonth = ref(monthToday)
     const overallRescue = ref(0)
     const mostReportedPlace = ref([])
     const classification = ref([])
@@ -437,9 +437,11 @@ export default {
     const monthlyPetAvailable = ref([])
     const monthlyPetAdopted = ref([])
     const monthlyDeceased = ref([])
-    const seletedYear = ref(yearToday)
-    const seletedMonth = ref(monthToday)
+    const selectedYear = ref(yearToday)
+    const selectedMonth = ref(monthToday)
     const seletedOperation = ref('<=')
+    const rows = ref([])
+    const tab = ref(1)
     const columns = [
       {
         name: 'id',
@@ -469,8 +471,6 @@ export default {
       { name: 'btn', align: 'center', label: 'Map' },
     ]
 
-    const rows = ref([])
-    const tab = ref(1)
     const printPage = () => {
       store.leftDrawerOpen = false
       store.showLayout = false
@@ -479,34 +479,45 @@ export default {
       }, 100)
     }
 
-    onMounted(async () => {
+    const fetchFn = async () => {
       inMedication.value = await getAnimalByHealtStatus(
-        seletedYear.value,
+        selectedYear.value,
+        selectedMonth.value,
         seletedOperation.value,
         3,
       )
       totalAdopted.value = await getTotalAdopted(
-        seletedYear.value,
-        seletedMonth.value,
+        selectedYear.value,
+        selectedMonth.value,
         seletedOperation.value,
       )
       petAvailable.value = await getPetAvailable(
-        seletedYear.value,
-        seletedMonth.value,
+        selectedYear.value,
+        selectedMonth.value,
         seletedOperation.value,
       )
       overallRescue.value = await getOverallRescue(
-        seletedYear.value,
-        seletedMonth.value,
+        selectedYear.value,
+        selectedMonth.value,
         seletedOperation.value,
       )
-      rows.value = await getFrequentLocation(seletedYear.value)
-      classification.value = await getClassification(seletedYear.value)
-      monthlyRescue.value = await getMonthlyRescue(seletedYear.value)
-      monthlyPetAvailable.value = await getMonthlyPetAvailble(seletedYear.value)
-      monthlyPetAdopted.value = await getMonthlyAdopted(seletedYear.value)
-      monthlyDeceased.value = await getMonthlyDeceased(seletedYear.value)
+      rows.value = await getFrequentLocation(selectedYear.value)
+      classification.value = await getClassification(
+        selectedYear.value,
+        selectedMonth.value,
+        seletedOperation.value,
+      )
+    }
 
+    watchEffect(() => {
+      fetchFn()
+    })
+
+    onMounted(async () => {
+      monthlyRescue.value = await getMonthlyRescue(selectedYear.value)
+      monthlyPetAvailable.value = await getMonthlyPetAvailble(selectedYear.value)
+      monthlyPetAdopted.value = await getMonthlyAdopted(selectedYear.value)
+      monthlyDeceased.value = await getMonthlyDeceased(selectedYear.value)
       window.onafterprint = () => {
         store.showLayout = true
         store.leftDrawerOpen = true
@@ -516,11 +527,10 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
-      seletedYear,
+      selectedYear,
       generateYearList,
-      seletedMonth,
-      monthNames,
       selectedMonth,
+      monthNames,
       filterDialog,
       monthlyDeceased,
       monthlyPetAdopted,

@@ -372,9 +372,9 @@ const getAnimalList = (healt_status) => {
   })
 }
 
-export const getAnimalByHealtStatus = async (healt_status) => {
+export const getAnimalByHealtStatus = async (year, month, operation, health_status) => {
   const reponse = await api.get('report.php', {
-    params: { get_animal_list: healt_status },
+    params: { get_animal_list: { year, month, operation, health_status } },
   })
 
   return reponse.data.data
@@ -407,9 +407,9 @@ export const getFrequentLocation = async () => {
 
   return reponse.data.data
 }
-export const getClassification = async () => {
+export const getClassification = async (year, month, operation) => {
   const reponse = await api.get('report.php', {
-    params: { get_classification: 'get_classification' },
+    params: { get_classification: { year, month, operation } },
   })
 
   return reponse.data

@@ -598,6 +598,13 @@ export const editDonation = async (obj) => {
   return response.data
 }
 
+export const softDeleteDonation = async (arrayId) => {
+  const response = await api.put('donation.php', {
+    soft_delete_donation: arrayId,
+  })
+  return response.data
+}
+
 export const updateImage = async (array, id, arrayOfId) => {
   const response = await api.put('pet_info.php', {
     update_image: array,

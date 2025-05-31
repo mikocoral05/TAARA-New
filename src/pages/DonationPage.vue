@@ -13,7 +13,7 @@
         style="width: 100%"
         :rows="rows"
         :columns="columns"
-        row-key="animal_id"
+        row-key="fund_id"
         separator="vertical"
         :rows-per-page-options="[10]"
         :title="tableConfig.title"
@@ -419,7 +419,7 @@
         <q-card-section class="column items-center">
           <q-icon name="sym_r_inventory_2" color="primary" size="2.5rem" />
           <span class="q-ml-sm text-black text-body1 q-mt-md text-center">
-            Are you sure you want to Delete this Pet Record List?
+            Are you sure you want to Delete this Donation Record?
           </span>
           <span class="q-ml-sm text-caption text-grey-7 q-mt-sm">
             This action is irreversible.
@@ -456,11 +456,10 @@
 import ReusableTable from 'src/components/ReusableTable.vue'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
 import {
-  softDeleteAnimal,
-  getAnimalList,
   getDonation,
   saveDonation,
   editDonation,
+  softDeleteDonation,
 } from 'src/composable/latestComposable'
 import { ref, watch, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -539,7 +538,7 @@ export default {
           console.log(dataStorage.value)
         }
       } else {
-        arrayOfId.value.push(data.animal_id)
+        arrayOfId.value.push(data.fund_id)
         confirm.value = !confirm.value
       }
     }
@@ -591,19 +590,19 @@ export default {
         group: 'update',
         message: 'Deleting Pet info. Please wait...',
       })
-      softDeleteAnimal(arrayOfId.value).then((response) => {
-        $q.loading.show({
-          group: 'update',
-          message: response.message,
-        })
+      softDeleteDonation(arrayOfId.value).then((response) => {
+        setTimeout(() => {
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+        }, 500)
         setTimeout(() => {
           $q.loading.hide()
           if (response.status == 'success') {
-            getAnimalList(tab.value).then((response) => {
-              rows.value = response
-            })
+            fetchFn()
           }
-        }, 2000)
+        }, 1000)
       })
     }
 

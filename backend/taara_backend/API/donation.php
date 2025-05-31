@@ -119,20 +119,20 @@ class API
 
     public function httpPut($payload)
     {
-        if (isset($payload['soft_delete_animal_info'])) {
-            $id = $payload['soft_delete_animal_info'];
+        if (isset($payload['soft_delete_donation'])) {
+            $id = $payload['soft_delete_donation'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
             // Set the update values here in the backend
             $update_values = [
-                'is_deleted' => 0,
+                'is_deleted' => 1,
                 'deleted_at' => date('Y-m-d H:i:s')
             ];
 
             // Update records matching the IDs
-            $this->db->where('animal_id', $ids, 'IN');
-            $updated = $this->db->update('tbl_animal_info', $update_values);
+            $this->db->where('fund_id', $ids, 'IN');
+            $updated = $this->db->update('tbl_funds', $update_values);
 
             if ($updated) {
                 echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);

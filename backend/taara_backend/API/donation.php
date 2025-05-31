@@ -52,11 +52,11 @@ class API
     {
         if (isset($payload['add_donation'])) {
             $data = $payload['add_donation'];
-            $table = $payload['donation_type'] == 'cash' ? 'tbl_cash_donations' : 'tbl_material_donations';
+            $table = $payload['add_donation']['donation_type'] == 'cash' ? 'tbl_cash_donations' : 'tbl_material_donations';
 
             $insertData = [
                 'donor_name'         => $data['donor_name'] ?? null,
-                'donation_type	'    => $data['donation_type'],
+                'donation_type'    => $data['donation_type'],
                 'allocated_for'      => $data['allocated_for'] ?? null,
                 'received_date'      => $data['received_date'] ?? null,
                 'anonymous'          => $data['anonymous'] ?? null,
@@ -67,7 +67,7 @@ class API
 
             $insertData2 = [];
 
-            if ($payload['donation_type'] === 'cash') {
+            if ($data['donation_type'] === 'cash') {
                 $insertData2 = [
                     'fund_id'        => $id,
                     'amount'         => $data['amount'],
@@ -185,14 +185,17 @@ class API
                 ]);
             }
         } else if (isset($payload['update_image'])) {
-            $array_link = $payload['update_image']['arrayLink'];
+            $array_link = $payload['update_image']['array_link'];
             $fund_id = $payload['update_image']['id'];
 
             // Get the first value of the array
-            $first_file_id = is_array($array_link) ? reset($array_link) : null;
+            $first_link = is_array($array_link) ? reset($array_link) : null;
+
+            $this->db->insert('tbl_files', ['image_path'     => $first_link]);
+            $id = $this->db->getInsertId();
 
             $update_values = [
-                'file_id'     => $first_file_id,
+                'file_id'     => $id,
                 'updated_at'  => date('Y-m-d H:i:s') // Correct timestamp format
             ];
 

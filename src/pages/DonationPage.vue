@@ -100,6 +100,7 @@
                     dense
                     class="q-mt-sm"
                     style="width: 200px"
+                    :readonly="mode == 'View'"
                   />
                 </div>
                 <div class="column no-wrap q-mr-md">
@@ -111,6 +112,7 @@
                     dense
                     class="q-mt-sm"
                     :rules="[(val) => !!val || 'Amount is required!']"
+                    :readonly="mode == 'View'"
                   />
                 </div>
 
@@ -124,10 +126,13 @@
                     :hint="
                       mode == 'Add'
                         ? 'Try uploading image first, will analyse'
-                        : 'Click the icon to view image'
+                        : dataStorage.file
+                          ? 'Click the icon to view image'
+                          : 'Click the empty space to add image'
                     "
                     outlined
                     dense
+                    :readonly="mode == 'View'"
                     style="max-width: 300px"
                     @update:model-value="imageFnUpdate()"
                   >
@@ -157,6 +162,7 @@
                     dense
                     class="q-mt-sm"
                     style="width: 200px"
+                    :readonly="mode == 'View'"
                   />
                 </div>
 
@@ -168,6 +174,7 @@
                     dense
                     class="q-mt-sm"
                     :rules="[(val) => !!val || 'Item name is required!']"
+                    :readonly="mode == 'View'"
                   />
                 </div>
                 <div class="column no-wrap">
@@ -177,11 +184,18 @@
                   <q-file
                     class="q-mt-sm"
                     v-model="dataStorage.file"
-                    hint="Upload resource image"
+                    :hint="
+                      mode == 'Add'
+                        ? 'Try uploading image first, will analyse'
+                        : dataStorage.file
+                          ? 'Click the icon to view image'
+                          : 'Click the empty space to add image'
+                    "
                     outlined
                     dense
                     style="max-width: 300px"
                     @update:model-value="imageFnUpdate()"
+                    :readonly="mode == 'View'"
                   >
                     <template v-slot:append>
                       <q-icon
@@ -215,13 +229,20 @@
                     map-options
                     style="width: 150px"
                     behavior="menu"
+                    :readonly="mode == 'View'"
                   />
                 </div>
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">
                     Reference code<span class="text-grey-7 text-caption">( optional )</span>
                   </div>
-                  <q-input outlined v-model="dataStorage.reference_code" dense class="q-mt-sm" />
+                  <q-input
+                    outlined
+                    v-model="dataStorage.reference_code"
+                    dense
+                    class="q-mt-sm"
+                    :readonly="mode == 'View'"
+                  />
                 </div>
                 <div class="column no-wrap">
                   <div class="text-capitalize">
@@ -241,6 +262,7 @@
                     dense
                     style="width: 150px"
                     behavior="menu"
+                    :readonly="mode == 'View'"
                   />
                 </div>
               </div>
@@ -254,6 +276,7 @@
                     :rules="[(val) => !!val || 'Quantity is required!']"
                     dense
                     style="width: 150px"
+                    :readonly="mode == 'View'"
                   />
                 </div>
 
@@ -265,6 +288,7 @@
                     dense
                     class="q-mt-sm"
                     :rules="[(val) => !!val || 'Unit is required!']"
+                    :readonly="mode == 'View'"
                   />
                 </div>
                 <div class="column no-wrap q-mr-md">
@@ -284,6 +308,7 @@
                     :rules="[(val) => !!val || 'This feild is required!']"
                     dense
                     style="width: 150px"
+                    :readonly="mode == 'View'"
                     behavior="menu"
                   />
                 </div>
@@ -305,6 +330,7 @@
                     dense
                     style="width: 150px"
                     behavior="menu"
+                    :readonly="mode == 'View'"
                   />
                 </div>
               </div>
@@ -319,6 +345,7 @@
                     style="width: 300px"
                     dense
                     class="q-mt-sm"
+                    :readonly="mode == 'View'"
                   />
                 </div>
                 <div class="column no-wrap q-mt-sm">
@@ -333,11 +360,12 @@
                     mask="####-##-##"
                     :rules="[(val) => !!val || '']"
                     hide-bottom-space
+                    :readonly="mode == 'View'"
                   >
                     <template v-slot:append>
                       <q-icon name="event" class="cursor-pointer">
                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="dataStorage.received_date">
+                          <q-date v-model="dataStorage.received_date" :disable="mode == 'View'">
                             <div class="row items-center justify-end">
                               <q-btn v-close-popup label="Close" color="primary" flat />
                             </div>
@@ -358,6 +386,7 @@
                   v-model="dataStorage.notes"
                   dense
                   class="q-mt-sm"
+                  :readonly="mode == 'View'"
                 />
               </div>
             </q-card-section>
@@ -429,9 +458,9 @@ import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optio
 import {
   softDeleteAnimal,
   getAnimalList,
-  editAnimalInfo,
   getDonation,
   saveDonation,
+  editDonation,
 } from 'src/composable/latestComposable'
 import { ref, watch, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -448,7 +477,6 @@ import {
   getImageLink,
   dateToday,
   parseDonationFromImage,
-  getFileNameFromLink,
 } from 'src/composable/simpleComposable'
 import ImageViewer from 'src/components/ImageViewer.vue'
 import { globalStore } from 'src/stores/global-store'
@@ -463,7 +491,7 @@ export default {
     const obj2 = { 1: 'Medicine', 2: 'Group', 3: 'Expired' }
     const obj3 = { Add: 'Adding', Edit: 'Updating', Delete: 'Deleting' }
     const $q = useQuasar()
-    const tab = ref('2')
+    const tab = ref('1')
     const filterTab = ref('1')
     const editTab = ref('1')
     const step = ref(1)
@@ -497,7 +525,7 @@ export default {
     }
 
     const groupNameOptions = ref([])
-    const tableAction = (data, modeParam) => {
+    const tableAction = async (data, modeParam) => {
       mode.value = modeParam
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         if (filterTab.value !== 2) showDialog.value = !showDialog.value
@@ -506,8 +534,9 @@ export default {
           dataStorage.value = { file: null, received_date: dateToday }
         } else {
           dataStorage.value = data
-          dataStorage.value.file = getFileNameFromLink(data?.image_path)
           previewImage.value = data?.image_path
+          dataStorage.value.file = data?.image_path
+          console.log(dataStorage.value)
         }
       } else {
         arrayOfId.value.push(data.animal_id)
@@ -542,15 +571,17 @@ export default {
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
-        editAnimalInfo(dataStorage.value).then((response) => {
+        editDonation(dataStorage.value).then((response) => {
           console.log(response)
-          $q.loading.show({
-            group: 'update',
-            message: response.message,
-          })
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 500)
           setTimeout(() => {
             $q.loading.hide()
-          }, 2000)
+          }, 1000)
         })
       }
     }
@@ -625,13 +656,21 @@ export default {
     watch(
       () => dataStorage.value.file,
       async (newValue) => {
-        if (tab.value == 1) {
-          if (!newValue) return // guard clause
+        if (tab.value != 1 || !newValue) return
+        console.log(newValue)
+
+        // When newValue is a File object (from q-file)
+        const isFileObject = typeof newValue === 'object' && newValue instanceof File
+
+        // Only process if it's a real uploaded file, not a string/URL
+        if (isFileObject) {
           showSpinner.value = true
           const response = await parseDonationFromImage(newValue)
           console.log('Extracted text:', response)
+
           dataStorage.value.amount = dataStorage.value?.amount || response.donation_amount
           dataStorage.value.reference_code = dataStorage.value?.reference_code || response.reference
+
           showSpinner.value = false
         }
       },

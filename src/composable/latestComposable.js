@@ -583,6 +583,21 @@ export const saveDonation = (obj) => {
   })
 }
 
+export const editDonation = async (obj) => {
+  const { file, ...donation_data } = obj
+  console.log(donation_data)
+  if (file) {
+    const res = await uploadImages([file])
+    donation_data.new_image = res.data.images[0]
+  }
+  const response = await api.put('donation.php', {
+    edit_donation: donation_data,
+  })
+  console.log(response)
+
+  return response.data
+}
+
 export const updateImage = async (array, id, arrayOfId) => {
   const response = await api.put('pet_info.php', {
     update_image: array,

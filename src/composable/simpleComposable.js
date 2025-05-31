@@ -541,9 +541,9 @@ export const statusColor = (status) => {
     disapproved: 'bg-negative q-px-sm',
   }
   const numberMap = {
-    pending: 'bg-orange ',
-    approved: 'bg-positive q-px-sm',
-    disapproved: 'bg-negative q-px-sm',
+    1: 'bg-orange text-white',
+    2: 'bg-positive q-px-sm text-white',
+    3: 'bg-negative q-px-sm text-white',
   }
   return typeof status === 'string' ? stringMap[status] : numberMap[status]
 }

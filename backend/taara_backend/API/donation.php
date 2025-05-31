@@ -60,6 +60,7 @@ class API
                 'allocated_for'      => $data['allocated_for'] ?? null,
                 'received_date'      => $data['received_date'] ?? null,
                 'anonymous'          => $data['anonymous'] ?? null,
+                'created_by'          => $data['created_by'] ?? null,
             ];
 
             $insertMain = $this->db->insert('tbl_funds', $insertData);
@@ -73,7 +74,6 @@ class API
                     'amount'         => $data['amount'],
                     'method'         => $data['method'] ?? null,
                     'reference_code' => $data['reference_code'] ?? null,
-                    'received_by'    => $data['received_by'] ?? null,
                     'notes'          => $data['notes'] ?? null,
                 ];
             } else {
@@ -83,8 +83,7 @@ class API
                     'quantity'       => $data['quantity'] ?? null,
                     'unit'           => $data['unit'] ?? null,
                     'estimated_value' => $data['estimated_value'] ?? null,
-                    'received_by'     => $data['received_by'] ?? null,
-                    'item_condition'  => $data['item_condition'] ?? null,
+                    'item_condition'  => $data['item_condition'] ?? 1,
                     'notes'          => $data['notes'] ?? null,
                 ];
             }

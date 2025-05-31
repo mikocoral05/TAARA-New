@@ -89,7 +89,7 @@
               </div>
             </q-card-section>
             <q-card-section>
-              <div class="row no-wrap q-mt-md">
+              <div class="row no-wrap q-mt-md" v-if="tab == 1">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">
                     Donor Name <span class="text-grey-7 text-caption">( optional )</span>
@@ -113,6 +113,7 @@
                     :rules="[(val) => !!val || 'Amount is required!']"
                   />
                 </div>
+
                 <div class="column no-wrap">
                   <div class="text-capitalize">
                     Upload image <span class="text-grey-7 text-caption">( optional )</span>
@@ -141,7 +142,59 @@
                   </q-file>
                 </div>
               </div>
-              <div class="row no-wrap q-mt-md">
+              <div class="row no-wrap q-mt-md" v-else>
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Donor Name <span class="text-grey-7 text-caption">( optional )</span>
+                  </div>
+                  <q-input
+                    outlined
+                    v-model="dataStorage.donor_name"
+                    dense
+                    class="q-mt-sm"
+                    style="width: 200px"
+                  />
+                </div>
+
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Item name<span class="text-negative"> *</span></div>
+                  <q-input
+                    outlined
+                    v-model="dataStorage.item_name"
+                    dense
+                    class="q-mt-sm"
+                    :rules="[(val) => !!val || 'Item name is required!']"
+                  />
+                </div>
+                <div class="column no-wrap">
+                  <div class="text-capitalize">
+                    Upload image <span class="text-grey-7 text-caption">( optional )</span>
+                  </div>
+                  <q-file
+                    class="q-mt-sm"
+                    v-model="dataStorage.file"
+                    hint="Upload resource image"
+                    outlined
+                    dense
+                    style="max-width: 300px"
+                    @update:model-value="imageFnUpdate()"
+                  >
+                    <template v-slot:append>
+                      <q-icon
+                        v-if="!dataStorage.file && !showSpinner"
+                        name="sym_r_add_photo_alternate"
+                      />
+                      <q-icon
+                        v-if="!showSpinner && dataStorage.file"
+                        name="sym_r_photo"
+                        @click="viewImage = !viewImage"
+                      />
+                      <q-spinner-ios color="primary" v-if="showSpinner" size="1em" />
+                    </template>
+                  </q-file>
+                </div>
+              </div>
+              <div class="row no-wrap q-mt-md" v-if="tab == 1">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">Method<span class="text-negative"> *</span></div>
                   <q-select
@@ -165,6 +218,70 @@
                     Reference code<span class="text-grey-7 text-caption">( optional )</span>
                   </div>
                   <q-input outlined v-model="dataStorage.reference_code" dense class="q-mt-sm" />
+                </div>
+                <div class="column no-wrap">
+                  <div class="text-capitalize">
+                    Be anonymous<span class="text-negative"> *</span>
+                  </div>
+                  <q-select
+                    outlined
+                    v-model="dataStorage.anonymous"
+                    class="q-mt-sm"
+                    :options="[
+                      { label: 'Yes', value: 'yes' },
+                      { label: 'No', value: 'no' },
+                    ]"
+                    emit-value
+                    map-options
+                    :rules="[(val) => !!val || 'This feild is required!']"
+                    dense
+                    style="width: 150px"
+                    behavior="menu"
+                  />
+                </div>
+              </div>
+              <div class="row no-wrap q-mt-md" v-else>
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Quantity<span class="text-negative"> *</span></div>
+                  <q-input
+                    outlined
+                    v-model="dataStorage.quantity"
+                    class="q-mt-sm"
+                    :rules="[(val) => !!val || 'Quantity is required!']"
+                    dense
+                    style="width: 150px"
+                  />
+                </div>
+
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">Unit<span class="text-negative"> *</span></div>
+                  <q-input
+                    outlined
+                    v-model="dataStorage.unit"
+                    dense
+                    class="q-mt-sm"
+                    :rules="[(val) => !!val || 'Unit is required!']"
+                  />
+                </div>
+                <div class="column no-wrap q-mr-md">
+                  <div class="text-capitalize">
+                    Item condition<span class="text-grey-7 text-caption">( optional )</span>
+                  </div>
+                  <q-select
+                    outlined
+                    v-model="dataStorage.item_condition"
+                    class="q-mt-sm"
+                    :options="[
+                      { label: 'New', value: 1 },
+                      { label: 'Used', value: 2 },
+                    ]"
+                    emit-value
+                    map-options
+                    :rules="[(val) => !!val || 'This feild is required!']"
+                    dense
+                    style="width: 150px"
+                    behavior="menu"
+                  />
                 </div>
                 <div class="column no-wrap">
                   <div class="text-capitalize">
@@ -329,17 +446,19 @@ import {
   parseDonationFromImage,
 } from 'src/composable/simpleComposable'
 import ImageViewer from 'src/components/ImageViewer.vue'
+import { globalStore } from 'src/stores/global-store'
 export default {
   components: {
     ReusableTable,
     ImageViewer,
   },
   setup() {
+    const store = globalStore()
     const obj = { 1: 'Cash Donation List', 2: 'Material Donation List' }
     const obj2 = { 1: 'Medicine', 2: 'Group', 3: 'Expired' }
     const obj3 = { Add: 'Adding', Edit: 'Updating', Delete: 'Deleting' }
     const $q = useQuasar()
-    const tab = ref('1')
+    const tab = ref('2')
     const filterTab = ref('1')
     const editTab = ref('1')
     const step = ref(1)
@@ -403,6 +522,7 @@ export default {
           message: `${obj3[mode.value]}. Please wait...`,
         })
         dataStorage.value.donation_type = tab.value == 1 ? 'cash' : 'material'
+        dataStorage.value.created_by = store.userData.user_id
         saveDonation(dataStorage.value).then((response) => {
           console.log(response)
           setTimeout(() => {
@@ -504,16 +624,16 @@ export default {
 
     watch(
       () => dataStorage.value.file,
-      async (newValue, oldValue) => {
-        console.log(oldValue)
-
-        if (!newValue) return // guard clause
-        showSpinner.value = true
-        const response = await parseDonationFromImage(newValue)
-        console.log('Extracted text:', response)
-        dataStorage.value.amount = dataStorage.value?.amount || response.donation_amount
-        dataStorage.value.reference_code = dataStorage.value?.reference_code || response.reference
-        showSpinner.value = false
+      async (newValue) => {
+        if (tab.value == 1) {
+          if (!newValue) return // guard clause
+          showSpinner.value = true
+          const response = await parseDonationFromImage(newValue)
+          console.log('Extracted text:', response)
+          dataStorage.value.amount = dataStorage.value?.amount || response.donation_amount
+          dataStorage.value.reference_code = dataStorage.value?.reference_code || response.reference
+          showSpinner.value = false
+        }
       },
     )
 

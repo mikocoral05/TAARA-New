@@ -121,7 +121,11 @@
                   <q-file
                     class="q-mt-sm"
                     v-model="dataStorage.file"
-                    hint="Try uploading image first, will analyse"
+                    :hint="
+                      mode == 'Add'
+                        ? 'Try uploading image first, will analyse'
+                        : 'Click the icon to view image'
+                    "
                     outlined
                     dense
                     style="max-width: 300px"
@@ -444,6 +448,7 @@ import {
   getImageLink,
   dateToday,
   parseDonationFromImage,
+  getFileNameFromLink,
 } from 'src/composable/simpleComposable'
 import ImageViewer from 'src/components/ImageViewer.vue'
 import { globalStore } from 'src/stores/global-store'
@@ -501,13 +506,8 @@ export default {
           dataStorage.value = { file: null, received_date: dateToday }
         } else {
           dataStorage.value = data
-          console.log(dataStorage.value.image_gallery)
-          if (dataStorage.value?.image_gallery.length > 0) {
-            dataStorage.value?.image_gallery.forEach((element) => {
-              previewImage.value.push(getImageLink(element))
-              console.log(getImageLink(element))
-            })
-          }
+          dataStorage.value.file = getFileNameFromLink(data?.image_path)
+          previewImage.value = data?.image_path
         }
       } else {
         arrayOfId.value.push(data.animal_id)

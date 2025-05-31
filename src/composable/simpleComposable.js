@@ -527,4 +527,10 @@ export const parseDonationFromImage = async (imageFile, fallbackReference = '') 
   }
 }
 
+export const getFileNameFromLink = (link) => {
+  if (!link) return ''
+  const splitLink = link.split('/')
+  const result = splitLink.at(-1)
+  return result
+}
 export { Email, dateToday, monthToday, yearToday, timeNow, dayToday }

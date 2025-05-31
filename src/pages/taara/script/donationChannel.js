@@ -86,7 +86,6 @@ export default {
       return uniqueDonatorsCount + uniqueWalkInCount
     }
 
-    // Example usage:
     onMounted(() => {
       getWishlistFood().then((response) => {
         wishlistFoodData.value = response

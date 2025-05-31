@@ -63,16 +63,8 @@
       id="ourMission"
       ref="ourMission"
     >
-      <h2
-        class="mission-title row justify-start items-center pt-md q-ma-none"
-        :class="maxScrollTop >= 200 ? 'show-in' : ''"
-      >
-        Our Mission
-      </h2>
-      <p
-        class="mission-text row justify-start items-center q-ma-none"
-        :class="maxScrollTop >= 200 ? 'show-in' : ''"
-      >
+      <h2 class="mission-title row justify-start items-center pt-md q-ma-none">Our Mission</h2>
+      <p class="mission-text row justify-start items-center q-ma-none">
         To rescue, rehabilitate and rehome abandoned and neglected animals, ensure healthy pets
         through education concerning animal welfare and animal care. And to provide affordable
         services through our partner animal clinics, and most importantly, to inspire a community
@@ -81,7 +73,7 @@
     </div>
     <div class="third-layer column items-center">
       <div class="first-child">
-        <div class="f-c-container" :class="maxScrollTop >= 700 ? 'show-in' : ''">
+        <div class="f-c-container">
           <div class="heading-2 q-mb-lg">What We Offer</div>
           <div class="paragraph-2 q-mb-xl">
             At TAARA, we offer a range of services including pet adoption,<br />
@@ -93,13 +85,8 @@
       </div>
       <div class="second-child row no-wrap justify-between">
         <div class="column no-wrap">
-          <img
-            src="~assets/1.jpg"
-            alt=""
-            class="q-mb-lg"
-            :class="maxScrollTop >= 700 ? 'fade-in' : ''"
-          />
-          <div :class="maxScrollTop >= 1250 ? 'show-in' : ''">
+          <img src="~assets/1.jpg" alt="" class="q-mb-lg" />
+          <div>
             <h6 class="q-ma-none q-mb-md">Adoption Process</h6>
             <p class="q-ma-none">
               Our adoption process is designed to ensure that every pet finds the perfect home. We
@@ -109,13 +96,8 @@
           </div>
         </div>
         <div class="column no-wrap">
-          <img
-            src="~assets/2.jpg"
-            alt=""
-            class="q-mb-lg"
-            :class="maxScrollTop >= 700 ? 'fade-in' : ''"
-          />
-          <div :class="maxScrollTop >= 1250 ? 'show-in' : ''">
+          <img src="~assets/2.jpg" alt="" class="q-mb-lg" />
+          <div>
             <h6 class="q-ma-none q-mb-md">Community Engagement</h6>
             <p class="q-ma-none">
               Join our community and become a part of the TAARA family. We offer various events,
@@ -125,13 +107,8 @@
           </div>
         </div>
         <div class="column no-wrap" @click="$router.push('/rescue-reports')">
-          <img
-            src="~assets/3.jpg"
-            alt=""
-            class="q-mb-lg"
-            :class="maxScrollTop >= 700 ? 'fade-in' : ''"
-          />
-          <div :class="maxScrollTop >= 1250 ? 'show-in' : ''">
+          <img src="~assets/3.jpg" alt="" class="q-mb-lg" />
+          <div>
             <h6 class="q-ma-none q-mb-md">Report & Rescue</h6>
             <p class="q-ma-none">
               Our rescue process is designed to ensure that every animal in danger gets immediate
@@ -141,13 +118,8 @@
           </div>
         </div>
         <div class="column no-wrap" @click="$router.push('/pet-transfer')">
-          <img
-            src="~assets/4.jpg"
-            alt=""
-            class="q-mb-lg"
-            :class="maxScrollTop >= 700 ? 'fade-in' : ''"
-          />
-          <div :class="maxScrollTop >= 1250 ? 'show-in' : ''">
+          <img src="~assets/4.jpg" alt="" class="q-mb-lg" />
+          <div>
             <h6 class="q-ma-none q-mb-md">Pet Transfer</h6>
             <p class="q-ma-none">
               Our organization offers an Pet Transfer and Rehoming Service for pets needing a new
@@ -159,28 +131,22 @@
       </div>
     </div>
     <div class="fourth-layer row no-wrap">
-      <div
-        :class="maxScrollTop >= 1662 ? 'fade-in' : ''"
-        class="left-image column justify-center items-center relative-position"
-      >
+      <div class="left-image column justify-center items-center relative-position">
         <div class="absolute-left blue-circle"></div>
         <img src="~assets/5.jpg" alt="" />
         <div class="absolute square"></div>
       </div>
       <div class="right-description column justify-center items-center">
-        <h2 class="q-ma-none" :class="maxScrollTop >= 1766 ? 'show-in' : ''">
+        <h2 class="q-ma-none text-weight-medium">
           Dedicated to Animal<br />
           Welfare
         </h2>
-        <p class="q-ma-none q-my-xl" :class="maxScrollTop >= 1896 ? 'show-in' : ''">
+        <p class="q-ma-none q-my-xl">
           At TAARA, we are committed to promoting animal welfare and advocating for the rights of
           all pets. Our dedicated team works tirelessly to ensure that every animal is treated with
           compassion and respect.
         </p>
-        <div
-          class="row no-wrap paragraph-3 justify-between"
-          :class="maxScrollTop >= 2070 ? 'fade-in' : ''"
-        >
+        <div class="row no-wrap paragraph-3 justify-between">
           <div class="row no-wrap">
             <q-icon class="q-mr-md" name="home" />
             <p class="q-ma-none">
@@ -200,8 +166,8 @@
       </div>
     </div>
     <div class="fifth-layer column justify-center items-center">
-      <div class="first-child" :class="maxScrollTop >= 2636 ? 'show-in' : ''">
-        <h2 class="q-ma-none q-mb-lg">Trusted Among Animal Lovers</h2>
+      <div class="first-child">
+        <h2 class="q-ma-none q-mb-lg text-weight-medium">Trusted Among Animal Lovers</h2>
         <p class="q-ma-none">
           We have gained the trust of countless animal lovers and adopters who have found their
           perfect companions through TAARA.
@@ -210,11 +176,8 @@
     </div>
     <div class="sixth-layer column justify-center items-center">
       <div class="first-child">
-        <h2 :class="maxScrollTop >= 3110 ? 'show-in' : ''">What Our Adopters Say</h2>
-        <div
-          class="row no-wrap justify-between items-center"
-          :class="maxScrollTop >= 3321 ? 'show-in' : ''"
-        >
+        <h2 class="text-weight-medium">What Our Adopters Say</h2>
+        <div class="row no-wrap justify-between items-center">
           <div class="column no-wrap feddback-container">
             <div class="head"></div>
             <div class="content column no-wrap justify-between items-center q-pa-md">
@@ -249,7 +212,7 @@
       </div>
     </div>
     <div class="seventh-layer column justify-center items-center">
-      <div class="first-child row no-wrap" :class="maxScrollTop >= 3900 ? 'fade-in' : ''">
+      <div class="first-child row no-wrap">
         <div class="support-cause column no-wrap justify-center item-center">
           <h2 class="q-ma-none q-mb-lg">Support Our Cause</h2>
           <p class="q-ma-none">
@@ -305,7 +268,7 @@
       </div>
     </div>
     <div class="eaight-layer column justify-center items-center no-wrap">
-      <h2 class="q-ma-none q-my-xl" :class="maxScrollTop >= 4651 ? 'show-in' : ''">
+      <h2 class="q-ma-none q-my-xl">
         Join TAARA in maximizing the happiness and well-being of pets by adopting, volunteering, or
         making a donation. Let's make a difference together!
       </h2>
@@ -316,12 +279,6 @@
         no-caps
         to="/public/volunteer-form"
       />
-      <!-- 
-      <img
-        src="../image/eight-layer-final-ai-brush-removebg-3a3jv43.png"
-        alt=""
-        :class="maxScrollTop >= 5100 ? 'show-in' : ''"
-      /> -->
     </div>
     <div id="footerDiv" ref="footerDiv">
       <TaaraFooter />

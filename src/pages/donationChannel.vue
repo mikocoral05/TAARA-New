@@ -163,7 +163,7 @@
           outline
           style="color: goldenrod"
           label="Other Amount"
-          class="other-amount q-mt-lg"
+          class="other-amount q-mt-lg bg-white"
           @click="counterStore.donationDialog = true"
         />
         <div class="row no-wrap q-mt-md overlooping-avatar items-center">

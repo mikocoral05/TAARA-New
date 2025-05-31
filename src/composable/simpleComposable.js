@@ -533,4 +533,74 @@ export const getFileNameFromLink = (link) => {
   const result = splitLink.at(-1)
   return result
 }
+
+export const statusColor = (status) => {
+  const stringMap = {
+    pending: 'bg-orange ',
+    approved: 'bg-positive q-px-sm',
+    disapproved: 'bg-negative q-px-sm',
+  }
+  const numberMap = {
+    pending: 'bg-orange ',
+    approved: 'bg-positive q-px-sm',
+    disapproved: 'bg-negative q-px-sm',
+  }
+  return typeof status === 'string' ? stringMap[status] : numberMap[status]
+}
+
+export const statusIcon = (status) => {
+  const stringMap = {
+    pending: 'sym_r_assignment',
+    approved: 'sym_r_thumb_up',
+    disapproved: 'sym_r_thumb_down',
+  }
+
+  const numberMap = {
+    1: 'sym_r_assignment',
+    2: 'sym_r_thumb_up',
+    3: 'sym_r_thumb_down',
+  }
+
+  return typeof status === 'string' ? stringMap[status] : numberMap[status]
+}
+
+export const rescueStatusIcon = (status) => {
+  const obj = {
+    1: 'sym_r_fact_check',
+    2: 'sym_r_notification_multiple',
+    3: 'sym_r_fire_truck',
+    4: 'sym_r_vaccines',
+    5: 'sym_r_deceased',
+    6: 'sym_r_outpatient_med',
+    7: 'sym_r_real_estate_agent',
+    8: 'sym_r_diversity_3',
+  }
+  return obj[status]
+}
+
+export const rescueStatusText = (r_status) => {
+  const map = {
+    1: 'Reported',
+    2: 'Acknowledged',
+    3: 'Rescue In Progress',
+    4: 'Reached Vet Clinic',
+    5: 'Deceased (as declared by vet)',
+    6: 'Released (to environment or public)',
+    7: 'Now Under Organization’s Care',
+    8: 'Returned to Owner',
+  }
+
+  return map[r_status]
+}
+
+export const donationStatusText = (status) => {
+  const map = {
+    1: 'Pending',
+    2: 'Approved',
+    3: 'Disapproved',
+  }
+
+  return map[status]
+}
+
 export { Email, dateToday, monthToday, yearToday, timeNow, dayToday }

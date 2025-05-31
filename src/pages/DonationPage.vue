@@ -134,7 +134,8 @@
                     style="max-width: 300px"
                   >
                     <template v-slot:append>
-                      <q-icon name="sym_r_attach_file" />
+                      <q-icon v-if="!dataStorage.file" name="sym_r_add_photo_alternate" />
+                      <q-icon v-else name="sym_r_photo" />
                     </template>
                   </q-file>
                 </div>
@@ -160,13 +161,7 @@
                   <div class="text-capitalize">
                     Reference code<span class="text-grey-7 text-caption">( optional )</span>
                   </div>
-                  <q-input
-                    outlined
-                    type="number"
-                    v-model="dataStorage.reference_code"
-                    dense
-                    class="q-mt-sm"
-                  />
+                  <q-input outlined v-model="dataStorage.reference_code" dense class="q-mt-sm" />
                 </div>
                 <div class="column no-wrap">
                   <div class="text-capitalize">
@@ -504,13 +499,14 @@ export default {
     watch(
       () => dataStorage.value.file,
       async (newValue, oldValue) => {
-        console.log('New file:', newValue)
-        console.log('Old file:', oldValue)
+        console.log(oldValue)
 
         if (!newValue) return // guard clause
 
         const response = await parseDonationFromImage(newValue)
         console.log('Extracted text:', response)
+        dataStorage.value.amount = dataStorage.value?.amount || response.donation_amount
+        dataStorage.value.reference_code = dataStorage.value?.reference_code || response.reference
       },
     )
 

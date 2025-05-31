@@ -25,12 +25,13 @@ class API
             }
 
             $this->db->join('tbl_users tbl3', 'tbl1.donor_id = tbl3.user_id', 'LEFT');
+            $this->db->join('tbl_files tbl4', 'tbl1.file_id = tbl4.id', 'LEFT');
 
             $this->db->where("tbl1.donation_type", $type);
             $this->db->where("tbl1.is_deleted", 0);
 
             // Specific columns you want to select
-            $columns = "tbl1.*, tbl2.*, tbl3.first_name as donor_name";
+            $columns = "tbl1.*, tbl2.*, tbl3.first_name as donor_name,tbl4.image_path";
             $data = $this->db->get("tbl_funds tbl1", null, $columns);
 
             echo json_encode([

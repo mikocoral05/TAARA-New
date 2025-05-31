@@ -132,10 +132,19 @@
                     outlined
                     dense
                     style="max-width: 300px"
+                    @update:model-value="imageFnUpdate()"
                   >
                     <template v-slot:append>
-                      <q-icon v-if="!dataStorage.file" name="sym_r_add_photo_alternate" />
-                      <q-icon v-else name="sym_r_photo" />
+                      <q-icon
+                        v-if="!dataStorage.file && !showSpinner"
+                        name="sym_r_add_photo_alternate"
+                      />
+                      <q-icon
+                        v-if="!showSpinner && dataStorage.file"
+                        name="sym_r_photo"
+                        @click="viewImage = !viewImage"
+                      />
+                      <q-spinner-ios color="primary" v-if="showSpinner" size="1em" />
                     </template>
                   </q-file>
                 </div>
@@ -295,6 +304,7 @@
       </q-card>
     </q-dialog>
   </q-page>
+  <ImageViewer v-model="viewImage" :imageUrl="previewImage" />
 </template>
 <script>
 import ReusableTable from 'src/components/ReusableTable.vue'
@@ -322,9 +332,11 @@ import {
   dateToday,
   parseDonationFromImage,
 } from 'src/composable/simpleComposable'
+import ImageViewer from 'src/components/ImageViewer.vue'
 export default {
   components: {
     ReusableTable,
+    ImageViewer,
   },
   setup() {
     const obj = { 1: 'Cash Donation List', 2: 'Material Donation List' }
@@ -339,10 +351,12 @@ export default {
     const confirm = ref(false)
     const search = ref(null)
     const showDialog = ref(false)
+    const showSpinner = ref(false)
     const pages = ref([])
     const dataStorage = ref({ file: null, received_date: dateToday })
     const elseSummary = ref({})
     const mode = ref('')
+    const viewImage = ref(false)
     const selectedMonth = ref(monthToday)
     const selectedYear = ref(yearToday)
     const selectedDay = ref(dayToday)
@@ -446,14 +460,10 @@ export default {
       })
     }
 
-    const previewImage = ref([])
+    const previewImage = ref(null)
     const imageFnUpdate = () => {
-      previewImage.value = [] // RESET before adding new images
-      if (dataStorage.value.file.length > 0) {
-        dataStorage.value.file.forEach((element) => {
-          previewImage.value.push(URL.createObjectURL(element))
-        })
-      }
+      previewImage.value = URL.createObjectURL(dataStorage.value.file)
+      console.log(previewImage.value)
     }
 
     const fetchFn = () => {
@@ -502,11 +512,12 @@ export default {
         console.log(oldValue)
 
         if (!newValue) return // guard clause
-
+        showSpinner.value = true
         const response = await parseDonationFromImage(newValue)
         console.log('Extracted text:', response)
         dataStorage.value.amount = dataStorage.value?.amount || response.donation_amount
         dataStorage.value.reference_code = dataStorage.value?.reference_code || response.reference
+        showSpinner.value = false
       },
     )
 
@@ -515,6 +526,8 @@ export default {
     })
 
     return {
+      showSpinner,
+      viewImage,
       getImageLink,
       imageFnUpdate,
       step,

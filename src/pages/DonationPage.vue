@@ -60,6 +60,15 @@
         <template #cell-item_condition="{ row }">
           {{ row.item_condition == 1 ? 'New' : 'Used' }}
         </template>
+        <template #cell-status="{ row }">
+          <div
+            :class="statusColor(row?.status)"
+            class="row no-wrap q-px-sm radius-2 items-center justify-center"
+          >
+            <q-icon :name="statusIcon(row.status)" size="1rem" class="q-mr-sm" />
+            {{ donationStatusText(row.status) }}
+          </div>
+        </template>
 
         <template #cell-expiration_date="{ row }">
           <div
@@ -476,6 +485,9 @@ import {
   getImageLink,
   dateToday,
   parseDonationFromImage,
+  statusIcon,
+  donationStatusText,
+  statusColor,
 } from 'src/composable/simpleComposable'
 import ImageViewer from 'src/components/ImageViewer.vue'
 import { globalStore } from 'src/stores/global-store'
@@ -626,8 +638,8 @@ export default {
             'remarks',
             'amount',
             'method',
-            'notes',
             'reference_code',
+            'status',
             'btn',
           ]
         } else {
@@ -638,12 +650,13 @@ export default {
             'donor_name',
             'received_date',
             'remarks',
-            'notes',
             'item_name',
             'quantity',
             'unit',
             'estimate_value',
             'item_condition',
+            'status',
+
             'btn',
           ]
         }
@@ -678,8 +691,10 @@ export default {
     watchEffect(() => {
       fetchFn()
     })
-
     return {
+      statusColor,
+      donationStatusText,
+      statusIcon,
       showSpinner,
       viewImage,
       getImageLink,
@@ -758,13 +773,7 @@ export default {
           sortable: true,
           align: 'center',
         },
-        {
-          name: 'notes',
-          label: 'Notes',
-          field: 'notes',
-          sortable: true,
-          align: 'center',
-        },
+
         {
           name: 'reference_code',
           label: 'Reference Code',
@@ -804,6 +813,13 @@ export default {
           name: 'item_condition',
           label: 'Item Condition',
           field: 'item_condition',
+          sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'status',
+          label: 'Status',
+          field: 'status',
           sortable: true,
           align: 'center',
         },

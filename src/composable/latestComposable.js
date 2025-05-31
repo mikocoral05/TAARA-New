@@ -556,8 +556,8 @@ export const saveAnimalDetail = (obj) => {
   })
 }
 
-const updateDonationFileId = async (arrayLink, id) => {
-  const reponse = await api.put('donation.php', { update_image: arrayLink, id })
+const updateDonationFileId = async (array_link, id) => {
+  const reponse = await api.put('donation.php', { update_image: { array_link, id } })
   console.log(reponse.data.data)
 }
 
@@ -571,7 +571,7 @@ export const saveDonation = (obj) => {
       .then(async (response) => {
         if (response.data.status == 'success') {
           const idToUpdate = response.data.id
-          const res = await uploadImages(file)
+          const res = await uploadImages([file])
           const status = await updateDonationFileId(res.data.images, idToUpdate)
           console.log(status)
           resolve({ status: status, message: response.data.message })

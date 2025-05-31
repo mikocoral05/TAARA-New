@@ -162,6 +162,8 @@
                       { label: 'Online', value: 'online' },
                     ]"
                     dense
+                    emit-value
+                    map-options
                     style="width: 150px"
                     behavior="menu"
                   />
@@ -184,6 +186,8 @@
                       { label: 'Yes', value: 'yes' },
                       { label: 'No', value: 'no' },
                     ]"
+                    emit-value
+                    map-options
                     :rules="[(val) => !!val || 'This feild is required!']"
                     dense
                     style="width: 150px"
@@ -220,7 +224,7 @@
                     <template v-slot:append>
                       <q-icon name="event" class="cursor-pointer">
                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="dataStorage.expiration_date">
+                          <q-date v-model="dataStorage.received_date">
                             <div class="row items-center justify-end">
                               <q-btn v-close-popup label="Close" color="primary" flat />
                             </div>
@@ -353,7 +357,7 @@ export default {
     const showDialog = ref(false)
     const showSpinner = ref(false)
     const pages = ref([])
-    const dataStorage = ref({ file: null, received_date: dateToday })
+    const dataStorage = ref({})
     const elseSummary = ref({})
     const mode = ref('')
     const viewImage = ref(false)
@@ -383,7 +387,7 @@ export default {
         if (filterTab.value !== 2) showDialog.value = !showDialog.value
 
         if (modeParam == 'Add') {
-          dataStorage.value = {}
+          dataStorage.value = { file: null, received_date: dateToday }
         } else {
           dataStorage.value = data
           console.log(dataStorage.value.image_gallery)

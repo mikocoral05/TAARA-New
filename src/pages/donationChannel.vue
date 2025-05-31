@@ -3,9 +3,15 @@
     <div class="background-image absolute-top"></div>
     <div class="container column justify-start items-center relative-position">
       <div class="donation-container q-pt-xl">
-        <h3 class="q-mb-md">Explore <span class="text-primary">Our Best</span> Option</h3>
-        <p class="text-center text-caption">Use this area to describe one of your memberships.</p>
+        <h3 class="q-mb-md text-center">
+          Make the <span class="text-primary">Biggest Impact</span> Today
+        </h3>
+        <p class="text-center text-caption">
+          Your support keeps our shelter running. Choose from our most impactful donation options
+          and help change lives.
+        </p>
       </div>
+
       <div class="row no-wrap justify-center items-center">
         <div class="column no-wrap best-value-container justify-center items-center">
           <div class="column no-wrap">
@@ -173,9 +179,10 @@
         </div>
       </div>
       <div class="donation-container q-pt-xl">
-        <h4 class="q-mb-md text-center">Thank You Donors</h4>
+        <h4 class="q-mb-md text-center">Thank You, Donors!</h4>
         <p class="text-center text-caption">
-          We always appreciate your love and support in helping animals to have a good life.
+          Your kindness and generosity give our animals a second chance at a better life. We’re
+          truly grateful for your support.
         </p>
       </div>
       <div class="thanks-donor-section">
@@ -279,9 +286,12 @@
 
       <div class="walkin-donation q-mt-xl" ref="targetWishlist">
         <div class="donation-container q-pt-xl">
-          <h4 class="q-mb-md text-center">We also love Walk In Donation</h4>
-          <p class="text-center text-caption">“Every Donation Supports Our Mission”</p>
+          <h4 class="q-mb-md text-center">We Welcome Walk-In Donations</h4>
+          <p class="text-center text-caption">
+            Every visit, every gift — you're helping us care for animals in need.
+          </p>
         </div>
+
         <div class="row no-wrap">
           <div class="flex justify-center items-center row" style="width: 100%">
             <div class="box flex column items-center justify-start q-ma-md">

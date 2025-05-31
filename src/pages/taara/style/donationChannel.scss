@@ -4,7 +4,6 @@
 .donation-container {
   p {
     font-size: 14px;
-    font-family: 'Space Grotesk', sans-serif;
   }
   margin-bottom: 70px;
 }
@@ -12,11 +11,8 @@
   height: 600px;
   z-index: -1;
   background: url('../../../image/seventh-layer-image.png');
-  // transform: rotate(180deg);
 }
 .best-value-container {
-  font-family: 'Space Grotesk', sans-serif;
-
   margin-top: 100px;
   margin: 0px 20px;
   .best-value {
@@ -44,7 +40,6 @@
   }
 }
 .other-amount {
-  font-family: 'Space Grotesk', sans-serif;
   font-size: 14px;
   width: 200px;
 }

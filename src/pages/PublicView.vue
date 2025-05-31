@@ -94,7 +94,7 @@
       <div class="second-child row no-wrap justify-between">
         <div class="column no-wrap">
           <img
-            src="http://77.37.74.195/images/adoption-image.jpg"
+            src="~assets/1.jpg"
             alt=""
             class="q-mb-lg"
             :class="maxScrollTop >= 700 ? 'fade-in' : ''"
@@ -110,7 +110,7 @@
         </div>
         <div class="column no-wrap">
           <img
-            src="http://77.37.74.195/images/community-image.jpg"
+            src="~assets/2.jpg"
             alt=""
             class="q-mb-lg"
             :class="maxScrollTop >= 700 ? 'fade-in' : ''"
@@ -126,7 +126,7 @@
         </div>
         <div class="column no-wrap" @click="$router.push('/rescue-reports')">
           <img
-            src="http://77.37.74.195/images/rescue-image.jpg"
+            src="~assets/3.jpg"
             alt=""
             class="q-mb-lg"
             :class="maxScrollTop >= 700 ? 'fade-in' : ''"
@@ -142,7 +142,7 @@
         </div>
         <div class="column no-wrap" @click="$router.push('/pet-transfer')">
           <img
-            src="http://77.37.74.195/images/transfer-image.jpg"
+            src="~assets/4.jpg"
             alt=""
             class="q-mb-lg"
             :class="maxScrollTop >= 700 ? 'fade-in' : ''"
@@ -164,7 +164,7 @@
         class="left-image column justify-center items-center relative-position"
       >
         <div class="absolute-left blue-circle"></div>
-        <img src="http://77.37.74.195/images/dedicated-team.jpg" alt="" />
+        <img src="~assets/5.jpg" alt="" />
         <div class="absolute square"></div>
       </div>
       <div class="right-description column justify-center items-center">
@@ -316,12 +316,12 @@
         no-caps
         to="/public/volunteer-form"
       />
-
+      <!-- 
       <img
         src="../image/eight-layer-final-ai-brush-removebg-3a3jv43.png"
         alt=""
         :class="maxScrollTop >= 5100 ? 'show-in' : ''"
-      />
+      /> -->
     </div>
     <div id="footerDiv" ref="footerDiv">
       <TaaraFooter />

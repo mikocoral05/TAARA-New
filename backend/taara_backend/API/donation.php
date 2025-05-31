@@ -139,48 +139,65 @@ class API
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
             }
-        } else if (isset($payload['edit_animal_info'])) {
-            $obj = $payload['edit_animal_info'];
+        } else if (isset($payload['edit_donation'])) {
+            $obj = $payload['edit_donation'];
+            $fund_id = $payload['edit_donation']['fund_id'];
+            $table = $payload['edit_donation']['donation_type'] == 'cash' ? 'tbl_cash_donations' : 'tbl_material_donations';
+            $new_img =  $obj['new_image'];
+            $last_insert_id = "";
+            if (!empty($new_img)) {
+                $this->db->insert('tbl_files', ['image_path' => $new_img]);
+                $last_insert_id = $this->db->getInsertId();
+            }
 
-            $update_values = [
-                'name' => $obj['name'] ?? null,
-                'species' => $obj['species'] ?? null,
-                'breed' => $obj['breed'] ?? null,
-                'fur_color' => $obj['fur_color'] ?? null,
-                'eye_color' => $obj['eye_color'] ?? null,
-                'date_of_birth' => $obj['date_of_birth'] ?? null,
-                'weight' => $obj['weight'] ?? null,
-                'height' => $obj['height'] ?? null,
-                'sex' => $obj['sex'] ?? null,
-                'spayed_neutered' => $obj['spayed_neutered'] ?? null,
-                'vaccination_status' => $obj['vaccination_status'] ?? null,
-                'temperament' => $obj['temperament'] ?? null, // stored as JSON string
-                'skills' => $obj['skills'] ?? null,           // stored as JSON string
-                'favorite_food' => $obj['favorite_food'] ?? null,
-                'story_background' => $obj['story_background'] ?? null,
-                'rescue_status' => $obj['rescue_status'] ?? null,
-                'health_status' => $obj['health_status'] ?? null,
-                'medical_needs' => $obj['medical_needs'] ?? null,
-                'date_rescued' => $obj['date_rescued'] ?? null,
-                'primary_image' => $obj['primary_image'] ?? 0,
-                'updated_at' => date('Y-m-d H:i:s'),
+            $updateData = [
+                'donor_name'         => $obj['donor_name'] ?? null,
+                'allocated_for'      => $obj['allocated_for'] ?? null,
+                'received_date'      => $obj['received_date'] ?? null,
+                'anonymous'          => $obj['anonymous'] ?? null,
+                'file_id'          => $last_insert_id ?? null,
+                'updated_at' => date('Y-m-d H:i:s')
+
             ];
+            $this->db->where('fund_id', $fund_id);
+            $this->db->update('tbl_funds', $updateData);
 
-            $animal_id = $obj['animal_id'];
+            $uppateArr = [];
 
-            $this->db->where('animal_id', $animal_id);
-            $updated = $this->db->update('tbl_animal_info', $update_values);
+            if ($obj['donation_type'] === 'cash') {
+                $uppateArr = [
+                    'amount'         => $obj['amount'],
+                    'method'         => $obj['method'] ?? null,
+                    'reference_code' => $obj['reference_code'] ?? null,
+                    'notes'          => $obj['notes'] ?? null,
+                ];
+            } else {
+                $uppateArr = [
+                    'item_name'      => $obj['item_name'],
+                    'quantity'       => $obj['quantity'] ?? null,
+                    'unit'           => $obj['unit'] ?? null,
+                    'estimated_value' => $obj['estimated_value'] ?? null,
+                    'item_condition'  => $obj['item_condition'] ?? 1,
+                    'notes'          => $obj['notes'] ?? null,
+                ];
+            }
+
+
+            $this->db->where('fund_id', $fund_id);
+            $updated = $this->db->update($table, $uppateArr);
+
+
 
             if ($updated) {
                 echo json_encode([
                     'status' => 'success',
-                    'message' => 'Animal info updated successfully',
+                    'message' => 'Donation info updated successfully',
                     'method' => 'PUT'
                 ]);
             } else {
                 echo json_encode([
                     'status' => 'error',
-                    'message' => 'Failed to update animal info',
+                    'message' => 'Failed to update Donation info',
                     'method' => 'PUT'
                 ]);
             }

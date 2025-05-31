@@ -56,19 +56,11 @@
         <template #cell-fund_id="{ rowIndex }">
           <div>{{ rowIndex + 1 }}</div>
         </template>
-        <template #cell-donor_name="{ row }">
-          <span :class="row?.donor_name ? 'text-black' : 'text-grey-5'">
-            {{ row?.donor_name || 'N/a' }}
-          </span>
-        </template>
-        <template #cell-reference_code="{ row }">
-          <span :class="row?.reference_code ? 'text-black' : 'text-grey-5'">
-            {{ row?.reference_code || 'N/a' }}
-          </span>
-        </template>
+
         <template #cell-item_condition="{ row }">
           {{ row.item_condition == 1 ? 'New' : 'Used' }}
         </template>
+
         <template #cell-expiration_date="{ row }">
           <div
             :class="{
@@ -307,8 +299,8 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <ImageViewer v-model="viewImage" :imageUrl="previewImage" />
   </q-page>
-  <ImageViewer v-model="viewImage" :imageUrl="previewImage" />
 </template>
 <script>
 import ReusableTable from 'src/components/ReusableTable.vue'

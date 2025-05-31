@@ -159,7 +159,7 @@ export default defineComponent({
         store.reset()
         router.replace('/user-login')
         $q.loading.hide()
-      }, 2000)
+      }, 1000)
     }
 
     const linksList = computed(() => [

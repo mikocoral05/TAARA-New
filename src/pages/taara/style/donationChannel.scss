@@ -4,18 +4,18 @@
 .donation-container {
   p {
     font-size: 14px;
-    font-family: "Space Grotesk", sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
   }
   margin-bottom: 70px;
 }
 .background-image {
   height: 600px;
   z-index: -1;
-  background: url("../../../image/seventh-layer-image.png");
+  background: url('../../../image/seventh-layer-image.png');
   // transform: rotate(180deg);
 }
 .best-value-container {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
 
   margin-top: 100px;
   margin: 0px 20px;
@@ -28,14 +28,13 @@
   .price {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-    // height: 300px;
     max-width: 360px;
   }
   .benefit {
     border-bottom-left-radius: 10px;
     border-bottom-right-radius: 10px;
 
-    background-color: #f6f5f5;
+    background-color: #ffd7ef;
     p {
       margin: 5px 0px;
     }
@@ -45,7 +44,7 @@
   }
 }
 .other-amount {
-  font-family: "Space Grotesk", sans-serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-size: 14px;
   width: 200px;
 }

@@ -365,4 +365,4 @@
   <TaaraFooter style="margin-top: 100px" />
 </template>
 <script src="pages/taara/script/donationChannel.js"></script>
-<style lang="scss" scoped src="./taara/style/donationChannel.scss"></style>
+<style lang="scss" scoped src="pages/taara/style/donationChannel.scss"></style>

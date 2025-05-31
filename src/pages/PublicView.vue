@@ -261,7 +261,7 @@
             class="bg-black text-white q-pa-sm q-mt-xl"
             flat
             no-caps
-            to="donation-channel"
+            to="/public/donation-channel"
             style="max-width: 200px"
           />
         </div>

@@ -394,7 +394,7 @@ export default {
 
     const statusColor = (status) => {
       const obj = {
-        pending: 'bg-orange  ',
+        pending: 'bg-orange',
         approved: 'bg-positive q-px-sm',
         disapproved: 'bg-negative q-px-sm',
       }

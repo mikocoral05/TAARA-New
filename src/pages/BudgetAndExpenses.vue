@@ -6,18 +6,10 @@
         <q-tab name="2" icon="sym_r_price_check" label="Daily Expenses" no-caps />
       </q-tabs>
       <div class="row no-wrap justify-between items-center">
-        <div class="row no-wrap items-center q-mr-xl">
+        <div class="row no-wrap items-center">
           <q-select v-model="selectedMonth" :options="monthNames" dense emit-value map-options />
           <q-icon name="sym_r_sync_alt" size="1.2rem" class="q-mx-lg" color="grey-7" />
           <q-select v-model="selectedYear" :options="generateYearList()" dense />
-        </div>
-        <div class="row no-wrap">
-          <q-btn icon="sym_r_add" dense unelevated class="q-mr-md">
-            <q-tooltip v-model="showingTooltip">Add Buget Allocation</q-tooltip>
-          </q-btn>
-          <q-btn icon="sym_r_upload" dense unelevated>
-            <!-- <q-tooltip v-model="showingTooltip">Tooltip text</q-tooltip> -->
-          </q-btn>
         </div>
       </div>
     </div>
@@ -129,7 +121,6 @@
               ]
         "
       >
-        <!-- Button slot with icon -->
         <template #cell-btn="{ row }">
           <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
             <q-menu anchor="bottom left" self="top right">
@@ -166,7 +157,7 @@
     </div>
     <q-dialog position="right" maximized full-height v-model="editDialog">
       <q-card style="min-width: 750px; height: 500px" class="text-black column justify-between">
-        <q-form @submit="saveFn()" class="column justify-between full-height">
+        <q-form @submit="saveFn()" class="column justify-between full-height no-wrap">
           <div class="column no-wrap">
             <q-card-section class="q-py-md row no-wrap justify-between items-center">
               <div class="text-body1">{{ mode }} {{ tableConfig?.title }}</div>
@@ -195,22 +186,52 @@
                   />
                 </div>
                 <div class="column no-wrap">
-                  <div class="text-capitalize">Category <span class="text-negative">*</span></div>
-                  <q-select
-                    outlined
-                    v-model="expenseData.category_id"
+                  <div class="text-capitalize">
+                    Upload image <span class="text-grey-7 text-caption">( optional )</span>
+                  </div>
+                  <q-file
                     class="q-mt-sm"
-                    :options="categoryOptions"
-                    emit-value
-                    map-options
-                    option-label="name"
-                    option-value="id"
+                    v-model="expenseData.file"
+                    :hint="
+                      mode == 'Add'
+                        ? 'Try uploading image first, will analyse'
+                        : previewImage
+                          ? 'Click the icon to view image'
+                          : 'Click the empty space to add image'
+                    "
+                    outlined
                     dense
-                    style="width: 250px"
-                    behavior="menu"
-                    :rules="[(val) => !!val || 'Category is required!']"
-                  />
+                    :readonly="mode == 'View'"
+                    style="max-width: 300px"
+                    @update:model-value="imageFnUpdate()"
+                  >
+                    <template v-slot:append>
+                      <q-icon v-if="!previewImage" name="sym_r_add_photo_alternate" />
+                      <q-icon
+                        v-if="previewImage"
+                        name="sym_r_photo"
+                        @click="viewImage = !viewImage"
+                      />
+                    </template>
+                  </q-file>
                 </div>
+              </div>
+              <div class="column no-wrap">
+                <div class="text-capitalize">Category <span class="text-negative">*</span></div>
+                <q-select
+                  outlined
+                  v-model="expenseData.category_id"
+                  class="q-mt-sm"
+                  :options="categoryOptions"
+                  emit-value
+                  map-options
+                  option-label="name"
+                  option-value="id"
+                  dense
+                  style="width: 250px"
+                  behavior="menu"
+                  :rules="[(val) => !!val || 'Category is required!']"
+                />
               </div>
               <div class="row no-wrap q-mt-sm">
                 <div class="column no-wrap q-mr-md">
@@ -391,6 +412,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <ImageViewer v-model="viewImage" :imageUrl="previewImage" />
   </q-page>
 </template>
 <script>
@@ -418,13 +440,15 @@ import {
   yearToday,
   dayToday,
 } from 'src/composable/simpleComposable'
+import ImageViewer from 'src/components/ImageViewer.vue'
 export default {
   components: {
     ReusableTable,
+    ImageViewer,
   },
   setup() {
     const $q = useQuasar()
-    const tab = ref('1')
+    const tab = ref('2')
     const obj = { 1: 'Budget Allocation', 2: 'Expenses' }
     const obj2 = { Add: 'Adding', Edit: 'Updating', Delete: 'Deleting' }
     const editTab = ref('1')
@@ -438,6 +462,7 @@ export default {
     const selectedDay = ref(dayToday)
     const selectedMonth = ref(monthToday)
     const selectedYear = ref(yearToday)
+    const viewImage = ref(false)
     const timeStamp = computed(() => {
       return new Date(
         selectedYear.value,
@@ -484,12 +509,17 @@ export default {
           //
         } else if (modeParam == 'Edit') {
           expenseData.value = { ...data }
+          console.log(expenseData.value)
+
+          previewImage.value = expenseData.value?.image_path
+
           if (tab.value == 1) {
             allocationDialog.value = true
           } else {
             editDialog.value = true
           }
         } else {
+          previewImage.value = data?.image_path
           editDialog.value = true
           expenseData.value = data
         }
@@ -615,6 +645,12 @@ export default {
       }
     }
 
+    const previewImage = ref(null)
+    const imageFnUpdate = () => {
+      previewImage.value = URL.createObjectURL(expenseData.value.file)
+      console.log(previewImage.value)
+    }
+
     const fetchFn = () => {
       if (tab.value == 1) {
         updateBudgetAllocationSum()
@@ -625,6 +661,7 @@ export default {
         }
         getExpenses({ ...obj, day: selectedDay.value }).then((response) => {
           rows.value = response
+          console.log(rows.value)
         })
         getMonthlyFundAndExpenses(obj).then((response) => {
           dailyExpenseTotal.value = response?.dailyTotal
@@ -653,6 +690,9 @@ export default {
     })
 
     return {
+      viewImage,
+      previewImage,
+      imageFnUpdate,
       arrayOfId,
       categoryOptions,
       softDeleteFn,
@@ -744,9 +784,9 @@ export default {
           align: 'center',
         },
         {
-          name: 'attachments',
+          name: 'file_id',
           label: 'File',
-          field: 'attachments',
+          field: 'file_id',
           sortable: true,
           align: 'center',
         },

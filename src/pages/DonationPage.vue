@@ -136,7 +136,7 @@
                     :hint="
                       mode == 'Add'
                         ? 'Try uploading image first, will analyse'
-                        : dataStorage.file
+                        : previewImage
                           ? 'Click the icon to view image'
                           : 'Click the empty space to add image'
                     "
@@ -148,11 +148,11 @@
                   >
                     <template v-slot:append>
                       <q-icon
-                        v-if="!dataStorage.file && !showSpinner"
+                        v-if="!previewImage && !showSpinner"
                         name="sym_r_add_photo_alternate"
                       />
                       <q-icon
-                        v-if="!showSpinner && dataStorage.file"
+                        v-if="!showSpinner && previewImage"
                         name="sym_r_photo"
                         @click="viewImage = !viewImage"
                       />

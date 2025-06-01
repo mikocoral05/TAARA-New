@@ -587,6 +587,8 @@ export const editDonation = async (obj) => {
   const { file, ...donation_data } = obj
   console.log(donation_data)
   if (file) {
+    console.log('inside file upload')
+
     const res = await uploadImages([file])
     donation_data.new_image = res.data.images[0]
   }

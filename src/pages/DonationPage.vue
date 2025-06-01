@@ -394,7 +394,7 @@
                   outlined
                   v-model="dataStorage.status"
                   class="q-mt-sm"
-                  :rules="[(val) => !!val || 'Method is required!']"
+                  :rules="[(val) => !!val || 'Status is required!']"
                   :options="[
                     { label: 'Pending', value: 1 },
                     { label: 'Approved', value: 2 },
@@ -408,7 +408,7 @@
                   :readonly="mode == 'View'"
                 />
               </div>
-              <div class="column no-wrap q-mt-lg">
+              <div class="column no-wrap">
                 <div class="text-capitalize">
                   Notes <span class="text-grey-7 text-caption"> (optional)</span>
                 </div>
@@ -568,9 +568,9 @@ export default {
         if (modeParam == 'Add') {
           dataStorage.value = { file: null, received_date: dateToday }
         } else {
-          dataStorage.value = data
+          dataStorage.value = { ...data }
           previewImage.value = data?.image_path
-          dataStorage.value.file = data?.image_path
+          // dataStorage.value.file = data?.image_path
           console.log(dataStorage.value)
         }
       } else {
@@ -615,6 +615,7 @@ export default {
             })
           }, 500)
           setTimeout(() => {
+            showDialog.value = false
             $q.loading.hide()
           }, 1000)
         })

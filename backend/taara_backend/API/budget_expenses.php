@@ -19,11 +19,12 @@ class API
             $year = $payload['get_expenses']['year'];
             $day = $payload['get_expenses']['day'];
 
-            $this->db->where("DAY(`expense_date`) = ?", [$day]);
-            $this->db->where("MONTH(`expense_date`) = ?", [$month]);
-            $this->db->where("YEAR(`expense_date`) = ?", [$year]);
-            $this->db->where('is_deleted', 0);
-            $query = $this->db->get("tbl_expenses");
+            $this->db->where("DAY(e.expense_date) = ?", [$day]);
+            $this->db->where("MONTH(e.expense_date) = ?", [$month]);
+            $this->db->where("YEAR(e.expense_date) = ?", [$year]);
+            $this->db->where('e.is_deleted', 0);
+            $this->db->join('tbl_files f', 'e.file_id = f.id', 'left');
+            $query = $this->db->get("tbl_expenses e", null, 'e.*,f.image_path');
 
             echo json_encode([
                 'status' => 'success',
@@ -181,6 +182,19 @@ class API
             $id = $payload['update_expense']['id'];
             $data = $payload['update_expense']['data'];
 
+            $new_img =  $data['new_image'] ?? '';
+            $last_insert_id = "";
+            if (!empty($new_img)) {
+                $this->db->insert('tbl_files', ['image_path' => $new_img]);
+                $last_insert_id = $this->db->getInsertId();
+            }
+
+            if (!empty($last_insert_id)) {
+                $data['file_id'] = $last_insert_id;
+            }
+
+            // Remove 'new_image' if it exists
+            unset($data['new_image']);
             $this->db->where('id', $id);
             $update_success = $this->db->update('tbl_expenses', $data);
 

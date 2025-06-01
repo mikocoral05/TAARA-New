@@ -149,6 +149,11 @@
             </q-menu>
           </q-btn>
         </template>
+        <template #cell-id="{ rowIndex }">
+          <div>
+            {{ rowIndex + 1 }}
+          </div>
+        </template>
         <template #cell-computed="{ row }">
           <div>
             {{ formatNumber((Number(totalBalance) * Number(row.percentage_allocated)) / 100) }}

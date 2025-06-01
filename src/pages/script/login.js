@@ -229,6 +229,11 @@ export default {
     }
 
     let logInTaara = () => {
+      if (step.value !== 4) {
+        step.value += 1
+        return
+      }
+
       $q.loading.show({
         message: 'Logging in. Please wait...',
       })

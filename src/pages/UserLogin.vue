@@ -1,11 +1,5 @@
 <template>
   <q-page class="full-height no-padding fig-tree relative-position bg-white">
-    <!-- <div class="row no-wrap items-center absolute-top q-pa-md">
-      <q-img src="TAARA_Logo.jpg" class="rad-100 q-mr-md" width="40px" />
-      <div class="text-bold text-body1">
-        <span class="text-primary">TAARA</span> <span class="text-grey-7">.Org</span>
-      </div>
-    </div> -->
     <div class="row no-wrap q-pa-md" style="height: 100vh">
       <div
         class="column no-wrap items-center justify-center q-mr-md"
@@ -13,93 +7,245 @@
       >
         <q-tab-panels v-model="tab" animated>
           <q-tab-panel name="register" class="column no-wrap justify-center q-px-xl">
-            <div class="column no-wrap q-mr-md justify-center q-px-xl">
-              <div class="text-h5 text-bold fig-tree">
-                Join Us in Our Mission to Help Animals in Need
+            <q-form
+              @submit="logInTaara(email_address, password)"
+              class="full-width full-height column justify-center items-center no-wrap q-mt-lg q-px-lg"
+            >
+              <div class="column no-wrap q-px-md">
+                <div class="text-h5 text-bold fig-tree">
+                  Join Us in Our Mission to Help Animals in Need
+                </div>
+                <div class="text-grey-7 fig-tree">
+                  Dedicated to rescuing, caring for, and cherishing every animal's life.
+                </div>
               </div>
-              <div class="text-grey-7 fig-tree">
-                Dedicated to rescuing, caring for, and cherishing every animal's life.
-              </div>
-
-              <q-form
-                @submit="logInTaara(email_address, password)"
-                class="full-width column justify-center items-center q-mt-lg"
-                :class="fadeValue ? '' : 'fade-in'"
+              <q-stepper
+                v-model="step"
+                ref="stepper"
+                color="primary"
+                animated
+                flat
+                class="q-pa-none full-height full-width"
+                style="min-height: 450px"
               >
-                <div class="column no-wrap full-width">
-                  <p class="q-ma-none q-mb-sm">
-                    Username<span class="q-ml-sm text-negative">*</span>
-                  </p>
-                  <q-input
-                    outlined
-                    placeholder="Username"
-                    dense
-                    v-model="userInfo.username"
-                    :rules="[(val) => !!val || 'Username is required!']"
-                    :error="showLoginError"
-                    hint="This will appear ini you public profile"
-                  />
-                </div>
-                <div class="column no-wrap full-width q-mt-md">
-                  <p class="q-ma-none q-mb-sm">
-                    Email Address<span class="text-negative q-ml-sm">*</span>
-                  </p>
-                  <q-input
-                    outlined
-                    placeholder="Email address"
-                    dense
-                    v-model="userInfo.email_address"
-                    :rules="[
-                      (val) => !!val || 'Email is required!',
-                      (val) => /^[^@]+@[^@]+\.[^@]+$/.test(val) || 'Email is invalid!',
-                    ]"
-                    hint="We will send confirmation to this email!"
-                  />
-                </div>
-                <div class="column no-wrap q-pt-md full-width">
-                  <p class="q-ma-none q-mb-sm">
-                    Password<span class="q-ml-sm text-negative">*</span>
-                  </p>
-                  <q-input
-                    outlined
-                    label="Password"
-                    type="password"
-                    dense
-                    v-model="userInfo.password"
-                    :rules="[(val) => !!val || 'Password is required!']"
-                  />
-                </div>
-                <div class="column no-wrap full-width q-mb-xl q-mt-sm">
-                  <div class="q-mb-md">Your password needs to include:</div>
-                  <div class="row no-wrap items-center">
-                    <q-icon
-                      name="check_circle"
-                      :color="includeNumber ? 'positive' : 'black'"
-                      class="q-mr-sm"
-                    />
-                    <div>Must include one number</div>
+                <q-step
+                  :name="1"
+                  title="Basic Info"
+                  icon="settings"
+                  :done="step > 1"
+                  class="q-pa-none"
+                >
+                  <div class="row no-wrap">
+                    <div class="column no-wrap q-mr-md w-100">
+                      <p class="q-ma-none q-mb-sm">
+                        First name<span class="q-ml-sm text-negative">*</span>
+                      </p>
+                      <q-input
+                        outlined
+                        placeholder="First name"
+                        dense
+                        v-model="userInfo.username"
+                        :rules="[(val) => !!val || 'First name is required!']"
+                        :error="showLoginError"
+                      />
+                    </div>
+                    <div class="column no-wrap w-100">
+                      <p class="q-ma-none q-mb-sm">
+                        Last name<span class="text-negative q-ml-sm">*</span>
+                      </p>
+                      <q-input
+                        outlined
+                        placeholder="Last name"
+                        dense
+                        v-model="userInfo.last_name"
+                        :rules="[(val) => !!val || 'Last name is required!']"
+                      />
+                    </div>
                   </div>
-                  <div class="row no-wrap items-center">
-                    <q-icon
-                      name="check_circle"
-                      :color="minSixLenght ? 'positive' : 'black'"
-                      class="q-mr-sm"
-                    />
-                    <div>Min 6 characters</div>
+                  <div class="row no-wrap">
+                    <div class="column no-wrap w-100 q-mr-md">
+                      <p class="q-ma-none q-mb-sm">
+                        Occupation<span class="q-ml-sm text-grey-7">( optional )</span>
+                      </p>
+                      <q-input
+                        outlined
+                        placeholder="Occupation"
+                        dense
+                        maxlength="1"
+                        v-model="userInfo.occupation"
+                      />
+                    </div>
+                    <div class="column no-wrap w-100">
+                      <p class="q-ma-none q-mb-sm">
+                        Civil status<span class="text-negative q-ml-sm">*</span>
+                      </p>
+                      <q-input
+                        outlined
+                        placeholder="Civil status"
+                        dense
+                        v-model="userInfo.civil_status"
+                        :rules="[(val) => !!val || 'Civil status is required!']"
+                      />
+                    </div>
                   </div>
-                </div>
+                  <div class="row no-wrap">
+                    <div class="column no-wrap w-100 q-mr-md">
+                      <p class="q-ma-none q-mb-sm">
+                        Birth date<span class="text-negative q-ml-sm">*</span>
+                      </p>
+                      <q-input
+                        class="input"
+                        outlined
+                        v-model="userInfo.birth_date"
+                        dense
+                        mask="####-##-##"
+                        :rules="[(val) => !!val || 'Birth date is required']"
+                        stack-label
+                        placeholder="####-##-##"
+                      >
+                        <template v-slot:append>
+                          <q-icon name="event" class="cursor-pointer">
+                            <q-popup-proxy cover transition-show="scale" transition-hide="scale">
+                              <q-date
+                                v-model="userInfo.birth_date"
+                                :title="userInfo.first_name"
+                                subtitle="Birthday"
+                                today-btn
+                                emit-immediately
+                                mask="YYYY-MM-DD"
+                                default-year-month="2000/01"
+                              >
+                                <div class="row items-center justify-end">
+                                  <q-btn v-close-popup label="Close" color="primary" flat rounded />
+                                </div>
+                              </q-date>
+                            </q-popup-proxy>
+                          </q-icon>
+                        </template>
+                      </q-input>
+                    </div>
+                    <div class="column no-wrap w-100">
+                      <p class="q-ma-none q-mb-sm">
+                        Phone Number<span class="q-ml-sm text-negative"> *</span>
+                      </p>
+                      <q-input
+                        outlined
+                        placeholder="(947) 856 - 7856"
+                        dense
+                        v-model="userInfo.phone_number"
+                        :rules="[Phone, (val) => !!val || 'Phone number is required!']"
+                        prefix="+63"
+                        mask="phone"
+                        hint="We will send otp in this number"
+                      />
+                    </div>
+                  </div>
+                </q-step>
+
+                <q-step
+                  :name="2"
+                  title="Address"
+                  caption="Optional"
+                  icon="create_new_folder"
+                  :done="step > 2"
+                >
+                  An ad group contains one or more ads which target a shared set of keywords.
+                </q-step>
+
+                <q-step :name="3" title="Credentials" icon="assignment">
+                  <div class="column no-wrap full-width">
+                    <p class="q-ma-none q-mb-sm">
+                      Username<span class="q-ml-sm text-negative">*</span>
+                    </p>
+                    <q-input
+                      outlined
+                      placeholder="Username"
+                      dense
+                      v-model="userInfo.username"
+                      :rules="[(val) => !!val || 'Username is required!']"
+                      :error="showLoginError"
+                      hint="This will appear ini you public profile"
+                    />
+                  </div>
+                  <div class="column no-wrap full-width q-mt-md">
+                    <p class="q-ma-none q-mb-sm">
+                      Email Address<span class="text-negative q-ml-sm">*</span>
+                    </p>
+                    <q-input
+                      outlined
+                      placeholder="Email address"
+                      dense
+                      v-model="userInfo.email_address"
+                      :rules="[
+                        (val) => !!val || 'Email is required!',
+                        (val) => /^[^@]+@[^@]+\.[^@]+$/.test(val) || 'Email is invalid!',
+                      ]"
+                      hint="We will send confirmation to this email!"
+                    />
+                  </div>
+                  <div class="column no-wrap q-pt-md full-width">
+                    <p class="q-ma-none q-mb-sm">
+                      Password<span class="q-ml-sm text-negative">*</span>
+                    </p>
+                    <q-input
+                      outlined
+                      label="Password"
+                      type="password"
+                      dense
+                      v-model="userInfo.password"
+                      :rules="[(val) => !!val || 'Password is required!']"
+                    />
+                  </div>
+                  <div class="column no-wrap full-width q-mb-xl q-mt-sm">
+                    <div class="q-mb-md">Your password needs to include:</div>
+                    <div class="row no-wrap items-center">
+                      <q-icon
+                        name="check_circle"
+                        :color="includeNumber ? 'positive' : 'black'"
+                        class="q-mr-sm"
+                      />
+                      <div>Must include one number</div>
+                    </div>
+                    <div class="row no-wrap items-center">
+                      <q-icon
+                        name="check_circle"
+                        :color="minSixLenght ? 'positive' : 'black'"
+                        class="q-mr-sm"
+                      />
+                      <div>Min 6 characters</div>
+                    </div>
+                  </div>
+                  <q-btn
+                    label="Sign In"
+                    no-caps
+                    class="bg-primary text-white full-width"
+                    type="submit"
+                  />
+                  <q-separator class="q-mt-md"></q-separator>
+                  <p @click="tab = 'login'">
+                    <u>Already have an account? Login</u>
+                  </p>
+                </q-step>
+              </q-stepper>
+              <div class="row no-wrap w-100 q-px-lg">
                 <q-btn
-                  label="Sign In"
-                  no-caps
-                  class="bg-primary text-white full-width"
+                  :label="step == 4 ? 'SUBMIT' : 'CONTINUE'"
+                  class="q-mr-md"
+                  color="primary"
+                  dense
+                  style="width: 150px"
                   type="submit"
                 />
-                <q-separator class="q-mt-md"></q-separator>
-                <p @click="tab = 'login'">
-                  <u>Already have an account? Login</u>
-                </p>
-              </q-form>
-            </div>
+                <q-btn
+                  v-if="step > 1"
+                  label="BACK"
+                  @click="step -= 1"
+                  color="primary"
+                  dense
+                  style="width: 150px"
+                />
+              </div>
+            </q-form>
           </q-tab-panel>
 
           <q-tab-panel name="login" class="column no-wrap justify-center q-px-xl">
@@ -149,7 +295,7 @@
                   type="submit"
                 />
                 <q-separator class="q-mt-md"></q-separator>
-                <p @click="router.push('user-registration')">
+                <p @click="tab = 'register'">
                   <u>Don't have an account yet? Crete now</u>
                 </p>
               </q-form>

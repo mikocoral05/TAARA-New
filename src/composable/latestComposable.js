@@ -185,7 +185,13 @@ export const updateBudgetAllocation = async (obj) => {
 }
 
 export const updateExpense = async (obj) => {
-  const { id, ...data } = obj
+  const { file, id, ...data } = obj
+  if (file) {
+    const res = await uploadImages([file])
+    data.new_image = res.data.images[0]
+  }
+  // Remove image_path if it exists
+  delete data.image_path
   const response = await api.put('budget_expenses.php', {
     update_expense: { id: id, data: data },
   })
@@ -248,21 +254,11 @@ export const getBudgetAllocation = () => {
   })
 }
 
-export const getExpenses = (obj) => {
-  return new Promise((resolve, reject) => {
-    api
-      .get('budget_expenses.php', {
-        params: { get_expenses: obj },
-      })
-      .then((response) => {
-        if (response.data.status == 'success') {
-          resolve(response.data.data)
-        }
-      })
-      .catch((error) => {
-        reject(error)
-      })
+export const getExpenses = async (obj) => {
+  const response = await api.get('budget_expenses.php', {
+    params: { get_expenses: obj },
   })
+  return response.data.data
 }
 
 export const getExpensesSummary = (obj) => {
@@ -587,15 +583,12 @@ export const editDonation = async (obj) => {
   const { file, ...donation_data } = obj
   console.log(donation_data)
   if (file) {
-    console.log('inside file upload')
-
     const res = await uploadImages([file])
     donation_data.new_image = res.data.images[0]
   }
   const response = await api.put('donation.php', {
     edit_donation: donation_data,
   })
-  console.log(response)
 
   return response.data
 }

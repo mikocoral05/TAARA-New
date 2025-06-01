@@ -278,6 +278,7 @@ class API
             $this->db->where('f.is_deleted', 0);
             $this->db->where('f.donation_type', 'cash');
             $this->db->where('YEAR(f.received_date)', $year);
+            $this->db->where('f.status', 2);
 
             // Group and sort by month
             $this->db->groupBy('MONTH(f.received_date)');
@@ -355,6 +356,7 @@ class API
             $this->db->join('tbl_cash_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
             $this->db->where('YEAR(tbl1.received_date)', $year);
             $this->db->where('MONTH(tbl1.received_date)', $month);
+            $this->db->where('tbl1.status', 2);
 
             $this->db->where('tbl1.is_deleted', 0);
             $totalCashDonations = $this->db->getValue('tbl_funds tbl1', 'SUM(tbl2.amount)');

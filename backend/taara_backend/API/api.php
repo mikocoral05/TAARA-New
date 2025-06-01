@@ -25,6 +25,7 @@ class API
     } else if (array_key_exists("year_donation_cash", $ref_id)) {
       $this->db->where("YEAR(f.created_at)", date('Y'));
       $this->db->where("f.is_deleted", 0);
+      $this->db->where("f.status", 2);
       $this->db->join("tbl_cash_donations c", "f.fund_id = c.fund_id", "LEFT");
       $max = $this->db->getValue("tbl_funds f", "MAX(c.amount)");
       echo json_encode(array('status' => 'success', 'data' => $max, 'method' => 'GET'));
@@ -32,6 +33,7 @@ class API
       $this->db->where("MONTH(f.created_at)", date('n')); // ✔️ 'n' = numeric month (1 to 12)
       $this->db->where("f.is_deleted", 0);
       $this->db->join("tbl_cash_donations c", "f.fund_id = c.fund_id", "LEFT");
+      $this->db->where("f.status", 2);
       $max = $this->db->getValue("tbl_funds f", "MAX(c.amount)");
       echo json_encode(array('status' => 'success', 'data' => $max, 'method' => 'GET'));
     } else if (array_key_exists("all_animals", $ref_id)) {
@@ -732,6 +734,7 @@ class API
       $this->db->join('tbl_material_donations tbl3', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
       $this->db->join('tbl_users tbl4', 'tbl1.donor_id = tbl4.user_id', 'LEFT');
       $this->db->where("tbl1.is_deleted", 0);
+      $this->db->where("tbl1.status", 2);
       $this->db->orderBy("tbl1.fund_id", "desc");
       $columns = "tbl1.*, tbl2.*";
       $data = $this->db->get("tbl_funds tbl1", null, $columns);
@@ -748,6 +751,7 @@ class API
       $this->db->join('tbl_users tbl4', 'tbl1.donor_id = tbl4.user_id', 'LEFT');
       $this->db->join('tbl_files tbl5', 'tbl4.image_id = tbl5.id', 'LEFT');
       $this->db->where("tbl1.is_deleted", 0);
+      $this->db->where("tbl1.status", 2);
       $this->db->orderBy("RAND()");
       $columns = "tbl1.*, tbl2.*,tbl5.image_path,tbl4.sex,CONCAT(tbl4.first_name,' ',tbl4.last_name) as name";
       $data = $this->db->get("tbl_funds tbl1", 10, $columns);

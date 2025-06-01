@@ -20,6 +20,7 @@ class API
 
             $this->db->where("MONTH(f.received_date)", $month);
             $this->db->where("YEAR(f.received_date)", $year);
+            $this->db->where("f.status", 2);
             $this->db->join("tbl_cash_donations cd", "cd.fund_id = f.fund_id", "LEFT");
             $totalCashDonations = $this->db->getValue('tbl_funds f', 'SUM(cd.amount)') ?? 0;
 
@@ -75,6 +76,7 @@ class API
             ON all_dates.year = YEAR(f.received_date) 
             AND all_dates.month = MONTH(f.received_date) 
             AND f.is_deleted = 0
+            AND f.status = 2
             LEFT JOIN tbl_cash_donations AS cd 
             ON cd.fund_id = f.fund_id
             WHERE all_dates.year = ?

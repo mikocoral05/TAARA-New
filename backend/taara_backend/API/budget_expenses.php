@@ -61,6 +61,7 @@ class API
             $this->db->join('tbl_cash_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
             $this->db->where('tbl1.received_date', $likeDate, 'LIKE');
             $this->db->where('tbl1.is_deleted', 0);
+            $this->db->where('tbl1.status', 2);
             $totalCashDonations = $this->db->getValue('tbl_funds tbl1', 'SUM(tbl2.amount)');
 
             // Get total expenses up to selected date

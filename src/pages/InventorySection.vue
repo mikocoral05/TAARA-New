@@ -157,11 +157,7 @@
             </q-menu>
           </q-btn>
         </template>
-        <template #cell-computed="{ row }">
-          <div>
-            {{ formatNumber((Number(totalBalance) * Number(row.percentage_allocated)) / 100) }}
-          </div>
-        </template>
+
         <template #cell-id="{ rowIndex }">
           <div>{{ rowIndex + 1 }}</div>
         </template>
@@ -376,9 +372,6 @@
 import ReusableTable from 'src/components/ReusableTable.vue'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
 import {
-  getBudgetAllocation,
-  getExpensesSummary,
-  getTotalBalance,
   getInventoryList,
   getInventoryGroup,
   getInventoryListSummary,
@@ -426,10 +419,7 @@ export default {
     const selectedMonth = ref(monthToday)
     const selectedYear = ref(yearToday)
     const selectedDay = ref(dayToday)
-    const totalExpense = ref(null)
 
-    const totalBalance = ref(null)
-    const dailyExpenseTotal = ref([])
     const itemsCount = ref([])
     const scrollAreaRef = ref(null)
     const scrollListRef = ref(null)
@@ -510,20 +500,6 @@ export default {
       }
     }
 
-    const updateBudgetAllocationSum = () => {
-      getBudgetAllocation().then((response) => {
-        rows.value = response
-      })
-      getExpensesSummary({ month: selectedMonth.value, year: selectedYear.value }).then(
-        (response) => {
-          totalExpense.value = response?.total
-        },
-      )
-      getTotalBalance({ month: selectedMonth.value, year: selectedYear.value }).then((response) => {
-        totalBalance.value = response?.balance
-      })
-    }
-
     const filterInventory = (filterNo) => {
       filterTab.value = filterNo
       if (filterNo == 1) {
@@ -577,31 +553,27 @@ export default {
     }
 
     watchEffect(() => {
-      if (tab.value == 1) {
-        updateBudgetAllocationSum()
-      } else {
-        getInventoryList(obj[tab.value]).then((response) => {
-          tableConfig.value.title = `${capitalize(obj[tab.value])} List`
-          tableConfig.value.columns = [
-            'id',
-            'item_name',
-            'group_name',
-            'quantity',
-            'unit',
-            'expiration_date',
-            'btn',
-          ]
-          rows.value = response
-          console.log(rows.value)
+      getInventoryList(obj[tab.value]).then((response) => {
+        tableConfig.value.title = `${capitalize(obj[tab.value])} List`
+        tableConfig.value.columns = [
+          'id',
+          'item_name',
+          'group_name',
+          'quantity',
+          'unit',
+          'expiration_date',
+          'btn',
+        ]
+        rows.value = response
+        console.log(rows.value)
 
-          itemsCount.value = rows.value.reduce((total, item) => {
-            return total + item.quantity
-          }, 0)
-        })
-        getInventoryListSummary(obj[tab.value]).then((response) => {
-          elseSummary.value = response
-        })
-      }
+        itemsCount.value = rows.value.reduce((total, item) => {
+          return total + item.quantity
+        }, 0)
+      })
+      getInventoryListSummary(obj[tab.value]).then((response) => {
+        elseSummary.value = response
+      })
     })
 
     return {
@@ -623,12 +595,8 @@ export default {
       scrollListRef,
       scrollAreaRef,
       selectedDay,
-      dailyExpenseTotal,
       generateYearList,
-      updateBudgetAllocationSum,
-      totalBalance,
       formatNumber,
-      totalExpense,
       selectedMonth,
       selectedYear,
       monthNames,

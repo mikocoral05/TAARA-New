@@ -109,7 +109,7 @@
         "
         :visible-columns="
           tab == 1
-            ? ['id', 'name', 'percentage_allocated', 'computed', 'btn']
+            ? ['id', 'name', 'percentage_allocated', 'computed', 'computed_expense', 'btn']
             : [
                 'id',
                 'expense_title',
@@ -117,6 +117,7 @@
                 'payment_method',
                 'expense_date',
                 'attachments',
+                'file_id',
                 'btn',
               ]
         "
@@ -151,6 +152,19 @@
         <template #cell-computed="{ row }">
           <div>
             {{ formatNumber((Number(totalBalance) * Number(row.percentage_allocated)) / 100) }}
+          </div>
+        </template>
+        <template #cell-computed_expense="{ row }">
+          <div>
+            {{ formatNumber(getSpecificExpenseFn(row.id)) }}
+          </div>
+        </template>
+        <template #cell-file_id="{ row }">
+          <div v-if="row?.file_id">
+            {{ 'Yes' }}
+          </div>
+          <div v-else class="text-grey-5">
+            {{ 'N/a' }}
           </div>
         </template>
       </ReusableTable>
@@ -431,6 +445,7 @@ import {
   softDeleteBudgetAndExpenses,
   addExpense,
   updateExpense,
+  getExpensesList,
 } from 'src/composable/latestComposable'
 import {
   formatNumber,
@@ -448,7 +463,7 @@ export default {
   },
   setup() {
     const $q = useQuasar()
-    const tab = ref('2')
+    const tab = ref('1')
     const obj = { 1: 'Budget Allocation', 2: 'Expenses' }
     const obj2 = { Add: 'Adding', Edit: 'Updating', Delete: 'Deleting' }
     const editTab = ref('1')
@@ -486,6 +501,7 @@ export default {
     const arrayOfId = ref([])
     const categoryOptions = ref([])
     const percentageAvailable = ref(0)
+    const expenseList = ref([])
 
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
@@ -617,14 +633,38 @@ export default {
       })
     }
 
+    const getSpecificExpenseFn = (allocation_id) => {
+      const result = expenseList.value
+        .filter((obj) => obj.category_id == allocation_id)
+        .reduce((sum, item) => sum + Number(item.amount), 0)
+      return result ?? 0
+    }
+
     const updateBudgetAllocationSum = () => {
-      getBudgetAllocation().then((response) => {
+      getBudgetAllocation().then(async (response) => {
         rows.value = response
+        console.log(rows.value)
         categoryOptions.value = response
+        expenseList.value = await getExpensesList(selectedMonth.value, selectedYear.value)
+        console.log(expenseList.value)
+        const addedObj = {
+          id: null,
+          name: 'Others',
+          percentage_allocated: null,
+          date_created: '2025-05-26 13:37:10',
+          is_deleted: 0,
+          deleted_at: null,
+        }
+        const nullisthList = getSpecificExpenseFn(null)
+
+        if (nullisthList) {
+          rows.value.push({ ...addedObj })
+        }
       })
       getExpensesSummary({ month: selectedMonth.value, year: selectedYear.value }).then(
         (response) => {
           totalExpense.value = response?.total
+          console.log(response)
         },
       )
       getTotalBalance({ month: selectedMonth.value, year: selectedYear.value }).then((response) => {
@@ -690,6 +730,8 @@ export default {
     })
 
     return {
+      getSpecificExpenseFn,
+      expenseList,
       viewImage,
       previewImage,
       imageFnUpdate,
@@ -750,8 +792,15 @@ export default {
         },
         {
           name: 'computed',
-          label: 'Accumulated Expenses',
+          label: 'Accumulated Amount',
           field: 'computed',
+          sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'computed_expense',
+          label: 'Accumulated Expenses',
+          field: 'computed_expense',
           sortable: true,
           align: 'center',
         },

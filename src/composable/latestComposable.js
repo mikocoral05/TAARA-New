@@ -278,6 +278,13 @@ export const getExpensesSummary = (obj) => {
   })
 }
 
+export const getExpensesList = async (month, year) => {
+  const response = await api.get('budget_expenses.php', {
+    params: { get_expenses_list: { month, year } },
+  })
+  return response.data.data
+}
+
 export const getTotalBalance = (obj) => {
   return new Promise((resolve, reject) => {
     api

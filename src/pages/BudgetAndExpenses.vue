@@ -160,7 +160,16 @@
           </div>
         </template>
         <template #cell-computed_expense="{ row }">
-          <div>
+          <div
+            class="text-red"
+            v-if="
+              getSpecificExpenseFn(row.id) >
+              (Number(totalBalance) * Number(row.percentage_allocated)) / 100
+            "
+          >
+            {{ formatNumber(getSpecificExpenseFn(row.id)) }}
+          </div>
+          <div v-else>
             {{ formatNumber(getSpecificExpenseFn(row.id)) }}
           </div>
         </template>

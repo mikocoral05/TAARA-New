@@ -386,6 +386,7 @@ class API
             $this->db->where('f.is_deleted', 0);
             $this->db->where('f.donation_type', 'cash');
             $this->db->where('YEAR(f.received_date)', $year);
+            $this->db->where('f.status', 2);
             $this->db->groupBy('MONTH(f.received_date)');
             $this->db->orderBy('MONTH(f.received_date)', 'ASC');
             $this->db->join('tbl_cash_donations cd', 'f.fund_id = cd.fund_id', 'LEFT');

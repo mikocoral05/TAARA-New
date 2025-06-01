@@ -454,7 +454,7 @@ export default {
     const selectedMonth = ref(monthToday)
     const seletedOperation = ref('<=')
     const rows = ref([])
-    const tab = ref(1)
+    const tab = ref(2)
     const columns = [
       {
         name: 'id',

@@ -1,7 +1,7 @@
 <template>
   <q-page>
     <div class="row no-wrap justify-between items-center">
-      <q-tabs dense v-model="tab" inline-label flat active-color="primary" active-bg-color="white">
+      <q-tabs dense v-model="tab" inline-label flat active-color="primary">
         <q-tab name="1" icon="sym_r_account_balance_wallet" label="Budget Allocation" no-caps />
         <q-tab name="2" icon="sym_r_price_check" label="Daily Expenses" no-caps />
       </q-tabs>

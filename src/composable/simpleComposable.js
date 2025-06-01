@@ -536,14 +536,14 @@ export const getFileNameFromLink = (link) => {
 
 export const statusColor = (status) => {
   const stringMap = {
-    pending: 'bg-orange ',
+    pending: 'bg-orange',
     approved: 'bg-positive q-px-sm',
     disapproved: 'bg-negative q-px-sm',
   }
   const numberMap = {
-    1: 'bg-orange text-white',
-    2: 'bg-positive q-px-sm text-white',
-    3: 'bg-negative q-px-sm text-white',
+    1: 'bg-white text-orange-10',
+    2: 'bg-white q-px-sm text-positive',
+    3: 'bg-white q-px-sm text-positive',
   }
   return typeof status === 'string' ? stringMap[status] : numberMap[status]
 }

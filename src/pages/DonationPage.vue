@@ -82,6 +82,7 @@
         </template>
       </ReusableTable>
     </div>
+
     <q-dialog position="right" full-height maximized v-model="showDialog">
       <q-card style="width: 50vw; height: 500px" class="text-black column justify-between">
         <q-form class="full-height column justify-between no-wrap" @submit="saveFn()">
@@ -387,6 +388,28 @@
               </div>
               <div class="column no-wrap q-mt-lg">
                 <div class="text-capitalize">
+                  Status <span class="text-negative text-caption"> *</span>
+                </div>
+                <q-select
+                  outlined
+                  v-model="dataStorage.status"
+                  class="q-mt-sm"
+                  :rules="[(val) => !!val || 'Method is required!']"
+                  :options="[
+                    { label: 'Pending', value: 1 },
+                    { label: 'Approved', value: 2 },
+                    { label: 'Disapproved', value: 3 },
+                  ]"
+                  dense
+                  emit-value
+                  map-options
+                  style="width: 150px"
+                  behavior="menu"
+                  :readonly="mode == 'View'"
+                />
+              </div>
+              <div class="column no-wrap q-mt-lg">
+                <div class="text-capitalize">
                   Notes <span class="text-grey-7 text-caption"> (optional)</span>
                 </div>
                 <q-input
@@ -458,6 +481,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+
     <ImageViewer v-model="viewImage" :imageUrl="previewImage" />
   </q-page>
 </template>

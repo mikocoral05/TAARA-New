@@ -143,7 +143,7 @@ class API
             $obj = $payload['edit_donation'];
             $fund_id = $payload['edit_donation']['fund_id'];
             $table = $payload['edit_donation']['donation_type'] == 'cash' ? 'tbl_cash_donations' : 'tbl_material_donations';
-            $new_img =  $obj['new_image'];
+            $new_img =  $obj['new_image'] ?? '';
             $last_insert_id = "";
             if (!empty($new_img)) {
                 $this->db->insert('tbl_files', ['image_path' => $new_img]);
@@ -155,10 +155,15 @@ class API
                 'allocated_for'      => $obj['allocated_for'] ?? null,
                 'received_date'      => $obj['received_date'] ?? null,
                 'anonymous'          => $obj['anonymous'] ?? null,
-                'file_id'          => $last_insert_id ?? null,
+                'status'             => $obj['status'] ?? 1,
                 'updated_at' => date('Y-m-d H:i:s')
 
             ];
+
+            if (!empty($last_insert_id)) {
+                $updateData['file_id'] = $last_insert_id;
+            }
+
             $this->db->where('fund_id', $fund_id);
             $this->db->update('tbl_funds', $updateData);
 

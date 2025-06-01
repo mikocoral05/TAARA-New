@@ -53,6 +53,21 @@ class API
                 'data' => ['total' => $totalAmount],
                 'method' => 'GET'
             ]);
+        } else if (array_key_exists('get_expenses_list', $payload)) {
+            $month = $payload['get_expenses_list']['month'];
+            $year = $payload['get_expenses_list']['year'];
+
+            $this->db->where('MONTH(expense_date)', $month);
+            $this->db->where('YEAR(expense_date)', $year);
+
+            $this->db->where('is_deleted', 0);
+            $query = $this->db->get("tbl_expenses");
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => $query,
+                'method' => 'GET'
+            ]);
         } else if (array_key_exists('get_total_balance', $payload)) {
             $month = str_pad($payload['get_total_balance']['month'], 2, '0', STR_PAD_LEFT);
             $year = $payload['get_total_balance']['year'];

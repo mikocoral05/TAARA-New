@@ -118,70 +118,24 @@ class API
 
     public function httpPut($payload)
     {
-        if (isset($payload['soft_delete_schedule'])) {
-            $id = $payload['soft_delete_schedule'];
+        if (isset($payload['change_password'])) {
+            $password = trim($payload['change_password']['password']);
+            $toWhere = trim($payload['change_password']['username']);
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-            $ids = is_array($id) ? $id : explode(',', $id);
-
-            // Set the update values here in the backend
             $update_values = [
-                'is_deleted' => 1,
-                'deleted_at' => date('Y-m-d H:i:s')
+                'password' => $hashedPassword,
             ];
 
             // Update records matching the IDs
-            $this->db->where('id', $ids, 'IN');
-            $updated = $this->db->update('tbl_animal_schedule', $update_values);
+            $this->db->where("username", $toWhere);
+            $this->db->orwhere("email_address", $toWhere);
+            $updated = $this->db->update('tbl_users', $update_values);
 
             if ($updated) {
-                echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
+                echo json_encode(['status' => 'success', 'message' => 'Password update successfully', 'method' => 'PUT']);
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
-            }
-        } else if (isset($payload['edit_animal_info'])) {
-            $obj = $payload['edit_animal_info'];
-
-            $update_values = [
-                'name' => $obj['name'] ?? null,
-                'species' => $obj['species'] ?? null,
-                'breed' => $obj['breed'] ?? null,
-                'fur_color' => $obj['fur_color'] ?? null,
-                'eye_color' => $obj['eye_color'] ?? null,
-                'date_of_birth' => $obj['date_of_birth'] ?? null,
-                'weight' => $obj['weight'] ?? null,
-                'height' => $obj['height'] ?? null,
-                'sex' => $obj['sex'] ?? null,
-                'spayed_neutered' => $obj['spayed_neutered'] ?? null,
-                'vaccination_status' => $obj['vaccination_status'] ?? null,
-                'temperament' => $obj['temperament'] ?? null, // stored as JSON string
-                'skills' => $obj['skills'] ?? null,           // stored as JSON string
-                'favorite_food' => $obj['favorite_food'] ?? null,
-                'story_background' => $obj['story_background'] ?? null,
-                'rescue_status' => $obj['rescue_status'] ?? null,
-                'health_status' => $obj['health_status'] ?? null,
-                'medical_needs' => $obj['medical_needs'] ?? null,
-                'date_rescued' => $obj['date_rescued'] ?? null,
-                'primary_image' => $obj['primary_image'] ?? 0,
-                'updated_at' => date('Y-m-d H:i:s'),
-            ];
-
-            $animal_id = $obj['animal_id'];
-
-            $this->db->where('animal_id', $animal_id);
-            $updated = $this->db->update('tbl_animal_info', $update_values);
-
-            if ($updated) {
-                echo json_encode([
-                    'status' => 'success',
-                    'message' => 'Animal info updated successfully',
-                    'method' => 'PUT'
-                ]);
-            } else {
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'Failed to update animal info',
-                    'method' => 'PUT'
-                ]);
+                echo json_encode(['status' => 'error', 'message' => 'Failed to udpate password', 'method' => 'PUT']);
             }
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Missing Animal info in the payload']);

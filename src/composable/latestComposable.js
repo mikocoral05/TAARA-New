@@ -1021,7 +1021,7 @@ export const registerUser = (obj) => {
   return new Promise((resolve, reject) => {
     api
       .post('login.php', {
-        params: { register_user: obj },
+        register_user: obj,
       })
       .then((response) => {
         resolve(response.data)

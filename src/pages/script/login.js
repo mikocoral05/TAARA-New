@@ -11,11 +11,11 @@ import {
   addUser,
   dearUserName,
   dearUserPhoneNumber,
-  userData,
 } from 'src/composable/taaraComposable'
 import BubbleChart from 'src/components/BubbleChart.vue'
 import { logIn, registerUser, sendEmailActiviationOtp } from 'src/composable/latestComposable'
 import { globalStore } from 'src/stores/global-store'
+import { civilStatusOption } from 'src/composable/optionsComposable'
 export default {
   components: { BubbleChart },
   setup() {
@@ -23,7 +23,7 @@ export default {
     const store = globalStore()
     const router = useRouter()
     let fadeValue = ref(false)
-    let step = ref(4)
+    let step = ref(1)
     let code = ref(null)
     const tab = ref('register')
     const includeNumber = ref(false)
@@ -46,6 +46,8 @@ export default {
     let changer = ref(0)
     let errorEmail = ref('')
     const showLoginError = ref(false)
+    const loadingVar = ref(false)
+    const emailOrPhone = ref(0)
     const referenceCode = ref(Math.floor(1000 + Math.random() * 9000))
     let registerInfo = ref({
       first_name: null,
@@ -154,6 +156,8 @@ export default {
     }
 
     const registerVerification = async (base) => {
+      emailOrPhone.value = base
+      loadingVar.value = true
       if (base == 1) {
         const response = await sendEmailActiviationOtp(
           userInfo.value.email_address,
@@ -163,6 +167,7 @@ export default {
           otpSent.value = true
         }
         console.log(response)
+        loadingVar.value = false
       } else {
         sendTelerivetSms(registerInfo.value.phone_number, registerMessageSms())
       }
@@ -266,7 +271,7 @@ export default {
           group: 'register',
           message: 'Registering . Please wait...',
         })
-        const response = await registerUser(userData.value)
+        const response = await registerUser(userInfo.value)
         setTimeout(() => {
           $q.loading.show({
             group: 'register',
@@ -400,6 +405,10 @@ export default {
       includeNumber.value = /\d/.test(userInfo.value.password)
     })
     return {
+      emailOrPhone,
+      loadingVar,
+      isPwd: ref(true),
+      civilStatusOption,
       otpSent,
       registerVerification,
       tab,
@@ -434,7 +443,6 @@ export default {
       confirm_password,
       checkResetVerificationCode,
       pin,
-      isPwd: ref(true),
       fadeValue,
       step,
       miniStep,

@@ -45,7 +45,7 @@
                         outlined
                         placeholder="First name"
                         dense
-                        v-model="userInfo.username"
+                        v-model="userInfo.first_name"
                         :rules="[(val) => !!val || 'First name is required!']"
                         :error="showLoginError"
                       />
@@ -72,7 +72,6 @@
                         outlined
                         placeholder="Occupation"
                         dense
-                        maxlength="1"
                         v-model="userInfo.occupation"
                       />
                     </div>
@@ -80,12 +79,15 @@
                       <p class="q-ma-none q-mb-sm">
                         Civil status<span class="text-negative q-ml-sm">*</span>
                       </p>
-                      <q-input
-                        outlined
-                        placeholder="Civil status"
-                        dense
+
+                      <q-select
                         v-model="userInfo.civil_status"
                         :rules="[(val) => !!val || 'Civil status is required!']"
+                        outlined
+                        dense
+                        :options="civilStatusOption"
+                        emit-value
+                        map-options
                       />
                     </div>
                   </div>
@@ -179,7 +181,6 @@
                         outlined
                         placeholder="City or Municipality"
                         dense
-                        maxlength="1"
                         v-model="userInfo.city_municipality"
                       />
                     </div>
@@ -236,11 +237,19 @@
                     <q-input
                       outlined
                       label="Password"
-                      type="password"
                       dense
+                      :type="isPwd ? 'password' : 'text'"
                       v-model="userInfo.password"
                       :rules="[(val) => !!val || 'Password is required!']"
-                    />
+                    >
+                      <template v-slot:append>
+                        <q-icon
+                          :name="isPwd ? 'visibility_off' : 'visibility'"
+                          class="cursor-pointer"
+                          @click="isPwd = !isPwd"
+                        />
+                      </template>
+                    </q-input>
                   </div>
                   <div class="column no-wrap full-width q-mb-xl q-mt-sm">
                     <div class="q-mb-md">Your password needs to include:</div>
@@ -279,6 +288,11 @@
                           <div>Mobile phone</div>
                           <div class="text-grey-7">{{ userData?.phone_number }}</div>
                         </div>
+                        <q-spinner-ios
+                          color="primary"
+                          size="2em"
+                          v-if="loadingVar && emailOrPhone == 2"
+                        />
                       </div>
                       <div
                         style="width: 200px"
@@ -290,15 +304,21 @@
                           <div>Email</div>
                           <div class="text-grey-7">{{ userData?.email_address }}</div>
                         </div>
+                        <q-spinner-ios
+                          color="primary"
+                          size="2em"
+                          v-if="loadingVar && emailOrPhone == 1"
+                        />
                       </div>
                     </div>
                   </div>
-                  <div class="flex flex-center" v-if="otpSent">
+                  <div class="flex flex-center full-height" v-if="otpSent">
                     <q-input
                       outlined
                       v-model="pin"
                       style="width: 200px"
-                      placeholder="Enter OTP send to your choosend option"
+                      hint="Enter OTP send to your choosend option"
+                      input-class="text-center"
                     />
                   </div>
                 </q-step>

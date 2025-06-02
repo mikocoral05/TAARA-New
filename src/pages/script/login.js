@@ -1,7 +1,13 @@
 import { ref, onBeforeUnmount, watchEffect } from 'vue'
 import { useRouter } from 'vue-router'
 import { QSpinnerGears, useQuasar, QSpinnerFacebook } from 'quasar'
-import { dateToday, timeNow, Email, sendTelerivetSms } from 'src/composable/simpleComposable'
+import {
+  dateToday,
+  timeNow,
+  Email,
+  sendTelerivetSms,
+  checkEmailOrPhone,
+} from 'src/composable/simpleComposable'
 import {
   dearUserEmail,
   changePass,
@@ -13,7 +19,12 @@ import {
   dearUserPhoneNumber,
 } from 'src/composable/taaraComposable'
 import BubbleChart from 'src/components/BubbleChart.vue'
-import { logIn, registerUser, sendEmailActiviationOtp } from 'src/composable/latestComposable'
+import {
+  changePassword,
+  logIn,
+  registerUser,
+  sendEmailActiviationOtp,
+} from 'src/composable/latestComposable'
 import { globalStore } from 'src/stores/global-store'
 import { civilStatusOption } from 'src/composable/optionsComposable'
 export default {
@@ -25,10 +36,9 @@ export default {
     let fadeValue = ref(false)
     let step = ref(1)
     let code = ref(null)
-    const tab = ref('login')
+    const tab = ref('forgot-password')
     const includeNumber = ref(false)
     const minSixLenght = ref(false)
-    let forgotPasswordStep = ref(0)
     let timer1, timer2
     let miniStep1 = ref(true)
     const userInfo = ref({})
@@ -70,6 +80,8 @@ export default {
     let minutes = ref(2)
     let seconds = ref(0)
     const otpSent = ref(false)
+    const forgotPasswordStep = ref(1)
+    const forgotPasswordField = ref(null)
 
     const startCountdown = () => {
       countdownTime.value = 2 * 60 // reset to 10 seconds for testing
@@ -148,14 +160,14 @@ export default {
     const registerMessageSms = () => {
       return `Hello, ${userInfo.value.first_name}
 
-Thank you for joining TAARA (Tabaco Animal Rescue and Adoption)! Please use the following code to complete your sign-up process:
+  Thank you for joining TAARA (Tabaco Animal Rescue and Adoption)! Please use the following code to complete your sign-up process:
 
-Code: ${referenceCode.value}
+  Code: ${referenceCode.value}
 
-If you did not request this, please ignore this message.
+  If you did not request this, please ignore this message.
 
-Best regards,
-TAARA Team`
+  Best regards,
+  TAARA Team`
     }
 
     const registerVerification = async (base) => {
@@ -395,6 +407,53 @@ TAARA Team`
       })
     }
 
+    const forgotFn = async () => {
+      loadingVar.value = true
+      const res = checkEmailOrPhone(forgotPasswordField.value)
+      if (res.type == 'email') {
+        const response = await sendEmailActiviationOtp(res.value, referenceCode.value)
+        if (response.status == 'success') {
+          forgotPasswordStep.value = 2
+        }
+        console.log(response)
+        loadingVar.value = false
+      } else {
+        const response = await sendTelerivetSms(res.value, registerMessageSms())
+        if (response.status == 'success') {
+          forgotPasswordStep.value = 2
+        }
+        console.log(response)
+        loadingVar.value = false
+      }
+    }
+
+    const validateForgotPassword = async () => {
+      if (forgotPasswordStep.value == 2) {
+        if (pin.value == referenceCode.value) {
+          forgotPasswordStep.value = 3
+        }
+      } else if (forgotPasswordStep.value == 3) {
+        $q.loading.show({
+          group: 'update',
+          message: 'Updating password . Please wait...',
+        })
+        const response = await changePassword(userInfo.value.emailOrPhone, userInfo.value.password)
+        console.log(response)
+        setTimeout(() => {
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+        }, 500)
+        setTimeout(() => {
+          if (response.status == 'success') {
+            tab.value = 'login'
+          }
+          $q.loading.hide()
+        }, 1000)
+      }
+    }
+
     let resetLogInInfo = () => {
       email_address.value = null
       password.value = null
@@ -414,6 +473,9 @@ TAARA Team`
       includeNumber.value = /\d/.test(userInfo.value.password)
     })
     return {
+      validateForgotPassword,
+      forgotPasswordStep,
+      forgotFn,
       emailOrPhone,
       loadingVar,
       isPwd: ref(true),
@@ -460,7 +522,7 @@ TAARA Team`
       disableProggress,
       aggree,
       code,
-      forgotPasswordStep,
+      forgotPasswordField,
       changePassBtn,
       resendVerification,
       civil_status_options: [

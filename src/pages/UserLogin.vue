@@ -318,10 +318,9 @@
                     <q-input
                       outlined
                       v-model="pin"
-                      placeholder="2325"
                       type="number"
                       style="width: 250px"
-                      hint="Enter OTP send to your choosend option"
+                      hint="Enter OTP send to your choosen option"
                       input-class="text-center text-body1"
                     />
                   </div>
@@ -362,7 +361,6 @@
               <q-form
                 @submit="logInTaara"
                 class="full-width column justify-center items-center q-mt-lg"
-                :class="fadeValue ? '' : 'fade-in'"
               >
                 <div class="column no-wrap full-width">
                   <p class="q-ma-none q-mb-sm">
@@ -391,7 +389,7 @@
                   />
                 </div>
                 <div class="w-100 text-right">
-                  <u @click="router.push('forgot-password')">Forgot password?</u>
+                  <u @click="tab = 'forgot-password'">Forgot password?</u>
                 </div>
                 <q-btn
                   label="Login"
@@ -402,6 +400,134 @@
                 <q-separator class="q-mt-md"></q-separator>
                 <p @click="tab = 'register'">
                   <u>Don't have an account yet? Crete now</u>
+                </p>
+              </q-form>
+            </div>
+          </q-tab-panel>
+
+          <q-tab-panel name="forgot-password" class="column no-wrap justify-center q-px-xl">
+            <div class="column no-wrap q-mr-md justify-center q-px-xl">
+              <div class="text-h5 text-bold fig-tree">Forgot Password</div>
+              <div class="text-grey-7 fig-tree">
+                Enter your registered email or mobile number to reset your password and regain
+                access to your account.
+              </div>
+
+              <q-form
+                @submit="forgotPasswordStep > 1 ? validateForgotPassword() : forgotFn()"
+                class="full-width column justify-center items-center q-mt-lg"
+              >
+                <div class="column no-wrap q-pt-md full-width" v-if="forgotPasswordStep == 1">
+                  <p class="q-ma-none q-mb-sm">
+                    Enter Email or Phone number<span class="q-ml-sm text-negative">*</span>
+                  </p>
+                  <q-input
+                    outlined
+                    label="Email or Phone"
+                    dense
+                    v-model="forgotPasswordField"
+                    :rules="[(val) => !!val || 'This field is required!']"
+                  />
+                </div>
+                <div class="column no-wrap q-pt-md full-width" v-if="forgotPasswordStep == 2">
+                  <p class="q-ma-none q-mb-sm">
+                    Enter the OTP sent to you choosen option<span class="q-ml-sm text-negative"
+                      >*</span
+                    >
+                  </p>
+                  <q-input
+                    outlined
+                    v-model="pin"
+                    type="number"
+                    dense
+                    hint="Enter OTP send to your choosen option"
+                    input-class="text-center text-body1"
+                  />
+                </div>
+                <div class="column no-wrap q-pt-md full-width" v-if="forgotPasswordStep == 3">
+                  <div class="column no-wrap full-width">
+                    <p class="q-ma-none q-mb-sm">
+                      Input new password<span class="q-ml-sm text-negative">*</span>
+                    </p>
+                    <q-input
+                      outlined
+                      placeholder="New Password"
+                      dense
+                      :type="isPwd ? 'password' : 'text'"
+                      v-model="userInfo.password"
+                      :rules="[(val) => !!val || 'Password is required!']"
+                    >
+                      <template v-slot:append>
+                        <q-icon
+                          :name="isPwd ? 'visibility_off' : 'visibility'"
+                          class="cursor-pointer"
+                          @click="isPwd = !isPwd"
+                        />
+                      </template>
+                    </q-input>
+                  </div>
+                  <div class="column no-wrap q-pt-md full-width">
+                    <p class="q-ma-none q-mb-sm">
+                      Password<span class="q-ml-sm text-negative">*</span>
+                    </p>
+                    <q-input
+                      outlined
+                      placeholder="Confirm New Password"
+                      dense
+                      :type="isPwd ? 'password' : 'text'"
+                      v-model="userInfo.confirm_password"
+                      :rules="[
+                        (val) => !!val || 'Confirm Password is required!',
+                        (val) => val == userInfo.password || `Password didn't match`,
+                      ]"
+                    >
+                      <template v-slot:append>
+                        <q-icon
+                          :name="isPwd ? 'visibility_off' : 'visibility'"
+                          class="cursor-pointer"
+                          @click="isPwd = !isPwd"
+                        />
+                      </template>
+                    </q-input>
+                  </div>
+                  <div class="column no-wrap full-width q-mb-xl q-mt-sm">
+                    <div class="q-mb-md">Your password needs to include:</div>
+                    <div class="row no-wrap items-center">
+                      <q-icon
+                        name="check_circle"
+                        :color="includeNumber ? 'positive' : 'black'"
+                        class="q-mr-sm"
+                      />
+                      <div>Must include one number</div>
+                    </div>
+                    <div class="row no-wrap items-center">
+                      <q-icon
+                        name="check_circle"
+                        :color="minSixLenght ? 'positive' : 'black'"
+                        class="q-mr-sm"
+                      />
+                      <div>Min 6 characters</div>
+                    </div>
+                  </div>
+                </div>
+
+                <q-btn
+                  :label="
+                    forgotPasswordStep == 1
+                      ? 'SEND OTP'
+                      : forgotPasswordStep == 2
+                        ? 'VERIFY'
+                        : 'CHANGE PASSWORD'
+                  "
+                  no-caps
+                  class="bg-primary text-white full-width q-mt-xl"
+                  type="submit"
+                >
+                  <q-spinner-ios color="white" size="1.2rem" class="q-ml-md" v-if="loadingVar"
+                /></q-btn>
+                <q-separator class="q-mt-md"></q-separator>
+                <p @click="tab = 'login'">
+                  <u>Back to Login</u>
                 </p>
               </q-form>
             </div>

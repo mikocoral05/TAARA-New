@@ -1017,6 +1017,13 @@ export const logIn = (obj) => {
   })
 }
 
+export const changePassword = async (username, password) => {
+  const response = await api.put('login.php', {
+    change_password: { username, password },
+  })
+  return response.data
+}
+
 export const registerUser = (obj) => {
   return new Promise((resolve, reject) => {
     api

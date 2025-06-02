@@ -87,6 +87,25 @@ class API
                     'method' => 'POST'
                 ]);
             }
+        } else if (isset($payload['register_user'])) {
+            $data = $payload['register_user'];
+
+            $data['is_activated'] = 1;
+            $insert = $this->db->insert('tbl_users', $data);
+
+            if ($insert) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Registration successfully!',
+                    'method' => 'POST',
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to register',
+                    'method' => 'POST'
+                ]);
+            }
         } else {
             echo json_encode([
                 'status' => 'error',

@@ -17,10 +17,10 @@ class API
         if (array_key_exists('login', $payload)) {
             $username_or_email = $payload['login']['username'];
             $password = $payload['login']['password'];
-
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
             $this->db->where("u.is_deleted", 1);
             $this->db->where("u.is_activated", 1);
-            $this->db->where("u.password", $password);
+            $this->db->where("u.password", $hashedPassword);
             $this->db->where("u.username", $username_or_email);
             $this->db->orwhere("u.email_address", $username_or_email);
             $this->db->join("tbl_files f", "f.id = u.image_id", "LEFT");

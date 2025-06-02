@@ -36,7 +36,7 @@ export default {
     let fadeValue = ref(false)
     let step = ref(1)
     let code = ref(null)
-    const tab = ref('forgot-password')
+    const tab = ref('login')
     const includeNumber = ref(false)
     const minSixLenght = ref(false)
     let timer1, timer2

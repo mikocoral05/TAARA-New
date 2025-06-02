@@ -359,7 +359,7 @@
               </div>
 
               <q-form
-                @submit="logInTaara"
+                @submit="logInTaara()"
                 class="full-width column justify-center items-center q-mt-lg"
               >
                 <div class="column no-wrap full-width">

@@ -128,7 +128,7 @@ class API
             ];
 
             // Update records matching the IDs
-            $this->db->where("username", $toWhere);
+            $this->db->where("phone_number", $toWhere);
             $this->db->orwhere("email_address", $toWhere);
             $updated = $this->db->update('tbl_users', $update_values);
 

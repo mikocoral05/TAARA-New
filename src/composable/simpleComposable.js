@@ -333,8 +333,17 @@ var Email = {
 export const removeNumSymbols = (num) => {
   if (typeof num !== 'string') return ''
 
-  const cleanedNumber = num.replace(/[^\d]/g, '') // Remove non-digit characters
-  const finalNumber = cleanedNumber.startsWith('0') ? cleanedNumber.slice(1) : cleanedNumber
+  const cleanedNumber = num.replace(/[^\d]/g, '')
+
+  // Remove starting '0' or '63' if present
+  let finalNumber = cleanedNumber
+
+  if (finalNumber.startsWith('63')) {
+    finalNumber = finalNumber.slice(2)
+  } else if (finalNumber.startsWith('0')) {
+    finalNumber = finalNumber.slice(1)
+  }
+
   return `+63${finalNumber}`
 }
 

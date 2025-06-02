@@ -437,8 +437,13 @@ export default {
           group: 'update',
           message: 'Updating password . Please wait...',
         })
-        const response = await changePassword(userInfo.value.emailOrPhone, userInfo.value.password)
-        console.log(response)
+        const res = checkEmailOrPhone(forgotPasswordField.value)
+        const sliceIfPhone =
+          res.type === 'phone' && res.value.startsWith('+63')
+            ? res.value.slice(3) // remove '+63'
+            : res.value
+
+        const response = await changePassword(sliceIfPhone, userInfo.value.password)
         setTimeout(() => {
           $q.loading.show({
             group: 'update',

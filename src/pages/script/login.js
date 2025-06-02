@@ -13,7 +13,7 @@ import {
   dearUserPhoneNumber,
 } from 'src/composable/taaraComposable'
 import BubbleChart from 'src/components/BubbleChart.vue'
-import { logIn } from 'src/composable/latestComposable'
+import { logIn, sendEmailActiviationOtp } from 'src/composable/latestComposable'
 import { globalStore } from 'src/stores/global-store'
 export default {
   components: { BubbleChart },
@@ -22,9 +22,9 @@ export default {
     const store = globalStore()
     const router = useRouter()
     let fadeValue = ref(false)
-    let step = ref(1)
+    let step = ref(4)
     let code = ref(null)
-    const tab = ref('login')
+    const tab = ref('register')
     const includeNumber = ref(false)
     const minSixLenght = ref(false)
     let forgotPasswordStep = ref(0)
@@ -45,7 +45,7 @@ export default {
     let changer = ref(0)
     let errorEmail = ref('')
     const showLoginError = ref(false)
-    let referenceCode = ref(Math.floor(1000 + Math.random() * 9000))
+    const referenceCode = ref(Math.floor(1000 + Math.random() * 9000))
     let registerInfo = ref({
       first_name: null,
       last_name: null,
@@ -66,6 +66,7 @@ export default {
     let timerId = null
     let minutes = ref(2)
     let seconds = ref(0)
+    const checkOtp = ref(false)
 
     const startCountdown = () => {
       countdownTime.value = 2 * 60 // reset to 10 seconds for testing
@@ -141,15 +142,15 @@ export default {
       }
     }
 
-    let registerMessageEmail = () => {
-      return (
-        'Hello,[' +
-        registerInfo.value.first_name +
-        '] <br><br>Thank you for joining TAARA (Tabaco Animal Rescue and Adoption)! Please use the following code to complete your sign-up process:<br><br><b>Code: ' +
-        referenceCode.value +
-        '</b><br><br> If you did not request this, please ignore this message.<br><br>Best regards, TAARA Team'
-      )
-    }
+    // let registerMessageEmail = () => {
+    //   return (
+    //     'Hello,[' +
+    //     registerInfo.value.first_name +
+    //     '] <br><br>Thank you for joining TAARA (Tabaco Animal Rescue and Adoption)! Please use the following code to complete your sign-up process:<br><br><b>Code: ' +
+    //     referenceCode.value +
+    //     '</b><br><br> If you did not request this, please ignore this message.<br><br>Best regards, TAARA Team'
+    //   )
+    // }
 
     let registerMessageSms = () => {
       return (
@@ -161,15 +162,19 @@ export default {
       )
     }
 
-    let registerVerification = () => {
-      Email.send({
-        SecureToken: 'e16c5656-79fd-4b50-8411-d2cbfcff3662',
-        To: registerInfo.value.email_address,
-        From: 'michaelangelo.corral.personal@gmail.com',
-        Subject: 'Account Creation Request',
-        Body: registerMessageEmail(),
-      }).then((message) => console.log(message))
-      sendTelerivetSms(registerInfo.value.phone_number, registerMessageSms())
+    const registerVerification = (base) => {
+      // Email.send({
+      //   SecureToken: 'e16c5656-79fd-4b50-8411-d2cbfcff3662',
+      //   To: registerInfo.value.email_address,
+      //   From: 'michaelangelo.corral.personal@gmail.com',
+      //   Subject: 'Account Creation Request',
+      //   Body: registerMessageEmail(),
+      // }).then((message) => console.log(message))
+      if (base == 1) {
+        sendEmailActiviationOtp(userInfo.value.email_address, referenceCode.value)
+      } else {
+        sendTelerivetSms(registerInfo.value.phone_number, registerMessageSms())
+      }
     }
 
     let finishUp = (email_address) => {
@@ -229,7 +234,7 @@ export default {
     }
 
     let logInTaara = () => {
-      if (step.value !== 4) {
+      if (step.value !== 4 && !checkOtp.value) {
         step.value += 1
         return
       }
@@ -385,6 +390,8 @@ export default {
       includeNumber.value = /\d/.test(userInfo.value.password)
     })
     return {
+      checkOtp,
+      registerVerification,
       tab,
       slide: ref(1),
       autoplay: ref(true),

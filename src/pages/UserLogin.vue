@@ -27,11 +27,12 @@
                 flat
                 class="q-pa-none full-height full-width"
                 style="min-height: 450px"
+                contracted
               >
                 <q-step
                   :name="1"
-                  title="Basic Info"
-                  icon="settings"
+                  title="Basic info"
+                  icon="sym_r_account_circle"
                   :done="step > 1"
                   class="q-pa-none"
                 >
@@ -142,17 +143,62 @@
                   </div>
                 </q-step>
 
-                <q-step
-                  :name="2"
-                  title="Address"
-                  caption="Optional"
-                  icon="create_new_folder"
-                  :done="step > 2"
-                >
-                  An ad group contains one or more ads which target a shared set of keywords.
+                <q-step :name="2" title="Address" icon="sym_r_location_on" :done="step > 2">
+                  <div class="row no-wrap">
+                    <div class="column no-wrap q-mr-md w-100">
+                      <p class="q-ma-none q-mb-sm">
+                        Street<span class="q-ml-sm text-negative">*</span>
+                      </p>
+                      <q-input
+                        outlined
+                        placeholder="Street"
+                        dense
+                        v-model="userInfo.street"
+                        :rules="[(val) => !!val || 'Street is required!']"
+                      />
+                    </div>
+                    <div class="column no-wrap w-100">
+                      <p class="q-ma-none q-mb-sm">
+                        Barangay<span class="text-negative q-ml-sm">*</span>
+                      </p>
+                      <q-input
+                        outlined
+                        placeholder="Barangay"
+                        dense
+                        v-model="userInfo.brgy_name"
+                        :rules="[(val) => !!val || 'Barangay is required!']"
+                      />
+                    </div>
+                  </div>
+                  <div class="row no-wrap">
+                    <div class="column no-wrap w-100 q-mr-md">
+                      <p class="q-ma-none q-mb-sm">
+                        City or Municipality<span class="text-negative q-ml-sm">*</span>
+                      </p>
+                      <q-input
+                        outlined
+                        placeholder="City or Municipality"
+                        dense
+                        maxlength="1"
+                        v-model="userInfo.city_municipality"
+                      />
+                    </div>
+                    <div class="column no-wrap w-100">
+                      <p class="q-ma-none q-mb-sm">
+                        Province<span class="text-negative q-ml-sm">*</span>
+                      </p>
+                      <q-input
+                        outlined
+                        placeholder="Province"
+                        dense
+                        v-model="userInfo.province"
+                        :rules="[(val) => !!val || 'Province is required!']"
+                      />
+                    </div>
+                  </div>
                 </q-step>
 
-                <q-step :name="3" title="Credentials" icon="assignment">
+                <q-step :name="3" title="Credentials" icon="sym_r_lock" :done="step > 3">
                   <div class="column no-wrap full-width">
                     <p class="q-ma-none q-mb-sm">
                       Username<span class="q-ml-sm text-negative">*</span>
@@ -164,7 +210,7 @@
                       v-model="userInfo.username"
                       :rules="[(val) => !!val || 'Username is required!']"
                       :error="showLoginError"
-                      hint="This will appear ini you public profile"
+                      hint="This will appear in your public profile"
                     />
                   </div>
                   <div class="column no-wrap full-width q-mt-md">
@@ -215,16 +261,38 @@
                       <div>Min 6 characters</div>
                     </div>
                   </div>
-                  <q-btn
-                    label="Sign In"
-                    no-caps
-                    class="bg-primary text-white full-width"
-                    type="submit"
-                  />
-                  <q-separator class="q-mt-md"></q-separator>
-                  <p @click="tab = 'login'">
-                    <u>Already have an account? Login</u>
-                  </p>
+                </q-step>
+
+                <q-step :name="4" title="Verification" icon="sym_r_vpn_key">
+                  <div class="column no-wrap">
+                    <div class="text-center">
+                      Choose where to send the OTP to activate yoru account!
+                    </div>
+                    <div class="column no-wrap items-center justify-center q-mt-md">
+                      <div
+                        style="width: 200px"
+                        class="radius-10 light-border row no-wrap q-pa-md q-px-lg items-center"
+                        @click="registerVerification(1)"
+                      >
+                        <q-icon name="sym_r_phone_iphone" size="2rem" />
+                        <div class="column no-wrap">
+                          <div>Mobile phone</div>
+                          <div class="text-grey-7">{{ userData?.phone_number }}</div>
+                        </div>
+                      </div>
+                      <div
+                        style="width: 200px"
+                        class="radius-10 light-border q-mt-md row no-wrap q-pa-md q-px-lg items-center"
+                        @click="registerVerification(2)"
+                      >
+                        <q-icon name="sym_r_mail" size="2rem" />
+                        <div class="column no-wrap q-ml-md">
+                          <div>Email</div>
+                          <div class="text-grey-7">{{ userData?.email_address }}</div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                 </q-step>
               </q-stepper>
               <div class="row no-wrap w-100 q-px-lg">
@@ -245,6 +313,10 @@
                   style="width: 150px"
                 />
               </div>
+              <q-separator class="q-mt-md"></q-separator>
+              <p @click="tab = 'login'">
+                <u>Already have an account? Login</u>
+              </p>
             </q-form>
           </q-tab-panel>
 

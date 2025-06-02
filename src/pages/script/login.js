@@ -25,7 +25,7 @@ export default {
     let fadeValue = ref(false)
     let step = ref(1)
     let code = ref(null)
-    const tab = ref('register')
+    const tab = ref('login')
     const includeNumber = ref(false)
     const minSixLenght = ref(false)
     let forgotPasswordStep = ref(0)
@@ -145,14 +145,17 @@ export default {
       }
     }
 
-    let registerMessageSms = () => {
-      return (
-        'Hello,[' +
-        registerInfo.value.first_name +
-        '] \n\nThank you for joining TAARA (Tabaco Animal Rescue and Adoption)! Please use the following code to complete your sign-up process:\n\nCode: ' +
-        referenceCode.value +
-        '\n\n If you did not request this, please ignore this message.\n\nBest regards, TAARA Team'
-      )
+    const registerMessageSms = () => {
+      return `Hello, ${registerInfo.value.first_name}
+
+      Thank you for joining TAARA (Tabaco Animal Rescue and Adoption)! Please use the following code to complete your sign-up process:
+
+      Code: ${referenceCode.value}
+
+      If you did not request this, please ignore this message.
+
+      Best regards,
+      TAARA Team`
     }
 
     const registerVerification = async (base) => {
@@ -169,7 +172,8 @@ export default {
         console.log(response)
         loadingVar.value = false
       } else {
-        sendTelerivetSms(registerInfo.value.phone_number, registerMessageSms())
+        const response = await sendTelerivetSms(userInfo.value.phone_number, registerMessageSms())
+        console.log(response)
       }
     }
 
@@ -279,6 +283,7 @@ export default {
           })
           if (response.status == 'success') {
             tab.value = 'login'
+            userInfo.value = {}
           }
         }, 500)
         setTimeout(() => {

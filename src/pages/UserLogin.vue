@@ -291,6 +291,7 @@
                         <q-spinner-ios
                           color="primary"
                           size="2em"
+                          class="q-ml-md"
                           v-if="loadingVar && emailOrPhone == 2"
                         />
                       </div>
@@ -307,6 +308,7 @@
                         <q-spinner-ios
                           color="primary"
                           size="2em"
+                          class="q-ml-md"
                           v-if="loadingVar && emailOrPhone == 1"
                         />
                       </div>
@@ -316,9 +318,11 @@
                     <q-input
                       outlined
                       v-model="pin"
-                      style="width: 200px"
+                      placeholder="2325"
+                      type="number"
+                      style="width: 250px"
                       hint="Enter OTP send to your choosend option"
-                      input-class="text-center"
+                      input-class="text-center text-body1"
                     />
                   </div>
                 </q-step>
@@ -367,10 +371,9 @@
                   <q-input
                     placeholder="Username or Email address"
                     dense
-                    filled
+                    outlined
                     v-model="userInfo.username"
                     :rules="[(val) => !!val || 'Username is required!']"
-                    hint="This will appear ini you public profile"
                   />
                 </div>
 
@@ -379,7 +382,7 @@
                     Password<span class="q-ml-sm text-negative">*</span>
                   </p>
                   <q-input
-                    filled
+                    outlined
                     label="Password"
                     type="password"
                     dense

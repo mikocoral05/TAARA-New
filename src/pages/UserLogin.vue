@@ -390,7 +390,9 @@
                     :rules="[(val) => !!val || 'Password is required!']"
                   />
                 </div>
-
+                <div class="w-100 text-right">
+                  <u @click="router.push('forgot-password')">Forgot password?</u>
+                </div>
                 <q-btn
                   label="Login"
                   no-caps

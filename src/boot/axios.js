@@ -18,6 +18,9 @@ const expressServer = axios.create({
 const imageUrl = axios.create({
   baseURL: 'http://77.37.74.195/upload',
 })
+const sendEmail = axios.create({
+  baseURL: 'https://vps.nutrivue.org/',
+})
 
 export default defineBoot(({ app }) => {
   // for use inside Vue files (Options API) through this.$axios and this.$api
@@ -31,4 +34,4 @@ export default defineBoot(({ app }) => {
   //       so you can easily perform requests against your app's API
 })
 
-export { api, expressServer, imageUrl }
+export { sendEmail, api, expressServer, imageUrl }

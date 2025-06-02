@@ -1017,6 +1017,21 @@ export const logIn = (obj) => {
   })
 }
 
+export const registerUser = (obj) => {
+  return new Promise((resolve, reject) => {
+    api
+      .post('login.php', {
+        params: { register_user: obj },
+      })
+      .then((response) => {
+        resolve(response.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
 export const getTotalUser = async () => {
   const response = await api.get('dashboard.php', {
     params: { get_user_sum: 'get_user_sum' },
@@ -1079,6 +1094,7 @@ export const sendEmailActiviationOtp = async (email, otp) => {
     email,
     otp,
   })
+  console.log(reponse.data)
 
-  return reponse.data.data
+  return reponse.data
 }

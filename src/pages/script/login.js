@@ -11,9 +11,10 @@ import {
   addUser,
   dearUserName,
   dearUserPhoneNumber,
+  userData,
 } from 'src/composable/taaraComposable'
 import BubbleChart from 'src/components/BubbleChart.vue'
-import { logIn, sendEmailActiviationOtp } from 'src/composable/latestComposable'
+import { logIn, registerUser, sendEmailActiviationOtp } from 'src/composable/latestComposable'
 import { globalStore } from 'src/stores/global-store'
 export default {
   components: { BubbleChart },
@@ -66,7 +67,7 @@ export default {
     let timerId = null
     let minutes = ref(2)
     let seconds = ref(0)
-    const checkOtp = ref(false)
+    const otpSent = ref(false)
 
     const startCountdown = () => {
       countdownTime.value = 2 * 60 // reset to 10 seconds for testing
@@ -142,16 +143,6 @@ export default {
       }
     }
 
-    // let registerMessageEmail = () => {
-    //   return (
-    //     'Hello,[' +
-    //     registerInfo.value.first_name +
-    //     '] <br><br>Thank you for joining TAARA (Tabaco Animal Rescue and Adoption)! Please use the following code to complete your sign-up process:<br><br><b>Code: ' +
-    //     referenceCode.value +
-    //     '</b><br><br> If you did not request this, please ignore this message.<br><br>Best regards, TAARA Team'
-    //   )
-    // }
-
     let registerMessageSms = () => {
       return (
         'Hello,[' +
@@ -162,16 +153,16 @@ export default {
       )
     }
 
-    const registerVerification = (base) => {
-      // Email.send({
-      //   SecureToken: 'e16c5656-79fd-4b50-8411-d2cbfcff3662',
-      //   To: registerInfo.value.email_address,
-      //   From: 'michaelangelo.corral.personal@gmail.com',
-      //   Subject: 'Account Creation Request',
-      //   Body: registerMessageEmail(),
-      // }).then((message) => console.log(message))
+    const registerVerification = async (base) => {
       if (base == 1) {
-        sendEmailActiviationOtp(userInfo.value.email_address, referenceCode.value)
+        const response = await sendEmailActiviationOtp(
+          userInfo.value.email_address,
+          referenceCode.value,
+        )
+        if (response.status == 'success') {
+          otpSent.value = true
+        }
+        console.log(response)
       } else {
         sendTelerivetSms(registerInfo.value.phone_number, registerMessageSms())
       }
@@ -233,43 +224,62 @@ export default {
       startCountdown()
     }
 
-    let logInTaara = () => {
-      if (step.value !== 4 && !checkOtp.value) {
-        step.value += 1
-        return
-      }
+    let logInTaara = async () => {
+      if (tab.value == 'login') {
+        $q.loading.show({
+          message: 'Logging in. Please wait...',
+        })
+        logIn(userInfo.value)
+          .then((response) => {
+            console.log(response.data)
 
-      $q.loading.show({
-        message: 'Logging in. Please wait...',
-      })
-      logIn(userInfo.value)
-        .then((response) => {
-          console.log(response.data)
-
-          if (response.status == 'success') {
-            store.userData = response.data
-            sessionStorage.setItem('user_data', JSON.stringify(response.data))
-            if (response.data.user_type == 1) {
-              setTimeout(() => {
-                router.replace('/public')
-                $q.loading.hide()
-              }, 1000)
+            if (response.status == 'success') {
+              store.userData = response.data
+              sessionStorage.setItem('user_data', JSON.stringify(response.data))
+              if (response.data.user_type == 1) {
+                setTimeout(() => {
+                  router.replace('/public')
+                  $q.loading.hide()
+                }, 1000)
+              } else {
+                setTimeout(() => {
+                  router.replace('/management')
+                  $q.loading.hide()
+                }, 1000)
+              }
             } else {
               setTimeout(() => {
-                router.replace('/management')
+                // showLoginError.value = !showLoginError.value
                 $q.loading.hide()
               }, 1000)
             }
-          } else {
-            setTimeout(() => {
-              // showLoginError.value = !showLoginError.value
-              $q.loading.hide()
-            }, 1000)
+          })
+          .catch((error) => {
+            console.error(error)
+          })
+      } else {
+        if (step.value < 4 && referenceCode.value !== pin.value) {
+          step.value += 1
+          return
+        }
+        $q.loading.show({
+          group: 'register',
+          message: 'Registering . Please wait...',
+        })
+        const response = await registerUser(userData.value)
+        setTimeout(() => {
+          $q.loading.show({
+            group: 'register',
+            message: response.message,
+          })
+          if (response.status == 'success') {
+            tab.value = 'login'
           }
-        })
-        .catch((error) => {
-          console.error(error)
-        })
+        }, 500)
+        setTimeout(() => {
+          $q.loading.hide()
+        }, 1000)
+      }
     }
 
     let miniStepCheck = (step) => {
@@ -390,7 +400,7 @@ export default {
       includeNumber.value = /\d/.test(userInfo.value.password)
     })
     return {
-      checkOtp,
+      otpSent,
       registerVerification,
       tab,
       slide: ref(1),

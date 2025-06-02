@@ -264,7 +264,7 @@
                 </q-step>
 
                 <q-step :name="4" title="Verification" icon="sym_r_vpn_key">
-                  <div class="column no-wrap">
+                  <div class="column no-wrap" v-if="!otpSent">
                     <div class="text-center">
                       Choose where to send the OTP to activate yoru account!
                     </div>
@@ -272,7 +272,7 @@
                       <div
                         style="width: 200px"
                         class="radius-10 light-border row no-wrap q-pa-md q-px-lg items-center"
-                        @click="registerVerification(1)"
+                        @click="registerVerification(2)"
                       >
                         <q-icon name="sym_r_phone_iphone" size="2rem" />
                         <div class="column no-wrap">
@@ -283,7 +283,7 @@
                       <div
                         style="width: 200px"
                         class="radius-10 light-border q-mt-md row no-wrap q-pa-md q-px-lg items-center"
-                        @click="registerVerification(2)"
+                        @click="registerVerification(1)"
                       >
                         <q-icon name="sym_r_mail" size="2rem" />
                         <div class="column no-wrap q-ml-md">
@@ -292,6 +292,14 @@
                         </div>
                       </div>
                     </div>
+                  </div>
+                  <div class="flex flex-center" v-if="otpSent">
+                    <q-input
+                      outlined
+                      v-model="pin"
+                      style="width: 200px"
+                      placeholder="Enter OTP send to your choosend option"
+                    />
                   </div>
                 </q-step>
               </q-stepper>

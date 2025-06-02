@@ -1,4 +1,4 @@
-import { api, imageUrl, sendEmail } from 'src/boot/axios'
+import { api, imageUrl, onlineEndpoint } from 'src/boot/axios'
 import { dateToday } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 const store = globalStore()
@@ -1090,7 +1090,7 @@ export const addWishlist = async (obj) => {
 }
 
 export const sendEmailActiviationOtp = async (email, otp) => {
-  const reponse = await sendEmail.post('/send-activation-code', {
+  const reponse = await onlineEndpoint.post('/send-activation-code', {
     email,
     otp,
   })

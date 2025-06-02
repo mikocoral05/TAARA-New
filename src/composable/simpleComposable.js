@@ -331,9 +331,23 @@ var Email = {
 }
 
 export const removeNumSymbols = (num) => {
+  if (typeof num !== 'string') return ''
+
   const cleanedNumber = num.replace(/[^\d]/g, '') // Remove non-digit characters
   const finalNumber = cleanedNumber.startsWith('0') ? cleanedNumber.slice(1) : cleanedNumber
   return `+63${finalNumber}`
+}
+
+export const checkEmailOrPhone = (param) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
+
+  if (typeof param !== 'string') return { type: 'invalid', value: '' }
+
+  if (emailRegex.test(param.trim())) {
+    return { type: 'email', value: param.trim() }
+  } else {
+    return { type: 'phone', value: removeNumSymbols(param) }
+  }
 }
 
 export const sendTelerivetSms = async (to, message) => {

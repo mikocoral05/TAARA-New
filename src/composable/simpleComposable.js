@@ -331,45 +331,22 @@ var Email = {
 }
 
 export const removeNumSymbols = (num) => {
-  const inputNumber = num
-  const cleanedNumber = inputNumber.replace(/[^\d]/g, '') // Remove non-digit characters
-  const formattedNumber = `+63${cleanedNumber}`
-  console.log(formattedNumber)
-  return formattedNumber
+  const cleanedNumber = num.replace(/[^\d]/g, '') // Remove non-digit characters
+  const finalNumber = cleanedNumber.startsWith('0') ? cleanedNumber.slice(1) : cleanedNumber
+  return `+63${finalNumber}`
 }
 
-// export const sendTelerivetSms = async (phone_number, message) => {
-//   try {
-//     const recipientNumber = removeNumSymbols(phone_number)
-//     const messageContent = message
-
-//     const response = await expressServer.post(
-//       'send-sms',
-//       {
-//         recipientNumber,
-//         messageContent,
-//       },
-//       {
-//         headers: {
-//           'Content-Type': 'application/json', // Set the correct content type
-//         },
-//       },
-//     )
-
-//     console.log('SMS sent successfully:', response.data)
-//   } catch (error) {
-//     console.error('Error sending SMS:', error.message)
-//   }
-// }
-
 export const sendTelerivetSms = async (to, message) => {
-  const reponse = await onlineEndpoint.post('/send-sms', {
-    to,
+  const cleanedTo = removeNumSymbols(to)
+
+  const response = await onlineEndpoint.post('/send-sms', {
+    to: cleanedTo,
     message,
   })
-  console.log(reponse.data)
 
-  return reponse.data
+  console.log(response.data)
+
+  return response.data
 }
 
 export const encodeAnimalId = (id) => {

@@ -146,16 +146,16 @@ export default {
     }
 
     const registerMessageSms = () => {
-      return `Hello, ${registerInfo.value.first_name}
+      return `Hello, ${userInfo.value.first_name}
 
-      Thank you for joining TAARA (Tabaco Animal Rescue and Adoption)! Please use the following code to complete your sign-up process:
+Thank you for joining TAARA (Tabaco Animal Rescue and Adoption)! Please use the following code to complete your sign-up process:
 
-      Code: ${referenceCode.value}
+Code: ${referenceCode.value}
 
-      If you did not request this, please ignore this message.
+If you did not request this, please ignore this message.
 
-      Best regards,
-      TAARA Team`
+Best regards,
+TAARA Team`
     }
 
     const registerVerification = async (base) => {
@@ -173,7 +173,11 @@ export default {
         loadingVar.value = false
       } else {
         const response = await sendTelerivetSms(userInfo.value.phone_number, registerMessageSms())
+        if (response.status == 'success') {
+          otpSent.value = true
+        }
         console.log(response)
+        loadingVar.value = false
       }
     }
 

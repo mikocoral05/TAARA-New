@@ -1,4 +1,4 @@
-import { expressServer } from 'src/boot/axios'
+import { onlineEndpoint } from 'src/boot/axios'
 import { globalStore } from 'src/stores/global-store'
 import { ref } from 'vue'
 
@@ -338,28 +338,38 @@ export const removeNumSymbols = (num) => {
   return formattedNumber
 }
 
-export const sendTelerivetSms = async (phone_number, message) => {
-  try {
-    const recipientNumber = removeNumSymbols(phone_number)
-    const messageContent = message
+// export const sendTelerivetSms = async (phone_number, message) => {
+//   try {
+//     const recipientNumber = removeNumSymbols(phone_number)
+//     const messageContent = message
 
-    const response = await expressServer.post(
-      'send-sms',
-      {
-        recipientNumber,
-        messageContent,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json', // Set the correct content type
-        },
-      },
-    )
+//     const response = await expressServer.post(
+//       'send-sms',
+//       {
+//         recipientNumber,
+//         messageContent,
+//       },
+//       {
+//         headers: {
+//           'Content-Type': 'application/json', // Set the correct content type
+//         },
+//       },
+//     )
 
-    console.log('SMS sent successfully:', response.data)
-  } catch (error) {
-    console.error('Error sending SMS:', error.message)
-  }
+//     console.log('SMS sent successfully:', response.data)
+//   } catch (error) {
+//     console.error('Error sending SMS:', error.message)
+//   }
+// }
+
+export const sendTelerivetSms = async (to, message) => {
+  const reponse = await onlineEndpoint.post('/send-sms', {
+    to,
+    message,
+  })
+  console.log(reponse.data)
+
+  return reponse.data
 }
 
 export const encodeAnimalId = (id) => {

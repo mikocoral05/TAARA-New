@@ -15,25 +15,25 @@
         />
         <div class="row no-wrap">
           <div class="img-container column justify-center items-center">
-            <div class="row justify-center items-center" v-if="store.userData.image == ''">
+            <div class="row justify-center items-center" v-if="userInfo.image == ''">
               <h4 class="q-ma-none">
-                {{ store.userData.first_name[0] }}
+                {{ userInfo.first_name[0] }}
               </h4>
             </div>
             <q-img
               :src="
-                store.userData?.image_path
-                  ? getImageLink(store.userData?.image_path)
-                  : store.userData?.sex == 1
+                userInfo?.image_path
+                  ? getImageLink(userInfo?.image_path)
+                  : userInfo?.sex == 1
                     ? 'no-profile-male.svg'
                     : 'no-profile-female.svg'
               "
               class="radius-100 q-img"
-            />asdasd
+            />
           </div>
           <div class="column justify-end items-end">
             <h4 class="q-ma-md">
-              {{ store.userData.first_name + ' ' + store.userData.last_name }}
+              {{ userInfo.first_name + ' ' + userInfo.last_name }}
             </h4>
           </div>
         </div>
@@ -65,12 +65,6 @@
         <div class="row no-wrap justify-between">
           <h5 class="q-ma-none account-title">Account</h5>
           <div class="row no-wrap btn-container">
-            <!-- <q-btn
-              class="q-mr-md text-black bg-white"
-              label="Discard"
-              no-caps
-              flat
-            /> -->
             <q-btn
               flat
               class="text-white bg-black"
@@ -91,7 +85,7 @@
             <q-input
               outlined
               dense
-              v-model="store.userData.first_name"
+              v-model="userInfo.first_name"
               :rules="[(val) => !!val || '']"
               hide-bottom-space
               :readonly="more == false"
@@ -102,9 +96,25 @@
             <q-input
               outlined
               dense
-              v-model="store.userData.last_name"
+              v-model="userInfo.last_name"
               :rules="[(val) => !!val || '']"
               hide-bottom-space
+              :readonly="more == false"
+            />
+          </div>
+        </div>
+        <div class="row no-wrap justify-between q-mb-lg">
+          <div class="column no-wrap each-div">
+            <p class="q-mb-sm">Middle name <span class="text-grey-7">( optional )</span></p>
+            <q-input outlined dense v-model="userInfo.middle_name" :readonly="more == false" />
+          </div>
+          <div class="column no-wrap each-div">
+            <p class="q-mb-sm">Suffix <span class="text-grey-7">( optional )</span></p>
+            <q-select
+              v-model="userInfo.suffix"
+              dense
+              outlined
+              :options="nameSuffixes"
               :readonly="more == false"
             />
           </div>
@@ -114,7 +124,7 @@
             <p class="q-mb-sm">Phone</p>
             <q-input
               mask="phone"
-              v-model="store.userData.phone_number"
+              v-model="userInfo.phone_number"
               prefix="+63"
               :rules="[(val) => !!val || '']"
               hide-bottom-space
@@ -132,7 +142,7 @@
 
               <q-input
                 dense
-                v-model="store.userData.birth_date"
+                v-model="userInfo.birth_date"
                 outlined
                 mask="####-##-##"
                 :rules="[(val) => !!val || '']"
@@ -144,10 +154,10 @@
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-date
-                        v-model="store.userData.birth_date"
+                        v-model="userInfo.birth_date"
                         mask="YYYY-MM-DD"
                         emit-immediately
-                        :title="store.userData.first_name"
+                        :title="userInfo.first_name"
                         subtitle="Birthday"
                       >
                         <div class="row items-center justify-end">
@@ -162,42 +172,47 @@
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">Sex</p>
               <q-select
-                v-model="store.userData.sex"
+                v-model="userInfo.sex"
                 :rules="[(val) => !!val || '']"
                 hide-bottom-space
                 dense
                 emit-value
                 map-options
                 outlined
-                :options="sex_options"
+                :options="sexOption"
                 :readonly="more == false"
               />
             </div>
           </div>
           <div class="row no-wrap justify-between q-mb-lg">
             <div class="column no-wrap each-div">
-              <p class="q-mb-sm">Occupation</p>
-              <q-input
-                v-model="store.userData.occupation"
-                :rules="[(val) => !!val || '']"
-                hide-bottom-space
-                dense
-                outlined
-                :readonly="more == false"
-              />
+              <p class="q-mb-sm">Occupation <span class="text-grey-7">( optional )</span></p>
+              <q-input v-model="userInfo.occupation" dense outlined :readonly="more == false" />
             </div>
 
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">Civil Status</p>
               <q-select
-                v-model="store.userData.civil_status"
+                v-model="userInfo.civil_status"
                 :rules="[(val) => !!val || '']"
                 hide-bottom-space
                 dense
                 outlined
                 emit-value
                 map-options
-                :options="civil_status_options"
+                :options="civilStatusOption"
+                :readonly="more == false"
+              />
+            </div>
+          </div>
+          <div class="column q-mb-lg">
+            <div class="column no-wrap each-div">
+              <p class="q-mb-sm">Bio <span class="text-grey-7">( optional )</span></p>
+              <q-input
+                v-model="userInfo.bio"
+                type="textarea"
+                dense
+                outlined
                 :readonly="more == false"
               />
             </div>
@@ -207,7 +222,7 @@
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">House No. / Apartment No. / Street</p>
               <q-input
-                v-model="store.userData.street"
+                v-model="userInfo.street"
                 :rules="[(val) => !!val || '']"
                 hide-bottom-space
                 dense
@@ -218,7 +233,7 @@
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">Baranggay</p>
               <q-input
-                v-model="store.userData.brgy_name"
+                v-model="userInfo.brgy_name"
                 :rules="[(val) => !!val || '']"
                 hide-bottom-space
                 dense
@@ -231,7 +246,7 @@
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">City/Municipality</p>
               <q-input
-                v-model="store.userData.city_municipality"
+                v-model="userInfo.city_municipality"
                 :rules="[(val) => !!val || '']"
                 hide-bottom-space
                 dense
@@ -242,7 +257,7 @@
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">Province</p>
               <q-input
-                v-model="store.userData.province"
+                v-model="userInfo.province"
                 :rules="[(val) => !!val || '']"
                 hide-bottom-space
                 dense
@@ -265,7 +280,7 @@
             class="text-white bg-black"
             label="Save Changes"
             no-caps
-            @click="updatePublicUserDetails(store.userData)"
+            @click="updateUserDataFn()"
           />
         </div>
       </div>
@@ -287,7 +302,7 @@
               <q-input
                 outlined
                 dense
-                v-model="store.userData.email_address"
+                v-model="userInfo.email_address"
                 :rules="[(val) => !!val || '']"
                 hide-bottom-space
                 readonly

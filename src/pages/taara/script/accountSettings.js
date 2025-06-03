@@ -3,41 +3,44 @@ import TaaraFooter from 'src/components/TaaraFooter.vue'
 import { resizeImage, Email, sendTelerivetSms, getImageLink } from 'src/composable/simpleComposable'
 import {
   logInDetails,
-  updatePublicUserDetails,
   updatePublicUserEmailAddress,
   updatePublicUserPassword,
 } from 'src/composable/taaraComposable'
 import { globalStore } from 'src/stores/global-store'
+import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
+import { getPublicUserInfo, updatePublicUserDetails } from 'src/composable/latestPublicComposable'
+import { useQuasar } from 'quasar'
 
 export default {
   components: {
     TaaraFooter,
   },
   setup() {
+    const $q = useQuasar()
     const store = globalStore()
-    let more = ref(false)
-    let userInfo = ref({})
-    let dummyPassword = ref('*******************')
-    let newPassword = ref()
-    let retypePassword = ref()
-    let emailOrPassProgress = ref(0)
-    let emailOrPass = ref(false)
-    let newEmailAddress = ref(null)
-    let tab = ref(1)
-    let code = ref(null)
-    let referenceCode = ref(Math.floor(1000 + Math.random() * 9000))
+    const more = ref(false)
+    const userInfo = ref({ ...store.userData })
+    const dummyPassword = ref('*******************')
+    const newPassword = ref()
+    const retypePassword = ref()
+    const emailOrPassProgress = ref(0)
+    const emailOrPass = ref(false)
+    const newEmailAddress = ref(null)
+    const tab = ref(1)
+    const code = ref(null)
+    const referenceCode = ref(Math.floor(1000 + Math.random() * 9000))
 
     const countdownTime = ref(2 * 60) // 2 minutes in seconds
     let timerId = null
-    let minutes = ref(2)
-    let seconds = ref(0)
+    const minutes = ref(2)
+    const seconds = ref(0)
 
     const handleFileUpload = (event, param) => {
       const files = event.target.files
       const file = files[0]
       param == 'profileImage'
-        ? (store.userData.user_image_name = file.name)
-        : (store.userData.valid_id_name = file.name)
+        ? (userInfo.value.user_image_name = file.name)
+        : (userInfo.value.valid_id_name = file.name)
       const reader = new FileReader()
       reader.readAsDataURL(file)
       reader.onload = () => {
@@ -45,9 +48,9 @@ export default {
           .then(({ dataUrl }) => {
             more.value = true
             if (param == 'profileImage') {
-              store.userData.image = dataUrl
+              userInfo.value.image = dataUrl
             } else {
-              store.userData.valid_id = dataUrl
+              userInfo.value.valid_id = dataUrl
             }
           })
           .catch((error) => {
@@ -55,71 +58,71 @@ export default {
           })
       }
     }
-    let imageShow = () => {
+    const imageShow = () => {
       document.getElementById('file').click()
     }
 
-    let changeEmailMess = () => {
+    const changeEmailMess = () => {
       return (
         'Dear [' +
-        store.userData.first_name +
+        userInfo.value.first_name +
         '],<br><br> Hello, <br><br>We received a request to change your Email Address. <br> If you made this request, please use the code below to change your Email.<br><br><b>Your verification code is: ' +
         +referenceCode.value +
         '</b><br><br> If you did not do this, please ignore this message.<br><br>Please note that this verification code does not have an expiration unless you request another one.<br><br>Best regards, Tabaco Animal Rescue and Adoption'
       )
     }
-    let changeSmsMess = () => {
+    const changeSmsMess = () => {
       return (
         'Dear [' +
-        store.userData.first_name +
+        userInfo.value.first_name +
         '],\n\n Hello, \n\nWe received a request to change your Email Address. \n If you made this request, please use the code below to change your Email.\n\nYour verification code is: ' +
         +referenceCode.value +
         '\n\n If you did not do this, please ignore this message.\n\nPlease note that this verification code does not have an expiration unless you request another one.\n\nBest regards, Tabaco Animal Rescue and Adoption'
       )
     }
-    let changeEmail = () => {
+    const changeEmail = () => {
       emailOrPassProgress.value = 1
       startCountdown()
       Email.send({
         SecureToken: 'e16c5656-79fd-4b50-8411-d2cbfcff3662',
-        To: store.userData.email_address,
+        To: userInfo.value.email_address,
         From: 'michaelangelo.corral.personal@gmail.com',
         Subject: 'Password Reset Request',
         Body: changeEmailMess(),
       }).then((message) => console.log(message))
       emailOrPass.value = false
-      sendTelerivetSms(store.userData.phone_number, changeSmsMess())
+      sendTelerivetSms(userInfo.value.phone_number, changeSmsMess())
     }
-    let resetPassMessageEmail = () => {
+    const resetPassMessageEmail = () => {
       return (
         'Dear [' +
-        store.userData.first_name +
+        userInfo.value.first_name +
         '],<br><br> Hello, <br><br>We received a request to reset your password for your account associated with this email address.<br> If you made this request, please use the code below to change your password.<br><br><b>Your verification code is:' +
         +referenceCode.value +
         '</b><br><br> If you did not do this, please ignore this message.<br><br>Please note that this verification code does not have an expiration unless you request another one.<br><br>Best regards, Tabaco Animal Rescue and Adoption'
       )
     }
-    let resetPassMessageSms = () => {
+    const resetPassMessageSms = () => {
       return (
         'Dear [' +
-        store.userData.first_name +
+        userInfo.value.first_name +
         '],\n\nHello,\n\nWe received a request to reset your password for your account associated with this phone number. If you made this request, please use the code below to change your password.\n\nYour verification code is: ' +
         referenceCode.value +
         '\n\nIf you did not do this, please ignore this message. Please note that this verification code does not have an expiration unless you request another one.\n\nBest regards, Tabaco Animal Rescue and Adoption'
       )
     }
-    let changePass = () => {
+    const changePass = () => {
       emailOrPassProgress.value = 1
       Email.send({
         SecureToken: 'e16c5656-79fd-4b50-8411-d2cbfcff3662',
-        To: store.userData.email_address,
+        To: userInfo.value.email_address,
         From: 'michaelangelo.corral.personal@gmail.com',
         Subject: 'Password Reset Request',
         Body: resetPassMessageEmail(),
       }).then((message) => console.log(message))
       startCountdown()
       emailOrPass.value = true
-      sendTelerivetSms(store.userData.phone_number, resetPassMessageSms())
+      sendTelerivetSms(userInfo.value.phone_number, resetPassMessageSms())
     }
 
     const startCountdown = () => {
@@ -143,7 +146,7 @@ export default {
         }
       }, 1000)
     }
-    let resendVerification = () => {
+    const resendVerification = () => {
       if (emailOrPassProgress.value == 1) {
         changeEmail()
         startCountdown()
@@ -153,7 +156,7 @@ export default {
       }
       startCountdown()
     }
-    let confirmCode = () => {
+    const confirmCode = () => {
       if (referenceCode.value == code.value) {
         if (emailOrPass.value == false) {
           emailOrPassProgress.value = 2
@@ -162,13 +165,13 @@ export default {
         }
       }
     }
-    let updateChange = () => {
+    const updateChange = () => {
       if (emailOrPass.value == false) {
         updatePublicUserEmailAddress(newEmailAddress.value, logInDetails.value[0].user_id)
           .then((response) => {
             if (response == 'success') {
               emailOrPassProgress.value = 0
-              store.userData.email_address = newEmailAddress.value
+              userInfo.value.email_address = newEmailAddress.value
             }
           })
           .catch((error) => {
@@ -186,8 +189,26 @@ export default {
           })
       }
     }
+    const updateUserDataFn = async () => {
+      $q.loading.show({ group: 'update', message: 'Updating info. Please wait...' })
+      const response = await updatePublicUserDetails(userInfo.value)
+      setTimeout(() => {
+        $q.loading.show({ group: 'update', message: response.message })
+      }, 500)
+      if (response.status == 'success') {
+        const newData = await getPublicUserInfo(userInfo.value.user_id)
+        console.log(newData)
+        store.userData = newData.data
+        sessionStorage.setItem('user_data', JSON.stringify(newData.data))
+      }
+      setTimeout(() => {
+        $q.loading.hide()
+      }, 1000)
+    }
 
     return {
+      updateUserDataFn,
+      nameSuffixes,
       getImageLink,
       store,
       isPwd: ref(false),
@@ -210,33 +231,11 @@ export default {
       tab,
       TaaraFooter,
       logInDetails,
-      updatePublicUserDetails,
+
       dummyPassword,
       emailOrPassProgress,
-      sex_options: [
-        {
-          label: 'Male',
-          value: 'Male',
-        },
-        {
-          label: 'Female',
-          value: 'Female',
-        },
-      ],
-      civil_status_options: [
-        {
-          label: 'Single',
-          value: 'Single',
-        },
-        {
-          label: 'Married',
-          value: 'Married',
-        },
-        {
-          label: 'Seperated',
-          value: 'Seperated',
-        },
-      ],
+      sexOption,
+      civilStatusOption,
     }
   },
 }

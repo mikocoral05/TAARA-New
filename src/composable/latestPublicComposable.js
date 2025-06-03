@@ -36,3 +36,10 @@ export const getMonthlyDonationByYear = async (date) => {
 
   return response.data.data
 }
+
+export const getPublicUserInfo = async (user_id) => {
+  const response = await api.get('new_api.php', {
+    params: { public_user_id: user_id },
+  })
+  return response.data
+}

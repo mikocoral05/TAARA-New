@@ -1126,3 +1126,13 @@ export const sendEmailActiviationOtp = async (email, otp) => {
 
   return reponse.data
 }
+
+export const sendChangeEmail = async (email, otp) => {
+  const reponse = await onlineEndpoint.post('/send-change-email-code', {
+    email,
+    otp,
+  })
+  console.log(reponse.data)
+
+  return reponse.data
+}

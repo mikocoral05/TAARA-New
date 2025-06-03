@@ -1,5 +1,5 @@
 import { api } from 'src/boot/axios'
-import { uploadImages } from './latestComposable'
+import { uploadImages } from 'src/composable/latestComposable'
 
 export const getMonthlyDonation = async (month, year) => {
   const response = await api.get('new_api.php', {

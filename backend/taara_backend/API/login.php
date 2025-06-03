@@ -17,24 +17,34 @@ class API
         if (array_key_exists('login', $payload)) {
             $username_or_email = $payload['login']['username'];
             $password = $payload['login']['password'];
-            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+
+            // Find user by username or email
             $this->db->where("u.is_deleted", 1);
             $this->db->where("u.is_activated", 1);
-            $this->db->where("u.password", $hashedPassword);
-            $this->db->where("u.username", $username_or_email);
-            $this->db->orwhere("u.email_address", $username_or_email);
+            $this->db->where("(u.username = ? OR u.email_address = ?)", [$username_or_email, $username_or_email]);
             $this->db->join("tbl_files f", "f.id = u.image_id", "LEFT");
             $this->db->join("tbl_official_position op", "u.roles = op.id", "LEFT");
             $this->db->join("tbl_volunteer_position vp", "u.roles = vp.id", "LEFT");
-            $data = $this->db->getOne("tbl_users u", null, "u.*, f.image_path, CASE WHEN u.roles_type = 1
-             then op.position_title WHEN u.roles_type = 2 then vp.position_title else null");
 
-            echo json_encode([
-                'status' => 'success',
-                'data' => $data,
-                'method' => 'GET'
-            ]);
-        } else  if (array_key_exists('get_animal_option', $payload)) {
+            $user = $this->db->getOne("tbl_users u", null, "u.*, f.image_path, 
+            CASE WHEN u.roles_type = 1 THEN op.position_title 
+             WHEN u.roles_type = 2 THEN vp.position_title 
+             ELSE null END as position_title");
+
+            if ($user && password_verify($password, $user['password'])) {
+                echo json_encode([
+                    'status' => 'success',
+                    'data' => $user,
+                    'method' => 'GET'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Invalid credentials',
+                    'method' => 'GET'
+                ]);
+            }
+        } else if (array_key_exists('get_animal_option', $payload)) {
 
             $this->db->where("is_deleted", 1);
             $data = $this->db->get("tbl_animal_info", null, "animal_id,name");
@@ -42,6 +52,36 @@ class API
             echo json_encode([
                 'status' => 'success',
                 'data' => $data,
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists('check_phone_number', $payload)) {
+            $phone_number = $payload['check_phone_number'];
+            $this->db->where("phone_number", $phone_number);
+            $data = $this->db->get("tbl_users", null);
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => count($data),
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists('check_email_address', $payload)) {
+            $email_address = $payload['check_email_address'];
+            $this->db->where("email_address", $email_address);
+            $data = $this->db->get("tbl_users", null);
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => count($data),
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists('check_username', $payload)) {
+            $username = $payload['check_username'];
+            $this->db->where("username", $username);
+            $data = $this->db->get("tbl_users", null);
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => count($data),
                 'method' => 'GET'
             ]);
         } else {
@@ -89,8 +129,11 @@ class API
             }
         } else if (isset($payload['register_user'])) {
             $data = $payload['register_user'];
+            $password = $payload['register_user']['password'];
+            $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
             $data['is_activated'] = 1;
+            $data['password'] = $hashedPassword;
             $insert = $this->db->insert('tbl_users', $data);
 
             if ($insert) {

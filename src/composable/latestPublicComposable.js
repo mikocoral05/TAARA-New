@@ -43,3 +43,25 @@ export const getPublicUserInfo = async (user_id) => {
   })
   return response.data
 }
+
+export const updatePublicUserDetails = async (obj) => {
+  const excludedKeys = [
+    'image_path',
+    'id',
+    'size',
+    'date_created',
+    'type',
+    'position_title',
+    'position_description',
+    'updated_at',
+    'category',
+  ]
+
+  const cleanedObj = Object.fromEntries(
+    Object.entries(obj).filter(([key]) => !excludedKeys.includes(key)),
+  )
+
+  const response = await api.put('new_api.php', { update_public_user_details: cleanedObj })
+  console.log(response)
+  return response.data
+}

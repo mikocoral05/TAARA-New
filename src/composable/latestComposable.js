@@ -1024,6 +1024,27 @@ export const changePassword = async (username, password) => {
   return response.data
 }
 
+export const checkPhoneNumber = async (phone_number) => {
+  const response = await api.get('login.php', {
+    params: { check_phone_number: phone_number },
+  })
+  return response.data
+}
+
+export const checkEmail = async (email_address) => {
+  const response = await api.get('login.php', {
+    params: { check_email_address: email_address },
+  })
+  return response.data
+}
+
+export const checkUsername = async (username) => {
+  const response = await api.get('login.php', {
+    params: { check_username: username },
+  })
+  return response.data
+}
+
 export const registerUser = (obj) => {
   return new Promise((resolve, reject) => {
     api

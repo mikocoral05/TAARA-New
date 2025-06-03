@@ -15,29 +15,32 @@
         />
         <div class="row no-wrap">
           <div class="img-container column justify-center items-center">
-            <div class="row justify-center items-center" v-if="userInfo.image == ''">
+            <div class="row justify-center items-center" v-if="store.userData.image == ''">
               <h4 class="q-ma-none">
-                {{ userInfo.first_name[0] }}
+                {{ store.userData.first_name[0] }}
               </h4>
             </div>
-            <img :src="userInfo.image" alt="" v-if="userInfo.image !== ''" />
+            <q-img
+              :src="
+                store.userData?.image_path
+                  ? getImageLink(store.userData?.image_path)
+                  : store.userData?.sex == 1
+                    ? 'no-profile-male.svg'
+                    : 'no-profile-female.svg'
+              "
+              class="radius-100 q-img"
+            />
           </div>
           <div class="column justify-end items-end">
             <h4 class="q-ma-md">
-              {{ userInfo.first_name + ' ' + userInfo.last_name }}
+              {{ store.userData.first_name + ' ' + store.userData.last_name }}
             </h4>
           </div>
         </div>
       </div>
       <div class="tabs row no-wrap">
         <div
-          @click="
-            ((tab = 1),
-            $router.push({
-              path: '/account-settings',
-              query: { 'my-account': null },
-            }))
-          "
+          @click="tab = 1"
           :style="
             tab == 1
               ? { borderTop: '2px solid black', color: 'grey' }
@@ -48,13 +51,7 @@
         </div>
 
         <div
-          @click="
-            ((tab = 2),
-            $router.push({
-              path: '/account-settings',
-              query: { 'email-password': null },
-            }))
-          "
+          @click="tab = 2"
           :style="
             tab == 2
               ? { borderTop: '2px solid black', color: 'grey' }
@@ -94,7 +91,7 @@
             <q-input
               outlined
               dense
-              v-model="userInfo.first_name"
+              v-model="store.userData.first_name"
               :rules="[(val) => !!val || '']"
               hide-bottom-space
               :readonly="more == false"
@@ -105,7 +102,7 @@
             <q-input
               outlined
               dense
-              v-model="userInfo.last_name"
+              v-model="store.userData.last_name"
               :rules="[(val) => !!val || '']"
               hide-bottom-space
               :readonly="more == false"
@@ -117,13 +114,13 @@
             <p class="q-mb-sm">Phone</p>
             <q-input
               mask="phone"
-              v-model="userInfo.phone_number"
+              v-model="store.userData.phone_number"
               prefix="+63"
               :rules="[(val) => !!val || '']"
               hide-bottom-space
-              :readonly="more == false"
               dense
               outlined
+              :readonly="more == false"
             />
           </div>
         </div>
@@ -135,7 +132,7 @@
 
               <q-input
                 dense
-                v-model="userInfo.birth_date"
+                v-model="store.userData.birth_date"
                 outlined
                 mask="####-##-##"
                 :rules="[(val) => !!val || '']"
@@ -147,10 +144,10 @@
                   <q-icon name="event" class="cursor-pointer">
                     <q-popup-proxy cover transition-show="scale" transition-hide="scale">
                       <q-date
-                        v-model="userInfo.birth_date"
+                        v-model="store.userData.birth_date"
                         mask="YYYY-MM-DD"
                         emit-immediately
-                        :title="userInfo.first_name"
+                        :title="store.userData.first_name"
                         subtitle="Birthday"
                       >
                         <div class="row items-center justify-end">
@@ -165,7 +162,7 @@
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">Sex</p>
               <q-select
-                v-model="userInfo.sex"
+                v-model="store.userData.sex"
                 :rules="[(val) => !!val || '']"
                 hide-bottom-space
                 dense
@@ -181,7 +178,7 @@
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">Occupation</p>
               <q-input
-                v-model="userInfo.occupation"
+                v-model="store.userData.occupation"
                 :rules="[(val) => !!val || '']"
                 hide-bottom-space
                 dense
@@ -193,7 +190,7 @@
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">Civil Status</p>
               <q-select
-                v-model="userInfo.civil_status"
+                v-model="store.userData.civil_status"
                 :rules="[(val) => !!val || '']"
                 hide-bottom-space
                 dense
@@ -210,7 +207,7 @@
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">House No. / Apartment No. / Street</p>
               <q-input
-                v-model="userInfo.street"
+                v-model="store.userData.street"
                 :rules="[(val) => !!val || '']"
                 hide-bottom-space
                 dense
@@ -221,7 +218,7 @@
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">Baranggay</p>
               <q-input
-                v-model="userInfo.brgy_name"
+                v-model="store.userData.brgy_name"
                 :rules="[(val) => !!val || '']"
                 hide-bottom-space
                 dense
@@ -234,7 +231,7 @@
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">City/Municipality</p>
               <q-input
-                v-model="userInfo.city_municipality"
+                v-model="store.userData.city_municipality"
                 :rules="[(val) => !!val || '']"
                 hide-bottom-space
                 dense
@@ -245,7 +242,7 @@
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">Province</p>
               <q-input
-                v-model="userInfo.province"
+                v-model="store.userData.province"
                 :rules="[(val) => !!val || '']"
                 hide-bottom-space
                 dense
@@ -268,7 +265,7 @@
             class="text-white bg-black"
             label="Save Changes"
             no-caps
-            @click="updatePublicUserDetails(userInfo)"
+            @click="updatePublicUserDetails(store.userData)"
           />
         </div>
       </div>
@@ -290,7 +287,7 @@
               <q-input
                 outlined
                 dense
-                v-model="userInfo.email_address"
+                v-model="store.userData.email_address"
                 :rules="[(val) => !!val || '']"
                 hide-bottom-space
                 readonly
@@ -465,5 +462,5 @@
   </div>
   <TaaraFooter></TaaraFooter>
 </template>
-<script src="./taara/script/accountSettings.js"></script>
-<style lang="scss" scope src="../pages/taara/style/accountSettings.scss"></style>
+<script src="pages/taara/script/accountSettings.js"></script>
+<style lang="scss" scope src="pages/taara/style/accountSettings.scss"></style>

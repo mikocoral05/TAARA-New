@@ -301,7 +301,7 @@ class API
                 'password' => $hashedPassword,
             ];
             $this->db->where('user_id', $user_id);
-            $update = $this->db->update('tbl_users', ['password' => $update_values]);
+            $update = $this->db->update('tbl_users', $update_values);
 
             if ($update) {
                 echo json_encode([

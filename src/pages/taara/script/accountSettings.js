@@ -27,7 +27,7 @@ export default {
     const dummyPassword = ref('*******************')
     const newPassword = ref(null)
     const retypePassword = ref(null)
-    const emailOrPassProgress = ref(4)
+    const emailOrPassProgress = ref(0)
     const emailOrPass = ref(false)
     const newEmailAddress = ref(null)
     const tab = ref(1)
@@ -41,8 +41,12 @@ export default {
     const seconds = ref(0)
     const emailOrPhone = ref(0)
     const loadingVar = ref(false)
-    const changeEmailOrPass = ref(2)
+    const changeEmailOrPass = ref(1)
     const showErrorEmailExist = ref(false)
+    const minSixLenght = ref(false)
+    const includeNumber = ref(false)
+    const showErrorPassRequirement = ref(false)
+
     const handleFileUpload = (event, param) => {
       const files = event.target.files
       const file = files[0]
@@ -78,16 +82,6 @@ export default {
       )
     }
 
-    const changeEmail = async () => {
-      emailOrPassProgress.value = 1
-      startCountdown()
-      const response = await sendChangeEmail()
-      if (response.status == 'success') {
-        //
-      }
-      //  emailOrPass.value = false
-      sendTelerivetSms(userInfo.value.phone_number, changeSmsMess())
-    }
     const resetPassMessageEmail = () => {
       return (
         'Dear [' +
@@ -97,6 +91,7 @@ export default {
         '</b><br><br> If you did not do this, please ignore this message.<br><br>Please note that this verification code does not have an expiration unless you request another one.<br><br>Best regards, Tabaco Animal Rescue and Adoption'
       )
     }
+
     const resetPassMessageSms = () => {
       return (
         'Dear [' +
@@ -106,6 +101,7 @@ export default {
         '\n\nIf you did not do this, please ignore this message. Please note that this verification code does not have an expiration unless you request another one.\n\nBest regards, Tabaco Animal Rescue and Adoption'
       )
     }
+
     const changePass = () => {
       emailOrPassProgress.value = 1
       Email.send({
@@ -148,21 +144,17 @@ export default {
       if (base == 1) {
         const response = await sendChangeEmail(userInfo.value.email_address, referenceCode.value)
         emailOrPassProgress.value = response.status == 'success' ? 2 : 1
+        startCountdown()
       } else {
         const response = await sendTelerivetSms(userInfo.value.phone_number, changeSmsMess())
         emailOrPassProgress.value = response.status == 'success' ? 2 : 1
+        startCountdown()
       }
       loadingVar.value = false
     }
 
     const resendVerification = () => {
-      if (emailOrPassProgress.value == 1) {
-        changeEmail()
-        startCountdown()
-      } else {
-        changePass()
-        startCountdown()
-      }
+      sendEmailOrPhoneOtp(emailOrPhone.value)
       startCountdown()
     }
 
@@ -171,7 +163,6 @@ export default {
         emailOrPassProgress.value = changeEmailOrPass.value == 1 ? 3 : 4
       }
     }
-
     const updateChange = async () => {
       if (changeEmailOrPass.value == 1) {
         const res = await checkEmail(newEmailAddress.value)
@@ -192,6 +183,11 @@ export default {
           $q.loading.hide()
         }, 500)
       } else if (changeEmailOrPass.value == 2) {
+        if (!minSixLenght.value || !includeNumber.value) {
+          showErrorPassRequirement.value = true
+          return
+        }
+        showErrorPassRequirement.value = false
         $q.loading.show({ group: 'update', message: 'Updating new password. Please wait ...' })
         const response = await updatePublicUserPassword(newPassword.value, userInfo.value.user_id)
         $q.loading.show({ group: 'update', message: response.message })
@@ -232,13 +228,13 @@ export default {
       previewImage.value = store.userData.image_path
       console.log(previewImage.value)
     })
-    const minSixLenght = ref(false)
-    const includeNumber = ref(false)
+
     watchEffect(() => {
       minSixLenght.value = newPassword.value?.length > 5
       includeNumber.value = /\d/.test(newPassword.value)
     })
     return {
+      showErrorPassRequirement,
       minSixLenght,
       includeNumber,
       showErrorEmailExist,
@@ -266,7 +262,6 @@ export default {
       newEmailAddress,
       confirmCode,
       resendVerification,
-      changeEmail,
       userInfo,
       handleFileUpload,
       more,

@@ -459,7 +459,7 @@
           <h6 class="q-mb-md">Log in Credentials</h6>
           <p class="q-mb-lg">Update your password.</p>
           <q-form @submit="updateChange()">
-            <div class="row no-wrap justify-between q-mb-lg">
+            <div class="row no-wrap justify-between q-mb-md">
               <div class="column no-wrap each-div">
                 <p class="q-mb-sm">New Password</p>
 
@@ -470,7 +470,8 @@
                   outlined
                   :type="isPwd ? 'password' : 'text'"
                   :rules="[(val) => !!val || 'New password is required!']"
-                  hide-bottom-space
+                  :error="showErrorPassRequirement"
+                  error-message="Didn't pass requrierements!"
                 >
                   <template v-slot:append>
                     <q-icon

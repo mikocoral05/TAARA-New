@@ -316,6 +316,38 @@ class API
                     'method' => 'PUT'
                 ]);
             }
+        } else if (isset($payload['update_public_user_image'])) {
+            $image = $payload['update_public_user_image']['new_image'];
+            $user_id = $payload['update_public_user_image']['user_id'];
+            $image_id = '';
+            if ($image) {
+                $this->db->insert('tbl_files', ['image_path' => $image]);
+                $image_id = $this->db->getInsertId();
+
+                $update_values = ['image_id' => $image_id];
+                $this->db->where('user_id', $user_id);
+                $update = $this->db->update('tbl_users', $update_values);
+
+                if ($update) {
+                    echo json_encode([
+                        'status' => 'success',
+                        'message' => 'User image updated successfully',
+                        'method' => 'PUT'
+                    ]);
+                } else {
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => 'Failed to update user image',
+                        'method' => 'PUT'
+                    ]);
+                }
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'No image provided',
+                    'method' => 'PUT'
+                ]);
+            }
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Missing Animal info in the payload']);
         }

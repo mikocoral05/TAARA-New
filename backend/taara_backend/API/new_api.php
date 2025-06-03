@@ -242,6 +242,23 @@ class API
                     'method' => 'PUT'
                 ]);
             }
+        } else if (isset($payload['update_public_user_details'])) {
+            $user_id = $payload['update_public_user_details']['user_id'];
+            $this->db->where('user_id', $user_id);
+            $update = $this->db->update('tbl_users', $payload['update_public_user_details']);
+            if ($update) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'User data updated successfully',
+                    'method' => 'PUT'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to update User data',
+                    'method' => 'PUT'
+                ]);
+            }
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Missing Animal info in the payload']);
         }

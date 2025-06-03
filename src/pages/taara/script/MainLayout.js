@@ -63,11 +63,11 @@ export default defineComponent({
         message: 'Logging Out. Please wait...',
       })
       setTimeout(() => {
-        sessionStorage.clear()
         router.replace('/user-login')
+        sessionStorage.clear()
         store.reset()
         $q.loading.hide()
-      }, 2000)
+      }, 1000)
     }
     let goToContactUs = () => {
       if (route.fullPath == '/public/home') {

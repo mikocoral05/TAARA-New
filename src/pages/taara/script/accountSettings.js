@@ -1,4 +1,4 @@
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import TaaraFooter from 'src/components/TaaraFooter.vue'
 import { resizeImage, Email, sendTelerivetSms, getImageLink } from 'src/composable/simpleComposable'
 import { logInDetails } from 'src/composable/taaraComposable'
@@ -8,6 +8,7 @@ import {
   getPublicUserInfo,
   updatePublicUserDetails,
   updatePublicUserEmailAddress,
+  updatePublicUserImage,
   updatePublicUserPassword,
 } from 'src/composable/latestPublicComposable'
 import { useQuasar } from 'quasar'
@@ -163,6 +164,7 @@ export default {
         emailOrPassProgress.value = changeEmailOrPass.value == 1 ? 3 : 4
       }
     }
+
     const updateChange = async () => {
       if (changeEmailOrPass.value == 1) {
         const res = await checkEmail(newEmailAddress.value)
@@ -224,10 +226,31 @@ export default {
     const triggerUpload = () => {
       myFile.value.pickFiles()
     }
+
     onMounted(() => {
       previewImage.value = store.userData.image_path
       console.log(previewImage.value)
     })
+
+    watch(
+      () => userInfo.value.file,
+      async (newVal, oldVal) => {
+        if (newVal != oldVal) {
+          $q.loading.show({ group: 'update', message: 'Update your image. Please wait ...' })
+          const response = await updatePublicUserImage(newVal, userInfo.value.user_id)
+          $q.loading.show({ group: 'update', message: response.message })
+          if (response.status == 'success') {
+            const newData = await getPublicUserInfo(userInfo.value.user_id)
+            console.log(newData)
+            store.userData = newData.data
+            sessionStorage.setItem('user_data', JSON.stringify(newData.data))
+          }
+          setTimeout(() => {
+            $q.loading.hide()
+          }, 500)
+        }
+      },
+    )
 
     watchEffect(() => {
       minSixLenght.value = newPassword.value?.length > 5

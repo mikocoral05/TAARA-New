@@ -56,19 +56,30 @@ export const updatePublicUserDetails = async (obj) => {
     'position_description',
     'updated_at',
     'category',
+    'file',
   ]
 
   const cleanedObj = Object.fromEntries(
     Object.entries(obj).filter(([key]) => !excludedKeys.includes(key)),
   )
-  const { file, ...new_data } = cleanedObj
-  if (file) {
-    const res = await uploadImages([file])
-    new_data.new_image = res.data.images[0]
-  }
-  const response = await api.put('new_api.php', { update_public_user_details: new_data })
+  // const { file, ...new_data } = cleanedObj
+  // if (file) {
+  //   const res = await uploadImages([file])
+  //   new_data.new_image = res.data.images[0]
+  // }
+  const response = await api.put('new_api.php', { update_public_user_details: cleanedObj })
   console.log(response)
   return response.data
+}
+
+export const updatePublicUserImage = async (file, user_id) => {
+  if (file) {
+    const res = await uploadImages([file])
+    const response = await api.put('new_api.php', {
+      update_public_user_image: { new_image: res.data.images[0], user_id },
+    })
+    return response.data
+  }
 }
 
 export const updatePublicUserEmailAddress = async (new_email_address, user_id) => {

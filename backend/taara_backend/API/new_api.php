@@ -272,6 +272,50 @@ class API
                     'method' => 'PUT'
                 ]);
             }
+        } else if (isset($payload['update_publicuser_email_address'])) {
+            $user_id = $payload['update_publicuser_email_address']['user_id'];
+            $email_address = $payload['update_publicuser_email_address']['new_email_address'];
+
+            $this->db->where('user_id', $user_id);
+            $update = $this->db->update('tbl_users', ['email_address' => $email_address]);
+
+            if ($update) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Email address updated successfully',
+                    'method' => 'PUT'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to update Email address',
+                    'method' => 'PUT'
+                ]);
+            }
+        } else if (isset($payload['update_password'])) {
+            $user_id = $payload['update_password']['user_id'];
+            $new_password = $payload['update_password']['new_password'];
+            $hashedPassword = password_hash($new_password, PASSWORD_DEFAULT);
+
+            $update_values = [
+                'password' => $hashedPassword,
+            ];
+            $this->db->where('user_id', $user_id);
+            $update = $this->db->update('tbl_users', ['password' => $update_values]);
+
+            if ($update) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Password updated successfully',
+                    'method' => 'PUT'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to update Password',
+                    'method' => 'PUT'
+                ]);
+            }
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Missing Animal info in the payload']);
         }

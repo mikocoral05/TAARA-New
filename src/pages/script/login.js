@@ -269,18 +269,18 @@ export default {
                 setTimeout(() => {
                   router.replace('/public')
                   $q.loading.hide()
-                }, 1000)
+                }, 500)
               } else {
                 setTimeout(() => {
                   router.replace('/management')
                   $q.loading.hide()
-                }, 1000)
+                }, 500)
               }
             } else {
               setTimeout(() => {
                 showPasswordError.value = true
                 $q.loading.hide()
-              }, 1000)
+              }, 500)
             }
           })
           .catch((error) => {

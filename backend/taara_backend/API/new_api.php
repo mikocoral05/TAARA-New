@@ -244,8 +244,21 @@ class API
             }
         } else if (isset($payload['update_public_user_details'])) {
             $user_id = $payload['update_public_user_details']['user_id'];
+            $new_image = $payload['update_public_user_details']['new_image'] ?? '';
+            $image_id = '';
+
+            if ($new_image) {
+                $this->db->insert('tbl_files', ['image_path' => $new_image]);
+                $image_id = $this->db->getInsertId();
+                $payload['update_public_user_details']['image_id'] = $image_id; // <-- inject image_id to update data
+            }
+
+            // Remove 'new_image' from update array if you don't want to store it
+            unset($payload['update_public_user_details']['new_image']);
+
             $this->db->where('user_id', $user_id);
             $update = $this->db->update('tbl_users', $payload['update_public_user_details']);
+
             if ($update) {
                 echo json_encode([
                     'status' => 'success',

@@ -2,16 +2,15 @@
   <div class="column justify-start items-center">
     <div class="first-child">
       <div class="member-profile-card column justify-between no-wrap q-pa-lg">
-        <q-icon name="photo_camera" size="sm" color="white" @click="imageShow()" />
-        <input
-          type="file"
-          accept="image/*"
-          ref="file"
-          id="file"
-          style="display: none"
-          @change="handleFileUpload($event, 'profileImage')"
-          :rules="[(val) => !!val || '']"
-          hide-bottom-space
+        <q-icon name="photo_camera" size="sm" color="white" @click="triggerUpload()" />
+        <q-file
+          class="q-mt-sm hidden"
+          v-model="userInfo.file"
+          outlined
+          dense
+          ref="myFile"
+          :readonly="mode == 'View'"
+          @update:model-value="imageFnUpdate()"
         />
         <div class="row no-wrap">
           <div class="img-container column justify-center items-center">
@@ -22,8 +21,8 @@
             </div>
             <q-img
               :src="
-                userInfo?.image_path
-                  ? getImageLink(userInfo?.image_path)
+                previewImage
+                  ? previewImage
                   : userInfo?.sex == 1
                     ? 'no-profile-male.svg'
                     : 'no-profile-female.svg'

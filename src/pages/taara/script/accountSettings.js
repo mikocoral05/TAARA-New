@@ -10,6 +10,7 @@ import { globalStore } from 'src/stores/global-store'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
 import { getPublicUserInfo, updatePublicUserDetails } from 'src/composable/latestPublicComposable'
 import { useQuasar } from 'quasar'
+import { onMounted } from 'vue'
 
 export default {
   components: {
@@ -27,6 +28,7 @@ export default {
     const emailOrPass = ref(false)
     const newEmailAddress = ref(null)
     const tab = ref(1)
+    const myFile = ref(null)
     const code = ref(null)
     const referenceCode = ref(Math.floor(1000 + Math.random() * 9000))
 
@@ -57,9 +59,6 @@ export default {
             console.error(error)
           })
       }
-    }
-    const imageShow = () => {
-      document.getElementById('file').click()
     }
 
     const changeEmailMess = () => {
@@ -146,6 +145,7 @@ export default {
         }
       }, 1000)
     }
+
     const resendVerification = () => {
       if (emailOrPassProgress.value == 1) {
         changeEmail()
@@ -156,6 +156,7 @@ export default {
       }
       startCountdown()
     }
+
     const confirmCode = () => {
       if (referenceCode.value == code.value) {
         if (emailOrPass.value == false) {
@@ -165,6 +166,7 @@ export default {
         }
       }
     }
+
     const updateChange = () => {
       if (emailOrPass.value == false) {
         updatePublicUserEmailAddress(newEmailAddress.value, logInDetails.value[0].user_id)
@@ -189,6 +191,7 @@ export default {
           })
       }
     }
+
     const updateUserDataFn = async () => {
       $q.loading.show({ group: 'update', message: 'Updating info. Please wait...' })
       const response = await updatePublicUserDetails(userInfo.value)
@@ -206,7 +209,24 @@ export default {
       }, 1000)
     }
 
+    const previewImage = ref(null)
+    const imageFnUpdate = () => {
+      previewImage.value = URL.createObjectURL(userInfo.value.file)
+      console.log(previewImage.value)
+    }
+
+    const triggerUpload = () => {
+      myFile.value.pickFiles()
+    }
+    onMounted(() => {
+      previewImage.value = store.userData.image_path
+      console.log(previewImage.value)
+    })
     return {
+      triggerUpload,
+      myFile,
+      previewImage,
+      imageFnUpdate,
       updateUserDataFn,
       nameSuffixes,
       getImageLink,
@@ -226,7 +246,6 @@ export default {
       changeEmail,
       userInfo,
       handleFileUpload,
-      imageShow,
       more,
       tab,
       TaaraFooter,

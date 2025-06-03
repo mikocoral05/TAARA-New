@@ -1,4 +1,5 @@
 import { api } from 'src/boot/axios'
+import { uploadImages } from './latestComposable'
 
 export const getMonthlyDonation = async (month, year) => {
   const response = await api.get('new_api.php', {
@@ -60,8 +61,12 @@ export const updatePublicUserDetails = async (obj) => {
   const cleanedObj = Object.fromEntries(
     Object.entries(obj).filter(([key]) => !excludedKeys.includes(key)),
   )
-
-  const response = await api.put('new_api.php', { update_public_user_details: cleanedObj })
+  const { file, ...new_data } = cleanedObj
+  if (file) {
+    const res = await uploadImages([file])
+    new_data.new_image = res.data.images[0]
+  }
+  const response = await api.put('new_api.php', { update_public_user_details: new_data })
   console.log(response)
   return response.data
 }

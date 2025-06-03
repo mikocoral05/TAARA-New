@@ -336,7 +336,7 @@
               no-caps
               class="change-btn"
               flat
-              @click="(changePass(), (changeEmailOrPass = 2))"
+              @click="((emailOrPassProgress = 1), (changeEmailOrPass = 2))"
             />
           </div>
         </div>

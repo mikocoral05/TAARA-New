@@ -1,6 +1,6 @@
 import { ref, watch } from 'vue'
 import TaaraFooter from 'src/components/TaaraFooter.vue'
-import { resizeImage, Email, sendTelerivetSms, getImageLink } from 'src/composable/simpleComposable'
+import { sendTelerivetSms, getImageLink } from 'src/composable/simpleComposable'
 import { logInDetails } from 'src/composable/taaraComposable'
 import { globalStore } from 'src/stores/global-store'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
@@ -29,7 +29,6 @@ export default {
     const newPassword = ref(null)
     const retypePassword = ref(null)
     const emailOrPassProgress = ref(0)
-    const emailOrPass = ref(false)
     const newEmailAddress = ref(null)
     const tab = ref(1)
     const myFile = ref(null)
@@ -48,73 +47,33 @@ export default {
     const includeNumber = ref(false)
     const showErrorPassRequirement = ref(false)
 
-    const handleFileUpload = (event, param) => {
-      const files = event.target.files
-      const file = files[0]
-      param == 'profileImage'
-        ? (userInfo.value.user_image_name = file.name)
-        : (userInfo.value.valid_id_name = file.name)
-      const reader = new FileReader()
-      reader.readAsDataURL(file)
-      reader.onload = () => {
-        resizeImage(file, 500, 500)
-          .then(({ dataUrl }) => {
-            more.value = true
-            if (param == 'profileImage') {
-              userInfo.value.image = dataUrl
-            } else {
-              userInfo.value.valid_id = dataUrl
-            }
-          })
-          .catch((error) => {
-            console.error(error)
-          })
+    const changeSmsMess = (type = 1) => {
+      const name = userInfo.value.first_name
+      const code = referenceCode.value
+
+      if (type === 1) {
+        return (
+          `Hello ${name},\n\n` +
+          `We received a request to change the email address associated with your TAARA account. ` +
+          `To confirm this change, please use the verification code below:\n\n` +
+          `Verification Code: ${code}\n\n` +
+          `If you did not request this change, please ignore this message or contact support.\n\n` +
+          `- Tabaco Animal Rescue and Adoption (TAARA)`
+        )
       }
-    }
 
-    const changeSmsMess = () => {
-      return (
-        `Hello ${userInfo.value.first_name},\n\n` +
-        `We received a request to change the email address associated with your TAARA account. ` +
-        `To confirm this change, please use the verification code below:\n\n` +
-        `Verification Code: ${referenceCode.value}\n\n` +
-        `If you did not request this change, please ignore this message or contact support.\n\n` +
-        `- Tabaco Animal Rescue and Adoption (TAARA)`
-      )
-    }
+      if (type === 2) {
+        return (
+          `Hello ${name},\n\n` +
+          `We received a request to reset the password for your TAARA account. ` +
+          `To proceed, please use the verification code below:\n\n` +
+          `Verification Code: ${code}\n\n` +
+          `If you did not request this, please ignore this message or contact support.\n\n` +
+          `- Tabaco Animal Rescue and Adoption (TAARA)`
+        )
+      }
 
-    const resetPassMessageEmail = () => {
-      return (
-        'Dear [' +
-        userInfo.value.first_name +
-        '],<br><br> Hello, <br><br>We received a request to reset your password for your account associated with this email address.<br> If you made this request, please use the code below to change your password.<br><br><b>Your verification code is:' +
-        +referenceCode.value +
-        '</b><br><br> If you did not do this, please ignore this message.<br><br>Please note that this verification code does not have an expiration unless you request another one.<br><br>Best regards, Tabaco Animal Rescue and Adoption'
-      )
-    }
-
-    const resetPassMessageSms = () => {
-      return (
-        'Dear [' +
-        userInfo.value.first_name +
-        '],\n\nHello,\n\nWe received a request to reset your password for your account associated with this phone number. If you made this request, please use the code below to change your password.\n\nYour verification code is: ' +
-        referenceCode.value +
-        '\n\nIf you did not do this, please ignore this message. Please note that this verification code does not have an expiration unless you request another one.\n\nBest regards, Tabaco Animal Rescue and Adoption'
-      )
-    }
-
-    const changePass = () => {
-      emailOrPassProgress.value = 1
-      Email.send({
-        SecureToken: 'e16c5656-79fd-4b50-8411-d2cbfcff3662',
-        To: userInfo.value.email_address,
-        From: 'michaelangelo.corral.personal@gmail.com',
-        Subject: 'Password Reset Request',
-        Body: resetPassMessageEmail(),
-      }).then((message) => console.log(message))
-      startCountdown()
-      emailOrPass.value = true
-      sendTelerivetSms(userInfo.value.phone_number, resetPassMessageSms())
+      return ''
     }
 
     const startCountdown = () => {
@@ -147,7 +106,10 @@ export default {
         emailOrPassProgress.value = response.status == 'success' ? 2 : 1
         startCountdown()
       } else {
-        const response = await sendTelerivetSms(userInfo.value.phone_number, changeSmsMess())
+        const response = await sendTelerivetSms(
+          userInfo.value.phone_number,
+          changeSmsMess(changeEmailOrPass.value),
+        )
         emailOrPassProgress.value = response.status == 'success' ? 2 : 1
         startCountdown()
       }
@@ -276,7 +238,7 @@ export default {
       isPwd: ref(false),
       newPassword,
       retypePassword,
-      changePass,
+      // changePass,
       minutes,
       seconds,
       code,
@@ -286,7 +248,6 @@ export default {
       confirmCode,
       resendVerification,
       userInfo,
-      handleFileUpload,
       more,
       tab,
       TaaraFooter,

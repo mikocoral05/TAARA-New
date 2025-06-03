@@ -314,7 +314,7 @@
               no-caps
               class="change-btn"
               flat
-              @click="changeEmail()"
+              @click="emailOrPassProgress = 1"
             />
           </div>
           <div class="row no-wrap justify-between q-mb-lg">
@@ -340,7 +340,46 @@
             />
           </div>
         </div>
-        <div v-if="emailOrPassProgress == 1" class="verification-container">
+        <div class="column no-wrap" v-if="emailOrPassProgress == 1">
+          <div class="text-center">Choose where to send the OTP to activate yoru account!</div>
+          <div class="column no-wrap items-center justify-center q-mt-md">
+            <div
+              style="width: 200px"
+              class="radius-10 light-border row no-wrap q-pa-md q-px-lg items-center"
+              @click="registerVerification(2)"
+            >
+              <q-icon name="sym_r_phone_iphone" size="2rem" />
+              <div class="column no-wrap">
+                <div>Mobile phone</div>
+                <div class="text-grey-7">{{ userData?.phone_number }}</div>
+              </div>
+              <q-spinner-ios
+                color="primary"
+                size="2em"
+                class="q-ml-md"
+                v-if="loadingVar && emailOrPhone == 2"
+              />
+            </div>
+            <div
+              style="width: 200px"
+              class="radius-10 light-border q-mt-md row no-wrap q-pa-md q-px-lg items-center"
+              @click="registerVerification(1)"
+            >
+              <q-icon name="sym_r_mail" size="2rem" />
+              <div class="column no-wrap q-ml-md">
+                <div>Email</div>
+                <div class="text-grey-7">{{ userData?.email_address }}</div>
+              </div>
+              <q-spinner-ios
+                color="primary"
+                size="2em"
+                class="q-ml-md"
+                v-if="loadingVar && emailOrPhone == 1"
+              />
+            </div>
+          </div>
+        </div>
+        <div v-if="emailOrPassProgress == 2" class="verification-container">
           <div>
             <h6 class="q-mb-sm">Verification</h6>
             <p class="text-caption">Input the code we sent in you email</p>
@@ -382,7 +421,7 @@
             </div>
           </div>
         </div>
-        <div v-if="emailOrPassProgress == 2">
+        <div v-if="emailOrPassProgress == 3">
           <h6 class="q-mb-md">Your new Email address</h6>
 
           <p class="q-mb-lg">you can now change your Email.</p>

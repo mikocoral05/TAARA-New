@@ -11,6 +11,7 @@ import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optio
 import { getPublicUserInfo, updatePublicUserDetails } from 'src/composable/latestPublicComposable'
 import { useQuasar } from 'quasar'
 import { onMounted } from 'vue'
+import { sendChangeEmail } from 'src/composable/latestComposable'
 
 export default {
   components: {
@@ -61,35 +62,25 @@ export default {
       }
     }
 
-    const changeEmailMess = () => {
-      return (
-        'Dear [' +
-        userInfo.value.first_name +
-        '],<br><br> Hello, <br><br>We received a request to change your Email Address. <br> If you made this request, please use the code below to change your Email.<br><br><b>Your verification code is: ' +
-        +referenceCode.value +
-        '</b><br><br> If you did not do this, please ignore this message.<br><br>Please note that this verification code does not have an expiration unless you request another one.<br><br>Best regards, Tabaco Animal Rescue and Adoption'
-      )
-    }
     const changeSmsMess = () => {
       return (
-        'Dear [' +
-        userInfo.value.first_name +
-        '],\n\n Hello, \n\nWe received a request to change your Email Address. \n If you made this request, please use the code below to change your Email.\n\nYour verification code is: ' +
-        +referenceCode.value +
-        '\n\n If you did not do this, please ignore this message.\n\nPlease note that this verification code does not have an expiration unless you request another one.\n\nBest regards, Tabaco Animal Rescue and Adoption'
+        `Hello ${userInfo.value.first_name},\n\n` +
+        `We received a request to change the email address associated with your TAARA account. ` +
+        `To confirm this change, please use the verification code below:\n\n` +
+        `Verification Code: ${referenceCode.value}\n\n` +
+        `If you did not request this change, please ignore this message or contact support.\n\n` +
+        `- Tabaco Animal Rescue and Adoption (TAARA)`
       )
     }
-    const changeEmail = () => {
+
+    const changeEmail = async () => {
       emailOrPassProgress.value = 1
       startCountdown()
-      Email.send({
-        SecureToken: 'e16c5656-79fd-4b50-8411-d2cbfcff3662',
-        To: userInfo.value.email_address,
-        From: 'michaelangelo.corral.personal@gmail.com',
-        Subject: 'Password Reset Request',
-        Body: changeEmailMess(),
-      }).then((message) => console.log(message))
-      emailOrPass.value = false
+      const response = await sendChangeEmail()
+      if (response.status == 'success') {
+        //
+      }
+      //  emailOrPass.value = false
       sendTelerivetSms(userInfo.value.phone_number, changeSmsMess())
     }
     const resetPassMessageEmail = () => {
@@ -144,6 +135,14 @@ export default {
           clearInterval(timerId)
         }
       }, 1000)
+    }
+
+    const registerVerification = (base) => {
+      if (base == 1) {
+        //email
+      } else {
+        //phone
+      }
     }
 
     const resendVerification = () => {
@@ -223,6 +222,7 @@ export default {
       console.log(previewImage.value)
     })
     return {
+      registerVerification,
       triggerUpload,
       myFile,
       previewImage,

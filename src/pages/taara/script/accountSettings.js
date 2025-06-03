@@ -37,7 +37,8 @@ export default {
     let timerId = null
     const minutes = ref(2)
     const seconds = ref(0)
-
+    const emailOrPhone = ref(0)
+    const loadingVar = ref(false)
     const handleFileUpload = (event, param) => {
       const files = event.target.files
       const file = files[0]
@@ -137,12 +138,17 @@ export default {
       }, 1000)
     }
 
-    const registerVerification = (base) => {
+    const sendEmailOrPhoneOtp = async (base) => {
+      emailOrPhone.value = base
+      loadingVar.value = true
       if (base == 1) {
-        //email
+        const response = await sendChangeEmail(userInfo.value.email_address, referenceCode.value)
+        emailOrPassProgress.value = response.status == 'success' ? 2 : 1
       } else {
-        //phone
+        const response = await sendTelerivetSms(userInfo.value.phone_number, changeSmsMess())
+        emailOrPassProgress.value = response.status == 'success' ? 2 : 1
       }
+      loadingVar.value = false
     }
 
     const resendVerification = () => {
@@ -222,7 +228,8 @@ export default {
       console.log(previewImage.value)
     })
     return {
-      registerVerification,
+      emailOrPhone,
+      sendEmailOrPhoneOtp,
       triggerUpload,
       myFile,
       previewImage,

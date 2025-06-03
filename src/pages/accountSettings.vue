@@ -32,7 +32,7 @@
           </div>
           <div class="column justify-end items-end">
             <h4 class="q-ma-md">
-              {{ userInfo.first_name + ' ' + userInfo.last_name }}
+              {{ store.userData.first_name + ' ' + store.userData.last_name }}
             </h4>
           </div>
         </div>
@@ -346,12 +346,12 @@
             <div
               style="width: 200px"
               class="radius-10 light-border row no-wrap q-pa-md q-px-lg items-center"
-              @click="registerVerification(2)"
+              @click="sendEmailOrPhoneOtp(2)"
             >
               <q-icon name="sym_r_phone_iphone" size="2rem" />
               <div class="column no-wrap">
                 <div>Mobile phone</div>
-                <div class="text-grey-7">{{ userData?.phone_number }}</div>
+                <div class="text-grey-7">{{ userInfo?.phone_number }}</div>
               </div>
               <q-spinner-ios
                 color="primary"
@@ -363,12 +363,12 @@
             <div
               style="width: 200px"
               class="radius-10 light-border q-mt-md row no-wrap q-pa-md q-px-lg items-center"
-              @click="registerVerification(1)"
+              @click="sendEmailOrPhoneOtp(1)"
             >
               <q-icon name="sym_r_mail" size="2rem" />
               <div class="column no-wrap q-ml-md">
                 <div>Email</div>
-                <div class="text-grey-7">{{ userData?.email_address }}</div>
+                <div class="text-grey-7">{{ userInfo?.email_address }}</div>
               </div>
               <q-spinner-ios
                 color="primary"

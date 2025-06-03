@@ -140,7 +140,10 @@
                         prefix="+63"
                         mask="phone"
                         hint="We will send otp in this number"
-                      />
+                        error-message="Number already registered!"
+                        :error="showPhoneError"
+                      >
+                      </q-input>
                     </div>
                   </div>
                 </q-step>
@@ -210,8 +213,9 @@
                       dense
                       v-model="userInfo.username"
                       :rules="[(val) => !!val || 'Username is required!']"
-                      :error="showLoginError"
                       hint="This will appear in your public profile"
+                      error-message="This username is already taken!"
+                      :error="showUsernameError"
                     />
                   </div>
                   <div class="column no-wrap full-width q-mt-md">
@@ -228,6 +232,8 @@
                         (val) => /^[^@]+@[^@]+\.[^@]+$/.test(val) || 'Email is invalid!',
                       ]"
                       hint="We will send confirmation to this email!"
+                      error-message="This email is already registered!"
+                      :error="showEmailError"
                     />
                   </div>
                   <div class="column no-wrap q-pt-md full-width">
@@ -314,12 +320,18 @@
                       </div>
                     </div>
                   </div>
-                  <div class="flex flex-center full-height" v-if="otpSent">
+
+                  <div class="column no-wrap q-pt-md full-width" v-if="otpSent">
+                    <p class="q-ma-none q-mb-sm">
+                      Enter the OTP sent to you choosen option<span class="q-ml-sm text-negative"
+                        >*</span
+                      >
+                    </p>
                     <q-input
                       outlined
                       v-model="pin"
                       type="number"
-                      style="width: 250px"
+                      dense
                       hint="Enter OTP send to your choosen option"
                       input-class="text-center text-body1"
                     />
@@ -334,7 +346,13 @@
                   dense
                   style="width: 150px"
                   type="submit"
-                />
+                >
+                  <q-spinner-ios
+                    color="white"
+                    size="1.2rem"
+                    class="q-ml-md"
+                    v-if="loadingVar && [1, 3].includes(step)"
+                /></q-btn>
                 <q-btn
                   v-if="step > 1"
                   label="BACK"
@@ -381,12 +399,20 @@
                   </p>
                   <q-input
                     outlined
-                    label="Password"
-                    type="password"
+                    placeholder="Password"
                     dense
+                    :type="isPwd ? 'password' : 'text'"
                     v-model="userInfo.password"
                     :rules="[(val) => !!val || 'Password is required!']"
-                  />
+                  >
+                    <template v-slot:append>
+                      <q-icon
+                        :name="isPwd ? 'visibility_off' : 'visibility'"
+                        class="cursor-pointer"
+                        @click="isPwd = !isPwd"
+                      />
+                    </template>
+                  </q-input>
                 </div>
                 <div class="w-100 text-right">
                   <u @click="tab = 'forgot-password'">Forgot password?</u>
@@ -523,8 +549,8 @@
                   class="bg-primary text-white full-width q-mt-xl"
                   type="submit"
                 >
-                  <q-spinner-ios color="white" size="1.2rem" class="q-ml-md" v-if="loadingVar"
-                /></q-btn>
+                  <q-spinner-ios color="white" size="1.2rem" class="q-ml-md" v-if="loadingVar" />
+                </q-btn>
                 <q-separator class="q-mt-md"></q-separator>
                 <p @click="tab = 'login'">
                   <u>Back to Login</u>

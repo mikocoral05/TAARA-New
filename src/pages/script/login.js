@@ -11,7 +11,6 @@ import {
 import {
   dearUserEmail,
   changePass,
-  checkEmail,
   logInDetails,
   wrongUserOrPass,
   addUser,
@@ -21,6 +20,9 @@ import {
 import BubbleChart from 'src/components/BubbleChart.vue'
 import {
   changePassword,
+  checkEmail,
+  checkPhoneNumber,
+  checkUsername,
   logIn,
   registerUser,
   sendEmailActiviationOtp,
@@ -82,7 +84,9 @@ export default {
     const otpSent = ref(false)
     const forgotPasswordStep = ref(1)
     const forgotPasswordField = ref(null)
-
+    const showPhoneError = ref(false)
+    const showEmailError = ref(false)
+    const showUsernameError = ref(false)
     const startCountdown = () => {
       countdownTime.value = 2 * 60 // reset to 10 seconds for testing
       minutes.value = Math.floor(countdownTime.value / 60)
@@ -283,6 +287,28 @@ export default {
             console.error(error)
           })
       } else {
+        loadingVar.value = [1, 3].includes(step.value)
+        if (step.value == 1) {
+          const res = await checkPhoneNumber(userInfo.value.phone_number)
+          loadingVar.value = false
+          if (res.data > 0) {
+            showPhoneError.value = true
+            return
+          }
+          showPhoneError.value = false
+        }
+        if (step.value == 3) {
+          const res1 = await checkEmail(userInfo.value.email_address)
+          const res2 = await checkUsername(userInfo.value.username)
+          loadingVar.value = false
+          showEmailError.value = res1.data > 0
+          showUsernameError.value = res2.data > 0
+          if (showEmailError.value || showUsernameError.value) {
+            return
+          }
+          showEmailError.value = false
+          showUsernameError.value = false
+        }
         if (step.value < 4 && referenceCode.value !== pin.value) {
           step.value += 1
           return
@@ -478,6 +504,9 @@ export default {
       includeNumber.value = /\d/.test(userInfo.value.password)
     })
     return {
+      showEmailError,
+      showUsernameError,
+      showPhoneError,
       validateForgotPassword,
       forgotPasswordStep,
       forgotFn,
@@ -510,7 +539,6 @@ export default {
       wrongUserOrPass,
       logInDetails,
       logInTaara,
-      checkEmail,
       errorEmail,
       forgotPassBtn,
       changer,

@@ -87,6 +87,7 @@ export default {
     const showPhoneError = ref(false)
     const showEmailError = ref(false)
     const showUsernameError = ref(false)
+    const showPasswordError = ref(false)
     const startCountdown = () => {
       countdownTime.value = 2 * 60 // reset to 10 seconds for testing
       minutes.value = Math.floor(countdownTime.value / 60)
@@ -260,9 +261,8 @@ export default {
         })
         logIn(userInfo.value)
           .then((response) => {
-            console.log(response.data)
-
             if (response.status == 'success') {
+              showPasswordError.value = false
               store.userData = response.data
               sessionStorage.setItem('user_data', JSON.stringify(response.data))
               if (response.data.user_type == 1) {
@@ -278,7 +278,7 @@ export default {
               }
             } else {
               setTimeout(() => {
-                // showLoginError.value = !showLoginError.value
+                showPasswordError.value = true
                 $q.loading.hide()
               }, 1000)
             }
@@ -504,6 +504,7 @@ export default {
       includeNumber.value = /\d/.test(userInfo.value.password)
     })
     return {
+      showPasswordError,
       showEmailError,
       showUsernameError,
       showPhoneError,

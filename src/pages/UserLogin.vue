@@ -404,6 +404,8 @@
                     :type="isPwd ? 'password' : 'text'"
                     v-model="userInfo.password"
                     :rules="[(val) => !!val || 'Password is required!']"
+                    :error="showPasswordError"
+                    error-message="Username or Password is incorrect!"
                   >
                     <template v-slot:append>
                       <q-icon

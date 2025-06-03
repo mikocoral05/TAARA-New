@@ -70,3 +70,16 @@ export const updatePublicUserDetails = async (obj) => {
   console.log(response)
   return response.data
 }
+
+export const updatePublicUserEmailAddress = async (new_email_address, user_id) => {
+  const response = await api.put('new_api.php', {
+    update_publicuser_email_address: { user_id, new_email_address },
+  })
+
+  return response.data
+}
+
+export const updatePublicUserPassword = async (new_password, user_id) => {
+  const response = await api.put('new_api.php', { update_password: { new_password, user_id } })
+  return response.data
+}

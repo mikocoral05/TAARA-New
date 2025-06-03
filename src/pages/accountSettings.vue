@@ -29,7 +29,7 @@
                     : 'no-profile-female.svg'
               "
               class="radius-100 q-img"
-            />
+            />asdasd
           </div>
           <div class="column justify-end items-end">
             <h4 class="q-ma-md">

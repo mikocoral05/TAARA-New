@@ -155,7 +155,7 @@
           <q-btn bordered icon="expand_more" round flat dense>
             <q-menu>
               <q-list>
-                <q-item clickable v-close-popup to="/public/account-settings?my-account">
+                <q-item clickable v-close-popup to="/public/account-settings">
                   <q-item-section>My Account</q-item-section>
                 </q-item>
 
@@ -166,22 +166,7 @@
               </q-list>
             </q-menu>
           </q-btn>
-          <q-btn bordered icon="notifications" round flat dense class="q-ml-sm">
-            <q-menu>
-              <q-list>
-                <q-item clickable v-close-popup to="/public/account-settings">
-                  <q-item-section>My Account</q-item-section>
-                </q-item>
-                <q-item clickable v-close-popup to="/public/account-settings">
-                  <q-item-section class="item-name">My Activity</q-item-section>
-                </q-item>
-                <q-separator />
-                <q-item clickable v-close-popup @click="logOuts()">
-                  <q-item-section>Log Out</q-item-section>
-                </q-item>
-              </q-list>
-            </q-menu>
-          </q-btn>
+          <q-btn bordered icon="notifications" round flat dense class="q-ml-sm" />
         </div>
         <div class="get-started" v-else>
           <q-btn class="q-ml-md text-white" label="Log In" no-caps flat to="/user-login" />

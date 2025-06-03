@@ -82,9 +82,46 @@ class API
             WHERE all_dates.year = ?
             GROUP BY all_dates.year, all_dates.month
             ORDER BY all_dates.year, all_dates.month;
-        ", [$year]);
+            ", [$year]);
 
             echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
+        } else if (array_key_exists("public_user_id", $payload)) {
+            $user_id = $payload['public_user_id'];
+
+            $columns = [
+                'u.user_id',
+                'u.user_type',
+                'u.first_name',
+                'u.middle_name',
+                'u.last_name',
+                'u.suffix',
+                'u.Bio',
+                'u.birth_date',
+                'u.email_address',
+                'u.phone_number',
+                'u.civil_status',
+                'u.occupation',
+                'u.street',
+                'u.brgy_name',
+                'u.city_municipality',
+                'u.province',
+                'u.sex',
+                'u.username',
+                'u.date_created',
+                'u.is_activated',
+                'f.image_path AS image_path'
+            ];
+
+            $this->db->where('u.user_id', $user_id);
+            $this->db->where('u.user_type', 1);
+            $this->db->join('tbl_files f', 'u.image_id = f.id', 'left');
+            $query = $this->db->getOne('tbl_users u', null, $columns);
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => $query,
+                'method' => 'GET'
+            ]);
         } else {
             // Return error if 'get_user_by_type' is not provided
             echo json_encode([

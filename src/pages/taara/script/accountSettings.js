@@ -1,19 +1,20 @@
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import TaaraFooter from 'src/components/TaaraFooter.vue'
+import { resizeImage, Email, sendTelerivetSms, getImageLink } from 'src/composable/simpleComposable'
 import {
   logInDetails,
-  getPublicUser,
   updatePublicUserDetails,
   updatePublicUserEmailAddress,
   updatePublicUserPassword,
 } from 'src/composable/taaraComposable'
-import { resizeImage, Email, sendTelerivetSms } from 'src/composable/simpleComposable'
+import { globalStore } from 'src/stores/global-store'
 
 export default {
   components: {
     TaaraFooter,
   },
   setup() {
+    const store = globalStore()
     let more = ref(false)
     let userInfo = ref({})
     let dummyPassword = ref('*******************')
@@ -35,8 +36,8 @@ export default {
       const files = event.target.files
       const file = files[0]
       param == 'profileImage'
-        ? (userInfo.value.user_image_name = file.name)
-        : (userInfo.value.valid_id_name = file.name)
+        ? (store.userData.user_image_name = file.name)
+        : (store.userData.valid_id_name = file.name)
       const reader = new FileReader()
       reader.readAsDataURL(file)
       reader.onload = () => {
@@ -44,9 +45,9 @@ export default {
           .then(({ dataUrl }) => {
             more.value = true
             if (param == 'profileImage') {
-              userInfo.value.image = dataUrl
+              store.userData.image = dataUrl
             } else {
-              userInfo.value.valid_id = dataUrl
+              store.userData.valid_id = dataUrl
             }
           })
           .catch((error) => {
@@ -61,7 +62,7 @@ export default {
     let changeEmailMess = () => {
       return (
         'Dear [' +
-        userInfo.value.first_name +
+        store.userData.first_name +
         '],<br><br> Hello, <br><br>We received a request to change your Email Address. <br> If you made this request, please use the code below to change your Email.<br><br><b>Your verification code is: ' +
         +referenceCode.value +
         '</b><br><br> If you did not do this, please ignore this message.<br><br>Please note that this verification code does not have an expiration unless you request another one.<br><br>Best regards, Tabaco Animal Rescue and Adoption'
@@ -70,7 +71,7 @@ export default {
     let changeSmsMess = () => {
       return (
         'Dear [' +
-        userInfo.value.first_name +
+        store.userData.first_name +
         '],\n\n Hello, \n\nWe received a request to change your Email Address. \n If you made this request, please use the code below to change your Email.\n\nYour verification code is: ' +
         +referenceCode.value +
         '\n\n If you did not do this, please ignore this message.\n\nPlease note that this verification code does not have an expiration unless you request another one.\n\nBest regards, Tabaco Animal Rescue and Adoption'
@@ -81,18 +82,18 @@ export default {
       startCountdown()
       Email.send({
         SecureToken: 'e16c5656-79fd-4b50-8411-d2cbfcff3662',
-        To: userInfo.value.email_address,
+        To: store.userData.email_address,
         From: 'michaelangelo.corral.personal@gmail.com',
         Subject: 'Password Reset Request',
         Body: changeEmailMess(),
       }).then((message) => console.log(message))
       emailOrPass.value = false
-      sendTelerivetSms(userInfo.value.phone_number, changeSmsMess())
+      sendTelerivetSms(store.userData.phone_number, changeSmsMess())
     }
     let resetPassMessageEmail = () => {
       return (
         'Dear [' +
-        userInfo.value.first_name +
+        store.userData.first_name +
         '],<br><br> Hello, <br><br>We received a request to reset your password for your account associated with this email address.<br> If you made this request, please use the code below to change your password.<br><br><b>Your verification code is:' +
         +referenceCode.value +
         '</b><br><br> If you did not do this, please ignore this message.<br><br>Please note that this verification code does not have an expiration unless you request another one.<br><br>Best regards, Tabaco Animal Rescue and Adoption'
@@ -101,7 +102,7 @@ export default {
     let resetPassMessageSms = () => {
       return (
         'Dear [' +
-        userInfo.value.first_name +
+        store.userData.first_name +
         '],\n\nHello,\n\nWe received a request to reset your password for your account associated with this phone number. If you made this request, please use the code below to change your password.\n\nYour verification code is: ' +
         referenceCode.value +
         '\n\nIf you did not do this, please ignore this message. Please note that this verification code does not have an expiration unless you request another one.\n\nBest regards, Tabaco Animal Rescue and Adoption'
@@ -111,14 +112,14 @@ export default {
       emailOrPassProgress.value = 1
       Email.send({
         SecureToken: 'e16c5656-79fd-4b50-8411-d2cbfcff3662',
-        To: userInfo.value.email_address,
+        To: store.userData.email_address,
         From: 'michaelangelo.corral.personal@gmail.com',
         Subject: 'Password Reset Request',
         Body: resetPassMessageEmail(),
       }).then((message) => console.log(message))
       startCountdown()
       emailOrPass.value = true
-      sendTelerivetSms(userInfo.value.phone_number, resetPassMessageSms())
+      sendTelerivetSms(store.userData.phone_number, resetPassMessageSms())
     }
 
     const startCountdown = () => {
@@ -167,7 +168,7 @@ export default {
           .then((response) => {
             if (response == 'success') {
               emailOrPassProgress.value = 0
-              userInfo.value.email_address = newEmailAddress.value
+              store.userData.email_address = newEmailAddress.value
             }
           })
           .catch((error) => {
@@ -186,22 +187,9 @@ export default {
       }
     }
 
-    onMounted(() => {
-      getPublicUser(logInDetails.value[0].user_id)
-        .then((response) => {
-          userInfo.value = { ...response }
-        })
-        .catch((error) => {
-          console.log(error)
-        })
-      // if (route.query.hasOwnProperty('my-account') == true) {
-      //   tab.value = 1
-      // } else {
-      //   tab.value = 2
-      // }
-    })
-
     return {
+      getImageLink,
+      store,
       isPwd: ref(false),
       newPassword,
       retypePassword,

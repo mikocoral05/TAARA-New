@@ -1,17 +1,19 @@
 import { ref } from 'vue'
 import TaaraFooter from 'src/components/TaaraFooter.vue'
 import { resizeImage, Email, sendTelerivetSms, getImageLink } from 'src/composable/simpleComposable'
-import {
-  logInDetails,
-  updatePublicUserEmailAddress,
-  updatePublicUserPassword,
-} from 'src/composable/taaraComposable'
+import { logInDetails } from 'src/composable/taaraComposable'
 import { globalStore } from 'src/stores/global-store'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
-import { getPublicUserInfo, updatePublicUserDetails } from 'src/composable/latestPublicComposable'
+import {
+  getPublicUserInfo,
+  updatePublicUserDetails,
+  updatePublicUserEmailAddress,
+  updatePublicUserPassword,
+} from 'src/composable/latestPublicComposable'
 import { useQuasar } from 'quasar'
 import { onMounted } from 'vue'
-import { sendChangeEmail } from 'src/composable/latestComposable'
+import { checkEmail, sendChangeEmail } from 'src/composable/latestComposable'
+import { watchEffect } from 'vue'
 
 export default {
   components: {
@@ -23,9 +25,9 @@ export default {
     const more = ref(false)
     const userInfo = ref({ ...store.userData })
     const dummyPassword = ref('*******************')
-    const newPassword = ref()
-    const retypePassword = ref()
-    const emailOrPassProgress = ref(0)
+    const newPassword = ref(null)
+    const retypePassword = ref(null)
+    const emailOrPassProgress = ref(4)
     const emailOrPass = ref(false)
     const newEmailAddress = ref(null)
     const tab = ref(1)
@@ -39,6 +41,8 @@ export default {
     const seconds = ref(0)
     const emailOrPhone = ref(0)
     const loadingVar = ref(false)
+    const changeEmailOrPass = ref(2)
+    const showErrorEmailExist = ref(false)
     const handleFileUpload = (event, param) => {
       const files = event.target.files
       const file = files[0]
@@ -164,36 +168,37 @@ export default {
 
     const confirmCode = () => {
       if (referenceCode.value == code.value) {
-        if (emailOrPass.value == false) {
-          emailOrPassProgress.value = 2
-        } else if (emailOrPass.value == true) {
-          emailOrPassProgress.value = 3
-        }
+        emailOrPassProgress.value = changeEmailOrPass.value == 1 ? 3 : 4
       }
     }
 
-    const updateChange = () => {
-      if (emailOrPass.value == false) {
-        updatePublicUserEmailAddress(newEmailAddress.value, logInDetails.value[0].user_id)
-          .then((response) => {
-            if (response == 'success') {
-              emailOrPassProgress.value = 0
-              userInfo.value.email_address = newEmailAddress.value
-            }
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-      } else if (emailOrPass.value == true) {
-        updatePublicUserPassword(newPassword.value, logInDetails.value[0].user_id)
-          .then((response) => {
-            if (response == 'success') {
-              emailOrPassProgress.value = 0
-            }
-          })
-          .catch((error) => {
-            console.log(error)
-          })
+    const updateChange = async () => {
+      if (changeEmailOrPass.value == 1) {
+        const res = await checkEmail(newEmailAddress.value)
+        if (res.data > 0) {
+          showErrorEmailExist.value = true
+          return
+        }
+        showErrorEmailExist.value = false
+        $q.loading.show({ group: 'update', message: 'Updating new Email address. Please wait ...' })
+        const response = await updatePublicUserEmailAddress(
+          newEmailAddress.value,
+          userInfo.value.user_id,
+        )
+        $q.loading.show({ group: 'update', message: response.message })
+        setTimeout(() => {
+          emailOrPassProgress.value = response.status == 'success' ? 0 : 3
+          userInfo.value.email_address = newEmailAddress.value
+          $q.loading.hide()
+        }, 500)
+      } else if (changeEmailOrPass.value == 2) {
+        $q.loading.show({ group: 'update', message: 'Updating new password. Please wait ...' })
+        const response = await updatePublicUserPassword(newPassword.value, userInfo.value.user_id)
+        $q.loading.show({ group: 'update', message: response.message })
+        setTimeout(() => {
+          emailOrPassProgress.value = response.status == 'success' ? 0 : 3
+          $q.loading.hide()
+        }, 500)
       }
     }
 
@@ -227,7 +232,18 @@ export default {
       previewImage.value = store.userData.image_path
       console.log(previewImage.value)
     })
+    const minSixLenght = ref(false)
+    const includeNumber = ref(false)
+    watchEffect(() => {
+      minSixLenght.value = newPassword.value?.length > 5
+      includeNumber.value = /\d/.test(newPassword.value)
+    })
     return {
+      minSixLenght,
+      includeNumber,
+      showErrorEmailExist,
+      changeEmailOrPass,
+      loadingVar,
       emailOrPhone,
       sendEmailOrPhoneOtp,
       triggerUpload,

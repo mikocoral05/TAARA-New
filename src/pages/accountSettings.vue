@@ -314,7 +314,7 @@
               no-caps
               class="change-btn"
               flat
-              @click="emailOrPassProgress = 1"
+              @click="((emailOrPassProgress = 1), (changeEmailOrPass = 1))"
             />
           </div>
           <div class="row no-wrap justify-between q-mb-lg">
@@ -336,22 +336,25 @@
               no-caps
               class="change-btn"
               flat
-              @click="changePass()"
+              @click="(changePass(), (changeEmailOrPass = 2))"
             />
           </div>
         </div>
-        <div class="column no-wrap" v-if="emailOrPassProgress == 1">
-          <div class="text-center">Choose where to send the OTP to activate yoru account!</div>
+        <div class="column no-wrap q-mt-xl" v-if="emailOrPassProgress == 1">
+          <div class="text-center">
+            Choose where to send the OTP to change your
+            {{ changeEmailOrPass == 1 ? 'Email' : 'Password' }}!
+          </div>
           <div class="column no-wrap items-center justify-center q-mt-md">
             <div
-              style="width: 200px"
-              class="radius-10 light-border row no-wrap q-pa-md q-px-lg items-center"
+              style="width: 300px"
+              class="radius-10 bg-white light-border row no-wrap q-pa-md q-px-lg items-center"
               @click="sendEmailOrPhoneOtp(2)"
             >
-              <q-icon name="sym_r_phone_iphone" size="2rem" />
+              <q-icon name="sym_r_phone_iphone" size="2rem" class="q-mr-md" />
               <div class="column no-wrap">
                 <div>Mobile phone</div>
-                <div class="text-grey-7">{{ userInfo?.phone_number }}</div>
+                <div class="text-grey-7">+63 {{ userInfo?.phone_number }}</div>
               </div>
               <q-spinner-ios
                 color="primary"
@@ -361,8 +364,8 @@
               />
             </div>
             <div
-              style="width: 200px"
-              class="radius-10 light-border q-mt-md row no-wrap q-pa-md q-px-lg items-center"
+              style="width: 300px"
+              class="radius-10 bg-white light-border q-mt-md row no-wrap q-pa-md q-px-lg items-center"
               @click="sendEmailOrPhoneOtp(1)"
             >
               <q-icon name="sym_r_mail" size="2rem" />
@@ -379,6 +382,7 @@
             </div>
           </div>
         </div>
+
         <div v-if="emailOrPassProgress == 2" class="verification-container">
           <div>
             <h6 class="q-mb-sm">Verification</h6>
@@ -421,7 +425,7 @@
             </div>
           </div>
         </div>
-        <div v-if="emailOrPassProgress == 3">
+        <div v-if="emailOrPassProgress == 3 && changeEmailOrPass == 1">
           <h6 class="q-mb-md">Your new Email address</h6>
 
           <p class="q-mb-lg">you can now change your Email.</p>
@@ -433,8 +437,10 @@
                 outlined
                 dense
                 v-model="newEmailAddress"
-                :rules="[(val) => !!val || '']"
+                :rules="[(val) => !!val || 'Please input new email address!']"
                 hide-bottom-space
+                :error="showErrorEmailExist"
+                error-message="This email already exist!"
               />
             </div>
           </div>
@@ -449,7 +455,7 @@
             @click="updateChange()"
           />
         </div>
-        <div v-if="emailOrPassProgress == 3">
+        <div v-if="emailOrPassProgress == 4 && changeEmailOrPass == 2">
           <h6 class="q-mb-md">Log in Credentials</h6>
           <p class="q-mb-lg">Update your password.</p>
           <q-form @submit="updateChange()">
@@ -458,12 +464,12 @@
                 <p class="q-mb-sm">New Password</p>
 
                 <q-input
-                  label="Password"
+                  placeholder="New password"
                   dense
                   v-model="newPassword"
                   outlined
                   :type="isPwd ? 'password' : 'text'"
-                  :rules="[(val) => val.length >= 8 || 'Password length atleast 8!']"
+                  :rules="[(val) => !!val || 'New password is required!']"
                   hide-bottom-space
                 >
                   <template v-slot:append>
@@ -481,13 +487,13 @@
                 <p class="q-mb-sm">Retype Password</p>
 
                 <q-input
-                  label="Must match with your password"
+                  placeholder="Enter your password again"
                   dense
                   outlined
                   stack-label
                   v-model="retypePassword"
                   :type="isPwd ? 'password' : 'text'"
-                  :rules="[(val) => val == newPassword || '']"
+                  :rules="[(val) => val == newPassword || `Password didn't match!`]"
                 >
                   <template v-slot:append>
                     <q-icon
@@ -498,16 +504,35 @@
                   </template>
                 </q-input>
               </div>
-              <q-btn
-                icon="check"
-                dense
-                label="Confirm"
-                no-caps
-                class="change-btn"
-                flat
-                type="submit"
-              />
             </div>
+            <div class="column no-wrap full-width q-mb-xl q-mt-sm">
+              <div class="q-mb-md">Your password needs to include:</div>
+              <div class="row no-wrap items-center">
+                <q-icon
+                  name="check_circle"
+                  :color="includeNumber ? 'positive' : 'black'"
+                  class="q-mr-sm"
+                />
+                <div>Must include one number</div>
+              </div>
+              <div class="row no-wrap items-center">
+                <q-icon
+                  name="check_circle"
+                  :color="minSixLenght ? 'positive' : 'black'"
+                  class="q-mr-sm"
+                />
+                <div>Min 6 characters</div>
+              </div>
+            </div>
+            <q-btn
+              icon="check"
+              dense
+              label="Confirm"
+              no-caps
+              class="change-btn"
+              flat
+              type="submit"
+            />
           </q-form>
         </div>
       </div>

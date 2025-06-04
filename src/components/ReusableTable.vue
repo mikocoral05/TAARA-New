@@ -37,6 +37,18 @@
                 <q-icon name="search" />
               </template>
             </q-input>
+            <q-select
+              outlined
+              dense
+              v-if="showStatusFilter"
+              :model-value="status"
+              :options="statusOption"
+              class="q-mr-md"
+              emit-value
+              map-options
+              style="width: 150px"
+              @update:model-value="(val) => emit('update:status', val)"
+            />
             <div class="row no-wrap">
               <q-btn
                 icon="sym_r_add"
@@ -96,8 +108,11 @@ export default {
     visibleColumns: { type: Array, default: () => [] },
     confirm: { type: Boolean, default: false }, // Accept confirm as a prop
     tableAction: { type: Function, default: () => {} }, // Accept function as a prop
+    status: { type: Number, default: 0 },
+    showStatusFilter: { type: Boolean, default: false },
+    statusOption: { type: Function, default: () => [] },
   },
-  emits: ['update:modelValue', 'update:selected', 'update:confirm'],
+  emits: ['update:modelValue', 'update:selected', 'update:status', 'update:confirm'],
 
   setup(props, { emit }) {
     const showingAddTooltip = ref(false)

@@ -37,3 +37,5 @@ export const sexOption = ref([
   { label: 'Male', value: 1 },
   { label: 'Female', value: 2 },
 ])
+
+export const petSizes = ['Small', 'Medium', 'Large', 'Giant']

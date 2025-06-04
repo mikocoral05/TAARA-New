@@ -490,6 +490,14 @@ export const getExpenseSummary = async (year, month, operation) => {
   return reponse.data.data
 }
 
+export const getInventorySummary = async () => {
+  const reponse = await api.get('dashboard.php', {
+    params: { get_inventory_summary: 'get_inventory_summary' },
+  })
+
+  return reponse.data.data
+}
+
 export const getSchedule = () => {
   return new Promise((resolve, reject) => {
     api

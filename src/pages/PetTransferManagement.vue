@@ -232,7 +232,7 @@
                 </div>
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">
-                    Middle name <span class="text-negative q-ml-sm"> *</span>
+                    Middle name <span class="text-grey-7 text-caption q-ml-sm"> ( optional) </span>
                   </div>
                   <q-input
                     outlined
@@ -240,7 +240,6 @@
                     dense
                     placeholder="Middle name"
                     class="q-mt-sm"
-                    :rules="[(val) => !!val || 'Middle is required!']"
                     :readonly="mode == 'View'"
                   />
                 </div>
@@ -537,7 +536,7 @@ import {
   sexOption,
 } from 'src/composable/optionsComposable'
 import {
-  updateWishlist,
+  updatePetTransfer,
   deleteWishlist,
   addPetListRequest,
   getPetTransferList,
@@ -653,20 +652,21 @@ export default {
       } else if (['Edit', 'EditP'].includes(mode.value)) {
         $q.loading.show({
           group: 'update',
-          message: `${obj3[mode.value]}. Please wait...`,
+          message: `Updating. Please wait...`,
         })
 
-        updateWishlist(obj[tab.value], dataStorage.value).then((response) => {
-          $q.loading.show({
-            group: 'update',
-            message: response.message,
-          })
+        updatePetTransfer(dataStorage.value).then((response) => {
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 500)
           setTimeout(() => {
             $q.loading.hide()
-            if (response.status == 'success') {
-              fetchData()
-            }
-          }, 2000)
+            addDialog.value = false
+            fetchData()
+          }, 1000)
         })
       }
     }

@@ -83,20 +83,11 @@ class API
 
     public function httpPut($payload)
     {
-        if (array_key_exists('update_wishlist', $payload)) {
-            $id = $payload['update_wishlist']['data']['id'];
-            $status = $payload['update_wishlist']['data']['status'] ?? '';
-            $table = $payload['update_wishlist']['table'];
-            if ($status) {
-                $update_values = [
-                    'is_priority' => $status,
-                ];
-            } else {
-                $update_values = $payload['update_wishlist']['data'];
-            }
-
+        if (array_key_exists('update_pet_transfer', $payload)) {
+            $data = $payload['update_pet_transfer'];
+            $id = $payload['update_pet_transfer']['id'];
             $this->db->where('id', $id);
-            $updated = $this->db->update($table, $update_values);
+            $updated = $this->db->update('tbl_pet_transfer', $data);
 
             if ($updated) {
                 echo json_encode(['status' => 'success', 'message' => 'Records updated successfully', 'method' => 'PUT']);

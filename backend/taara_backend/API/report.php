@@ -48,10 +48,13 @@ class API
                 exit;
             }
 
-            $where = "YEAR(updated_at) $operation ? AND MONTH(updated_at) $operation ?  AND adoption_status = 4";
-            $params = [$year, $month];
+            // Format year-month as YYYY-MM with zero-padded month
+            $yearMonth = sprintf('%04d-%02d', $year, $month);
 
-            $results = $this->db->rawQuery("SELECT * FROM tbl_adoption_form WHERE $where", $params);
+            $where = "DATE_FORMAT(updated_at, '%Y-%m') $operation ?";
+            $params = [$yearMonth];
+
+            $results = $this->db->rawQuery("SELECT * FROM tbl_adoption_form WHERE $where AND adoption_status = 4", $params);
 
             echo json_encode([
                 'status' => 'success',
@@ -92,14 +95,51 @@ class API
                 exit;
             }
 
-            $where = "YEAR(date_rescued) $operation ? AND MONTH(date_rescued) $operation ? AND is_deleted = 1";
-            $params = [$year, $month];
+            // Format year-month to 'YYYY-MM' string, zero-padded month
+            $yearMonth = sprintf('%04d-%02d', $year, $month);
 
-            $results = $this->db->rawQuery("SELECT * FROM tbl_animal_info WHERE $where", $params);
+            $where = "DATE_FORMAT(date_rescued, '%Y-%m') $operation ?";
+            $params = [$yearMonth];
+
+            $results = $this->db->rawQuery("SELECT * FROM tbl_animal_info WHERE $where AND is_deleted = 1", $params);
 
             echo json_encode([
                 'status' => 'success',
                 'data' => count($results),
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists('get_total_donation', $payload)) {
+
+            $year = $payload['get_total_donation']['year'];
+            $month = str_pad($payload['get_total_donation']['month'], 2, '0', STR_PAD_LEFT);
+            $operation = $payload['get_total_donation']['operation'];
+
+            $allowed_operations = ['=', '<', '<=', '>', '>='];
+            if (!in_array($operation, $allowed_operations)) {
+                echo json_encode(['status' => 'error', 'message' => 'Invalid operation']);
+                exit;
+            }
+
+            $where = "f.is_deleted = 0 
+          AND f.donation_type = 'cash' 
+          AND f.status = 2 
+          AND DATE_FORMAT(f.received_date, '%Y-%m') $operation ?";
+
+            $params = ["$year-$month"];
+
+            $sql = "
+                SELECT SUM(cd.amount) as total 
+                FROM tbl_funds f 
+                LEFT JOIN tbl_cash_donations cd ON f.fund_id = cd.fund_id 
+                WHERE $where
+                LIMIT 1
+            ";
+
+            $result = $this->db->rawQuery($sql, $params);
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => $result[0] ?? ['total' => 0],
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_classification', $payload)) {
@@ -348,26 +388,62 @@ class API
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_expense_summary', $payload)) {
+            // $year = $payload['get_expense_summary']['year'];
+            // $month = str_pad($payload['get_expense_summary']['month'], 2, '0', STR_PAD_LEFT);
+            // $operation = $payload['get_expense_summary']['operation'];
+
+            // // Get total donations for the selected month (still using LIKE to match month)
+            // $this->db->join('tbl_cash_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
+            // $this->db->where('YEAR(tbl1.received_date)', $year);
+            // $this->db->where('MONTH(tbl1.received_date)', $month);
+            // $this->db->where('tbl1.status', 2);
+
+            // $this->db->where('tbl1.is_deleted', 0);
+            // $totalCashDonations = $this->db->getValue('tbl_funds tbl1', 'SUM(tbl2.amount)');
+
+            // // Get total expenses up to (or for) the selected date, using the dynamic operation
+            // $this->db->where('MONTH(expense_date)', $month);
+            // $this->db->where('YEAR(expense_date)', $year);
+            // $this->db->where('is_deleted', 0);
+            // $totalExpenses = $this->db->getValue('tbl_expenses', 'SUM(amount)');
+
+            // // Calculate balance
+            // $finalBalance = floatval($totalCashDonations) - floatval($totalExpenses);
+
+            // echo json_encode([
+            //     'status' => 'success',
+            //     'data' => [
+            //         'donations' => $totalCashDonations ?: 0,
+            //         'expenses' => $totalExpenses ?: 0,
+            //         'balance' => $finalBalance
+            //     ],
+            //     'method' => 'GET'
+            // ]);
             $year = $payload['get_expense_summary']['year'];
             $month = str_pad($payload['get_expense_summary']['month'], 2, '0', STR_PAD_LEFT);
             $operation = $payload['get_expense_summary']['operation'];
 
-            // Get total donations for the selected month (still using LIKE to match month)
-            $this->db->join('tbl_cash_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
-            $this->db->where('YEAR(tbl1.received_date)', $year);
-            $this->db->where('MONTH(tbl1.received_date)', $month);
-            $this->db->where('tbl1.status', 2);
+            $allowed_operations = ['=', '<', '<=', '>', '>='];
+            if (!in_array($operation, $allowed_operations)) {
+                echo json_encode(['status' => 'error', 'message' => 'Invalid operation']);
+                exit;
+            }
 
+            $yearMonth = sprintf('%04d-%02d', $year, $month);
+
+            // --- Total Cash Donations ---
+            $this->db->join('tbl_cash_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
             $this->db->where('tbl1.is_deleted', 0);
+            $this->db->where('tbl1.status', 2);
+            $this->db->where("DATE_FORMAT(tbl1.received_date, '%Y-%m') $operation ?", [$yearMonth]);
             $totalCashDonations = $this->db->getValue('tbl_funds tbl1', 'SUM(tbl2.amount)');
 
-            // Get total expenses up to (or for) the selected date, using the dynamic operation
-            $this->db->where('MONTH(expense_date)', $month);
-            $this->db->where('YEAR(expense_date)', $year);
+            // --- Total Expenses ---
             $this->db->where('is_deleted', 0);
+            $this->db->where("DATE_FORMAT(expense_date, '%Y-%m') $operation ?", [$yearMonth]);
             $totalExpenses = $this->db->getValue('tbl_expenses', 'SUM(amount)');
 
-            // Calculate balance
+            // --- Calculate balance ---
             $finalBalance = floatval($totalCashDonations) - floatval($totalExpenses);
 
             echo json_encode([

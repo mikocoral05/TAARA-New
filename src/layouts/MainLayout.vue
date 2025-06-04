@@ -27,7 +27,7 @@
           <q-btn round icon="notifications" color="primary" class="q-mr-xl" flat dense>
             <q-badge color="red" floating>4</q-badge>
           </q-btn>
-          <div class="row no-wrap items-center q-mr-lg">
+          <!-- <div class="row no-wrap items-center q-mr-lg">
             <q-img src="svg/united-kingdom-flag.svg" width="40px" class="q-mr-lg" />
             <q-select
               v-model="language"
@@ -37,8 +37,8 @@
               flat
               dense
             />
-          </div>
-          <div class="row no-wrap items-center">
+          </div> -->
+          <div class="row no-wrap items-center q-mr-md">
             <q-img
               :src="
                 store.userData?.image_path
@@ -61,6 +61,20 @@
               </div>
             </div>
           </div>
+          <q-btn round icon="sym_r_more_vert" color="primary" flat dense>
+            <q-menu>
+              <q-list style="width: 150px">
+                <q-item clickable v-close-popup to="/management/account-settings">
+                  <q-item-section class="row no-wrap">My Account</q-item-section>
+                </q-item>
+
+                <q-separator />
+                <q-item clickable v-close-popup @click="logOuts()">
+                  <q-item-section>Log Out</q-item-section>
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
         </div>
       </q-toolbar>
     </q-header>
@@ -154,6 +168,7 @@ export default defineComponent({
       $q.loading.show({
         message: 'Logging Out. Please wait...',
       })
+
       setTimeout(() => {
         sessionStorage.clear()
         store.reset()

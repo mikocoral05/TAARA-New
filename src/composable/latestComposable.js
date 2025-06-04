@@ -434,6 +434,15 @@ export const getMonthlyDonation = async (year) => {
 
   return reponse.data.data
 }
+
+export const getTotalDonation = async (year, month, operation) => {
+  const reponse = await api.get('report.php', {
+    params: { get_total_donation: { year, month, operation } },
+  })
+
+  return reponse.data.data?.total || 0
+}
+
 export const getMonthlyExpense = async (year) => {
   const reponse = await api.get('report.php', {
     params: { get_monthly_expense: year },

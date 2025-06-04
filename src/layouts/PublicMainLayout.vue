@@ -131,6 +131,22 @@
                   <q-item-label>Shelter Wishlist</q-item-label>
                 </q-item-section>
               </q-item>
+              <q-separator></q-separator>
+              <q-item
+                clickable
+                v-close-popup
+                to="/public/pet-transfer"
+                @click="headerColor = 'white'"
+                :class="
+                  $route.fullPath == '/public/pet-transfer' || ''
+                    ? 'bg-primary text-white'
+                    : 'bg-white text-black'
+                "
+              >
+                <q-item-section>
+                  <q-item-label>Pet Transfer</q-item-label>
+                </q-item-section>
+              </q-item>
             </q-list>
           </q-btn-dropdown>
         </div>

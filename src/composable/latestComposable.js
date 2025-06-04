@@ -1113,6 +1113,14 @@ export const getWishlist = async (table) => {
   }
 }
 
+export const getPetTransferList = async (status) => {
+  const response = await api.get('pet_transfer.php', {
+    params: { get_pet_transfer_list: status },
+  })
+
+  return response.data.data
+}
+
 export const updateWishlist = async (table, obj) => {
   const response = await api.put('wishlist_management.php', {
     update_wishlist: { table: table, data: obj },
@@ -1130,6 +1138,13 @@ export const deleteWishlist = async (table, arrayId) => {
 export const addWishlist = async (obj) => {
   const response = await api.post('wishlist_management.php', {
     add_wishlist: obj,
+  })
+  return response.data
+}
+
+export const addPetListRequest = async (obj) => {
+  const response = await api.post('pet_transfer.php', {
+    add_petList_request: obj,
   })
   return response.data
 }

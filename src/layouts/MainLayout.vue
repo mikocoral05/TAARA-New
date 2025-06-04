@@ -228,6 +228,11 @@ export default defineComponent({
         icon: 'sym_r_folded_hands',
         nav: '/management/wishlist',
       },
+      {
+        title: 'Pet Transfer',
+        icon: 'sym_r_airport_shuttle',
+        nav: '/management/pet-transfer-request',
+      },
     ])
 
     const linksList3 = computed(() => [
@@ -260,6 +265,7 @@ export default defineComponent({
       '/management/rescue-report': 'Rescue Report',
       '/management/analytic-report': 'Report',
       '/management/wishlist': 'Wishlist',
+      '/management/pet-transfer-request': 'Pet Transfer',
     }
 
     const tab = ref(routeToTabMap[route.path] || 'Dashboard')

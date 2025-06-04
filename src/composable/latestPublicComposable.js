@@ -105,3 +105,12 @@ export const submitPetTransfer = async (obj) => {
   console.log(response)
   return response.data
 }
+
+export const getPetTransferRequest = async (user_id) => {
+  const response = await api.get('new_api.php', {
+    params: {
+      get_pet_transfer_request: user_id,
+    },
+  })
+  return response.data.data
+}

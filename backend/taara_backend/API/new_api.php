@@ -29,6 +29,18 @@ class API
                 'data' => $totalCashDonations,
                 'method' => 'GET'
             ]);
+        } else  if (array_key_exists('get_pet_transfer_request', $payload)) {
+            $user_id = $payload['get_pet_transfer_request'];
+
+            $this->db->where("user_id", $user_id);
+            $this->db->orderBy("id", "DESC");
+            $query = $this->db->getOne('tbl_pet_transfer');
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => $query,
+                'method' => 'GET'
+            ]);
         } else if (array_key_exists('get_monthly_rescue', $payload)) {
             $month = $payload['get_monthly_rescue']['month'];
             $year = $payload['get_monthly_rescue']['year'];
@@ -179,7 +191,7 @@ class API
 
                 // 3. Set image ID reference
                 $data['image_of_owner_and_pet'] = $image_id;
-                $data['statua'] = 1;
+                $data['status'] = 1;
 
                 // 4. Insert to tbl_pet_transfer
                 $update = $this->db->insert('tbl_pet_transfer', $data);

@@ -1,7 +1,7 @@
 <template>
   <q-page class="column items-center justify-center">
     <div style="width: 100%; max-width: 800px" class="bg-white q-my-md q-py-lg radius-10">
-      <h5 class="q-ma-none q-px-lg text-bold">Transfer in 2 Steps</h5>
+      <h5 class="q-ma-none q-px-lg text-bold">Transfer in 3 Steps</h5>
       <q-form @submit="submitTransfer()">
         <q-stepper class="q-mt-md" v-model="step" color="primary" animated flat>
           <q-step :name="1" title="Basic Pet Info" icon="sym_r_pets" :done="step > 1">
@@ -37,7 +37,7 @@
                   <p class="q-ma-none q-mb-sm">Breed</p>
                   <q-input
                     outlined
-                    placeholder="Ex: Rockie"
+                    placeholder="Breed"
                     dense
                     v-model="petTransferInfo.breed"
                     stack-label
@@ -117,6 +117,7 @@
                       { label: 'No', value: 2 },
                     ]"
                     map-options
+                    emit-value
                     dense
                     :rules="[(val) => !!val || 'This field is required!']"
                     style="width: 200px"
@@ -133,6 +134,7 @@
                       { label: 'No', value: 2 },
                     ]"
                     map-options
+                    emit-value
                     dense
                     :rules="[(val) => !!val || 'This field is required!']"
                     style="width: 200px"
@@ -148,6 +150,7 @@
                       { label: 'Indoor', value: 1 },
                       { label: 'Outdoor', value: 2 },
                     ]"
+                    emit-value
                     map-options
                     dense
                     :rules="[(val) => !!val || 'This field is required!']"
@@ -181,7 +184,7 @@
             </div>
           </q-step>
 
-          <q-step :name="2" title="Upload Image" icon="sym_r_add_photo_alternate" :done="step > 3">
+          <q-step :name="2" title="Upload Image" icon="sym_r_add_photo_alternate" :done="step > 2">
             <div class="row no-wrap justify-between items-start">
               <div class="column no-wrap">
                 <h5 class="q-mb-sm q-mt-none">Upload Photo</h5>
@@ -237,21 +240,65 @@
                     <div
                       class="row no-wrap items-center q-px-md"
                       :style="
-                        requestResult
+                        transferTransaction.status == 1
                           ? {
-                              border: '1px solid green',
+                              border: '1px solid orange',
                               borderRadius: '2px',
                             }
-                          : { border: '1px solid red', borderRadius: '2px' }
+                          : transferTransaction.status == 2
+                            ? {
+                                border: '1px solid green',
+                                borderRadius: '2px',
+                              }
+                            : { border: '1px solid red', borderRadius: '2px' }
                       "
                     >
-                      <q-icon name="cancel" size="xs" :color="requestResult ? 'positive' : 'red'" />
-                      <p class="q-ma-none text-red">
-                        {{ requestResult ? 'Approved' : 'Decline' }}
+                      <q-icon
+                        :name="
+                          transferTransaction.status == 1
+                            ? 'sym_r_schedule'
+                            : transferTransaction.status == 2
+                              ? 'sym_r_check_circle'
+                              : 'sym_r_cancel'
+                        "
+                        size="xs"
+                        class="q-mr-sm"
+                        :color="
+                          transferTransaction.status == 1
+                            ? 'orange'
+                            : transferTransaction.status == 2
+                              ? 'positive'
+                              : 'negative'
+                        "
+                      />
+                      <p
+                        class="q-ma-none"
+                        :class="{
+                          'text-orange': transferTransaction.status == 1,
+                          'text-positive': transferTransaction.status == 2,
+                          'text-negative': transferTransaction.status == 3,
+                        }"
+                      >
+                        {{
+                          transferTransaction.status == 1
+                            ? 'Pending'
+                            : transferTransaction.status == 2
+                              ? 'Approved'
+                              : 'Disapproved'
+                        }}
                       </p>
                     </div>
                   </div>
-                  <p class="text-caption" v-if="requestResult == false">
+                  <p v-if="transferTransaction.status == 1">
+                    Your transfer request has been received and is currently under review. Please
+                    allow up to
+                    <strong>3 working days</strong> for our team to carefully evaluate your request.
+                    <br /><br />
+                    We appreciate your patience during this time. You will be notified once a
+                    decision has been made. Thank you for your continued commitment to animal
+                    welfare.
+                  </p>
+                  <p v-if="transferTransaction.status == 3">
                     Thank you for submitting your transfer request. After careful consideration, we
                     regret to inform you that your request has been declined. Unfortunately, due to
                     limitations in shelter capacity or other factors, we are unable to accommodate
@@ -262,7 +309,7 @@
                     feel free to reach out to us. Thank you for your compassion and commitment to
                     animals.
                   </p>
-                  <p v-if="requestResult == true">
+                  <p v-if="transferTransaction.status == 2">
                     Your transfer request has been approved! You can deliver your pet to our shelter
                     at your convenience. We look forward to welcoming them into our organization.
                     Thank you for your compassion and commitment to animals.
@@ -274,6 +321,7 @@
         </q-stepper>
         <div class="row no-wrap q-px-lg">
           <q-btn
+            v-if="step != 3"
             :label="step == 2 ? 'Submit' : 'Continue'"
             type="submit"
             class="text-white bg-primary q-mb-xs"
@@ -294,17 +342,20 @@
   </q-page>
 </template>
 <script>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { petSizes, sexOption } from 'src/composable/optionsComposable'
-import { submitPetTransfer } from 'src/composable/latestPublicComposable'
+import { getPetTransferRequest, submitPetTransfer } from 'src/composable/latestPublicComposable'
 import { useQuasar } from 'quasar'
+import { globalStore } from 'src/stores/global-store'
 export default {
   setup() {
     const $q = useQuasar()
+    const store = globalStore()
     const petTransferInfo = ref({ sex: 1 })
     const requestResult = ref(false)
-    const step = ref(2)
+    const step = ref(1)
     const fileInput = ref(null)
+    const transferTransaction = ref([])
     const showFileError = ref(false)
     const showFolder = () => {
       fileInput.value && fileInput.value.$el.querySelector('input').click()
@@ -321,9 +372,14 @@ export default {
       }
       showFileError.value = false
       $q.loading.show({ group: 'post', message: 'Submitting pet transfer. Pleast wait ...' })
+      petTransferInfo.value.user_id = store.userData.user_id
       const response = await submitPetTransfer(petTransferInfo.value)
       $q.loading.show({ group: 'post', message: response.message })
       console.log(response)
+      if (response.status == 'success') {
+        step.value = 3
+      }
+      transferTransaction.value = await getPetTransferRequest(store.userData.user_id)
       setTimeout(() => {
         $q.loading.hide()
       }, 500)
@@ -332,7 +388,13 @@ export default {
     const imageFnUpdate = () => {
       previewImage.value = URL.createObjectURL(petTransferInfo.value.file)
     }
+    onMounted(async () => {
+      transferTransaction.value = await getPetTransferRequest(store.userData.user_id)
+      console.log(transferTransaction.value)
+      step.value = transferTransaction.value?.status ? 3 : 1
+    })
     return {
+      transferTransaction,
       showFileError,
       previewImage,
       imageFnUpdate,

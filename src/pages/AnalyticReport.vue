@@ -378,11 +378,12 @@
               :options="generateYearList()"
             />
             <q-select
-              hint="Opertaion"
+              hint="Operation"
               dense
               outlined
               style="width: 100px"
               v-model="seletedOperation"
+              emit-value
               :options="[
                 {
                   label: `From the beginning up to ${monthNames.find((obj) => obj.value == selectedMonth)?.label} ${selectedYear}`,

@@ -259,7 +259,6 @@ import StackBarLine from 'src/components/StackBarLine.vue'
 import {
   getAnimalByHealtStatus,
   getExpenseSummary,
-  getFrequentLocation,
   getInventorySummary,
   getMonthlyAdopted,
   getMonthlyBalance,
@@ -269,7 +268,6 @@ import {
   getMonthlyPetAvailble,
   getMonthlyRescue,
   getOverallRescue,
-  getPetAvailable,
   getTotalAdopted,
   getTotalDonation,
 } from 'src/composable/latestComposable'
@@ -289,7 +287,6 @@ export default {
   components: { StackBarLine },
   setup() {
     const store = globalStore()
-    const petAvailable = ref(0)
     const totalAdopted = ref(0)
     const totalDonation = ref(0)
     const filterDialog = ref(false)
@@ -307,36 +304,7 @@ export default {
     const selectedYear = ref(yearToday)
     const selectedMonth = ref(monthToday)
     const seletedOperation = ref('<=')
-    const rows = ref([])
     const tab = ref(1)
-    const columns = [
-      {
-        name: 'id',
-        required: true,
-        label: '#',
-        align: 'left',
-        field: (row) => row.id,
-        format: (val) => `${val}`,
-        sortable: true,
-      },
-      {
-        name: 'location',
-        required: true,
-        label: 'Full Address',
-        align: 'left',
-        field: 'location',
-        sortable: true,
-      },
-      {
-        name: 'total_reports',
-        required: true,
-        label: 'No. of reports',
-        align: 'left',
-        field: 'total_reports',
-        sortable: true,
-      },
-      { name: 'btn', align: 'center', label: 'Map' },
-    ]
 
     const printPage = () => {
       store.leftDrawerOpen = false
@@ -352,17 +320,12 @@ export default {
         selectedMonth.value,
         seletedOperation.value,
       )
-      petAvailable.value = await getPetAvailable(
-        selectedYear.value,
-        selectedMonth.value,
-        seletedOperation.value,
-      )
+
       overallRescue.value = await getOverallRescue(
         selectedYear.value,
         selectedMonth.value,
         seletedOperation.value,
       )
-      rows.value = await getFrequentLocation(selectedYear.value)
     }
 
     const fetchFn2 = async () => {
@@ -371,13 +334,13 @@ export default {
         selectedMonth.value,
         seletedOperation.value,
       )
-      monthlyDonation.value = await getMonthlyDonation(selectedYear.value)
-      monthlyExpense.value = await getMonthlyExpense(selectedYear.value)
       totalDonation.value = await getTotalDonation(
         selectedYear.value,
         selectedMonth.value,
         seletedOperation.value,
       )
+      monthlyDonation.value = await getMonthlyDonation(selectedYear.value)
+      monthlyExpense.value = await getMonthlyExpense(selectedYear.value)
     }
     watchEffect(() => {
       fetchFn()
@@ -386,7 +349,6 @@ export default {
 
     onMounted(async () => {
       inventorySummary.value = await getInventorySummary()
-      console.log(inventorySummary.value)
 
       monthlyRescue.value = await getMonthlyRescue(selectedYear.value)
       monthlyPetAvailable.value = await getMonthlyPetAvailble(selectedYear.value)
@@ -419,15 +381,12 @@ export default {
       monthlyPetAvailable,
       monthlyRescue,
       mostReportedPlace,
-      petAvailable,
       totalAdopted,
       overallRescue,
       getAnimalByHealtStatus,
       store,
       tab,
       printPage,
-      columns,
-      rows,
       formatOrNumber,
       formatNumber,
       seletedOperation,

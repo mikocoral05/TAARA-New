@@ -165,6 +165,45 @@ class API
                     'method' => 'POST'
                 ]);
             }
+        } else if (isset($payload['submit_pet_transfer'])) {
+            $image = $payload['submit_pet_transfer']['new_image'];
+            $data = $payload['submit_pet_transfer'];
+
+            if ($image) {
+                // 1. Save the image
+                $this->db->insert('tbl_files', ['image_path' => $image]);
+                $image_id = $this->db->getInsertId();
+
+                // 2. Cleanup: remove 'new_image' from data before insert
+                unset($data['new_image']);
+
+                // 3. Set image ID reference
+                $data['image_of_owner_and_pet'] = $image_id;
+                $data['statua'] = 1;
+
+                // 4. Insert to tbl_pet_transfer
+                $update = $this->db->insert('tbl_pet_transfer', $data);
+
+                if ($update) {
+                    echo json_encode([
+                        'status' => 'success',
+                        'message' => 'Pet transfer form submitted successfully',
+                        'method' => 'POST'
+                    ]);
+                } else {
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => 'Failed to submit Pet transfer form',
+                        'method' => 'POST'
+                    ]);
+                }
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'No image provided',
+                    'method' => 'POST'
+                ]);
+            }
         } else {
             echo json_encode([
                 'status' => 'error',

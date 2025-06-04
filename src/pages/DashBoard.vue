@@ -11,7 +11,7 @@
                   <q-icon name="sym_r_savings" size="1.5rem" color="positive" />
                 </div>
                 <div class="text-h6 text-bold q-mt-lg">
-                  {{ formatNumber(expenseSummary.donations) }}
+                  {{ formatNumber(totalDonation) }}
                 </div>
                 <div class="text-grey-7 text-caption q-mt-sm">
                   <q-icon name="sym_r_north_east" class="text-positive text-bold q-mr-xs" /><span
@@ -253,7 +253,6 @@
 import StackBarLine from 'src/components/StackBarLine.vue'
 import {
   getAnimalByHealtStatus,
-  getClassification,
   getExpenseSummary,
   getFrequentLocation,
   getMonthlyAdopted,
@@ -266,6 +265,7 @@ import {
   getOverallRescue,
   getPetAvailable,
   getTotalAdopted,
+  getTotalDonation,
 } from 'src/composable/latestComposable'
 import {
   formatNumber,
@@ -283,14 +283,13 @@ export default {
   components: { StackBarLine },
   setup() {
     const store = globalStore()
-    const inMedication = ref(0)
     const petAvailable = ref(0)
     const totalAdopted = ref(0)
+    const totalDonation = ref(0)
     const filterDialog = ref(false)
     const overallRescue = ref(0)
     const expenseSummary = ref({ donations: 0, expenses: 0, balance: 0 })
     const mostReportedPlace = ref([])
-    const classification = ref([])
     const monthlyRescue = ref([])
     const monthlyDonation = ref([])
     const monthlyBalance = ref([])
@@ -341,12 +340,6 @@ export default {
     }
 
     const fetchFn = async () => {
-      inMedication.value = await getAnimalByHealtStatus(
-        selectedYear.value,
-        selectedMonth.value,
-        seletedOperation.value,
-        3,
-      )
       totalAdopted.value = await getTotalAdopted(
         selectedYear.value,
         selectedMonth.value,
@@ -363,11 +356,6 @@ export default {
         seletedOperation.value,
       )
       rows.value = await getFrequentLocation(selectedYear.value)
-      classification.value = await getClassification(
-        selectedYear.value,
-        selectedMonth.value,
-        seletedOperation.value,
-      )
     }
 
     const fetchFn2 = async () => {
@@ -378,6 +366,11 @@ export default {
       )
       monthlyDonation.value = await getMonthlyDonation(selectedYear.value)
       monthlyExpense.value = await getMonthlyExpense(selectedYear.value)
+      totalDonation.value = await getTotalDonation(
+        selectedYear.value,
+        selectedMonth.value,
+        seletedOperation.value,
+      )
     }
     watchEffect(() => {
       fetchFn()
@@ -390,7 +383,6 @@ export default {
       monthlyPetAdopted.value = await getMonthlyAdopted(selectedYear.value)
       monthlyDeceased.value = await getMonthlyDeceased(selectedYear.value)
       monthlyBalance.value = await getMonthlyBalance(selectedYear.value)
-      console.log(monthlyBalance.value)
 
       window.onafterprint = () => {
         store.showLayout = true
@@ -401,6 +393,7 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
+      totalDonation,
       monthlyBalance,
       monthlyExpense,
       monthlyDonation,
@@ -414,12 +407,10 @@ export default {
       monthlyPetAdopted,
       monthlyPetAvailable,
       monthlyRescue,
-      classification,
       mostReportedPlace,
       petAvailable,
       totalAdopted,
       overallRescue,
-      inMedication,
       getAnimalByHealtStatus,
       store,
       tab,

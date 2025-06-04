@@ -26,7 +26,7 @@
                 <q-item clickable v-close-popup @click="tableAction(row, 'View')">
                   <q-item-section>View</q-item-section>
                   <q-item-section side>
-                    <q-icon name="sym_r_edit" size="1.2rem" />
+                    <q-icon name="sym_r_visibility" size="1.2rem" />
                   </q-item-section>
                 </q-item>
                 <q-item clickable v-close-popup @click="tableAction(row, 'Edit')">
@@ -35,23 +35,23 @@
                     <q-icon name="sym_r_edit" size="1.2rem" />
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="tableAction(row.id, 'Edit', 'approve')">
+                <q-item clickable v-close-popup @click="tableAction(row, 'Approve')">
                   <q-item-section>Approve</q-item-section>
                   <q-item-section side>
-                    <q-icon name="sym_r_flag_circle" size="1.2rem" color="red" />
+                    <q-icon name="sym_r_check_circle" size="1.2rem" color="positive" />
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="tableAction(row.id, 'Edit', 'Disapprove')">
+                <q-item clickable v-close-popup @click="tableAction(row, 'Disapprove')">
                   <q-item-section>Dispprove</q-item-section>
                   <q-item-section side>
-                    <q-icon name="sym_r_list" size="1.2rem" />
+                    <q-icon name="sym_r_cancel" color="red" size="1.2rem" />
                   </q-item-section>
                 </q-item>
                 <q-separator />
                 <q-item clickable @click="tableAction(row.id, 'Archieve')">
                   <q-item-section>Archieve</q-item-section>
                   <q-item-section side>
-                    <q-icon name="sym_r_delete" size="1.2rem" />
+                    <q-icon name="sym_r_delete" size="1.2rem" color="negative" />
                   </q-item-section>
                 </q-item>
               </q-list>
@@ -612,7 +612,7 @@ export default {
 
     const tableAction = (row, modeParam, action) => {
       mode.value = modeParam
-      if (['View', 'Edit', 'Add', 'EditP'].includes(modeParam)) {
+      if (['View', 'Edit', 'Add'].includes(modeParam)) {
         if (modeParam == 'Add') {
           addDialog.value = true
           dataStorage.value = { status: 1 }
@@ -624,6 +624,12 @@ export default {
           dataStorage.value = { id: row, status: action == 'prio' ? 1 : 0 }
           saveFn()
         }
+      } else if (['Disapprove', 'Approve'].includes(modeParam)) {
+        const statusParam = modeParam == 'Disapprove' ? 3 : 2
+        dataStorage.value = { ...row, status: statusParam }
+        console.log(dataStorage.value)
+
+        saveFn()
       } else {
         arrayOfId.value.push(row)
         confirm.value = !confirm.value
@@ -649,7 +655,7 @@ export default {
             fetchData()
           }, 1000)
         })
-      } else if (['Edit', 'EditP'].includes(mode.value)) {
+      } else if (['Edit', 'Approve', 'Disapprove'].includes(mode.value)) {
         $q.loading.show({
           group: 'update',
           message: `Updating. Please wait...`,

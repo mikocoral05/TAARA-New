@@ -81,37 +81,7 @@
           <q-btn icon="sym_r_event" dense unelevated @click="filterDialog = !filterDialog" />
         </div>
       </div>
-      <!-- <div class="radius-10 q-mb-md row no-wrap">
-        <div class="bg-white full-width radius-10 q-pa-md">
-          <q-table :rows="rows" :columns="columns" row-key="name" :rows-per-page-options="[3]" flat>
-            <template v-slot:top>
-              <div class="row no-wrap q-mb-md items-center">
-                <div class="text-body1">
-                  Geographical Hotspots
-                  <q-icon class="q-ml-sm" size="1.2rem" name="sym_r_language" />
-                </div>
-                <div class="text-grey-7 q-ml-md text-caption">
-                  Most frequently reported rescue locations
-                </div>
-              </div>
-            </template>
 
-            <template v-slot:body-cell-btn="props">
-              <q-td :props="props">
-                <q-btn flat dense no-caps :ripple="false" class="q-px-md">
-                  <span class="q-mr-sm text-caption">Show </span>
-                  <q-icon name="sym_r_location_on" size="1.2rem" class="cursor-pointer" />
-                </q-btn>
-              </q-td>
-            </template>
-            <template v-slot:body-cell-id="{ rowIndex }">
-              <q-td>
-                {{ rowIndex + 1 }}
-              </q-td>
-            </template>
-          </q-table>
-        </div>
-      </div> -->
       <div class="bg-white radius-10">
         <StackBarLine
           title="Annual Shelter & Financial Overview"
@@ -193,6 +163,41 @@
           ]"
         />
       </div>
+      <div class="q-mt-md">
+        <q-card flat class="radius-10">
+          <q-card-section class="column no-wrap">
+            <div class="text-bold text-caption text-grey-8">INVENTORIES</div>
+            <q-separator class="q-my-sm q-mb-md"></q-separator>
+            <div class="row no-wrap justify-between items-center">
+              <div class="column no-wrap">
+                <div class="text-bold">
+                  {{
+                    inventorySummary.filter((obj) => obj.category == 'medicine')[0]?.total_count ||
+                    0
+                  }}
+                </div>
+                <div class="q-mt-sm text-grey-8" style="font-size: 13px">Total no. of Medicine</div>
+              </div>
+              <div class="column no-wrap">
+                <div class="text-bold">
+                  {{
+                    inventorySummary.filter((obj) => obj.category == 'vaccine')[0]?.total_count || 0
+                  }}
+                </div>
+                <div class="q-mt-sm text-grey-8" style="font-size: 13px">Total no. of Vaccine</div>
+              </div>
+              <div class="column no-wrap">
+                <div class="text-bold">
+                  {{
+                    inventorySummary.filter((obj) => obj.category == 'vitamin')[0]?.total_count || 0
+                  }}
+                </div>
+                <div class="q-mt-sm text-grey-8" style="font-size: 13px">Total no. of Vitamin</div>
+              </div>
+            </div>
+          </q-card-section>
+        </q-card>
+      </div>
     </div>
 
     <q-dialog v-model="filterDialog" position="top">
@@ -255,6 +260,7 @@ import {
   getAnimalByHealtStatus,
   getExpenseSummary,
   getFrequentLocation,
+  getInventorySummary,
   getMonthlyAdopted,
   getMonthlyBalance,
   getMonthlyDeceased,
@@ -290,6 +296,7 @@ export default {
     const overallRescue = ref(0)
     const expenseSummary = ref({ donations: 0, expenses: 0, balance: 0 })
     const mostReportedPlace = ref([])
+    const inventorySummary = ref([])
     const monthlyRescue = ref([])
     const monthlyDonation = ref([])
     const monthlyBalance = ref([])
@@ -378,6 +385,9 @@ export default {
     })
 
     onMounted(async () => {
+      inventorySummary.value = await getInventorySummary()
+      console.log(inventorySummary.value)
+
       monthlyRescue.value = await getMonthlyRescue(selectedYear.value)
       monthlyPetAvailable.value = await getMonthlyPetAvailble(selectedYear.value)
       monthlyPetAdopted.value = await getMonthlyAdopted(selectedYear.value)
@@ -393,6 +403,7 @@ export default {
       window.onafterprint = null // Clean up
     })
     return {
+      inventorySummary,
       totalDonation,
       monthlyBalance,
       monthlyExpense,

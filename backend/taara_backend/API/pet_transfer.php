@@ -94,9 +94,8 @@ class API
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to updated records', 'method' => 'PUT']);
             }
-        } else   if (array_key_exists('delete_wishlist', $payload)) {
-            $id = $payload['delete_wishlist']['id'];
-            $table = $payload['delete_wishlist']['table'];
+        } else   if (array_key_exists('delete_pet_transfer', $payload)) {
+            $id = $payload['delete_pet_transfer'];
             $ids = is_array($id) ? $id : explode(',', $id);
 
             $update_values = [
@@ -105,7 +104,7 @@ class API
             ];
 
             $this->db->where('id', $ids, 'IN');
-            $updated = $this->db->update($table, $update_values);
+            $updated = $this->db->update('tbl_pet_transfer', $update_values);
 
             if ($updated) {
                 echo json_encode(['status' => 'success', 'message' => 'Records delete successfully', 'method' => 'PUT']);

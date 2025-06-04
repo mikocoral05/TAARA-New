@@ -1142,6 +1142,13 @@ export const deleteWishlist = async (table, arrayId) => {
   return response.data
 }
 
+export const deletePetTransfer = async (arrayId) => {
+  const response = await api.put('pet_transfer.php', {
+    delete_pet_transfer: arrayId,
+  })
+  return response.data
+}
+
 export const addWishlist = async (obj) => {
   const response = await api.post('wishlist_management.php', {
     add_wishlist: obj,

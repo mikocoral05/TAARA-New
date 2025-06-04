@@ -168,7 +168,7 @@
         <q-card-section class="column items-center">
           <q-icon name="sym_r_inventory_2" color="primary" size="2.5rem" />
           <span class="q-ml-sm text-black text-body1 q-mt-md text-center">
-            Are you sure you want to Delete this {{ obj2[tab] }} List?
+            Are you sure you want to Delete this Pet Transfer Request ?
           </span>
           <span class="q-ml-sm text-caption text-grey-7 q-mt-sm">
             This action is irreversible.
@@ -537,7 +537,7 @@ import {
 } from 'src/composable/optionsComposable'
 import {
   updatePetTransfer,
-  deleteWishlist,
+  deletePetTransfer,
   addPetListRequest,
   getPetTransferList,
 } from 'src/composable/latestComposable'
@@ -561,8 +561,6 @@ export default {
   setup() {
     const obj = { 1: 'tbl_wishlist_medicine', 2: 'tbl_wishlist_food', 3: 'tbl_wishlist_supplies' }
 
-    const obj2 = { 1: 'Medicine', 2: 'Food', 3: 'Supplies' }
-    const obj3 = { Add: 'Adding', Edit: 'Updating', Delete: 'Deleting' }
     const $q = useQuasar()
     const tab = ref('1')
     const filterTab = ref('1')
@@ -618,7 +616,7 @@ export default {
           dataStorage.value = { status: 1 }
         } else if (['Edit', 'View'].includes(modeParam)) {
           addDialog.value = true
-          dataStorage.value = { ...row } //actually pass data not id
+          dataStorage.value = { ...row }
           console.log(dataStorage.value)
         } else {
           dataStorage.value = { id: row, status: action == 'prio' ? 1 : 0 }
@@ -627,8 +625,6 @@ export default {
       } else if (['Disapprove', 'Approve'].includes(modeParam)) {
         const statusParam = modeParam == 'Disapprove' ? 3 : 2
         dataStorage.value = { ...row, status: statusParam }
-        console.log(dataStorage.value)
-
         saveFn()
       } else {
         arrayOfId.value.push(row)
@@ -680,19 +676,19 @@ export default {
     const softDeleteFn = () => {
       $q.loading.show({
         group: 'update',
-        message: `${obj3[mode.value]}. Please wait...`,
+        message: `Deleting Pet Transfer list. Please wait...`,
       })
-      deleteWishlist(obj[tab.value], arrayOfId.value).then((response) => {
-        $q.loading.show({
-          group: 'update',
-          message: response.message,
-        })
+      deletePetTransfer(arrayOfId.value).then((response) => {
+        setTimeout(() => {
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+        }, 500)
         setTimeout(() => {
           $q.loading.hide()
-          if (response.status == 'success') {
-            fetchData()
-          }
-        }, 2000)
+          fetchData()
+        }, 1000)
       })
     }
 
@@ -710,7 +706,6 @@ export default {
       arrayOfId,
       filterTab,
       softDeleteFn,
-      obj2,
       obj,
       search,
       isExpired,

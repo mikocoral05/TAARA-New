@@ -35,6 +35,17 @@ class API
                 'count' => count($query),
                 'method' => 'GET'
             ]);
+        } else if (array_key_exists('get_inventory_summary', $payload)) {
+
+            $this->db->where("is_deleted", 1);
+            $this->db->groupBy('category');
+            $results = $this->db->get('tbl_inventory', null, ['category', 'COUNT(*) as total_count']);
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => $results,
+                'method' => 'GET'
+            ]);
         } else if (array_key_exists('get_inventory_list_summary', $payload)) {
             $category = $payload['get_inventory_list_summary'];
             $today = date('Y-m-d');

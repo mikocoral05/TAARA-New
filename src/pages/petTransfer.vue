@@ -230,7 +230,7 @@
             <div class="full-width">
               <h5 class="q-mb-sm q-mt-none">Transfer Request sent</h5>
               <p class="text-caption">The result of your request will show here .</p>
-              <div class="input-fields-container">
+              <div>
                 <p class="text-overline text-amber" v-if="requestResult == null">
                   waiting result...
                 </p>
@@ -314,6 +314,10 @@
                     at your convenience. We look forward to welcoming them into our organization.
                     Thank you for your compassion and commitment to animals.
                   </p>
+                  <div v-if="[2, 3].includes(transferTransaction.status)">
+                    <q-separator class="q-mb-sm" />
+                    <div>Note: You can apply again after 30 days!</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -347,6 +351,7 @@ import { petSizes, sexOption } from 'src/composable/optionsComposable'
 import { getPetTransferRequest, submitPetTransfer } from 'src/composable/latestPublicComposable'
 import { useQuasar } from 'quasar'
 import { globalStore } from 'src/stores/global-store'
+import { isPastThirtyDays } from 'src/composable/simpleComposable'
 export default {
   setup() {
     const $q = useQuasar()
@@ -391,7 +396,11 @@ export default {
     onMounted(async () => {
       transferTransaction.value = await getPetTransferRequest(store.userData.user_id)
       console.log(transferTransaction.value)
-      step.value = transferTransaction.value?.status ? 3 : 1
+      step.value = transferTransaction.value?.status
+        ? 3
+        : isPastThirtyDays(transferTransaction.value?.date_request)
+          ? 1
+          : 3
     })
     return {
       transferTransaction,

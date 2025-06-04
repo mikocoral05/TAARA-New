@@ -614,3 +614,14 @@ export const donationStatusText = (status) => {
 }
 
 export { Email, dateToday, monthToday, yearToday, timeNow, dayToday }
+
+export const isPastThirtyDays = (date) => {
+  if (!date) return false
+  const now = new Date()
+  const targetDate = new Date(date)
+
+  const diffInMs = now - targetDate
+  const diffInDays = diffInMs / (1000 * 60 * 60 * 24)
+
+  return diffInDays > 30
+}

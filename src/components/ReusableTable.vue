@@ -51,6 +51,28 @@
             />
             <div class="row no-wrap">
               <q-btn
+                @click="tableActionFn(null, 'Download')"
+                v-if="showDownload"
+                icon="sym_r_download"
+                dense
+                flat
+                class="q-mr-md"
+              >
+                <q-tooltip v-model="showingDownloadTooltip"
+                  >Download example excel format</q-tooltip
+                >
+              </q-btn>
+              <q-btn
+                @click="tableActionFn(null, 'Upload')"
+                v-if="showUpload"
+                icon="sym_r_upload"
+                dense
+                flat
+                class="q-mr-md"
+              >
+                <q-tooltip v-model="showingUploadTooltip">Upload a excel with pet info</q-tooltip>
+              </q-btn>
+              <q-btn
                 icon="sym_r_add"
                 dense
                 flat
@@ -111,11 +133,15 @@ export default {
     status: { type: Number, default: 0 },
     showStatusFilter: { type: Boolean, default: false },
     statusOption: { type: Function, default: () => [] },
+    showUpload: { type: Boolean, default: false },
+    showDownload: { type: Boolean, default: false },
   },
   emits: ['update:modelValue', 'update:selected', 'update:status', 'update:confirm'],
 
   setup(props, { emit }) {
     const showingAddTooltip = ref(false)
+    const showingUploadTooltip = ref(false)
+    const showingDownloadTooltip = ref(false)
     const showingDeleteTooltip = ref(false)
     const internalSelected = ref(props.selected) // Mapping to only store IDs
     const showSelection = ref(false) // State to toggle selection visibility
@@ -156,6 +182,8 @@ export default {
     })
 
     return {
+      showingDownloadTooltip,
+      showingUploadTooltip,
       tableActionFn,
       closeSelection,
       showingCancelTooltip: ref(false),

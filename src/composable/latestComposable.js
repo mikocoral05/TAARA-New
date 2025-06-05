@@ -2,7 +2,16 @@ import { api, imageUrl, onlineEndpoint } from 'src/boot/axios'
 import { dateToday } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 const store = globalStore()
+import * as XLSX from 'xlsx'
 
+export const exportToExcel = (data, filename = 'data.xlsx') => {
+  const worksheet = XLSX.utils.json_to_sheet(data)
+  const workbook = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
+
+  // Write to browser file download
+  XLSX.writeFile(workbook, filename)
+}
 export const getUserByType = (type) => {
   return new Promise((resolve, reject) => {
     api

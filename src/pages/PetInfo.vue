@@ -627,6 +627,7 @@ import {
   getAnimalList,
   saveAnimalDetail,
   editAnimalInfo,
+  downloadExampleExcelFormat,
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -704,7 +705,30 @@ export default {
       } else if (modeParam == 'Upload') {
         //
       } else if (modeParam == 'Download') {
-        //
+        const columnsToGet = [
+          'name',
+          'species',
+          'breed',
+          'fur_color',
+          'eye_color',
+          'date_of_birth',
+          'weight',
+          'height',
+          'sex',
+          'spayed_neutered',
+          'vaccination_status',
+          'temperament',
+          'skills',
+          'favorite_food',
+          'story_background',
+          'rescue_status',
+          'health_status',
+          'medical_needs',
+          'date_rescued',
+          'classification',
+        ]
+
+        downloadExampleExcelFormat('tbl_animal_info', columnsToGet, 'pet_info_excel_structure.xlsx')
       } else {
         arrayOfId.value.push(data.animal_id)
         confirm.value = !confirm.value

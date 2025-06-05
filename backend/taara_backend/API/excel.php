@@ -15,46 +15,40 @@ class API
     public function httpGet($payload)
     {
 
-        if (array_key_exists('get_animal_list', $payload)) {
-            $category = $payload['get_animal_list'];
+        if (array_key_exists('get_sample_format', $payload)) {
+            $table = $payload['get_sample_format']['table'];
+            $columns = $payload['get_sample_format']['colums'];
 
-            $this->db->join("tbl_files f", "f.id = tbl_animal_info.primary_image", "LEFT");
-            $this->db->where("is_deleted", 1);
-            $this->db->where("health_status", $category);
+            $columnsStr = implode("','", $columns);
+            $columnsMeta = $this->db->query("SHOW FULL COLUMNS FROM `$table` WHERE Field IN ('$columnsStr')");
 
-            // ✅ Add column selection with alias
-            $animalRows = $this->db->get("tbl_animal_info", null, "tbl_animal_info.*, f.image_path AS primary_image");
+            $sampleRow = [];
 
+            foreach ($columnsMeta as $column) {
+                $field = $column['Field'];
+                $comment = trim($column['Comment']);
 
-            foreach ($animalRows as &$animal) {
-                $galleryIds = json_decode($animal['image_gallery'], true);
+                // Check for ENUM type
+                if (stripos($column['Type'], 'enum') === 0) {
+                    preg_match("/enum\((.*)\)/", $column['Type'], $matches);
+                    $enumValues = [];
+                    if (!empty($matches[1])) {
+                        $enumValues = array_map(function ($val) {
+                            return trim($val, "'");
+                        }, explode(',', $matches[1]));
+                    }
 
-                if (is_array($galleryIds) && count($galleryIds)) {
-                    $this->db->where('id', $galleryIds, 'IN');
-                    $files = $this->db->get('tbl_files');
-
-                    $fileObjects = array_map(function ($file) {
-                        return [
-                            'name' => $file['image_path'],
-                            'type' => $file['type'],
-                            'size' => $file['size'],
-                            'id' => $file['id']
-                        ];
-                    }, $files);
-
-                    $animal['file'] = $fileObjects; // ✅ renamed key
+                    // Use comment as label if available, else list the ENUM values
+                    $sampleRow[$field] = $comment ?: implode(' | ', $enumValues);
                 } else {
-                    $animal['file'] = []; // ✅ renamed key
+                    // If comment exists, use it, otherwise set blank
+                    $sampleRow[$field] = $comment ?: '';
                 }
-
-                // Optional: remove the original image_gallery if you want
-                unset($animal['image_gallery']);
             }
-
 
             echo json_encode([
                 'status' => 'success',
-                'data' => $animalRows,
+                'data' => [$sampleRow], // wrap in array to match XLSX input
                 'method' => 'GET'
             ]);
         } else {

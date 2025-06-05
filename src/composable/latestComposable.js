@@ -4,7 +4,7 @@ import { globalStore } from 'src/stores/global-store'
 const store = globalStore()
 import * as XLSX from 'xlsx'
 
-export const exportToExcel = (data, filename = 'data.xlsx') => {
+export const exportToExcel = async (data, filename = 'data.xlsx') => {
   const worksheet = XLSX.utils.json_to_sheet(data)
   const workbook = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
@@ -13,11 +13,12 @@ export const exportToExcel = (data, filename = 'data.xlsx') => {
   XLSX.writeFile(workbook, filename)
 }
 
-export const downloadExampleExcelFormat = async () => {
+export const downloadExampleExcelFormat = async (table, colums, excelName) => {
   const response = await api.get('excel.php', {
-    params: {},
+    params: { get_sample_format: { table, colums } },
   })
-  console.log(response)
+
+  exportToExcel(response.data.data, `${excelName}.xlsx`)
 }
 
 export const getUserByType = (type) => {

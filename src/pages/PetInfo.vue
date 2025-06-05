@@ -47,6 +47,8 @@
         :title="tableConfig.title"
         :visible-columns="tableConfig.columns"
         selection="multiple"
+        :showUpload="true"
+        :showDownload="true"
         v-model="search"
         v-model:selected="arrayOfId"
         v-model:confirm="confirm"
@@ -699,6 +701,10 @@ export default {
             })
           }
         }
+      } else if (modeParam == 'Upload') {
+        //
+      } else if (modeParam == 'Download') {
+        //
       } else {
         arrayOfId.value.push(data.animal_id)
         confirm.value = !confirm.value

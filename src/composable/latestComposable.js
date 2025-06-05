@@ -12,6 +12,14 @@ export const exportToExcel = (data, filename = 'data.xlsx') => {
   // Write to browser file download
   XLSX.writeFile(workbook, filename)
 }
+
+export const downloadExampleExcelFormat = async () => {
+  const response = await api.get('excel.php', {
+    params: {},
+  })
+  console.log(response)
+}
+
 export const getUserByType = (type) => {
   return new Promise((resolve, reject) => {
     api

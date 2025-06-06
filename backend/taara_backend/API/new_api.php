@@ -125,7 +125,6 @@ class API
             ];
 
             $this->db->where('u.user_id', $user_id);
-            $this->db->where('u.user_type', 1);
             $this->db->join('tbl_files f', 'u.image_id = f.id', 'left');
             $query = $this->db->getOne('tbl_users u', null, $columns);
 

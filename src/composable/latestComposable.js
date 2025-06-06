@@ -1200,3 +1200,10 @@ export const sendChangeEmail = async (email, otp) => {
 
   return reponse.data
 }
+
+export const getUserInfo = async (user_id) => {
+  const response = await api.get('management_profile.php', {
+    params: { get_user_info: user_id },
+  })
+  return response.data
+}

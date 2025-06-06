@@ -51,7 +51,7 @@
               </div>
             </div>
           </div>
-          <q-btn round icon="sym_r_more_vert" color="primary" flat dense>
+          <q-btn round icon="sym_r_arrow_drop_down" color="primary" flat dense :ripple="false">
             <q-menu>
               <q-list style="width: 150px">
                 <q-item clickable v-close-popup to="/management/profile">

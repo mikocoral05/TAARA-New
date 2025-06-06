@@ -16,7 +16,7 @@
           <div class="img-container column justify-center items-center">
             <div class="row justify-center items-center" v-if="userInfo.image == ''">
               <h4 class="q-ma-none">
-                {{ userInfo.first_name[0] }}
+                {{ userInfo.first_name }}
               </h4>
             </div>
             <q-img

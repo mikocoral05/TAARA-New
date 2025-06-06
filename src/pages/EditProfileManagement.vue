@@ -1,8 +1,8 @@
 <template>
-  <div class="column justify-start items-center">
-    <div class="first-child">
+  <q-page>
+    <div class="bg-white first-child radius-10">
       <div class="member-profile-card column justify-between no-wrap q-pa-lg">
-        <q-icon name="photo_camera" size="sm" color="white" @click="triggerUpload()" />
+        <q-icon name="photo_camera" size="sm" color="black" @click="triggerUpload()" />
         <q-file
           class="q-mt-sm hidden"
           v-model="userInfo.file"
@@ -16,7 +16,7 @@
           <div class="img-container column justify-center items-center">
             <div class="row justify-center items-center" v-if="userInfo.image == ''">
               <h4 class="q-ma-none">
-                {{ userInfo.first_name[0] }}
+                {{ userInfo.first_name }}
               </h4>
             </div>
             <q-img
@@ -538,12 +538,10 @@
         </div>
       </div>
     </div>
-  </div>
-  <TaaraFooter></TaaraFooter>
+  </q-page>
 </template>
 <script>
 import { ref, watch } from 'vue'
-import TaaraFooter from 'src/components/TaaraFooter.vue'
 import { sendTelerivetSms, getImageLink } from 'src/composable/simpleComposable'
 import { logInDetails } from 'src/composable/taaraComposable'
 import { globalStore } from 'src/stores/global-store'
@@ -561,9 +559,6 @@ import { checkEmail, sendChangeEmail } from 'src/composable/latestComposable'
 import { watchEffect } from 'vue'
 
 export default {
-  components: {
-    TaaraFooter,
-  },
   setup() {
     const $q = useQuasar()
     const store = globalStore()
@@ -717,6 +712,7 @@ export default {
         console.log(newData)
         store.userData = newData.data
         sessionStorage.setItem('user_data', JSON.stringify(newData.data))
+        userInfo.value = newData.data
       }
       setTimeout(() => {
         $q.loading.hide()
@@ -782,7 +778,6 @@ export default {
       isPwd: ref(false),
       newPassword,
       retypePassword,
-      // changePass,
       minutes,
       seconds,
       code,
@@ -794,9 +789,7 @@ export default {
       userInfo,
       more,
       tab,
-      TaaraFooter,
       logInDetails,
-
       dummyPassword,
       emailOrPassProgress,
       sexOption,
@@ -807,10 +800,7 @@ export default {
 </script>
 <style lang="scss" scope>
 .first-child {
-  width: 950px;
-  margin-bottom: 100px;
   .member-profile-card {
-    background: #ffbf23;
     height: 250px;
     div {
       .img-container {

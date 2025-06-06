@@ -15,7 +15,9 @@
       <q-td :props="props">
         <slot :name="`cell-${col.name}`" v-bind="props">
           {{ props.row[col.field] }}
-          <span class="text-grey-5" v-if="!props.row[col.field]"> N/a </span>
+          <span class="text-grey-5" v-if="!props.row[col.field] && props.row[col.field] != 0">
+            N/a
+          </span>
         </slot>
       </q-td>
     </template>

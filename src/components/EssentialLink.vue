@@ -4,6 +4,7 @@
     class="radius-10 q-my-sm relative-position"
     :class="{ 'bg-primary text-white': isActive }"
     @click="updateTab()"
+    v-if="showTab"
   >
     <div
       class="bg-primary absolute-left radius-10"
@@ -67,6 +68,10 @@ export default defineComponent({
     action: {
       type: Function,
       default: null,
+    },
+    showTab: {
+      type: Boolean,
+      default: false,
     },
   },
   setup(props, { emit }) {

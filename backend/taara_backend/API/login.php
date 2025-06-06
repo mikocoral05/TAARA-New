@@ -18,20 +18,30 @@ class API
             $username_or_email = $payload['login']['username'];
             $password = $payload['login']['password'];
 
-            // Find user by username or email
             $this->db->where("u.is_deleted", 1);
             $this->db->where("u.is_activated", 1);
             $this->db->where("(u.username = ? OR u.email_address = ?)", [$username_or_email, $username_or_email]);
             $this->db->join("tbl_files f", "f.id = u.image_id", "LEFT");
-            $this->db->join("tbl_official_position op", "u.roles = op.id", "LEFT");
-            $this->db->join("tbl_volunteer_position vp", "u.roles = vp.id", "LEFT");
 
-            $user = $this->db->getOne("tbl_users u", null, "u.*, f.image_path, 
-            CASE WHEN u.roles_type = 1 THEN op.position_title 
-             WHEN u.roles_type = 2 THEN vp.position_title 
-             ELSE null END as position_title");
+            $user = $this->db->getOne("tbl_users u", null, "u.*, f.image_path");
 
             if ($user && password_verify($password, $user['password'])) {
+                $position_title = null;
+
+                if ($user['roles_type'] == 1) {
+                    $this->db->where("id", $user['roles']);
+                    $position = $this->db->getOne("tbl_official_position", "position_title, id as admin_id");
+                    $position_title = $position['position_title'];
+                    $user['admin_id'] = $position['admin_id'];
+                } else if ($user['roles_type'] == 2) {
+                    $this->db->where("id", $user['roles']);
+                    $position = $this->db->getOne("tbl_volunteer_position", "position_title, id as volunteer_id");
+                    $position_title = $position['position_title'];
+                    $user['volunteer_id'] = $position['volunteer_id'];
+                }
+
+                $user['position_title'] = $position_title;
+
                 echo json_encode([
                     'status' => 'success',
                     'data' => $user,

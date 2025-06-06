@@ -45,7 +45,7 @@ export const getPublicUserInfo = async (user_id) => {
   return response.data
 }
 
-export const updatePublicUserDetails = async (obj) => {
+export const udpateUserInfo = async (obj) => {
   const excludedKeys = [
     'image_path',
     'id',

@@ -6,7 +6,7 @@ import { globalStore } from 'src/stores/global-store'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
 import {
   getPublicUserInfo,
-  updatePublicUserDetails,
+  udpateUserInfo,
   updatePublicUserEmailAddress,
   updatePublicUserImage,
   updatePublicUserPassword,
@@ -164,7 +164,7 @@ export default {
 
     const updateUserDataFn = async () => {
       $q.loading.show({ group: 'update', message: 'Updating info. Please wait...' })
-      const response = await updatePublicUserDetails(userInfo.value)
+      const response = await udpateUserInfo(userInfo.value)
       setTimeout(() => {
         $q.loading.show({ group: 'update', message: response.message })
       }, 500)

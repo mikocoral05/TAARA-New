@@ -547,7 +547,7 @@ import { logInDetails } from 'src/composable/taaraComposable'
 import { globalStore } from 'src/stores/global-store'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
 import {
-  updatePublicUserDetails,
+  udpateUserInfo,
   updatePublicUserEmailAddress,
   updatePublicUserImage,
   updatePublicUserPassword,
@@ -702,16 +702,16 @@ export default {
 
     const updateUserDataFn = async () => {
       $q.loading.show({ group: 'update', message: 'Updating info. Please wait...' })
-      const response = await updatePublicUserDetails(userInfo.value)
+      const response = await udpateUserInfo(userInfo.value)
       setTimeout(() => {
         $q.loading.show({ group: 'update', message: response.message })
       }, 500)
       if (response.status == 'success') {
-        // const newData = await getUserInfo(userInfo.value.user_id)
-        // console.log(newData)
-        // store.userData = newData.data
-        // sessionStorage.setItem('user_data', JSON.stringify(newData.data))
-        // userInfo.value = newData.data
+        const newData = await getUserInfo(userInfo.value.user_id)
+        console.log(newData.data)
+        store.userData = newData.data
+        sessionStorage.setItem('user_data', JSON.stringify(newData.data))
+        userInfo.value = newData.data
       }
       setTimeout(() => {
         $q.loading.hide()

@@ -14,18 +14,17 @@ class API
 
     public function httpGet($payload)
     {
-        if (array_key_exists('login', $payload)) {
-            $username_or_email = $payload['login']['username'];
-            $password = $payload['login']['password'];
+        if (array_key_exists('get_user_info', $payload)) {
+            $user_id = $payload['get_user_info'];
 
             $this->db->where("u.is_deleted", 1);
             $this->db->where("u.is_activated", 1);
-            $this->db->where("(u.username = ? OR u.email_address = ?)", [$username_or_email, $username_or_email]);
+            $this->db->where("u.user_id", $user_id);
             $this->db->join("tbl_files f", "f.id = u.image_id", "LEFT");
 
             $user = $this->db->getOne("tbl_users u", null, "u.*, f.image_path");
 
-            if ($user && password_verify($password, $user['password'])) {
+            if ($user) {
                 $position_title = null;
 
                 if ($user['roles_type'] == 1) {

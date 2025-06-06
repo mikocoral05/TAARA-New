@@ -161,8 +161,6 @@ export default defineComponent({
       setTimeout(() => {
         router.replace('/user-login')
         $q.loading.hide()
-        sessionStorage.clear()
-        store.reset()
       }, 500)
       setTimeout(() => {
         sessionStorage.clear()

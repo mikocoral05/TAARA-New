@@ -96,12 +96,6 @@
                   <q-icon name="sym_r_keyboard_arrow_right" size="1.2rem" />
                 </q-item-section>
               </q-item>
-              <q-item clickable @click="tableAction(row, 'Page Access')">
-                <q-item-section>Access</q-item-section>
-                <q-item-section side>
-                  <q-icon name="sym_r_key" size="1.2rem" />
-                </q-item-section>
-              </q-item>
             </q-list>
           </q-menu>
         </q-btn>
@@ -114,10 +108,7 @@
           <q-icon name="close" size="1.2rem" @click="editDialog = !editDialog" />
         </q-card-section>
         <q-separator />
-        <q-card-section
-          v-if="mode !== 'Page Access'"
-          class="q-px-lg row no-wrap justify-between items-center"
-        >
+        <q-card-section class="q-px-lg row no-wrap justify-between items-center">
           <div class="column no-wrap" style="width: 30%">
             <q-avatar size="120px" class="q-mr-md">
               <q-img
@@ -134,7 +125,7 @@
             <div class="text-grey-7">{{ userData?.email_address }}</div>
           </div>
         </q-card-section>
-        <q-card-section v-if="mode !== 'Page Access'">
+        <q-card-section>
           <q-tabs
             v-model="editTab"
             dense
@@ -493,51 +484,6 @@
             </q-tab-panel>
           </q-tab-panels>
         </q-card-section>
-        <q-card-section v-if="mode == 'Page Access'">
-          <div class="column no-wrap full-width">
-            <div
-              class="row no-wrap q-mt-sm items-center justify-between"
-              v-for="(pg, index) in userData?.page_access"
-              :key="index"
-            >
-              <div style="width: 150px">{{ pg.page }}</div>
-              <div class="row no-wrap items-start" style="min-width: 200px">
-                <q-checkbox label="View" dense v-model="pg.view" class="q-mr-md" />
-                <q-checkbox label="Add" dense v-model="pg.add" class="q-mr-md" />
-                <q-checkbox label="Edit" dense v-model="pg.edit" class="q-mr-md" />
-                <q-checkbox label="Delete" dense v-model="pg.delete" class="q-mr-md" />
-              </div>
-              <q-toggle
-                v-model="pg.enable"
-                color="primary"
-                checked-icon="sym_r_visibility"
-                unchecked-icon="sym_r_visibility_off"
-              />
-            </div>
-          </div>
-          <div class="row no-wrap q-mt-lg">
-            <q-btn
-              label="Cancel"
-              v-close-popup
-              no-caps
-              outline
-              color="black"
-              class="q-mr-md"
-              style="width: 200px"
-              unelevated
-              :ripple="false"
-            />
-            <q-btn
-              label="Save"
-              @click="saveFn()"
-              :ripple="false"
-              no-caps
-              color="primary"
-              style="width: 200px"
-              unelevated
-            />
-          </div>
-        </q-card-section>
       </q-card>
     </q-dialog>
     <q-dialog v-model="confirm" persistent>
@@ -580,12 +526,7 @@
 <script>
 import ReusableTable from 'src/components/ReusableTable.vue'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
-import {
-  getPageAccess,
-  getUserByType,
-  softDeleteUser,
-  updateUser,
-} from 'src/composable/latestComposable'
+import { getUserByType, softDeleteUser, updateUser } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
 import { getImageLink } from 'src/composable/simpleComposable'
@@ -613,22 +554,8 @@ export default {
       mode.value = modeParam
       userData.value = data
 
-      if (['Edit', 'View', 'Page Access'].includes(modeParam)) {
+      if (['Edit', 'View'].includes(modeParam)) {
         editDialog.value = !editDialog.value
-        if (modeParam == 'Page Access') {
-          if (userData.value.page_access == '') {
-            getPageAccess().then((response) => {
-              const updatedPages = response.map((element) => {
-                const obj = { view: true, edit: true, add: true, delete: true, enable: true }
-                return { ...element, ...obj }
-              })
-              userData.value.page_access = updatedPages
-            })
-          } else {
-            if (typeof userData.value.page_access == 'string')
-              userData.value.page_access = JSON.parse(userData.value.page_access)
-          }
-        }
       } else {
         arrayOfId.value.push(data.user_id)
         confirm.value = !confirm.value

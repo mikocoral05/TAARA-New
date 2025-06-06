@@ -27,17 +27,7 @@
           <q-btn round icon="notifications" color="primary" class="q-mr-xl" flat dense>
             <q-badge color="red" floating>4</q-badge>
           </q-btn>
-          <!-- <div class="row no-wrap items-center q-mr-lg">
-            <q-img src="svg/united-kingdom-flag.svg" width="40px" class="q-mr-lg" />
-            <q-select
-              v-model="language"
-              :options="['English', 'France']"
-              borderless
-              style="min-width: 100px"
-              flat
-              dense
-            />
-          </div> -->
+
           <div class="row no-wrap items-center q-mr-md">
             <q-img
               :src="
@@ -64,7 +54,7 @@
           <q-btn round icon="sym_r_more_vert" color="primary" flat dense>
             <q-menu>
               <q-list style="width: 150px">
-                <q-item clickable v-close-popup to="/management/account-settings">
+                <q-item clickable v-close-popup to="/management/profile">
                   <q-item-section class="row no-wrap">My Account</q-item-section>
                 </q-item>
 

@@ -44,6 +44,11 @@ const routes = [
         component: () => import('src/pages/WishlistManagement.vue'),
       },
       {
+        name: 'profile',
+        path: 'profile',
+        component: () => import('src/pages/EditProfileManagement.vue'),
+      },
+      {
         name: 'pet-transfer-request',
         path: 'pet-transfer-request',
         component: () => import('src/pages/PetTransferManagement.vue'),

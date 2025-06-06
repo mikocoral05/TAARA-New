@@ -57,6 +57,8 @@ export const updatePublicUserDetails = async (obj) => {
     'updated_at',
     'category',
     'file',
+    'admin_id',
+    'volunteer_id',
   ]
 
   const cleanedObj = Object.fromEntries(

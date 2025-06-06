@@ -137,7 +137,6 @@ class API
                 'expiration_date' => $data['expiration_date'] ?? null,
                 'group_name'      => $data['group_name'] ?? null,
                 'date_received'   => $data['date_received'] ?? date('Y-m-d'),
-                'description'   => $data['description'] ?? '',
                 'notes'   => $data['notes'] ?? '',
             ];
 
@@ -233,7 +232,6 @@ class API
                 'expiration_date' => $data['expiration_date'] ?? null,
                 'group_name'      => $data['group_name'] ?? null,
                 'date_received'   => $data['date_received'] ?? date('Y-m-d'),
-                'description'   => $data['description'] ?? '',
                 'notes'   => $data['notes'] ?? '',
                 'date_updated'   => date('Y-m-d'),
             ];

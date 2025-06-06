@@ -547,7 +547,6 @@ import { logInDetails } from 'src/composable/taaraComposable'
 import { globalStore } from 'src/stores/global-store'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
 import {
-  getPublicUserInfo,
   updatePublicUserDetails,
   updatePublicUserEmailAddress,
   updatePublicUserImage,
@@ -555,7 +554,7 @@ import {
 } from 'src/composable/latestPublicComposable'
 import { useQuasar } from 'quasar'
 import { onMounted } from 'vue'
-import { checkEmail, sendChangeEmail } from 'src/composable/latestComposable'
+import { checkEmail, getUserInfo, sendChangeEmail } from 'src/composable/latestComposable'
 import { watchEffect } from 'vue'
 
 export default {
@@ -708,11 +707,11 @@ export default {
         $q.loading.show({ group: 'update', message: response.message })
       }, 500)
       if (response.status == 'success') {
-        const newData = await getPublicUserInfo(userInfo.value.user_id)
-        console.log(newData)
-        store.userData = newData.data
-        sessionStorage.setItem('user_data', JSON.stringify(newData.data))
-        userInfo.value = newData.data
+        // const newData = await getUserInfo(userInfo.value.user_id)
+        // console.log(newData)
+        // store.userData = newData.data
+        // sessionStorage.setItem('user_data', JSON.stringify(newData.data))
+        // userInfo.value = newData.data
       }
       setTimeout(() => {
         $q.loading.hide()
@@ -742,7 +741,7 @@ export default {
           const response = await updatePublicUserImage(newVal, userInfo.value.user_id)
           $q.loading.show({ group: 'update', message: response.message })
           if (response.status == 'success') {
-            const newData = await getPublicUserInfo(userInfo.value.user_id)
+            const newData = await getUserInfo(userInfo.value.user_id)
             console.log(newData)
             store.userData = newData.data
             sessionStorage.setItem('user_data', JSON.stringify(newData.data))

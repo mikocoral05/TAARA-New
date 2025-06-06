@@ -264,6 +264,8 @@ export default {
             if (response.status == 'success') {
               showPasswordError.value = false
               store.userData = response.data
+              console.log(store.userData)
+
               sessionStorage.setItem('user_data', JSON.stringify(response.data))
               if (response.data.user_type == 1) {
                 setTimeout(() => {

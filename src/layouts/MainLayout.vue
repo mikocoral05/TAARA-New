@@ -152,7 +152,6 @@ export default defineComponent({
     const scrollPosition = ref(0)
     const language = ref('English')
     const pathExclude = ref(['/management/user-login', '/management/user-registration'])
-    // const leftDrawerOpen = ref(store.leftDrawerOpen)
     const $q = useQuasar()
     let logOuts = () => {
       $q.loading.show({
@@ -160,10 +159,14 @@ export default defineComponent({
       })
 
       setTimeout(() => {
-        sessionStorage.clear()
-        store.reset()
         router.replace('/user-login')
         $q.loading.hide()
+        sessionStorage.clear()
+        store.reset()
+      }, 500)
+      setTimeout(() => {
+        sessionStorage.clear()
+        store.reset()
       }, 1000)
     }
 
@@ -172,37 +175,44 @@ export default defineComponent({
         title: 'Dashboard',
         icon: 'space_dashboard',
         nav: '/management',
+        showTab: true,
       },
       {
         title: 'User Management',
         icon: 'groups',
         nav: '/management/users',
         pending: store.pendingVolunteer,
+        showTab: store.userData?.admin_id == 1,
       },
       {
         title: 'Report',
         icon: 'analytics',
         nav: '/management/analytic-report',
+        showTab: true,
       },
       {
         title: 'Pets',
         icon: 'pets',
         nav: '/management/pets',
+        showTab: true,
       },
       {
         title: 'Budget & Expenses',
         icon: 'payments',
         nav: '/management/budget-and-expenses',
+        showTab: true,
       },
       {
         title: 'Announcement',
         icon: 'campaign',
         nav: '/management/announcement',
+        showTab: true,
       },
       {
         title: 'Donation',
         icon: 'volunteer_activism',
         nav: '/management/donation',
+        showTab: true,
       },
     ])
 
@@ -211,32 +221,38 @@ export default defineComponent({
         title: 'Medicine Inventory',
         icon: 'inventory',
         nav: '/management/invetory',
+        showTab: true,
       },
       {
         title: 'Rescue Report',
         icon: 'fire_truck',
         nav: '/management/rescue-report',
         pending: store.pendingRescueReport,
+        showTab: true,
       },
       {
         title: 'Schedule',
         icon: 'schedule',
         nav: '/management/animal-schedule',
+        showTab: true,
       },
       {
         title: 'Activities & Events',
         icon: 'calendar_month',
         nav: '/management/activities-and-events',
+        showTab: true,
       },
       {
         title: 'Wishlist',
         icon: 'sym_r_folded_hands',
         nav: '/management/wishlist',
+        showTab: true,
       },
       {
         title: 'Pet Transfer',
         icon: 'sym_r_airport_shuttle',
         nav: '/management/pet-transfer-request',
+        showTab: true,
       },
     ])
 
@@ -245,12 +261,14 @@ export default defineComponent({
         title: 'Settings',
         icon: 'settings',
         nav: '',
+        showTab: true,
       },
       {
         title: 'Logout',
         icon: 'logout',
         nav: '',
         action: logOuts,
+        showTab: true,
       },
     ])
 

@@ -46,7 +46,7 @@
               <q-separator vertical inset class="q-mx-md" />
               <div class="text-h6 text-bold q-my-md text-center">
                 {{ formatOrNumber(elseSummary.total_quantity) }}
-                <span class="text-caption text-grey-7"> Pieces</span>
+                <span class="text-caption text-grey-7"> Quantity</span>
               </div>
             </div>
             <q-separator />
@@ -262,21 +262,9 @@
             </div>
             <div class="column no-wrap q-mt-md">
               <div class="text-capitalize">
-                Description <span class="text-grey-7 text-caption"> (optional)</span>
-              </div>
-              <q-input
-                outlined
-                type="textarea"
-                v-model="dataStorage.description"
-                dense
-                class="q-mt-sm"
-              />
-            </div>
-            <div class="column no-wrap q-mt-md">
-              <div class="text-capitalize">
                 Notes <span class="text-grey-7 text-caption"> (optional)</span>
               </div>
-              <q-input outlined autogrow v-model="dataStorage.notes" dense class="q-mt-sm" />
+              <q-input outlined type="textarea" v-model="dataStorage.notes" dense class="q-mt-sm" />
             </div>
           </q-card-section>
         </div>

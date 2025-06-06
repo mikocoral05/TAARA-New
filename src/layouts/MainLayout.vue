@@ -218,7 +218,7 @@ export default defineComponent({
 
     const linksList2 = computed(() => [
       {
-        title: 'Inventory',
+        title: 'Medicine Inventory',
         icon: 'inventory',
         nav: '/management/invetory',
       },
@@ -271,7 +271,7 @@ export default defineComponent({
       '/management/pets': 'Pets',
       '/management/budget-and-expenses': 'Budget & Expenses',
       '/management/donation': 'Donation',
-      '/management/invetory': 'Inventory',
+      '/management/invetory': 'Medicine Inventory',
       '/management/pending-application': 'Pending',
       '/management/animal-schedule': 'Schedule',
       '/management/supplies': 'Supplies',

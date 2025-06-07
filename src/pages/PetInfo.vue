@@ -54,6 +54,7 @@
         v-model:confirm="confirm"
         v-model:dialog="showDialog"
         :tableAction="tableAction"
+        :preventAction="preventAction"
       >
         <template #cell-btn="{ row }">
           <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
@@ -614,6 +615,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <NoAccessDialog v-model:showNoAccess="showNoAccess" />
   </q-page>
 </template>
 <script>
@@ -643,9 +645,12 @@ import {
   isExpired,
   getImageLink,
 } from 'src/composable/simpleComposable'
+import { globalStore } from 'src/stores/global-store'
+import NoAccessDialog from 'src/components/NoAccessDialog.vue'
 export default {
   components: {
     ReusableTable,
+    NoAccessDialog,
   },
   setup() {
     const obj = { 1: 'Ready for Adoption', 2: 'Under Rehabilitation', 3: 'Under Medication' }
@@ -653,12 +658,14 @@ export default {
     const obj3 = { Add: 'Adding', Edit: 'Updating', Delete: 'Deleting' }
     const $q = useQuasar()
     const tab = ref('1')
+    const store = globalStore()
     const filterTab = ref('1')
     const editTab = ref('1')
     const showDialog = ref(false)
     const step = ref(1)
     const rows = ref([])
     const confirm = ref(false)
+    const showNoAccess = ref(false)
     const search = ref(null)
     const pages = ref([])
     const dataStorage = ref({ file: [] })
@@ -684,6 +691,9 @@ export default {
 
     const groupNameOptions = ref([])
     const tableAction = (data, modeParam) => {
+      if (!preventAction()) {
+        return
+      }
       mode.value = modeParam
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         step.value = 1
@@ -919,7 +929,19 @@ export default {
       }
     }
 
+    const preventAction = () => {
+      const userType = store.userData.user_type
+      const userRole = store.userData.role
+      const result = [1, 2, 3, 4].includes(userRole) && userType == 3
+      if (!result) {
+        showNoAccess.value = true
+        return false
+      }
+      return true
+    }
+
     return {
+      preventAction,
       showErrorNeutered,
       showErrorRS,
       showErrorVC,

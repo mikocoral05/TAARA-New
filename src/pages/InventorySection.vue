@@ -129,6 +129,7 @@
         v-model:confirm="confirm"
         v-model:dialog="showDialog"
         :tableAction="tableAction"
+        :preventAction="preventAction"
       >
         <template #cell-btn="{ row }">
           <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
@@ -354,6 +355,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <NoAccessDialog v-model:showNoAccess="showNoAccess" />
   </q-page>
 </template>
 <script>
@@ -383,6 +385,7 @@ import {
   isExpired,
   capitalize,
 } from 'src/composable/simpleComposable'
+import { globalStore } from 'src/stores/global-store'
 export default {
   components: {
     ReusableTable,
@@ -394,12 +397,14 @@ export default {
     const $q = useQuasar()
     const tab = ref('2')
     const filterTab = ref('1')
+    const store = globalStore()
     const editTab = ref('1')
     const rows = ref([])
     const confirm = ref(false)
     const search = ref(null)
     const showDialog = ref(false)
     const groupDialog = ref(false)
+    const showNoAccess = ref(false)
     const pages = ref([])
     const dataStorage = ref({})
     const elseSummary = ref({})
@@ -416,6 +421,9 @@ export default {
 
     const groupNameOptions = ref([])
     const tableAction = (data, modeParam) => {
+      if (!preventAction()) {
+        return
+      }
       mode.value = modeParam
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         if (filterTab.value !== 2) showDialog.value = !showDialog.value
@@ -563,8 +571,19 @@ export default {
         elseSummary.value = response
       })
     })
+    const preventAction = () => {
+      const userType = store.userData.user_type
+      const userRole = store.userData.role
+      const result = [1, 2, 3, 4].includes(userRole) && userType == 3
+      if (!result) {
+        showNoAccess.value = true
+        return false
+      }
+      return true
+    }
 
     return {
+      preventAction,
       groupDialog,
       groupNameOptions,
       arrayOfId,

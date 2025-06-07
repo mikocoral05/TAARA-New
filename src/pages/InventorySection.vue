@@ -158,7 +158,6 @@
             </q-menu>
           </q-btn>
         </template>
-
         <template #cell-id="{ rowIndex }">
           <div>{{ rowIndex + 1 }}</div>
         </template>
@@ -386,9 +385,11 @@ import {
   capitalize,
 } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
+import NoAccessDialog from 'src/components/NoAccessDialog.vue'
 export default {
   components: {
     ReusableTable,
+    NoAccessDialog,
   },
   setup() {
     const obj = { 2: 'medicine', 3: 'vaccine', 4: 'vitamin' }
@@ -583,6 +584,7 @@ export default {
     }
 
     return {
+      showNoAccess,
       preventAction,
       groupDialog,
       groupNameOptions,

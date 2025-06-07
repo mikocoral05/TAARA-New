@@ -289,9 +289,9 @@ export const calculateAge = (birthDate) => {
     (today.getDate() >= birthDate.getDate() ? 0 : -1)
 
   if (years < 1) {
-    return months == 1 ? months + ' month old' : months + ' months old'
+    return months === 1 ? `1 mo` : `${months} mos`
   } else {
-    return years == 1 ? months + ' year old' : months + ' years old'
+    return years === 1 ? `1 yr` : `${years} yrs`
   }
 }
 

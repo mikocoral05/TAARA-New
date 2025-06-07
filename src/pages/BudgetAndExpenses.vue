@@ -441,6 +441,7 @@
       </q-card>
     </q-dialog>
     <ImageViewer v-model="viewImage" :imageUrl="previewImage" />
+    <NoAccessDialog v-model:showNoAccess="showNoAccess" />
   </q-page>
 </template>
 <script>
@@ -470,12 +471,16 @@ import {
   dayToday,
 } from 'src/composable/simpleComposable'
 import ImageViewer from 'src/components/ImageViewer.vue'
+import { globalStore } from 'src/stores/global-store'
+import NoAccessDialog from 'src/components/NoAccessDialog.vue'
 export default {
   components: {
     ReusableTable,
     ImageViewer,
+    NoAccessDialog,
   },
   setup() {
+    const store = globalStore()
     const $q = useQuasar()
     const tab = ref('1')
     const obj = { 1: 'Budget Allocation', 2: 'Expenses' }
@@ -485,6 +490,7 @@ export default {
     const confirm = ref(false)
     const search = ref(null)
     const editDialog = ref(false)
+    const showNoAccess = ref(false)
     const pages = ref([])
     const expenseData = ref({})
     const mode = ref('')
@@ -518,6 +524,9 @@ export default {
     const expenseList = ref([])
 
     const tableAction = (data, modeParam) => {
+      if (!preventAction()) {
+        return
+      }
       mode.value = modeParam
       if (['Edit', 'View', 'Add'].includes(modeParam)) {
         tableConfig.value.title = tab.value == 1 ? 'Budget Allocation' : 'Expense'
@@ -743,7 +752,20 @@ export default {
       fetchFn()
     })
 
+    const preventAction = () => {
+      const userType = store.userData.user_type
+      const userRole = store.userData.role
+      const result = [1, 2, 3, 4].includes(userRole) && userType == 3
+      if (!result) {
+        showNoAccess.value = true
+        return false
+      }
+      return true
+    }
+
     return {
+      showNoAccess,
+      preventAction,
       getSpecificExpenseFn,
       expenseList,
       viewImage,

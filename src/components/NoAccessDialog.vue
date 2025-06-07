@@ -30,6 +30,7 @@ export default defineComponent({
   setup(props, { emit }) {
     const localshowNoAccess = ref(props.showNoAccess)
 
+    // Watch external prop changes
     watch(
       () => props.showNoAccess,
       (val) => {
@@ -37,6 +38,7 @@ export default defineComponent({
       },
     )
 
+    // Emit updates back to parent
     watch(localshowNoAccess, (val) => {
       emit('update:showNoAccess', val)
     })

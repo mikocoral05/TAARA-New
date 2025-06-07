@@ -73,6 +73,9 @@
           {{ statusText(row.application_status) }}
         </div>
       </template>
+      <template #cell-age="{ row }">
+        {{ calculateAge(row.birth_date) }}
+      </template>
       <template #cell-btn="{ row }">
         <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
           <q-menu anchor="bottom left" self="top right">
@@ -529,7 +532,7 @@ import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optio
 import { getUserByType, softDeleteUser, updateUser } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
-import { getImageLink } from 'src/composable/simpleComposable'
+import { calculateAge, getImageLink } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 export default {
   components: {
@@ -645,6 +648,7 @@ export default {
       return obj[status]
     }
     return {
+      calculateAge,
       store,
       statusText,
       statusColor,

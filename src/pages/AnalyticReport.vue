@@ -399,10 +399,12 @@
         </q-card-section>
       </q-card>
     </q-dialog>
+    <NoAccessDialog :showNoAccess="showNoAccess" />
   </q-page>
 </template>
 <script>
 import DoughnutChart from 'src/components/DoughnutChart.vue'
+import NoAccessDialog from 'src/components/NoAccessDialog.vue'
 import StackBarLine from 'src/components/StackBarLine.vue'
 import {
   getAnimalByHealtStatus,
@@ -433,7 +435,7 @@ import { watchEffect } from 'vue'
 import { onMounted, onUnmounted, ref } from 'vue'
 
 export default {
-  components: { StackBarLine, DoughnutChart },
+  components: { StackBarLine, DoughnutChart, NoAccessDialog },
   setup() {
     const store = globalStore()
     const inMedication = ref(0)
@@ -451,6 +453,7 @@ export default {
     const monthlyPetAdopted = ref([])
     const monthlyDeceased = ref([])
     const monthlyExpense = ref([])
+    const showNoAccess = ref(false)
     const selectedYear = ref(yearToday)
     const selectedMonth = ref(monthToday)
     const seletedOperation = ref('<=')
@@ -486,6 +489,7 @@ export default {
     ]
 
     const printPage = () => {
+      if (!preventAction()) return
       store.leftDrawerOpen = false
       store.showLayout = false
       setTimeout(() => {
@@ -532,6 +536,7 @@ export default {
       monthlyDonation.value = await getMonthlyDonation(selectedYear.value)
       monthlyExpense.value = await getMonthlyExpense(selectedYear.value)
     }
+
     watchEffect(() => {
       if (tab.value == 1) {
         fetchFn()
@@ -539,6 +544,17 @@ export default {
         fetchFn2()
       }
     })
+
+    const preventAction = () => {
+      const userType = store.userData.user_type
+      const userRole = store.userData.role
+      const result = [1, 2, 3].includes(userRole) && userType == 3
+      if (!result) {
+        showNoAccess.value = true
+        return false
+      }
+      return true
+    }
 
     onMounted(async () => {
       monthlyRescue.value = await getMonthlyRescue(selectedYear.value)
@@ -553,10 +569,13 @@ export default {
         store.leftDrawerOpen = true
       }
     })
+
     onUnmounted(() => {
       window.onafterprint = null // Clean up
     })
     return {
+      preventAction,
+      showNoAccess,
       monthlyBalance,
       monthlyExpense,
       monthlyDonation,

@@ -21,7 +21,7 @@ const routes = [
     component: () => import('layouts/MainLayout.vue'),
     beforeEnter: (to, from, next) => {
       const store = globalStore()
-      if (store.userData?.user_type === 3) {
+      if ([3, 2].includes(store.userData?.user_type)) {
         next() // ✅ Proceed to layout
       } else {
         next('/404+not+found') // 🚫 Block access

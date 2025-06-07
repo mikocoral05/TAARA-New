@@ -13,6 +13,7 @@
       v-model:confirm="confirm"
       v-model:dialog="showDialog"
       :tableAction="tableAction"
+      :preventAction="preventAction"
       :visible-columns="[
         'id',
         'schedule_name',
@@ -326,11 +327,13 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <NoAccessDialog v-model:showNoAccess="showNoAccess" />
   </q-page>
 </template>
 
 <script>
 import { useQuasar } from 'quasar'
+import NoAccessDialog from 'src/components/NoAccessDialog.vue'
 import ReusableTable from 'src/components/ReusableTable.vue'
 import {
   addSchedule,
@@ -343,7 +346,7 @@ import { globalStore } from 'src/stores/global-store'
 import { onMounted, watchEffect } from 'vue'
 import { ref } from 'vue'
 export default {
-  components: { ReusableTable },
+  components: { ReusableTable, NoAccessDialog },
   setup() {
     const rows = ref([])
     const $q = useQuasar()
@@ -356,8 +359,12 @@ export default {
     const arrayOfId = ref([])
     const search = ref(null)
     const animalOption = ref([])
+    const showNoAccess = ref(false)
     const store = globalStore
     const tableAction = (data, modeParam) => {
+      if (!preventAction()) {
+        return
+      }
       mode.value = modeParam
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         showDialog.value = !showDialog.value
@@ -467,12 +474,25 @@ export default {
       })
     }
 
+    const preventAction = () => {
+      const userType = store.userData.user_type
+      const userRole = store.userData.role
+      const result = [1, 2, 3, 4].includes(userRole) && userType == 3
+      if (!result) {
+        showNoAccess.value = true
+        return false
+      }
+      return true
+    }
+
     onMounted(() => {
       getSchedule().then((response) => {
         rows.value = response
       })
     })
     return {
+      preventAction,
+      showNoAccess,
       softDeleteFn,
       saveFn,
       showInputInterval,

@@ -525,6 +525,7 @@
         </q-form>
       </q-card>
     </q-dialog>
+    <NoAccessDialog v-model:showNoAccess="showNoAccess" />
   </q-page>
 </template>
 <script>
@@ -554,9 +555,12 @@ import {
   isNearExpiration,
   isExpired,
 } from 'src/composable/simpleComposable'
+import NoAccessDialog from 'src/components/NoAccessDialog.vue'
+import { globalStore } from 'src/stores/global-store'
 export default {
   components: {
     ReusableTable,
+    NoAccessDialog,
   },
   setup() {
     const obj = { 1: 'tbl_wishlist_medicine', 2: 'tbl_wishlist_food', 3: 'tbl_wishlist_supplies' }
@@ -578,6 +582,7 @@ export default {
     const selectedDay = ref(dayToday)
     const totalExpense = ref(null)
     const status = ref(0)
+    const store = globalStore()
     const showStatusFilter = ref(true)
     const statusOption = ref([
       { label: 'All', value: 0 },
@@ -594,7 +599,7 @@ export default {
     const arrayOfId = ref([])
     const tableConfig = ref({ title: '', columns: [] })
     const groupNameOptions = ref([])
-
+    const showNoAccess = ref(false)
     const fetchData = async () => {
       const response = await getPetTransferList(status.value)
       tableConfig.value.columns = [
@@ -609,6 +614,9 @@ export default {
     }
 
     const tableAction = (row, modeParam, action) => {
+      if (!preventAction()) {
+        return
+      }
       mode.value = modeParam
       if (['View', 'Edit', 'Add'].includes(modeParam)) {
         if (modeParam == 'Add') {
@@ -691,11 +699,22 @@ export default {
         }, 1000)
       })
     }
-
+    const preventAction = () => {
+      const userType = store.userData.user_type
+      const userRole = store.userData.role
+      const result = [1, 2, 3, 4].includes(userRole) && userType == 3
+      if (!result) {
+        showNoAccess.value = true
+        return false
+      }
+      return true
+    }
     watchEffect(() => {
       fetchData()
     })
     return {
+      preventAction,
+      showNoAccess,
       sexOption,
       petSizes,
       showStatusFilter,

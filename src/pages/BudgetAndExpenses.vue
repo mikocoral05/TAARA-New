@@ -102,6 +102,7 @@
         v-model:confirm="confirm"
         v-model:dialog="showDialog"
         :tableAction="tableAction"
+        :preventAction="preventAction"
         :title="
           tab == 1
             ? 'Budget Allocation'

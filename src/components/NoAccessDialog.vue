@@ -1,14 +1,15 @@
 <template>
-  <q-dialog v-model="localShowDialog" persistent>
+  <q-dialog v-model="localshowNoAccess" persistent>
     <q-card>
-      <q-card-section class="row items-center">
-        <q-avatar icon="signal_wifi_off" color="primary" text-color="white" />
-        <span class="q-ml-sm">You are currently not connected to any network.</span>
+      <q-card-section class="items-center column no-wrap">
+        <q-avatar icon="sym_r_do_not_touch" color="primary" text-color="white" />
+        <div class="q-mt-md">
+          You don't have access to perform this action. This feature is restricted.
+        </div>
       </q-card-section>
 
       <q-card-actions align="right">
-        <q-btn flat label="Cancel" color="primary" @click="closeDialog" />
-        <q-btn flat label="Turn on Wifi" color="primary" @click="closeDialog" />
+        <q-btn flat label="Close" color="primary" @click="closeDialog" />
       </q-card-actions>
     </q-card>
   </q-dialog>
@@ -20,32 +21,32 @@ import { defineComponent, ref, watch } from 'vue'
 export default defineComponent({
   name: 'NoAccessDialog',
   props: {
-    showDialog: {
+    showNoAccess: {
       type: Boolean,
       default: false,
     },
   },
-  emits: ['update:showDialog'],
+  emits: ['update:showNoAccess'],
   setup(props, { emit }) {
-    const localShowDialog = ref(props.showDialog)
+    const localshowNoAccess = ref(props.showNoAccess)
 
     watch(
-      () => props.showDialog,
+      () => props.showNoAccess,
       (val) => {
-        localShowDialog.value = val
+        localshowNoAccess.value = val
       },
     )
 
-    watch(localShowDialog, (val) => {
-      emit('update:showDialog', val)
+    watch(localshowNoAccess, (val) => {
+      emit('update:showNoAccess', val)
     })
 
     const closeDialog = () => {
-      localShowDialog.value = false
+      localshowNoAccess.value = false
     }
 
     return {
-      localShowDialog,
+      localshowNoAccess,
       closeDialog,
     }
   },

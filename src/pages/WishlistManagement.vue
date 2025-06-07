@@ -165,6 +165,7 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <NoAccessDialog v-model:showNoAccess="showNoAccess" />
   </q-page>
 </template>
 <script>
@@ -190,9 +191,12 @@ import {
   isExpired,
   capitalize,
 } from 'src/composable/simpleComposable'
+import NoAccessDialog from 'src/components/NoAccessDialog.vue'
+import { globalStore } from 'src/stores/global-store'
 export default {
   components: {
     ReusableTable,
+    NoAccessDialog,
   },
   setup() {
     const obj = { 1: 'tbl_wishlist_medicine', 2: 'tbl_wishlist_food', 3: 'tbl_wishlist_supplies' }
@@ -204,6 +208,7 @@ export default {
     const filterTab = ref('1')
     const editTab = ref('1')
     const rows = ref([])
+    const store = globalStore()
     const confirm = ref(false)
     const search = ref(null)
     const addDialog = ref(false)
@@ -224,7 +229,7 @@ export default {
     const arrayOfId = ref([])
     const tableConfig = ref({ title: '', columns: [] })
     const groupNameOptions = ref([])
-
+    const showNoAccess = ref(false)
     const fetchData = () => {
       getWishlist(obj[tab.value]).then((response) => {
         tableConfig.value.title = `${capitalize(obj2[tab.value])} Wishlist`
@@ -235,6 +240,9 @@ export default {
     }
 
     const tableAction = (id, modeParam, action) => {
+      if (!preventAction()) {
+        return
+      }
       mode.value = modeParam
       if (['Edit', 'Add', 'EditP'].includes(modeParam)) {
         if (modeParam == 'Add') {
@@ -313,11 +321,24 @@ export default {
       })
     }
 
+    const preventAction = () => {
+      const userType = store.userData.user_type
+      const userRole = store.userData.role
+      const result = [1, 2, 3, 4].includes(userRole) && userType == 3
+      if (!result) {
+        showNoAccess.value = true
+        return false
+      }
+      return true
+    }
+
     watchEffect(() => {
       fetchData()
     })
 
     return {
+      preventAction,
+      showNoAccess,
       addDialog,
       groupNameOptions,
       arrayOfId,

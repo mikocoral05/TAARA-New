@@ -132,6 +132,7 @@ export default {
     visibleColumns: { type: Array, default: () => [] },
     confirm: { type: Boolean, default: false }, // Accept confirm as a prop
     tableAction: { type: Function, default: () => {} }, // Accept function as a prop
+    preventAction: { type: Function, default: () => {} }, // Accept function as a prop
     status: { type: Number, default: 0 },
     showStatusFilter: { type: Boolean, default: false },
     statusOption: { type: Function, default: () => [] },
@@ -158,6 +159,9 @@ export default {
     })
 
     const toggleSelection = () => {
+      const allowed = props.preventAction()
+      if (!allowed) return
+
       if (showSelection.value) {
         if (internalSelected.value.length > 0) {
           emit('update:confirm', true)

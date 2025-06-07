@@ -13,6 +13,7 @@
       v-model:confirm="confirm"
       v-model:dialog="showDialog"
       :tableAction="tableAction"
+      :preventAction="preventAction"
       :visible-columns="[
         'id',
         'title',
@@ -211,11 +212,13 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <NoAccessDialog v-model:showNoAccess="showNoAccess" />
   </q-page>
 </template>
 
 <script>
 import { useQuasar } from 'quasar'
+import NoAccessDialog from 'src/components/NoAccessDialog.vue'
 import ReusableTable from 'src/components/ReusableTable.vue'
 import {
   addAnnouncement,
@@ -232,12 +235,13 @@ import { globalStore } from 'src/stores/global-store'
 import { onMounted, watchEffect } from 'vue'
 import { ref } from 'vue'
 export default {
-  components: { ReusableTable },
+  components: { ReusableTable, NoAccessDialog },
   setup() {
     const rows = ref([])
     const $q = useQuasar()
     const confirm = ref(false)
     const showDialog = ref(false)
+    const showNoAccess = ref(false)
     const showInputInterval = ref(false)
     const dataStorage = ref({ file: [] })
     const mode = ref('')
@@ -253,6 +257,9 @@ export default {
     }
 
     const tableAction = (data, modeParam) => {
+      if (!preventAction()) {
+        return
+      }
       mode.value = modeParam
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         showDialog.value = !showDialog.value
@@ -366,6 +373,17 @@ export default {
       previewImage.value = URL.createObjectURL(dataStorage.value.file)
     }
 
+    const preventAction = () => {
+      const userType = store.userData.user_type
+      const userRole = store.userData.role
+      const result = [1, 2, 3, 4].includes(userRole) && userType == 3
+      if (!result) {
+        showNoAccess.value = true
+        return false
+      }
+      return true
+    }
+
     onMounted(() => {
       getAnnouncement().then((response) => {
         rows.value = response
@@ -373,6 +391,7 @@ export default {
       })
     })
     return {
+      preventAction,
       previewImage,
       myFile,
       imageFnUpdate,

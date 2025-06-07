@@ -878,6 +878,7 @@ export default {
         console.log(rows.value)
       })
     }
+
     watchEffect(() => {
       fetchFn()
     })
@@ -941,6 +942,7 @@ export default {
     }
 
     return {
+      showNoAccess,
       preventAction,
       showErrorNeutered,
       showErrorRS,

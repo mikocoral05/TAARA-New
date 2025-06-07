@@ -24,6 +24,7 @@
         v-model:confirm="confirm"
         v-model:dialog="showDialog"
         :tableAction="tableAction"
+        :preventAction="preventAction"
       >
         <template #cell-btn="{ row }">
           <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
@@ -483,7 +484,8 @@
     </q-dialog>
 
     <ImageViewer v-model="viewImage" :imageUrl="previewImage" />
-  </q-page>
+    <NoAccessDialog v-model:showNoAccess="showNoAccess"
+  /></q-page>
 </template>
 <script>
 import ReusableTable from 'src/components/ReusableTable.vue'
@@ -515,10 +517,12 @@ import {
 } from 'src/composable/simpleComposable'
 import ImageViewer from 'src/components/ImageViewer.vue'
 import { globalStore } from 'src/stores/global-store'
+import NoAccessDialog from 'src/components/NoAccessDialog.vue'
 export default {
   components: {
     ReusableTable,
     ImageViewer,
+    NoAccessDialog,
   },
   setup() {
     const store = globalStore()
@@ -536,6 +540,7 @@ export default {
     const showDialog = ref(false)
     const showSpinner = ref(false)
     const pages = ref([])
+    const showNoAccess = ref(false)
     const dataStorage = ref({})
     const elseSummary = ref({})
     const mode = ref('')
@@ -561,6 +566,9 @@ export default {
 
     const groupNameOptions = ref([])
     const tableAction = async (data, modeParam) => {
+      if (!preventAction()) {
+        return
+      }
       mode.value = modeParam
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         if (filterTab.value !== 2) showDialog.value = !showDialog.value
@@ -713,10 +721,22 @@ export default {
       },
     )
 
+    const preventAction = () => {
+      const userType = store.userData.user_type
+      const userRole = store.userData.role
+      const result = [1, 2, 3, 4].includes(userRole) && userType == 3
+      if (!result) {
+        showNoAccess.value = true
+        return false
+      }
+      return true
+    }
+
     watchEffect(() => {
       fetchFn()
     })
     return {
+      preventAction,
       statusColor,
       donationStatusText,
       statusIcon,

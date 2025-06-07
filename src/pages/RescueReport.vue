@@ -13,6 +13,7 @@
       v-model:confirm="confirm"
       v-model:dialog="showDialog"
       :tableAction="tableAction"
+      :preventAction="preventAction"
       :visible-columns="[
         'id',
         'name',
@@ -284,12 +285,14 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <NoAccessDialog v-model:showNoAccess="showNoAccess" />
   </q-page>
 </template>
 
 <script>
 import { useQuasar } from 'quasar'
 import ImageViewer from 'src/components/ImageViewer.vue'
+import NoAccessDialog from 'src/components/NoAccessDialog.vue'
 import ReusableTable from 'src/components/ReusableTable.vue'
 import {
   addRescueRerport,
@@ -302,7 +305,7 @@ import { globalStore } from 'src/stores/global-store'
 import { onMounted, watchEffect } from 'vue'
 import { ref } from 'vue'
 export default {
-  components: { ReusableTable, ImageViewer },
+  components: { ReusableTable, ImageViewer, NoAccessDialog },
   setup() {
     const rows = ref([])
     const $q = useQuasar()
@@ -310,6 +313,7 @@ export default {
     const showDialog = ref(false)
     const showImage = ref(false)
     const showInputInterval = ref(false)
+    const showNoAccess = ref(false)
     const dataStorage = ref({ file: [] })
     const mode = ref('')
     const itemsCount = ref([])
@@ -324,6 +328,9 @@ export default {
     }
 
     const tableAction = (data, modeParam) => {
+      if (!preventAction()) {
+        return
+      }
       mode.value = modeParam
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         showDialog.value = !showDialog.value
@@ -501,6 +508,17 @@ export default {
       { value: 8, label: 'Returned to Owner' },
     ]
 
+    const preventAction = () => {
+      const userType = store.userData.user_type
+      const userRole = store.userData.role
+      const result = [1, 2, 3, 4].includes(userRole) && userType == 3
+      if (!result) {
+        showNoAccess.value = true
+        return false
+      }
+      return true
+    }
+
     onMounted(() => {
       getRescueReport().then((response) => {
         rows.value = response
@@ -508,6 +526,8 @@ export default {
       })
     })
     return {
+      preventAction,
+      showNoAccess,
       showImage,
       rescueStatusOptions,
       reportStatusOption,

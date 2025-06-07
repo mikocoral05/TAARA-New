@@ -736,6 +736,7 @@ export default {
       fetchFn()
     })
     return {
+      showNoAccess,
       preventAction,
       statusColor,
       donationStatusText,

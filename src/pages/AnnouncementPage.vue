@@ -391,6 +391,7 @@ export default {
       })
     })
     return {
+      showNoAccess,
       preventAction,
       previewImage,
       myFile,

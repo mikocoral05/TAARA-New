@@ -179,7 +179,7 @@ export default defineComponent({
         title: 'User Management',
         icon: 'groups',
         nav: '/management/users',
-        pending: store.pendingVolunteer,
+        // pending: store.pendingVolunteer,
         showTab: store.userData?.admin_id == 1,
       },
       {
@@ -225,7 +225,7 @@ export default defineComponent({
         title: 'Rescue Report',
         icon: 'fire_truck',
         nav: '/management/rescue-report',
-        pending: store.pendingRescueReport,
+        // pending: store.pendingRescueReport,
         showTab: true,
       },
       {

@@ -242,13 +242,13 @@ export default defineComponent({
       },
       {
         title: 'Wishlist',
-        icon: 'sym_r_folded_hands',
+        icon: 'folded_hands',
         nav: '/management/wishlist',
         showTab: true,
       },
       {
         title: 'Pet Transfer',
-        icon: 'sym_r_airport_shuttle',
+        icon: 'airport_shuttle',
         nav: '/management/pet-transfer-request',
         showTab: true,
       },
@@ -256,9 +256,9 @@ export default defineComponent({
 
     const linksList3 = computed(() => [
       {
-        title: 'Settings',
-        icon: 'settings',
-        nav: '',
+        title: 'Logs',
+        icon: 'chronic',
+        nav: '/management/logs',
         showTab: true,
       },
       {
@@ -287,6 +287,7 @@ export default defineComponent({
       '/management/analytic-report': 'Report',
       '/management/wishlist': 'Wishlist',
       '/management/pet-transfer-request': 'Pet Transfer',
+      '/management/logs': 'Logs',
     }
 
     const tab = ref(routeToTabMap[route.path] || 'Dashboard')

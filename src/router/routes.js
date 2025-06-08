@@ -110,6 +110,11 @@ const routes = [
         path: 'announcement',
         component: () => import('src/pages/AnnouncementPage.vue'),
       },
+      {
+        name: 'logs',
+        path: 'logs',
+        component: () => import('src/pages/LogsSection.vue'),
+      },
     ],
   },
   {

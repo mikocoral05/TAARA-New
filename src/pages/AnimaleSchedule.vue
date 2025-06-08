@@ -363,7 +363,7 @@ export default {
     const search = ref(null)
     const animalOption = ref([])
     const showNoAccess = ref(false)
-    const store = globalStore
+    const store = globalStore()
     const tableAction = (data, modeParam) => {
       if (!preventAction()) {
         return
@@ -566,7 +566,6 @@ export default {
           sortable: true,
           align: 'center',
         },
-        { name: 'amount', label: 'Amount', field: 'amount', align: 'center' },
         { name: 'btn', label: 'Action', field: 'btn', align: 'center' },
       ],
     }

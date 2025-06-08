@@ -1207,3 +1207,10 @@ export const getUserInfo = async (user_id) => {
   })
   return response.data
 }
+
+export const getLogs = async () => {
+  const response = await api.get('logs.php', {
+    params: { get_logs: 'get_logs' },
+  })
+  return response.data
+}

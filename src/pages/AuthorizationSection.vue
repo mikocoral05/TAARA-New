@@ -27,16 +27,12 @@
         >
         <q-tab name="3" icon="sym_r_manage_accounts" label="Officials" no-caps />
       </q-tabs>
-      <div class="row no-wrap justify-between items-center">
-        <q-btn icon="sym_r_add" dense unelevated class="q-mr-md" />
-        <q-btn icon="sym_r_upload" dense unelevated />
-      </div>
     </div>
     <q-separator color="grey-3" class="q-mb-md" />
     <ReusableTable
       row-key="user_id"
       :rows="userRows"
-      :columns="volunteerColumns"
+      :columns="userColumns"
       separator="vertical"
       :rows-per-page-options="[10]"
       :title="tableConfig.title"
@@ -46,6 +42,7 @@
       v-model:selected="arrayOfId"
       v-model:confirm="confirm"
       :tableAction="tableAction"
+      :preventAction="preventAction"
     >
       <template #cell-fullName="{ row }">
         <q-img
@@ -76,6 +73,10 @@
       <template #cell-age="{ row }">
         {{ calculateAge(row.birth_date) }}
       </template>
+      <template #cell-id="{ rowIndex }">
+        {{ rowIndex + 1 }}
+      </template>
+      <template #cell-phone_number="{ row }"> +63 {{ row.phone_number }} </template>
       <template #cell-btn="{ row }">
         <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
           <q-menu anchor="bottom left" self="top right">
@@ -104,24 +105,44 @@
         </q-btn>
       </template>
     </ReusableTable>
-    <q-dialog position="right" full-height v-model="editDialog">
-      <q-card style="min-width: 750px; height: 500px" class="text-black">
+    <q-dialog position="right" full-height maximized v-model="editDialog">
+      <q-card style="width: 50vw; height: 500px" class="text-black">
         <q-card-section class="q-py-md row no-wrap justify-between items-center">
           <div>{{ mode }}</div>
           <q-icon name="close" size="1.2rem" @click="editDialog = !editDialog" />
         </q-card-section>
         <q-separator />
         <q-card-section class="q-px-lg row no-wrap justify-between items-center">
-          <div class="column no-wrap" style="width: 30%">
-            <q-avatar size="120px" class="q-mr-md">
+          <div class="column no-wrap w-100">
+            <div class="row no-wrap justify-between items-start">
               <q-img
                 :src="
-                  userData?.img_path || userData?.sex == 1
-                    ? 'no-profile-male.svg'
-                    : 'no-profile-female.svg'
+                  previewImage
+                    ? previewImage
+                    : userData?.sex == 1
+                      ? 'no-profile-male.svg'
+                      : 'no-profile-female.svg'
                 "
+                height="120px"
+                width="120px"
+                class="radius-100"
               />
-            </q-avatar>
+              <q-btn
+                icon="sym_r_photo_camera"
+                flat
+                dense
+                @click="triggerUpload()"
+                :disable="mode == 'View'"
+              />
+              <q-file
+                class="q-mt-sm hidden"
+                v-model="fileStorage"
+                outlined
+                dense
+                ref="myFile"
+                @update:model-value="imageFnUpdate()"
+              />
+            </div>
             <div class="text-body1">
               {{ userData?.first_name }} {{ userData?.middle_name }} {{ userData?.last_name }}
             </div>
@@ -408,9 +429,11 @@
                     v-model="userData.password"
                     dense
                     outlined
+                    placeholder="***************"
                     class="q-mt-sm"
                     :type="isPwd ? 'password' : 'text'"
                     style="width: 400px"
+                    hint="Type new password"
                   >
                     <template v-slot:append>
                       <q-icon
@@ -534,6 +557,8 @@ import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
 import { calculateAge, getImageLink } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
+import { updatePublicUserImage } from 'src/composable/latestPublicComposable'
+import { watch } from 'vue'
 export default {
   components: {
     ReusableTable,
@@ -550,13 +575,18 @@ export default {
     const pages = ref([])
     const userData = ref()
     const mode = ref('')
+    const myFile = ref(null)
     const arrayOfId = ref([])
     const tableConfig = ref({ title: '', columns: [] })
     const store = globalStore()
+    const fileStorage = ref(null)
+
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
-      userData.value = data
+      userData.value = { ...data }
+      console.log(userData.value)
 
+      previewImage.value = data.image_path
       if (['Edit', 'View'].includes(modeParam)) {
         editDialog.value = !editDialog.value
       } else {
@@ -577,11 +607,18 @@ export default {
             group: 'update',
             message: response.message,
           })
-        }, 1000)
+        }, 500)
+        if (response.status == 'success') {
+          const index = userRows.value.findIndex((row) => row.user_id === userData.value.user_id)
+
+          if (index !== -1) {
+            userRows.value[index] = { ...userData.value }
+          }
+        }
         setTimeout(() => {
           editDialog.value = false
           $q.loading.hide()
-        }, 2000)
+        }, 1000)
       })
     }
 
@@ -608,7 +645,7 @@ export default {
       })
     }
 
-    watchEffect(() => {
+    const fetchFn = () => {
       tableConfig.value.title = `${obj[tab.value]} List`
       tableConfig.value.columns = ['3', '2'].includes(tab.value)
         ? ['id', 'fullName', 'email', 'roles', 'age', 'profession', 'phone_number', 'btn']
@@ -620,7 +657,17 @@ export default {
         userRows.value = response
         console.log(userRows.value)
       })
+    }
+
+    watchEffect(() => {
+      fetchFn()
     })
+
+    const previewImage = ref(null)
+    const imageFnUpdate = () => {
+      previewImage.value = URL.createObjectURL(fileStorage.value)
+    }
+
     const statusColor = (status) => {
       const obj = {
         1: 'bg-orange  ',
@@ -647,7 +694,52 @@ export default {
       }
       return obj[status]
     }
+
+    const triggerUpload = () => {
+      myFile.value.pickFiles()
+    }
+
+    const showNoAccess = ref(false)
+    const preventAction = () => {
+      const userType = store.userData.user_type
+      const userRole = store.userData.roles
+
+      const official = [1, 2, 3].includes(userRole) && userType == 3
+      const volunteer = [5].includes(userRole) && userType == 2
+      const result = userType == 3 ? official : volunteer
+
+      if (!result) {
+        showNoAccess.value = true
+        return false
+      }
+      return true
+    }
+
+    watch(
+      () => fileStorage.value,
+      async (newVal, oldVal) => {
+        if (newVal != oldVal) {
+          $q.loading.show({ group: 'update', message: 'Update your image. Please wait ...' })
+          const response = await updatePublicUserImage(newVal, userData.value.user_id)
+          $q.loading.show({ group: 'update', message: response.message })
+          if (response.status == 'success') {
+            fetchFn()
+          }
+          setTimeout(() => {
+            $q.loading.hide()
+          }, 500)
+        }
+      },
+    )
+
     return {
+      preventAction,
+      showNoAccess,
+      triggerUpload,
+      fileStorage,
+      myFile,
+      previewImage,
+      imageFnUpdate,
       calculateAge,
       store,
       statusText,
@@ -672,7 +764,7 @@ export default {
       tableAction,
       userRows,
       tab,
-      volunteerColumns: [
+      userColumns: [
         { name: 'id', label: 'ID', field: 'user_id', align: 'center' },
         {
           name: 'fullName',

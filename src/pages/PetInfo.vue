@@ -738,7 +738,7 @@ export default {
           'classification',
         ]
 
-        downloadExampleExcelFormat('tbl_animal_info', columnsToGet, 'pet_info_excel_structure.xlsx')
+        downloadExampleExcelFormat('tbl_animal_info', columnsToGet, 'pet_info_excel_structure')
       } else {
         arrayOfId.value.push(data.animal_id)
         confirm.value = !confirm.value

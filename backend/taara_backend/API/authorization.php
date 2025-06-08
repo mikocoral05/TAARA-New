@@ -17,7 +17,6 @@ class API
         if (isset($payload["get_user_by_type"])) {
             $type = $payload['get_user_by_type'];
 
-            // Define columns to fetch
             $columns = [
                 'tbl_users.user_id',
                 'tbl_users.user_type',
@@ -39,14 +38,13 @@ class API
                 'tbl_users.sex',
                 'tbl_users.date_created',
                 'tbl_users.username',
-                'tbl_users.password',
             ];
 
-            // Add tbl_official_position columns if the type is 3
             if ($type == 3) {
                 $columns[] = 'tbl_official_position.position_title';
                 $columns[] = 'tbl_official_position.position_description';
                 $columns[] = 'page_access';
+                $this->db->groupBy("tbl_users.roles");
                 $this->db->join('tbl_official_position', 'tbl_users.roles = tbl_official_position.id', 'left');
             }
             if ($type == 2) {
@@ -106,11 +104,13 @@ class API
         $datas = json_encode($payload);
         $ref_id = json_decode($datas, true);
     }
+
     public function httpPut($payload)
     {
         if (array_key_exists('updateUser', $payload)) {
             // Extract the user data
             $user_data = $payload['updateUser'];
+            $password = $user_data['password'] ?? '';
 
             // Ensure user_id is provided
             if (!isset($user_data['user_id'])) {
@@ -118,13 +118,11 @@ class API
                 return;
             }
 
-            // Prepare the array to hold the fields that will be updated
             $update_values = [];
 
-            // Define the allowed fields for update (columns that can be updated)
             $allowed_fields = [
                 'user_type',
-                'image_path',
+                // 'image_path',
                 'first_name',
                 'middle_name',
                 'last_name',
@@ -144,7 +142,6 @@ class API
                 'date_archieve',
                 'username',
                 'password',
-                'page_access',
             ];
 
             // Loop through the allowed fields and check if they exist in the user data
@@ -153,6 +150,11 @@ class API
                     // Only add fields that exist in the payload and are not null
                     $update_values[$field] = $user_data[$field];
                 }
+            }
+
+            // Encrypt and set password if it's not empty
+            if (!empty($password)) {
+                $update_values['password'] = password_hash($password, PASSWORD_DEFAULT);
             }
 
             // Check if we have any fields to update

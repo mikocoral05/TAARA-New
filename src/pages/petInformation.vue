@@ -17,7 +17,7 @@
           />
           <p class="text-center q-mt-md">PET NAME</p>
           <q-input
-            v-model="search.animal_name"
+            v-model="search.name"
             style="border: 1px solid #b157ae; border-radius: 5px"
             class="q-mx-md responsive-advance-search-input"
             :input-style="{
@@ -323,43 +323,22 @@
           Explore, connect with their stories, and learn how you can help.”
         </p>
         <div class="row no-wrap justify-between items-center q-btn-container q-mt-lg">
-          <q-select
-            outlined
+          <q-input
             v-model="searchValue"
-            clearable
-            use-input
-            hide-selected
-            fill-input
-            input-debounce="0"
-            placeholder="Search pet details"
-            :options="options"
-            @filter="filterFn"
+            outlined
             dense
-            class="search-field"
-            hide-dropdown-icon
-            @update:model-value="onSelectionChange"
+            type="search"
+            style="width: 350px"
+            placeholder="Search pet here ..."
           >
-            <!-- @new-value="onSelectionChange" -->
-
-            <template v-slot:no-option>
-              <q-item>
-                <q-item-section class="text-grey"> No results </q-item-section>
-              </q-item>
-            </template>
             <template v-slot:append>
               <q-icon name="search" />
             </template>
-          </q-select>
+          </q-input>
+
           <div class="row no-wrap items-center justify-center">
             <p class="q-ma-none q-mr-sm">Sorted by:</p>
-            <q-select
-              v-model="sorted"
-              emit-value
-              map-options
-              :options="sorted_by"
-              dense
-              @update:model-value="sortPets(sorted)"
-            />
+            <q-select v-model="sorted" emit-value map-options :options="sorted_by" dense />
           </div>
         </div>
         <div class="categorize-container row justify-between items-center q-pt-md no-wrap">
@@ -437,7 +416,7 @@
                   Sex: {{ data.sex }} Age:
                   {{ calculateAge(data.date_of_birth) }}
                 </div>
-                <div class="q-ma-none text-caption">Name: {{ data.animal_name }}</div>
+                <div class="q-ma-none text-caption">Name: {{ data.name }}</div>
               </q-card-section>
             </q-btn>
           </q-card>
@@ -459,5 +438,303 @@
     <TaaraFooter class="footer" />
   </q-page>
 </template>
-<script src="pages/taara/script/petInformation.js"></script>
+<script>
+import { ref, onMounted, watch, computed, watchEffect } from 'vue'
+import TaaraFooter from 'src/components/TaaraFooter.vue'
+import { useRoute } from 'vue-router'
+import { getAllAnimals, specificAnimalId, SearchAnimalByName } from 'src/composable/taaraComposable'
+import { calculateAge, encodeAnimalId, getImageLink } from 'src/composable/simpleComposable'
+
+export default {
+  components: { TaaraFooter },
+
+  setup() {
+    const miniState = ref(false)
+    const route = useRoute()
+    const searchValue = ref(null)
+    const filterAdvanceSearch = ref(false)
+    const drawer = ref(true)
+    const sorted = ref('')
+    const categorizeByName = ref(false)
+    const categorizeByAge = ref(false)
+    const categorizeByWeight = ref(false)
+    const categorizeByHeight = ref(false)
+    const categorizeByYearRescued = ref(false)
+    const allAnimalData = ref([])
+    const search = ref(null)
+    const options = ref()
+    const watchRoute = () => {
+      return route.query.page
+    }
+    const currentPage = ref(1)
+    const itemsPerPage = ref(20)
+
+    const totalPages = computed(() => Math.ceil(filteredRows.value.length / itemsPerPage.value))
+
+    const paginatedItems = computed(() => {
+      const start = (currentPage.value - 1) * itemsPerPage.value
+      const end = start + itemsPerPage.value
+      return filteredRows.value.slice(start, end)
+    })
+
+    const categorizeByNameFn = () => {}
+    const sortByName = (array) => {
+      categorizeByName.value = !categorizeByName.value
+      return array.sort((a, b) => {
+        let nameA = a.name.toUpperCase() // ignore upper and lowercase
+        let nameB = b.name.toUpperCase() // ignore upper and lowercase
+
+        if (categorizeByName.value == false) {
+          if (nameA < nameB) {
+            return -1
+          }
+          if (nameA > nameB) {
+            return 1
+          }
+        } else {
+          if (nameA > nameB) {
+            return -1
+          }
+          if (nameA < nameB) {
+            return 1
+          }
+        }
+
+        // names must be equal
+        return 0
+      })
+    }
+
+    const sortByAge = (array) => {
+      categorizeByAge.value = !categorizeByAge.value
+
+      const getAgeInMonths = (dob) => {
+        const birthDate = new Date(dob)
+        const now = new Date()
+
+        const years = now.getFullYear() - birthDate.getFullYear()
+        const months = now.getMonth() - birthDate.getMonth()
+        const totalMonths = years * 12 + months
+
+        return totalMonths
+      }
+
+      return array.sort((a, b) => {
+        const ageA = getAgeInMonths(a.date_of_birth)
+        const ageB = getAgeInMonths(b.date_of_birth)
+
+        // If categorizeByAge is true, sort ascending (youngest to oldest)
+        return categorizeByAge.value ? ageA - ageB : ageB - ageA
+      })
+    }
+
+    const sortByWeight = (array) => {
+      categorizeByWeight.value = !categorizeByWeight.value
+      let convertWeightToGrams = (weightString) => {
+        let value = parseFloat(weightString)
+        let unit = weightString.replace(value, '')
+
+        if (unit.includes('kg')) {
+          value = value * 1000 // convert kilograms to grams
+        }
+        // if unit is 'g' or 'mg', value remains the same
+
+        return value
+      }
+
+      return array.sort((a, b) => {
+        let weightA = convertWeightToGrams(a.weight)
+        let weightB = convertWeightToGrams(b.weight)
+
+        if (categorizeByWeight.value == false) {
+          return weightA - weightB
+        } else {
+          return weightB - weightA
+        }
+      })
+    }
+
+    const sortByHeight = (array) => {
+      categorizeByHeight.value = !categorizeByHeight.value
+      return array.sort((a, b) => {
+        let heightA = a.height
+        let heightB = b.height
+
+        if (categorizeByHeight.value == false) {
+          return heightB - heightA
+        } else {
+          return heightA - heightB
+        }
+      })
+    }
+
+    const sortByDateRescued = (array) => {
+      console.log(array)
+      categorizeByYearRescued.value = !categorizeByYearRescued.value
+      return array.sort((a, b) => {
+        let dateA = new Date(a.care_start_date)
+        let dateB = new Date(b.care_start_date)
+
+        if (categorizeByYearRescued.value == false) {
+          // if condition is true, sort in descending order
+          return dateB - dateA
+        } else {
+          // if condition is false, sort in ascending order
+          return dateA - dateB
+        }
+      })
+    }
+
+    watch(watchRoute, (newVal) => {
+      currentPage.value = route.query.page == undefined ? 1 : Number(newVal)
+    })
+
+    const filteredRows = computed(() => {
+      if (!searchValue.value) return allAnimalData.value
+      const keyword = searchValue.value.toLowerCase().trim()
+      return allAnimalData.value.filter((row) =>
+        Object.values(row).some((val) => String(val).toLowerCase().includes(keyword)),
+      )
+    })
+    watchEffect(() => {
+      getAllAnimals(sorted.value).then((response) => {
+        allAnimalData.value = response
+        console.log(allAnimalData.value)
+      })
+    })
+    onMounted(() => {
+      if (window.innerWidth <= 581) {
+        drawer.value = false
+      }
+      currentPage.value = route.query.page == undefined ? 1 : route.query.page
+    })
+    return {
+      filteredRows,
+      getImageLink,
+      sortByDateRescued,
+      sortByHeight,
+      sortByWeight,
+      sortByAge,
+      sortByName,
+      categorizeByNameFn,
+      options,
+      encodeAnimalId,
+
+      totalPages,
+      paginatedItems,
+      currentPage,
+      itemsPerPage,
+      filterAdvanceSearch,
+      search,
+      animal_type_option: [
+        {
+          label: 'Any',
+          value: 'Any',
+        },
+        {
+          label: 'Dog',
+          value: 'dog',
+        },
+        {
+          label: 'Cat',
+          value: 'cat',
+        },
+      ],
+      breed_option: [
+        {
+          label: 'Any',
+          value: 'Any',
+        },
+        {
+          label: 'Aspin',
+          value: 'aspin',
+        },
+        {
+          label: 'German Shepherd',
+          value: 'german shepherd',
+        },
+        {
+          label: 'Golden retriever',
+          value: 'golden retriever',
+        },
+        {
+          label: 'Chihuahua',
+          value: 'chihuahua',
+        },
+        {
+          label: 'Beagle',
+          value: 'beagle',
+        },
+      ],
+
+      age_option: [
+        { label: 'Any', value: 'Any' },
+        { label: 'Young', value: 'young' },
+        { label: 'Adult', value: 'adult' },
+        { label: 'Senior', value: 'senior' },
+      ],
+      sex_option: [
+        { label: 'Any', value: 'Any' },
+        { label: 'Male', value: 'male' },
+        { label: 'Female', value: 'female' },
+      ],
+      size_option: [
+        { label: 'Any', value: 'Any' },
+        { label: 'Small', value: 1 },
+        { label: 'Normal', value: 2 },
+        { label: 'Big', value: 3 },
+      ],
+      color_option: [
+        { label: 'Any', value: 'Any' },
+        { label: 'Black', value: 'black' },
+        { label: 'White', value: 'white' },
+        { label: 'Brown', value: 'brown' },
+        { label: 'Orange', value: 'orange' },
+        { label: 'Mix', value: 'mix' },
+      ],
+      good_with_option: [
+        { label: 'Any', value: 'Any' },
+        { label: 'People', value: 1 },
+        { label: 'Animal', value: 2 },
+        { label: 'Both', value: 3 },
+      ],
+      care_behavior: [
+        { label: 'Any', value: 'Any' },
+        { label: 'House Trained', value: 'house trained' },
+        { label: 'Declawed', value: 'declawed' },
+        { label: 'Playful', value: 'playful' },
+        { label: 'Loving', value: 'loving' },
+        { label: 'Special Needs', value: 'special needs' },
+      ],
+      sorted_by: [
+        { label: 'All', value: '' },
+        { label: 'Ready for Adoption', value: 1 },
+        { label: 'In Rehabilitation', value: 2 },
+        { label: 'In Medication', value: 3 },
+        // { label: "Adopted", value: 4 },
+      ],
+      drawer,
+      miniState,
+      getAllAnimals,
+      allAnimalData,
+      specificAnimalId,
+      SearchAnimalByName,
+      categorizeByName,
+      categorizeByAge,
+      categorizeByWeight,
+      categorizeByHeight,
+      categorizeByYearRescued,
+      drawerClick(e) {
+        if (miniState.value) {
+          miniState.value = false
+          e.stopPropagation()
+        }
+      },
+      calculateAge,
+      sorted,
+      searchValue,
+    }
+  },
+}
+</script>
 <style lang="scss" scoped src="pages/taara/style/petInformation.scss"></style>

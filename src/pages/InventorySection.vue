@@ -574,7 +574,7 @@ export default {
     })
     const preventAction = () => {
       const userType = store.userData.user_type
-      const userRole = store.userData.role
+      const userRole = store.userData.roles
       const official = [1, 2, 3, 4].includes(userRole) && userType == 3
       const volunteer = [1, 2].includes(userRole) && userType == 2
       const result = userType == 3 ? official : volunteer

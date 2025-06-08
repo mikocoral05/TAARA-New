@@ -89,10 +89,10 @@ const getFeaturedAnimals = () => {
       })
   })
 }
-const getAllAnimals = () => {
+const getAllAnimals = (health_status) => {
   return new Promise((resolve, reject) => {
     api
-      .get('api.php', { params: { all_animals: 'all_animals' } })
+      .get('api.php', { params: { all_animals: health_status } })
       .then((response) => {
         console.log(response.data.data)
         resolve(response.data.data)

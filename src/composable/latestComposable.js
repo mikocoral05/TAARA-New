@@ -177,7 +177,7 @@ export const getRescueReport = () => {
 
 export const updateUser = (data) => {
   const clone = { ...data }
-  clone.page_access = JSON.stringify(clone.page_access)
+  delete clone.image_path
   return new Promise((resolve, reject) => {
     api
       .put('authorization.php', {
@@ -572,12 +572,12 @@ export const uploadImages = async (fileArray) => {
   })
 }
 
-export const saveAnimalDetail = (obj) => {
+export const saveAnimalDetail = (obj, user_id, user_type) => {
   const { file, ...animalData } = obj // separate the files
   return new Promise((resolve, reject) => {
     api
       .post('pet_info.php', {
-        save_animal_list: animalData,
+        save_animal_list: { animalData, user_id, user_type },
       })
       .then(async (response) => {
         if (response.data.status == 'success') {
@@ -651,12 +651,12 @@ export const updateImage = async (array, id, arrayOfId) => {
   return response.data.status
 }
 
-export const editAnimalInfo = (obj) => {
+export const editAnimalInfo = (obj, user_id, user_type) => {
   const { file, toRemoveId, ...animal_data } = obj
   return new Promise((resolve, reject) => {
     api
       .put('pet_info.php', {
-        edit_animal_info: animal_data,
+        edit_animal_info: { animal_data, user_id, user_type },
       })
       .then(async (response) => {
         if (response.data.status == 'success') {
@@ -831,11 +831,11 @@ export const softDeleteUser = (arrayId) => {
   })
 }
 
-export const softDeleteAnimal = (arrayId) => {
+export const softDeleteAnimal = (arrayId, user_id, user_type) => {
   return new Promise((resolve, reject) => {
     api
       .put('pet_info.php', {
-        soft_delete_animal_info: arrayId,
+        soft_delete_animal_info: { arrayId, user_id, user_type },
       })
       .then((response) => {
         resolve(response.data)

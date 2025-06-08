@@ -13,7 +13,7 @@
     ></div>
 
     <q-item-section v-if="icon" avatar>
-      <q-icon :name="`sym_r_${icon}`" size="1rem" />
+      <q-icon :name="`sym_r_${icon}`" size="1.1rem" />
     </q-item-section>
 
     <q-item-section>

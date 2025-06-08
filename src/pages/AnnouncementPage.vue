@@ -376,7 +376,9 @@ export default {
     const preventAction = () => {
       const userType = store.userData.user_type
       const userRole = store.userData.role
-      const result = [1, 2, 3, 4].includes(userRole) && userType == 3
+      const official = [1, 2, 3, 4].includes(userRole) && userType == 3
+      const volunteer = [4].includes(userRole) && userType == 2
+      const result = userType == 3 ? official : volunteer
       if (!result) {
         showNoAccess.value = true
         return false

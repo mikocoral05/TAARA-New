@@ -752,37 +752,41 @@ export default {
           message: `${obj3[mode.value]}. Please wait...`,
         })
         dataStorage.value.health_status = Number(tab.value)
-        saveAnimalDetail(dataStorage.value).then((response) => {
-          console.log(response)
-          setTimeout(() => {
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-          }, 500)
-          setTimeout(() => {
-            showDialog.value = false
-            $q.loading.hide()
-            fetchFn()
-          }, 1000)
-        })
+        saveAnimalDetail(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
+          (response) => {
+            console.log(response)
+            setTimeout(() => {
+              $q.loading.show({
+                group: 'update',
+                message: response.message,
+              })
+            }, 500)
+            setTimeout(() => {
+              showDialog.value = false
+              $q.loading.hide()
+              fetchFn()
+            }, 1000)
+          },
+        )
       } else if (mode.value == 'Edit') {
         $q.loading.show({
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
         dataStorage.value.toRemoveId = idToRemove.value
-        editAnimalInfo(dataStorage.value).then((response) => {
-          $q.loading.show({
-            group: 'update',
-            message: response.message,
-          })
-          setTimeout(() => {
-            showDialog.value = false
-            $q.loading.hide()
-            fetchFn()
-          }, 2000)
-        })
+        editAnimalInfo(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
+          (response) => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+            setTimeout(() => {
+              showDialog.value = false
+              $q.loading.hide()
+              fetchFn()
+            }, 2000)
+          },
+        )
       }
     }
 
@@ -805,20 +809,22 @@ export default {
         group: 'update',
         message: 'Deleting Pet info. Please wait...',
       })
-      softDeleteAnimal(arrayOfId.value).then((response) => {
-        $q.loading.show({
-          group: 'update',
-          message: response.message,
-        })
-        setTimeout(() => {
-          $q.loading.hide()
-          if (response.status == 'success') {
-            getAnimalList(tab.value).then((response) => {
-              rows.value = response
-            })
-          }
-        }, 2000)
-      })
+      softDeleteAnimal(arrayOfId.value, store.userData.user_id, store.userData.user_type).then(
+        (response) => {
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+          setTimeout(() => {
+            $q.loading.hide()
+            if (response.status == 'success') {
+              getAnimalList(tab.value).then((response) => {
+                rows.value = response
+              })
+            }
+          }, 2000)
+        },
+      )
     }
 
     const previewImage = ref([])
@@ -932,7 +938,7 @@ export default {
 
     const preventAction = () => {
       const userType = store.userData.user_type
-      const userRole = store.userData.role
+      const userRole = store.userData.roles
       const official = [1, 2, 3].includes(userRole) && userType == 3
       const volunteer = [5].includes(userRole) && userType == 2
       const result = userType == 3 ? official : volunteer

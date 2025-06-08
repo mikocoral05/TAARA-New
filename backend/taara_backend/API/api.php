@@ -37,11 +37,21 @@ class API
       $max = $this->db->getValue("tbl_funds f", "MAX(c.amount)");
       echo json_encode(array('status' => 'success', 'data' => $max, 'method' => 'GET'));
     } else if (array_key_exists("all_animals", $ref_id)) {
-      $this->db->join("tbl_files f", "f.id = tbl_animal_info.primary_image", "LEFT");
+      $all_animals = $ref_id['all_animals'];
+      $this->db->join("tbl_files f", "f.id = ai.primary_image", "LEFT");
       $this->db->where("is_deleted", 1);
 
-      // ✅ Add column selection with alias
-      $animalRows = $this->db->get("tbl_animal_info", null, "tbl_animal_info.*, f.image_path AS primary_image");
+      if (!empty($all_animals)) {
+        // Apply only if it's not 4, since 4 is excluded anyway
+        if ($all_animals != 4) {
+          $this->db->where("health_status", $all_animals);
+        }
+      }
+
+      $this->db->where("health_status", 4, '!=');
+
+
+      $animalRows = $this->db->get("tbl_animal_info ai", null, "ai.*, f.image_path AS primary_image");
 
       foreach ($animalRows as &$animal) {
         $galleryIds = json_decode($animal['image_gallery'], true);
@@ -56,7 +66,6 @@ class API
           $animal['image_gallery'] = [];
         }
       }
-
 
       echo json_encode([
         'status' => 'success',

@@ -14,8 +14,9 @@ class API
 
     public function httpGet($payload)
     {
-        if (array_key_exists('logs', $payload)) {
-            $query = $this->db->get('tbl_logs');
+        if (array_key_exists('get_logs', $payload)) {
+            $this->db->join('tbl_users u', 'u.user_id = l.user_id', 'left');
+            $query = $this->db->get('tbl_logs l', null, 'l.*,u.first_name,u.last_name,u.email_address');
 
             echo json_encode([
                 'status' => 'success',

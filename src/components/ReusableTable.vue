@@ -29,7 +29,8 @@
             <q-input
               borderless
               style="width: 300px"
-              class="bg-default radius-10 q-px-md q-mr-xl"
+              class="bg-default radius-10 q-px-md"
+              :class="{ 'q-mr-xl': showBtns }"
               placeholder="Search"
               dense
               :model-value="modelValue"
@@ -51,7 +52,7 @@
               style="width: 150px"
               @update:model-value="(val) => emit('update:status', val)"
             />
-            <div class="row no-wrap">
+            <div class="row no-wrap" v-if="showBtns">
               <q-btn
                 @click="tableActionFn(null, 'Download')"
                 v-if="showDownload"
@@ -138,6 +139,7 @@ export default {
     statusOption: { type: Function, default: () => [] },
     showUpload: { type: Boolean, default: false },
     showDownload: { type: Boolean, default: false },
+    showBtns: { type: Boolean, default: true },
   },
   emits: ['update:modelValue', 'update:selected', 'update:status', 'update:confirm'],
 

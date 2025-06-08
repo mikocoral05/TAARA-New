@@ -70,7 +70,9 @@ class API
     public function httpPost($payload)
     {
         if (isset($payload['save_animal_list'])) {
-            $data = $payload['save_animal_list'];
+            $data = $payload['save_animal_list']['animalData'];
+            $user_id = $payload['save_animal_list']['user_id'];
+            $user_type = $payload['save_animal_list']['user_type'];
 
             $insertData = [
                 'name'               => $data['name'] ?? null,
@@ -97,6 +99,13 @@ class API
             $id = $this->db->getInsertId();
 
             if ($insert) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Create pet record',
+                    'module' => 'Pet Info',
+                ];
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Animal info successfully added',
@@ -123,7 +132,9 @@ class API
     public function httpPut($payload)
     {
         if (isset($payload['soft_delete_animal_info'])) {
-            $id = $payload['soft_delete_animal_info'];
+            $id = $payload['soft_delete_animal_info']['arrayId'];
+            $user_id = $payload['soft_delete_animal_info']['user_id'];
+            $user_type = $payload['soft_delete_animal_info']['user_type'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -138,12 +149,22 @@ class API
             $updated = $this->db->update('tbl_animal_info', $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Archieve pet record',
+                    'module' => 'Pet Info',
+                ];
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
             }
         } else if (isset($payload['edit_animal_info'])) {
-            $obj = $payload['edit_animal_info'];
+            $obj = $payload['edit_animal_info']['animal_data'];
+            $animal_name = $payload['edit_animal_info']['animal_data']['name'];
+            $user_id = $payload['edit_animal_info']['user_id'];
+            $user_type = $payload['edit_animal_info']['user_type'];
 
             $update_values = [
                 'name' => $obj['name'] ?? null,
@@ -174,6 +195,14 @@ class API
             $updated = $this->db->update('tbl_animal_info', $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Update pet record name ' . $animal_name,
+                    'module' => 'Pet Info',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Animal info updated successfully',

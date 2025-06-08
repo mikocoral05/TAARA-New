@@ -41,7 +41,13 @@ class API
                 }
 
                 $user['position_title'] = $position_title;
-
+                $logs = [
+                    'user_id' => $user['user_id'],
+                    'user_type' => $user['user_type'],
+                    'action' => 'User logged in',
+                    'module' => 'Login',
+                ];
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'data' => $user,

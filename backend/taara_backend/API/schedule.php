@@ -19,7 +19,8 @@ class API
             $this->db->where("p.is_deleted", 0);
             $this->db->join("tbl_users u", "p.added_by = u.user_id", "LEFT");
             $this->db->join("tbl_animal_info a", "a.animal_id = p.animal_id", "LEFT");
-            $data = $this->db->get("tbl_animal_schedule p", null, "p.*, u.first_name, a.name");
+            $this->db->join("tbl_files f", "f.id = a.primary_image", "LEFT");
+            $data = $this->db->get("tbl_animal_schedule p", null, "p.*, u.first_name, a.name,f.image_path");
 
             echo json_encode([
                 'status' => 'success',

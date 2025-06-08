@@ -31,9 +31,12 @@
       ]"
     >
       <template #cell-name="{ row }">
-        <q-avatar size="30px" class="q-mr-md">
-          <img :src="row.image || defaultImage" />
-        </q-avatar>
+        <q-img
+          :src="row.image_path || defaultImage"
+          height="30px"
+          width="30px"
+          class="radius-100"
+        />
         {{ row.name }}
       </template>
       <template #cell-next_due_interval="{ row }">
@@ -490,6 +493,7 @@ export default {
     onMounted(() => {
       getSchedule().then((response) => {
         rows.value = response
+        console.log(rows.value)
       })
     })
     return {

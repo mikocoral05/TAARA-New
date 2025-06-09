@@ -237,7 +237,7 @@ export default defineComponent({
           donor_id: store.userData.user_id,
           donation_type: 'cash',
           anonymous: 'no',
-          amount: '',
+          amount: 0,
           allocated_for: '',
           notes: '',
           image: null,

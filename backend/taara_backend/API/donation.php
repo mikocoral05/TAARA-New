@@ -29,7 +29,7 @@ class API
 
             $this->db->where("tbl1.donation_type", $type);
             $this->db->where("tbl1.is_deleted", 0);
-            $this->db->where("tbl1.status", 2);
+            // $this->db->where("tbl1.status", 2);
 
             // Specific columns you want to select
             $columns = "tbl1.*, tbl2.*, tbl3.first_name as donor_name,tbl4.image_path";

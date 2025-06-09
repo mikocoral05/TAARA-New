@@ -391,6 +391,11 @@ export const generateYearList = () => {
   return years
 }
 
+export const excelDateToISO = (excelSerial) => {
+  const excelEpoch = new Date(1899, 11, 30) // Excel starts on Dec 30, 1899
+  return new Date(excelEpoch.getTime() + excelSerial * 86400000).toISOString().split('T')[0]
+}
+
 export const isNearExpiration = (expirationDate) => {
   const now = new Date()
   const expiry = new Date(expirationDate)

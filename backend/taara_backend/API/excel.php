@@ -63,47 +63,58 @@ class API
 
     public function httpPost($payload)
     {
-        if (isset($payload['save_animal_list'])) {
-            $data = $payload['save_animal_list'];
+        if (isset($payload['upload_excel'])) {
+            $allPets = $payload['upload_excel']['processedPets'];
+            $table = $payload['upload_excel']['table'];
 
-            $insertData = [
-                'name'               => $data['name'] ?? null,
-                'species'            => $data['species'] ?? null,
-                'breed'              => $data['breed'] ?? null,
-                'date_of_birth'      => $data['date_of_birth'] ?? null,
-                'fur_color'          => $data['fur_color'] ?? null,
-                'eye_color'          => $data['eye_color'] ?? null,
-                'sex'                => $data['sex'] ?? null,
-                'weight'             => $data['weight'] ?? null,
-                'height'             => $data['height'] ?? null,
-                'temperament'        => $data['temperament'] ?? null,
-                'skills'             => $data['skills'] ?? null,
-                'favorite_food'      => $data['favorite_food'] ?? null,
-                'health_status'      => $data['health_status'] ?? null,
-                'medical_needs'      => $data['medical_needs'] ?? null,
-                'spayed_neutered'    => $data['spayed_neutered'] ?? null,
-                'vaccination_status' => $data['vaccination_status'] ?? null,
-                'rescue_status'      => $data['rescue_status'] ?? null,
-                'story_background'   => $data['story_background'] ?? null,
-            ];
+            $inserted = [];
+            $failed = [];
+            $index = 0;
 
-            $insert = $this->db->insert('tbl_animal_info', $insertData);
-            $id = $this->db->getInsertId();
+            foreach ($allPets as $data) {
+                $index++; // Track row number (optional, for more helpful logs)
 
-            if ($insert) {
-                echo json_encode([
-                    'status' => 'success',
-                    'message' => 'Animal info successfully added',
-                    'method' => 'POST',
-                    'id' => $id
-                ]);
-            } else {
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'Failed to save animal info',
-                    'method' => 'POST'
-                ]);
+                $insertData = [
+                    'name'               => $data['name'] ?? null,
+                    'species'            => $data['species'] ?? null,
+                    'breed'              => $data['breed'] ?? null,
+                    'date_of_birth'      => $data['date_of_birth'] ?? null,
+                    'fur_color'          => $data['fur_color'] ?? null,
+                    'eye_color'          => $data['eye_color'] ?? null,
+                    'sex'                => $data['sex'] ?? null,
+                    'weight'             => $data['weight'] ?? null,
+                    'height'             => $data['height'] ?? null,
+                    'temperament'        => $data['temperament'] ?? null,
+                    'skills'             => $data['skills'] ?? null,
+                    'favorite_food'      => $data['favorite_food'] ?? null,
+                    'health_status'      => $data['health_status'] ?? null,
+                    'medical_needs'      => $data['medical_needs'] ?? null,
+                    'spayed_neutered'    => $data['spayed_neutered'] ?? null,
+                    'vaccination_status' => $data['vaccination_status'] ?? null,
+                    'rescue_status'      => $data['rescue_status'] ?? null,
+                    'story_background'   => $data['story_background'] ?? null,
+                ];
+
+                $success = $this->db->insert('tbl_animal_info', $insertData);
+
+                if ($success) {
+                    $inserted[] = $this->db->getInsertId();
+                } else {
+                    $failed[] = [
+                        'row' => $index,
+                        'data' => $data,
+                        'error' => $this->db->_error_message() ?? 'Unknown DB error'
+                    ];
+                }
             }
+
+            echo json_encode([
+                'status' => count($failed) === 0 ? 'success' : 'partial_success',
+                'message' => 'Animal data upload finished',
+                'inserted_count' => count($inserted),
+                'failed_count' => count($failed),
+                'failed_rows' => $failed // Optional, can be omitted in production
+            ]);
         } else {
             echo json_encode([
                 'status' => 'error',

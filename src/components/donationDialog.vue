@@ -2,11 +2,20 @@
   <div>
     <q-dialog v-model="counterStore.donationDialog" persistent>
       <div class="my-div column no-wrap q-pa-md">
-        <q-form @submit="(submitPublicDonation(donatorsInfo), (donateDialog = false))">
-          <div class="container-update-icon">
+        <q-form @submit="submitPublicDonationFn(donatorsInfo)">
+          <div class="container-update-icon row no-wrap justify-between items-start">
             <div class="text-purple">
               <q-icon class="update-icon" size="1.5rem" color="primary" name="wallet" />
             </div>
+            <q-toggle
+              v-model="donatorsInfo.anonymous"
+              true-value="yes"
+              false-value="no"
+              color="black"
+              icon="sym_r_domino_mask"
+              label="Anonymous"
+              dense
+            />
           </div>
 
           <div class="" style="position: relative; height: 300px">
@@ -61,7 +70,7 @@
                   class="cursor-pointer"
                 />
                 <div v-if="controlSpinner == true">
-                  <q-spinner-ios color="primary" size="md" />
+                  <q-spinner-ios color="primary" size="1.2rem" />
                   <q-tooltip :offset="[0, 8]">QSpinnerIos</q-tooltip>
                 </div>
                 <q-icon name="create_new_folder" @click.stop.prevent />
@@ -89,6 +98,14 @@
                 />
               </template>
             </q-input>
+            <q-input
+              filled
+              dense
+              v-model="donatorsInfo.allocated_for"
+              class="q-mt-md"
+              placeholder="Allocated for?"
+              hint="Any notes for this donation?"
+            />
           </div>
           <div class="row no-wrap justify-between q-mt-md btn-container">
             <q-btn
@@ -117,6 +134,7 @@
         </q-form>
       </div>
     </q-dialog>
+    <OutputDialog v-model:outputDialog="outputDialog" v-model:outputObj="outputObj" />
   </div>
 </template>
 <script>
@@ -124,87 +142,107 @@ import { defineComponent, watch, ref } from 'vue'
 import { useCounterStore } from 'src/stores/example-store'
 import { useRoute } from 'vue-router'
 import { createWorker } from 'tesseract.js'
-import { resizeImage, dateToday, timeNow } from 'src/composable/simpleComposable'
-import { submitPublicDonation } from 'src/composable/taaraComposable'
 import { globalStore } from 'src/stores/global-store'
-export default defineComponent({
-  name: 'donationDialog',
+import { useQuasar } from 'quasar'
+import { submitPublicDonation } from 'src/composable/latestPublicComposable'
+import OutputDialog from './OutputDialog.vue'
 
+export default defineComponent({
+  name: 'DonationDialog',
+  components: { OutputDialog },
   setup() {
+    const $q = useQuasar()
     const route = useRoute()
     const store = globalStore()
     const counterStore = useCounterStore()
-    let donatorsInfo = ref({})
-    let reference = ref(null)
+    const donatorsInfo = ref({
+      donor_id: store.userData.user_id,
+      donation_type: 'cash',
+      anonymous: 'no',
+      donation_amount: '',
+      allocated_for: '',
+      notes: '',
+      image: null,
+    })
+    const reference = ref(null)
     const imgPath = ref('G-dt/GCash-MyQR-0.jpg')
-    let controlSpinner = ref(false)
-    let imageOrReference = ref(true)
-    let donationImage = ref(null)
-    let dialog = ref(counterStore.donationDialog)
+    const controlSpinner = ref(false)
+    const imageOrReference = ref(true)
+    const donationImage = ref(null)
+    const dialog = ref(counterStore.donationDialog)
 
-    let desireNumber = ref(500)
+    const desireNumber = ref(500)
     watch(
       () => [donationImage.value, reference.value],
-      () => {
-        ;(async () => {
-          let obj = {
-            donators_id: store.userData.user_id,
-            donation_amount: null,
-            image: null,
-            reference: null,
-            donation_date: dateToday,
-            donation_time: timeNow,
-            donation_status: 1,
-          }
-          if (donationImage.value == null) {
-            obj.reference = 'Ref No. ' + reference.value
-            obj.image = null
-            obj.donation_amount = null
-          } else {
-            controlSpinner.value = true
+      async () => {
+        if (donationImage.value == null) {
+          donatorsInfo.value.reference_code = reference.value
+          donatorsInfo.value.image = null
+          donatorsInfo.value.donation_amount = null
+        } else {
+          controlSpinner.value = true
+
+          try {
             const reader = new FileReader()
             reader.readAsDataURL(donationImage.value)
-            reader.onload = () => {
-              resizeImage(donationImage.value, 500, 500)
-                .then(({ dataUrl }) => {
-                  obj.image = dataUrl
-                })
-                .catch((error) => {
-                  console.error(error)
-                })
-            }
+            await new Promise((resolve) => {
+              reader.onload = resolve
+            })
+
+            donatorsInfo.value.image = donationImage.value
+
             const worker = await createWorker('eng')
             const {
               data: { text },
             } = await worker.recognize(donationImage.value)
-            const amountRegex = /(Total Amount Sent|Amount|Php)\s*(\d+(\.\d{1,2})?)/gi
 
-            let match
+            const amountRegex = /(Total Amount Sent|Amount|Php)\s*(\d+(\.\d{1,2})?)/gi
             const amounts = []
+            let match
             while ((match = amountRegex.exec(text)) !== null) {
-              amounts.push(match[2]) // This will push only the numerical amounts to the array
-              console.log(match)
+              amounts.push(match[2])
             }
-            donationImage.value !== null ? (obj.donation_amount = Number(amounts[0])) : null
-            const refNoRegex = /Ref No\.\s*([\d\s]+)/gi // Adjusted to match the format of the reference number
-            let refMatch
-            if ((refMatch = refNoRegex.exec(text)) !== null) {
-              // This will set the reference number in the object
-              donationImage.value !== null
-                ? (obj.reference = refMatch[1])
-                : (obj.reference = reference.value)
+            if (amounts[0]) donatorsInfo.value.donation_amount = Number(amounts[0])
+
+            const refNoRegex = /Ref No\.\s*([\d\s]+)/gi
+            const refMatch = refNoRegex.exec(text)
+            if (refMatch && refMatch[1]) {
+              donatorsInfo.value.reference_code = refMatch[1]
+            } else {
+              donatorsInfo.value.reference_code = reference.value
             }
-            controlSpinner.value = false
+
             await worker.terminate()
+          } catch (err) {
+            console.error('Error processing donation image:', err)
+          } finally {
+            controlSpinner.value = false
           }
-          donatorsInfo.value = { ...obj }
-          console.log(donatorsInfo.value)
-        })()
+        }
+
+        console.log(donatorsInfo.value)
       },
     )
+    const outputDialog = ref(false)
+    const outputObj = ref({})
+    const submitPublicDonationFn = async () => {
+      $q.loading.show({ message: 'Sending donation. please wait...' })
+      const response = await submitPublicDonation(donatorsInfo.value)
+      setTimeout(() => {
+        $q.loading.hide()
+        outputDialog.value = true
+        outputObj.value = {
+          icon: 'check_circle',
+          title: response.message,
+          subtext: 'Donation has been recorded and is now pending for verification.',
+        }
+      }, 1000)
+    }
     return {
+      outputObj,
+      outputDialog,
+      submitPublicDonationFn,
       donatorsInfo,
-      submitPublicDonation,
       route,
       desireNumber,
       imgPath,

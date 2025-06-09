@@ -121,5 +121,5 @@ export const submitPublicDonation = async (obj) => {
   const response = await api.post('donation.php', {
     add_donation: obj,
   })
-  return response.data.data
+  return response.data
 }

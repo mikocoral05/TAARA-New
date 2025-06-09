@@ -159,10 +159,11 @@ export default defineComponent({
       donor_id: store.userData.user_id,
       donation_type: 'cash',
       anonymous: 'no',
-      donation_amount: '',
+      amount: '',
       allocated_for: '',
       notes: '',
       image: null,
+      method: 'online',
     })
     const reference = ref(null)
     const imgPath = ref('G-dt/GCash-MyQR-0.jpg')
@@ -178,7 +179,7 @@ export default defineComponent({
         if (donationImage.value == null) {
           donatorsInfo.value.reference_code = reference.value
           donatorsInfo.value.image = null
-          donatorsInfo.value.donation_amount = null
+          donatorsInfo.value.amount = null
         } else {
           controlSpinner.value = true
 
@@ -196,13 +197,18 @@ export default defineComponent({
               data: { text },
             } = await worker.recognize(donationImage.value)
 
-            const amountRegex = /(Total Amount Sent|Amount|Php)\s*(\d+(\.\d{1,2})?)/gi
+            const amountRegex =
+              /(Total Amount Sent|Amount|Php)[^\d]*(\d{1,3}(,\d{3})*(\.\d{1,2})?|\d+(\.\d{1,2})?)/gi
+
             const amounts = []
             let match
             while ((match = amountRegex.exec(text)) !== null) {
               amounts.push(match[2])
             }
-            if (amounts[0]) donatorsInfo.value.donation_amount = Number(amounts[0])
+            if (amounts[0]) {
+              const cleanedAmount = amounts[0].replace(/,/g, '') // Remove commas
+              donatorsInfo.value.amount = Number(cleanedAmount)
+            }
 
             const refNoRegex = /Ref No\.\s*([\d\s]+)/gi
             const refMatch = refNoRegex.exec(text)
@@ -223,6 +229,23 @@ export default defineComponent({
         console.log(donatorsInfo.value)
       },
     )
+
+    watch(
+      () => counterStore.donationDialog,
+      () => {
+        donatorsInfo.value = {
+          donor_id: store.userData.user_id,
+          donation_type: 'cash',
+          anonymous: 'no',
+          amount: '',
+          allocated_for: '',
+          notes: '',
+          image: null,
+          method: 'online',
+        }
+      },
+    )
+
     const outputDialog = ref(false)
     const outputObj = ref({})
     const submitPublicDonationFn = async () => {
@@ -230,6 +253,7 @@ export default defineComponent({
       const response = await submitPublicDonation(donatorsInfo.value)
       setTimeout(() => {
         $q.loading.hide()
+        counterStore.donationDialog = false
         outputDialog.value = true
         outputObj.value = {
           icon: 'check_circle',

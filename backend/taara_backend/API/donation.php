@@ -57,6 +57,7 @@ class API
             $table = $payload['add_donation']['donation_type'] == 'cash' ? 'tbl_cash_donations' : 'tbl_material_donations';
 
             $insertData = [
+                'donor_id'         => $data['donor_id'] ?? null,
                 'donor_name'         => $data['donor_name'] ?? null,
                 'donation_type'    => $data['donation_type'],
                 'allocated_for'      => $data['allocated_for'] ?? null,
@@ -73,7 +74,7 @@ class API
             if ($data['donation_type'] === 'cash') {
                 $insertData2 = [
                     'fund_id'        => $id,
-                    'amount'         => $data['amount'],
+                    'amount'         => $data['amount'] ?? 0,
                     'method'         => $data['method'] ?? null,
                     'reference_code' => $data['reference_code'] ?? null,
                     'notes'          => $data['notes'] ?? null,

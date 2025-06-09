@@ -66,6 +66,8 @@ class API
         if (isset($payload['upload_excel'])) {
             $allPets = $payload['upload_excel']['processedPets'];
             $table = $payload['upload_excel']['table'];
+            $user_id = $payload['upload_excel']['user_id'];
+            $user_type = $payload['upload_excel']['user_type'];
 
             $inserted = [];
             $failed = [];
@@ -107,7 +109,14 @@ class API
                     ];
                 }
             }
+            $logs = [
+                'user_id' => $user_id,
+                'user_type' => $user_type,
+                'action' => 'Add new pet record from excell count ' . count($inserted),
+                'module' => 'Pet Info (Upload)',
+            ];
 
+            $this->db->insert("tbl_logs", $logs);
             echo json_encode([
                 'status' => count($failed) === 0 ? 'success' : 'partial_success',
                 'message' => 'Animal data upload finished',

@@ -60,7 +60,7 @@ class API
                 'donor_name'         => $data['donor_name'] ?? null,
                 'donation_type'    => $data['donation_type'],
                 'allocated_for'      => $data['allocated_for'] ?? null,
-                'received_date'      => $data['received_date'] ?? null,
+                'received_date'      => $data['received_date'] ?? date('Y-m-d'),
                 'anonymous'          => $data['anonymous'] ?? null,
                 'created_by'          => $data['created_by'] ?? null,
             ];

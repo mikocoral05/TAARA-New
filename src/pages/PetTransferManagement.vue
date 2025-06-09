@@ -307,7 +307,7 @@
                     <template v-slot:append>
                       <q-icon name="event" class="cursor-pointer">
                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="dataStorage.birth_date">
+                          <q-date v-model="dataStorage.birth_date" mask="YYYY-MM-DD">
                             <div class="row items-center justify-end">
                               <q-btn v-close-popup label="Close" color="primary" flat />
                             </div>
@@ -462,7 +462,7 @@
                     <template v-slot:append>
                       <q-icon name="event" class="cursor-pointer">
                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="dataStorage.date_transfer">
+                          <q-date v-model="dataStorage.date_transfer" mask="YYYY-MM-DD">
                             <div class="row items-center justify-end">
                               <q-btn v-close-popup label="Close" color="primary" flat />
                             </div>

@@ -376,7 +376,11 @@
                     <template v-slot:append>
                       <q-icon name="event" class="cursor-pointer">
                         <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="dataStorage.received_date" :disable="mode == 'View'">
+                          <q-date
+                            v-model="dataStorage.received_date"
+                            mask="YYYY-MM-DD"
+                            :disable="mode == 'View'"
+                          >
                             <div class="row items-center justify-end">
                               <q-btn v-close-popup label="Close" color="primary" flat />
                             </div>

@@ -33,14 +33,14 @@ export const downloadExampleExcelFormat = async (table, colums, excelName) => {
   exportToExcel(response.data.data, `${excelName}.xlsx`)
 }
 
-export const uploadExcel = async (table, data) => {
+export const uploadExcel = async (table, data, user_id, user_type) => {
   const processedPets = data.map((pet) => ({
     ...pet,
     date_of_birth: excelDateToISO(pet.date_of_birth),
     date_rescued: excelDateToISO(pet.date_rescued),
   }))
-  const response = await api.get('excel.php', {
-    params: { upload_excel: { table, processedPets } },
+  const response = await api.post('excel.php', {
+    upload_excel: { table, processedPets, user_id, user_type },
   })
   console.log(response.data)
   return response.data

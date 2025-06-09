@@ -83,7 +83,6 @@
             </q-menu>
           </q-btn>
         </template>
-
         <template #cell-animal_id="{ rowIndex }">
           <div>{{ rowIndex + 1 }}</div>
         </template>
@@ -111,6 +110,12 @@
         </template>
       </ReusableTable>
     </div>
+    <q-file
+      ref="uploadExcellFile"
+      v-model="excellFile"
+      class="hidden"
+      accept=".xls, .xlsx, application/vnd.ms-excel, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    />
     <q-dialog position="right" full-height maximized v-model="showDialog">
       <q-card style="width: 50vw; height: 500px" class="text-black column justify-between">
         <div class="column no-wrap">
@@ -198,7 +203,7 @@
                         <template v-slot:append>
                           <q-icon name="event" class="cursor-pointer">
                             <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                              <q-date v-model="dataStorage.date_of_birth">
+                              <q-date v-model="dataStorage.date_of_birth" mask="YYYY-MM-DD">
                                 <div class="row items-center justify-end">
                                   <q-btn v-close-popup label="Close" color="primary" flat />
                                 </div>
@@ -615,23 +620,60 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <q-dialog v-model="uploadConfirm" persistent>
+      <q-card class="q-pa-md" style="width: 450px; min-height: 230px">
+        <q-card-section class="column items-center">
+          <q-icon name="sym_r_upload" color="positive" size="2.5rem" />
+          <span class="q-ml-sm text-black text-body1 q-mt-md text-center">
+            {{ uploadObj.title }}
+          </span>
+          <span class="q-ml-sm text-caption text-center text-grey-7 q-mt-sm">
+            {{ uploadObj.subtext }}
+          </span>
+        </q-card-section>
+
+        <q-card-actions align="center">
+          <q-btn
+            outline
+            label="Cancel"
+            v-close-popup
+            color="primary"
+            no-caps
+            style="width: 180px"
+            dense
+          />
+          <q-btn
+            label="Confirm"
+            unelevated
+            color="primary"
+            no-caps
+            dense
+            v-close-popup
+            style="width: 180px"
+            :disable="uploadObj.length == 0"
+            @click="uploadFn(uploadObj.data)"
+          />
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
     <NoAccessDialog v-model:showNoAccess="showNoAccess" />
+    <OutputDialog v-model:outputDialog="outputDialog" v-model:outputObj="outputObj" />
   </q-page>
 </template>
 <script>
 import ReusableTable from 'src/components/ReusableTable.vue'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
 import {
-  getBudgetAllocation,
-  getExpensesSummary,
-  getTotalBalance,
   softDeleteAnimal,
   getAnimalList,
   saveAnimalDetail,
   editAnimalInfo,
   downloadExampleExcelFormat,
+  readExcelFileToJson,
+  uploadExcel,
+  // uploadExcel,
 } from 'src/composable/latestComposable'
-import { ref, watchEffect } from 'vue'
+import { ref, watch, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
 import {
   formatNumber,
@@ -647,10 +689,12 @@ import {
 } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 import NoAccessDialog from 'src/components/NoAccessDialog.vue'
+import OutputDialog from 'src/components/OutputDialog.vue'
 export default {
   components: {
     ReusableTable,
     NoAccessDialog,
+    OutputDialog,
   },
   setup() {
     const obj = { 1: 'Ready for Adoption', 2: 'Under Rehabilitation', 3: 'Under Medication' }
@@ -662,23 +706,20 @@ export default {
     const filterTab = ref('1')
     const editTab = ref('1')
     const showDialog = ref(false)
+    const uploadConfirm = ref(false)
     const step = ref(1)
     const rows = ref([])
     const confirm = ref(false)
     const showNoAccess = ref(false)
     const search = ref(null)
-    const pages = ref([])
     const dataStorage = ref({ file: [] })
-    const elseSummary = ref({})
     const mode = ref('')
     const selectedMonth = ref(monthToday)
     const selectedYear = ref(yearToday)
     const selectedDay = ref(dayToday)
-    const totalExpense = ref(null)
-    const totalBalance = ref(null)
-    const dailyExpenseTotal = ref([])
-    const itemsCount = ref([])
+    const uploadExcellFile = ref(null)
     const scrollAreaRef = ref(null)
+    const excellFile = ref(null)
     const scrollListRef = ref(null)
     const arrayOfId = ref([])
     const tableConfig = ref({ title: '', columns: [] })
@@ -713,7 +754,7 @@ export default {
           }
         }
       } else if (modeParam == 'Upload') {
-        //
+        uploadExcellFile.value.pickFiles()
       } else if (modeParam == 'Download') {
         const columnsToGet = [
           'name',
@@ -737,7 +778,6 @@ export default {
           'date_rescued',
           'classification',
         ]
-
         downloadExampleExcelFormat('tbl_animal_info', columnsToGet, 'pet_info_excel_structure')
       } else {
         arrayOfId.value.push(data.animal_id)
@@ -776,32 +816,21 @@ export default {
         dataStorage.value.toRemoveId = idToRemove.value
         editAnimalInfo(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
           (response) => {
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
             setTimeout(() => {
               showDialog.value = false
               $q.loading.hide()
+              outputDialog.value = true
+              outputObj.value = {
+                icon: 'check_circle',
+                title: response.message,
+                subtext: 'Action was successfull!',
+              }
               fetchFn()
-            }, 2000)
+              $q.loading.hide()
+            }, 1000)
           },
         )
       }
-    }
-
-    const updateBudgetAllocationSum = () => {
-      getBudgetAllocation().then((response) => {
-        rows.value = response
-      })
-      getExpensesSummary({ month: selectedMonth.value, year: selectedYear.value }).then(
-        (response) => {
-          totalExpense.value = response?.total
-        },
-      )
-      getTotalBalance({ month: selectedMonth.value, year: selectedYear.value }).then((response) => {
-        totalBalance.value = response?.balance
-      })
     }
 
     const softDeleteFn = () => {
@@ -907,6 +936,8 @@ export default {
     const showErrorNeutered = ref(null)
     const showErrorVC = ref(null)
     const showErrorRS = ref(null)
+    const outputDialog = ref(false)
+    const outputObj = ref({})
     const validatorFn = () => {
       if (step.value == 2) {
         if (!dataStorage.value.spayed_neutered) {
@@ -949,7 +980,64 @@ export default {
       return true
     }
 
+    const uploadObj = ref({})
+    watch(excellFile, async (newVal) => {
+      if (!newVal) return
+
+      const file = Array.isArray(newVal) ? newVal[0] : newVal
+
+      if (
+        file instanceof File &&
+        file.size > 0 &&
+        (file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
+          file.type === 'application/vnd.ms-excel')
+      ) {
+        $q.loading.show({ group: 'read', message: 'Reading excell. please wait...' })
+        try {
+          const data = await readExcelFileToJson(file)
+          console.log('Parsed Excel data:', data)
+          uploadObj.value = {
+            title: `Upload a total of ${data.length} pet record(s)?`,
+            subtext: `The file has been successfully read. You can now proceed to upload the pet records.`,
+            length: data.length,
+            data: data,
+          }
+          setTimeout(() => {
+            $q.loading.hide()
+            uploadConfirm.value = true
+          }, 500)
+          // Do something with the data here
+        } catch (err) {
+          uploadObj.value = {
+            title: `Unable to read the Excel file.`,
+            subtext: `Please ensure the file is in .xls or .xlsx format and contains valid data.`,
+          }
+          setTimeout(() => {
+            $q.loading.hide()
+            uploadConfirm.value = true
+          }, 500)
+          console.error('Failed to parse Excel:', err)
+        }
+      } else {
+        $q.loading.hide()
+        console.warn('Invalid Excel file selected')
+      }
+    })
+
+    const uploadFn = async (data) => {
+      $q.loading.show({ group: 'add', message: 'Adding new pet record!. please wait...' })
+      const response = await uploadExcel('tbl_animal_info', data)
+      $q.loading.show({ group: 'add', message: 'Adding new pet record!. please wait...' })
+      console.log(response)
+    }
     return {
+      outputObj,
+      outputDialog,
+      uploadObj,
+      uploadConfirm,
+      uploadFn,
+      excellFile,
+      uploadExcellFile,
       showNoAccess,
       preventAction,
       showErrorNeutered,
@@ -973,24 +1061,17 @@ export default {
       obj,
       search,
       isExpired,
-      elseSummary,
       isNearExpiration,
       formatOrNumber,
-      itemsCount,
       tableConfig,
       scrollListRef,
       scrollAreaRef,
       selectedDay,
-      dailyExpenseTotal,
       generateYearList,
-      updateBudgetAllocationSum,
-      totalBalance,
       formatNumber,
-      totalExpense,
       selectedMonth,
       selectedYear,
       monthNames,
-      pages,
       saveFn,
       confirm,
       isPwd: ref(true),

@@ -1,15 +1,27 @@
 import { api, imageUrl, onlineEndpoint } from 'src/boot/axios'
-import { dateToday } from 'src/composable/simpleComposable'
+import { dateToday, excelDateToISO } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 const store = globalStore()
 import * as XLSX from 'xlsx'
 
 export const exportToExcel = async (data, filename = 'data.xlsx') => {
   const worksheet = XLSX.utils.json_to_sheet(data)
+
+  // Manually define column widths (number represents "characters")
+  const maxWidths = Object.keys(data[0] || {}).map((key) => {
+    const maxLength = Math.max(
+      key.length,
+      ...data.map((row) => (row[key] ? String(row[key]).length : 0)),
+    )
+    return { wch: maxLength + 5 } // Add padding
+  })
+
+  worksheet['!cols'] = maxWidths
+
   const workbook = XLSX.utils.book_new()
   XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1')
 
-  // Write to browser file download
+  // Download the file
   XLSX.writeFile(workbook, filename)
 }
 
@@ -19,6 +31,45 @@ export const downloadExampleExcelFormat = async (table, colums, excelName) => {
   })
 
   exportToExcel(response.data.data, `${excelName}.xlsx`)
+}
+
+export const uploadExcel = async (table, data) => {
+  const processedPets = data.map((pet) => ({
+    ...pet,
+    date_of_birth: excelDateToISO(pet.date_of_birth),
+    date_rescued: excelDateToISO(pet.date_rescued),
+  }))
+  const response = await api.get('excel.php', {
+    params: { upload_excel: { table, processedPets } },
+  })
+  console.log(response.data)
+  return response.data
+}
+
+export const readExcelFileToJson = async (file) => {
+  console.log('reach')
+
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader()
+
+    reader.onload = (e) => {
+      const data = new Uint8Array(e.target.result)
+      const workbook = XLSX.read(data, { type: 'array' })
+
+      const sheetName = workbook.SheetNames[0]
+      const worksheet = workbook.Sheets[sheetName]
+
+      const jsonData = XLSX.utils.sheet_to_json(worksheet, { defval: '' }) // defval avoids undefined
+
+      resolve(jsonData)
+    }
+
+    reader.onerror = (error) => {
+      reject(error)
+    }
+
+    reader.readAsArrayBuffer(file)
+  })
 }
 
 export const getUserByType = (type) => {

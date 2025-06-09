@@ -178,6 +178,24 @@
           <span class="text-caption">{{ countOtherDonator() }}</span>
         </div>
       </div>
+      <div class="q-my-xl row items-center">
+        <div class="column no-wrap items-center q-mr-md">
+          <q-img src="~assets/bdo.png" width="300px" class="radius-10" />
+          <div class="text-bold q-mt-md">Ednalyn De Lara Cristo</div>
+          <div class="text-grey-7">0051 5034 3794</div>
+        </div>
+        <div class="column no-wrap items-center q-mr-md">
+          <q-img src="~assets/paypal.png" width="340px" class="radius-10" />
+          <div class="text-bold q-mt-md">Ednalyn De Lara Cristo</div>
+          <div class="text-grey-7">0905-523-8105</div>
+        </div>
+        <div class="column no-wrap items-center">
+          <q-img src="~assets/gcash.png" width="300px" class="radius-10" />
+          <div class="text-bold q-mt-md">Ednalyn De Lara Cristo</div>
+          <div class="text-grey-7">0905-523-8105</div>
+        </div>
+      </div>
+
       <div class="donation-container q-pt-xl">
         <h4 class="q-mb-md text-center">Thank You, Donors!</h4>
         <p class="text-center text-caption">

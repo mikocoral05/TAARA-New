@@ -1,5 +1,4 @@
 import TaaraFooter from 'src/components/TaaraFooter.vue'
-import donationDialog from 'src/components/donationDialog.vue'
 import { useCounterStore } from 'src/stores/example-store'
 import VueScrollTo from 'vue-scrollto'
 import {
@@ -21,10 +20,11 @@ import {
 } from 'src/composable/taaraComposable'
 import { onMounted, ref } from 'vue'
 import { useRoute } from 'vue-router'
+import DonationDialog from 'src/components/DonationDialog.vue'
 export default {
   components: {
     TaaraFooter,
-    donationDialog,
+    DonationDialog,
   },
   setup() {
     const wishlistFoodData = ref([])

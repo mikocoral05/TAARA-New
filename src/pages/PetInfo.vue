@@ -796,15 +796,17 @@ export default {
           (response) => {
             console.log(response)
             setTimeout(() => {
-              $q.loading.show({
-                group: 'update',
-                message: response.message,
-              })
-            }, 500)
-            setTimeout(() => {
               showDialog.value = false
               $q.loading.hide()
+              outputDialog.value = true
+              outputObj.value = {
+                icon: 'check_circle',
+                title: response.message,
+                subtext: 'New record has been added successfully.',
+              }
+
               fetchFn()
+              $q.loading.hide()
             }, 1000)
           },
         )
@@ -823,8 +825,9 @@ export default {
               outputObj.value = {
                 icon: 'check_circle',
                 title: response.message,
-                subtext: 'Action was successfull!',
+                subtext: 'Changes have been saved successfully.',
               }
+
               fetchFn()
               $q.loading.hide()
             }, 1000)
@@ -1025,10 +1028,28 @@ export default {
     })
 
     const uploadFn = async (data) => {
-      $q.loading.show({ group: 'add', message: 'Adding new pet record!. please wait...' })
-      const response = await uploadExcel('tbl_animal_info', data)
-      $q.loading.show({ group: 'add', message: 'Adding new pet record!. please wait...' })
-      console.log(response)
+      $q.loading.show({ message: 'Adding new pet record!. please wait...' })
+      const response = await uploadExcel(
+        'tbl_animal_info',
+        data,
+        store.userData.user_id,
+        store.userData.user_type,
+      )
+      setTimeout(() => {
+        showDialog.value = false
+        $q.loading.hide()
+        outputDialog.value = true
+        outputObj.value = {
+          icon: 'check_circle',
+          title: response.message,
+          subtext:
+            response.failed_count > 0
+              ? `Added ${response.inserted_count} record(s). ${response.failed_count} failed — please review the data.`
+              : `All ${response.inserted_count} record(s) were added successfully.`,
+        }
+
+        fetchFn()
+      }, 1000)
     }
     return {
       outputObj,

@@ -218,11 +218,11 @@ export const getAnnouncement = () => {
   })
 }
 
-export const getRescueReport = () => {
+export const getRescueReport = (status) => {
   return new Promise((resolve, reject) => {
     api
       .get('rescue_report.php', {
-        params: { get_rescue_report: 'rescue_report' },
+        params: { get_rescue_report: status },
       })
       .then((response) => {
         if (response.data.status == 'success') {
@@ -962,12 +962,12 @@ export const addAnnouncement = (obj) => {
   })
 }
 
-export const addRescueRerport = (obj) => {
+export const addRescueRerport = (obj, user_id, user_type) => {
   const { file, ...data } = obj
   return new Promise((resolve, reject) => {
     api
       .post('rescue_report.php', {
-        add_rescue_report: data,
+        add_rescue_report: { data, user_id, user_type },
       })
       .then((response) => {
         if (response.data.status == 'success') {
@@ -1011,12 +1011,12 @@ export const editAnnouncement = (obj) => {
   })
 }
 
-export const editRescueReport = (obj) => {
+export const editRescueReport = (obj, user_id, user_type) => {
   const { file, ...data } = obj
   return new Promise((resolve, reject) => {
     api
       .put('rescue_report.php', {
-        edit_rescue_report: data,
+        edit_rescue_report: { data, user_id, user_type },
       })
       .then((response) => {
         if (response.data.status == 'success') {

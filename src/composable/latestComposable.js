@@ -4,6 +4,15 @@ import { globalStore } from 'src/stores/global-store'
 const store = globalStore()
 import * as XLSX from 'xlsx'
 
+export const getAddressFromCoords = async (lat, lng) => {
+  const apiKey = 'a36536a501c740f3adddef512611e850'
+  const response = await fetch(
+    `https://api.opencagedata.com/geocode/v1/json?q=${lat}+${lng}&key=${apiKey}`,
+  )
+  const data = await response.json()
+  return data.results[0]?.formatted || 'Address not found'
+}
+
 export const exportToExcel = async (data, filename = 'data.xlsx') => {
   const worksheet = XLSX.utils.json_to_sheet(data)
 

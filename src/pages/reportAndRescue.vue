@@ -1,243 +1,175 @@
 <template>
-  <q-page>
-    <div class="flex justify-center q-pb-xl q-pt-sm all-container">
-      <div class="containerss flex column q-mx-sm">
-        <h4 class="q-ma-none q-my-sm text-center report-title q-mt-md">Animal Report Incident</h4>
-        <div class="divider invisible"></div>
-        <div class="flex justify-center items-center">
-          <img class="image" src="../image/TAARA_Logo.jpg" />
-        </div>
-
-        <div class="flex justify-center items-center column">
-          <!-- {{ images.length }} -->
-          <p class="hidden">{{ images.splice(5) }}</p>
-
-          <div v-show="images.length > 0" class="flex justify-end q-pr-xl" style="width: 100%">
-            <q-icon @click="imageRemover" name="clear" size="2rem"></q-icon>
+  <q-page class="flex flex-center q-pa-lg q-py-xl">
+    <q-card flat class="radius-10" style="min-width: 600px; min-height: 500px">
+      <q-form @submit="submitReport()" ref="reportForm">
+        <q-card-section class="text-center">
+          <div class="text-bold text-h6">Animal Report Incident</div>
+          <div class="column no-wrap q-mt-xl">
+            <div class="text-left">Upload image of incident</div>
+            <q-file
+              class="q-mt-sm"
+              outlined
+              v-model="reportDetails.file"
+              dense
+              :rules="[(val) => !!val || 'Image is required!']"
+            >
+              <template v-slot:prepend>
+                <q-icon name="attach_file" />
+              </template>
+            </q-file>
           </div>
-          <div class="flex row justify-center items-center">
-            <img
-              v-for="showImage in images"
-              :key="showImage"
-              :src="showImage"
-              id="previewImage"
-              class="uploading-image"
-            />
-          </div>
-        </div>
-        <div class="flex column justify-center items-center q-mt-lg q-px-md">
-          <div class="flex row no-wrap justify-center items-center input-container">
-            <div class="flex column input-container q-pr-sm">
-              <p class="q-pa-none q-ma-none">Reporter Name</p>
-
+          <div class="row no-wrap q-mt-md">
+            <div class="column no-wrap q-mr-md w-100">
+              <div class="text-left">Reporter name</div>
               <q-input
-                class="q-my-sm input"
-                :disable="logInDetails == null ? false : true"
-                v-model="reporterDetails.reporter_name"
-                :input-style="
-                  inputStyleAdjuster
-                    ? {
-                        height: '22px',
-                        margin: '5px 5px 5px 10px',
-                        fontSize: '13px',
-                      }
-                    : { margin: '10px' }
-                "
+                class="q-mt-sm"
+                outlined
+                v-model="reportDetails.name"
                 dense
-                filled
-                :rules="[(val) => !!val || '']"
-                hide-bottom-space
+                :rules="[(val) => !!val || 'Reporter name is required!']"
               />
             </div>
-            <div class="flex column input-container q-pl-sm">
-              <p class="q-pa-none q-ma-none">Phone Number</p>
+            <div class="column no-wrap w-100">
+              <p class="q-mb-sm text-left">Phone</p>
               <q-input
-                class="q-my-sm input"
-                :disable="logInDetails == null ? false : true"
                 mask="phone"
-                v-model="reporterDetails.phone_number"
-                :input-style="
-                  inputStyleAdjuster
-                    ? {
-                        height: '22px',
-                        margin: '5px 5px 5px 10px',
-                        fontSize: '13px',
-                      }
-                    : { margin: '10px' }
-                "
+                v-model="reportDetails.phone_number"
                 prefix="+63"
-                :rules="[
-                  (val) => (!!val && val.length == 16) || '',
-                  (val) => (val && val[1] === '9') || 'Phone number must start with 9',
-                ]"
-                hide-bottom-space
+                :rules="[(val) => !!val || 'Phone number is required!']"
                 dense
-                filled
+                outlined
               />
             </div>
           </div>
-          <div class="flex column input-container">
-            <p class="q-pa-none q-ma-none">Location</p>
+          <div class="column no-wrap w-100">
+            <p class="q-mb-sm text-left">Location</p>
             <q-input
-              class="q-my-sm input"
-              v-model="reporterDetails.location"
+              v-model="reportDetails.location"
+              placeholder="Location of incident"
+              :rules="[(val) => !!val || 'Location is required!']"
               dense
-              filled
-              :rules="[(val) => !!val || '']"
-              hide-bottom-space
-              :input-style="
-                inputStyleAdjuster
-                  ? {
-                      height: '22px',
-                      margin: '5px 5px 5px 10px',
-                      fontSize: '13px',
-                    }
-                  : { margin: '10px' }
-              "
-            />
+              hint="You can share your current location where the incident by clicking the icon in the right!"
+              outlined
+            >
+              <q-separator vertical class="q-mr-sm" /><template v-slot:append>
+                <q-spinner-ios color="primary" size="1.1rem" class="q-ml-md" v-if="showSpinner" />
+                <q-icon name="sym_r_location_on" @click="getLocation()" size="1.2rem" /> </template
+            ></q-input>
           </div>
-          <div class="flex justify-around items-center hidden">
+          <div class="column no-wrap w-100 q-mt-md">
+            <p class="q-mb-sm text-left">Details</p>
             <q-input
-              class="q-my-sm"
-              readonly
-              filled
-              v-model="reporterDetails.date_report"
-              label="Date"
-              stack-label
+              v-model="reportDetails.description"
               dense
-            />
-            <q-input
-              class="q-my-sm"
-              readonly
-              filled
-              v-model="reporterDetails.time_report"
-              label="Time"
-              stack-label
-              dense
-            />
+              outlined
+              type="textarea"
+              placeholder="The details of report"
+              :rules="[(val) => !!val || 'Details of incident is required!']"
+            >
+            </q-input>
           </div>
-          <div class="flex column input-container">
-            <p class="q-pa-none q-ma-none">Report Details</p>
-            <q-input
-              class="input-autgrow"
-              v-model="reporterDetails.description"
-              :input-style="
-                inputStyleAdjuster
-                  ? {
-                      margin: '-5px 5px 5px 10px',
-                      fontSize: '13px',
-                    }
-                  : { margin: '10px' }
-              "
-              autogrow
-              dense
-              borderless
-              flat
-            />
-          </div>
-          <!-- <p style="color: black;">{{ previewImage }}</p> -->
-          <div class="flex justify-between items-start button no-wrap full-width input-container">
-            <q-btn label="Cancel" class="q-ma-lg cancel-button" @click="cancelInput" flat />
-            <q-btn
-              label="Report"
-              @click="submitReport(reporterDetails, images)"
-              class="text-white q-ma-lg report-button"
-              flat
-            />
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <TaaraFooter />
+        </q-card-section>
+        <q-card-section>
+          <q-btn label="Submit" type="submit" class="w-100" dense color="primary" />
+        </q-card-section>
+      </q-form>
+    </q-card>
+    <OutputDialog v-model:outputDialog="outputDialog" v-model:outputObj="outputObj" />
   </q-page>
+  <TaaraFooter class="q-mt-xl" />
 </template>
 <script>
-import { ref, onMounted, onUnmounted } from 'vue'
-import { QSpinnerGears, useQuasar } from 'quasar'
-import { logInDetails, addAnimalReport, getReportRescue } from 'src/composable/taaraComposable'
-import { useRouter } from 'vue-router'
+import { ref } from 'vue'
+import { useQuasar } from 'quasar'
 import TaaraFooter from 'src/components/TaaraFooter.vue'
 import { globalStore } from 'src/stores/global-store'
+import { addRescueRerport, getAddressFromCoords } from 'src/composable/latestComposable'
+import OutputDialog from 'src/components/OutputDialog.vue'
 export default {
-  component: {
+  components: {
     TaaraFooter,
+    OutputDialog,
   },
   setup() {
-    const router = useRouter()
     const $q = useQuasar()
     const store = globalStore()
-    const reporterDetails = ref({
+
+    const reportDetails = ref({
       reporter_type: store.userData.user_id ? 1 : 2,
       reporter_id: store.userData.user_id ?? null,
       name: store.userData.first_name ?? null,
       phone_number: store.userData.phone_number ?? null,
-      image: null,
+      file: null,
       description: null,
       location: null,
     })
+    const outputDialog = ref(false)
+    const outputObj = ref({})
+    const showSpinner = ref(false)
+    const reportForm = ref(false)
 
-    const date_rescued = ref('')
-    const animal_condition = ref('')
-    const continaer = ref([])
-    const images = ref([])
-
-    const imageRemover = () => {
-      images.value = []
-    }
-    const imageShow = () => {
-      document.getElementById('file').click()
-    }
-    const submitReport = (report, image) => {
-      addAnimalReport(report, image)
+    const submitReport = async () => {
+      $q.loading.show({ message: 'Submitting report. please wait ...' })
+      const response = await addRescueRerport(reportDetails.value)
+      console.log(response)
       setTimeout(() => {
-        $q.notify({
-          spinner: QSpinnerGears,
-          message: 'Report Submitted',
-          timeout: 500,
-          position: 'center',
-        })
-      }, 1500)
-      setTimeout(() => {
-        // router.go(-1);
-        router.push('rescue-reports')
-      }, 3500)
-    }
-    const cancelInput = () => {
-      if (logInDetails.value == null) {
-        let arrayKeys = ['description', 'location', 'phone_number', 'reporter_name']
-        for (let key of arrayKeys) {
-          reporterDetails.value[key] = null
+        $q.loading.hide()
+        outputDialog.value = true
+        outputObj.value = {
+          icon: 'check_circle',
+          title: response.message,
+          subtext: 'Your report has been submitted and is pending verification by our team.',
         }
-      } else {
-        reporterDetails.value.description = null
-        reporterDetails.value.location = null
+        resetForm()
+      }, 1000)
+    }
+
+    const getLocation = () => {
+      showSpinner.value = true
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+          const lat = position.coords.latitude
+          const lng = position.coords.longitude
+          console.log(`Latitude: ${lat}, Longitude: ${lng}`)
+
+          // Now use reverse geocoding to get the address
+          const address = await getAddressFromCoords(lat, lng)
+          reportDetails.value.location = address
+          reportDetails.value.latitude = lat
+          reportDetails.value.longitude = lng
+          showSpinner.value = false
+        },
+        (error) => {
+          console.error('Geolocation error:', error)
+        },
+      )
+    }
+
+    const resetForm = () => {
+      // Reset the form data
+      reportDetails.value = {
+        reporter_type: store.userData.user_id ? 1 : 2,
+        reporter_id: store.userData.user_id ?? null,
+        name: store.userData.first_name ?? null,
+        phone_number: store.userData.phone_number ?? null,
+        file: null,
+        description: null,
+        location: null,
+      }
+
+      // Reset the form validation
+      if (reportForm.value) {
+        reportForm.value.reset()
       }
     }
-    const inputStyleAdjuster = ref(false)
-
-    const handleWindowSize = () => {
-      inputStyleAdjuster.value = window.innerWidth < 500
-    }
-    onMounted(() => {
-      getReportRescue()
-      window.addEventListener('resize', handleWindowSize)
-    })
-    onUnmounted(() => {
-      window.removeEventListener('resize', handleWindowSize)
-    })
     return {
-      cancelInput,
-      inputStyleAdjuster,
-      images,
+      reportForm,
+      showSpinner,
+      outputDialog,
+      outputObj,
+      getLocation,
       submitReport,
-      imageShow,
-      reporterDetails,
-      imageRemover,
-      date_rescued,
-      animal_condition,
-      continaer,
-      logInDetails,
+      reportDetails,
     }
   },
 }

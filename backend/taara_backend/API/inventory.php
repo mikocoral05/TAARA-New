@@ -126,7 +126,9 @@ class API
     public function httpPost($payload)
     {
         if (isset($payload['add_inventory_list'])) {
-            $data = $payload['add_inventory_list'];
+            $data = $payload['add_inventory_list']['obj'];
+            $user_id = $payload['add_inventory_list']['user_id'];
+            $user_type = $payload['add_inventory_list']['user_type'];
 
             // Required fields - adapt based on your table schema
             $insertData = [
@@ -143,6 +145,14 @@ class API
             $insert = $this->db->insert('tbl_inventory', $insertData);
 
             if ($insert) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Add new Inventory List ' . $data['item_name'],
+                    'module' => 'Medicine Inventory',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Inventory list successfully added',
@@ -156,8 +166,9 @@ class API
                 ]);
             }
         } else if (isset($payload['add_group_name'])) {
-            $data = $payload['add_group_name'];
-
+            $data = $payload['add_group_name']['obj'];
+            $user_id = $payload['add_group_name']['user_id'];
+            $user_type = $payload['add_group_name']['user_type'];
             // Required fields - adapt based on your table schema
             $insertData = [
                 'group_name'   => $data['group_name'] ?? null,
@@ -167,6 +178,14 @@ class API
             $insert = $this->db->insert('tbl_inventory_group', $insertData);
 
             if ($insert) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Add new Inventory Group ' . $data['group_name'],
+                    'module' => 'Medicine Inventory',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Inventory list successfully added',
@@ -193,6 +212,8 @@ class API
         if (isset($payload['soft_delete_inventory_data'])) {
             $id = $payload['soft_delete_inventory_data'];
             $table = $payload['table'];
+            $user_id = $payload['user_id'];
+            $user_type = $payload['user_type'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -215,12 +236,22 @@ class API
             $updated = $this->db->update($table, $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Archieve Inventory List',
+                    'module' => 'Medicine Inventory',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
             }
         } else if (isset($payload['edit_inventory_list'])) {
-            $data = $payload['edit_inventory_list'];
+            $data = $payload['edit_inventory_list']['obj'];
+            $user_id = $payload['edit_inventory_list']['user_id'];
+            $user_type = $payload['edit_inventory_list']['user_type'];
             $id = $data['id'];
 
             // Sanitize and validate as needed
@@ -240,6 +271,14 @@ class API
             $update = $this->db->update('tbl_inventory', $updateData);
 
             if ($update) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Update Inventory List ' . $data['group_name'],
+                    'module' => 'Medicine Inventory',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Inventory list successfully updated',

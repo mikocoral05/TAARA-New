@@ -452,7 +452,11 @@ export default {
         })
         dataStorage.value.category = obj[tab.value]
         if (filterTab.value !== 2) {
-          addInventoryList(dataStorage.value).then((response) => {
+          addInventoryList(
+            dataStorage.value,
+            store.userData.user_id,
+            store.userData.user_type,
+          ).then((response) => {
             console.log(response)
             setTimeout(() => {
               $q.loading.show({
@@ -465,35 +469,39 @@ export default {
             }, 2000)
           })
         } else {
-          addGroupName(dataStorage.value).then((response) => {
-            console.log(response)
-            setTimeout(() => {
-              $q.loading.show({
-                group: 'update',
-                message: response.message,
-              })
-            }, 1000)
-            setTimeout(() => {
-              groupDialog.value = false
-              $q.loading.hide()
-            }, 2000)
-          })
+          addGroupName(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
+            (response) => {
+              console.log(response)
+              setTimeout(() => {
+                $q.loading.show({
+                  group: 'update',
+                  message: response.message,
+                })
+              }, 1000)
+              setTimeout(() => {
+                groupDialog.value = false
+                $q.loading.hide()
+              }, 2000)
+            },
+          )
         }
       } else if (mode.value == 'Edit') {
         $q.loading.show({
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
-        editInventoryList(dataStorage.value).then((response) => {
-          console.log(response)
-          $q.loading.show({
-            group: 'update',
-            message: response.message,
-          })
-          setTimeout(() => {
-            $q.loading.hide()
-          }, 2000)
-        })
+        editInventoryList(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
+          (response) => {
+            console.log(response)
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+            setTimeout(() => {
+              $q.loading.hide()
+            }, 2000)
+          },
+        )
       }
     }
 
@@ -539,7 +547,12 @@ export default {
 
     const softDeleteFn = () => {
       const tableName = filterTab.value == 2 ? 'tbl_inventory_group' : 'tbl_inventory'
-      softDeleteInventoryData(arrayOfId.value, tableName).then((response) => {
+      softDeleteInventoryData(
+        arrayOfId.value,
+        tableName,
+        store.userData.user_id,
+        store.userData.user_type,
+      ).then((response) => {
         if (response == 'success') {
           filterInventory(filterTab.value)
           getInventoryListSummary(obj[tab.value]).then((response) => {

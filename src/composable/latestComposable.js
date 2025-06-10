@@ -845,12 +845,14 @@ export const getInventoryGroup = (category) => {
   })
 }
 
-export const softDeleteInventoryData = (arrayId, tableName) => {
+export const softDeleteInventoryData = (arrayId, tableName, user_id, user_type) => {
   return new Promise((resolve, reject) => {
     api
       .put('inventory.php', {
         soft_delete_inventory_data: arrayId,
         table: tableName,
+        user_id,
+        user_type,
       })
       .then((response) => {
         resolve(response.data.status)
@@ -906,12 +908,12 @@ export const softDeleteAnimal = (arrayId, user_id, user_type) => {
   })
 }
 
-export const addInventoryList = (obj) => {
+export const addInventoryList = (obj, user_id, user_type) => {
   obj.date_received = dateToday
   return new Promise((resolve, reject) => {
     api
       .post('inventory.php', {
-        add_inventory_list: obj,
+        add_inventory_list: { obj, user_id, user_type },
       })
       .then((response) => {
         resolve(response.data)
@@ -1065,13 +1067,13 @@ export const softDeleteRescueReport = (arrayId, user_id, user_type) => {
   })
 }
 
-export const addGroupName = (obj) => {
+export const addGroupName = (obj, user_id, user_type) => {
   console.log(obj)
 
   return new Promise((resolve, reject) => {
     api
       .post('inventory.php', {
-        add_group_name: obj,
+        add_group_name: { obj, user_id, user_type },
       })
       .then((response) => {
         resolve(response.data)
@@ -1082,11 +1084,11 @@ export const addGroupName = (obj) => {
   })
 }
 
-export const editInventoryList = (obj) => {
+export const editInventoryList = (obj, user_id, user_type) => {
   return new Promise((resolve, reject) => {
     api
       .put('inventory.php', {
-        edit_inventory_list: obj,
+        edit_inventory_list: { obj, user_id, user_type },
       })
       .then((response) => {
         resolve(response.data)

@@ -50,7 +50,9 @@ class API
     public function httpPost($payload)
     {
         if (isset($payload['add_schedule'])) {
-            $data = $payload['add_schedule'];
+            $data = $payload['add_schedule']['obj'];
+            $user_id = $payload['add_schedule']['user_id'];
+            $user_type = $payload['add_schedule']['user_type'];
 
             $insertData = [
                 'animal_id'            => $data['animal_id'] ?? null,
@@ -68,6 +70,14 @@ class API
             $insert = $this->db->insert('tbl_animal_schedule', $insertData);
 
             if ($insert) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Add New Schedule',
+                    'module' => 'Vet Schedule',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'New Schedule successfully added',
@@ -93,7 +103,9 @@ class API
     public function httpPut($payload)
     {
         if (isset($payload['soft_delete_schedule'])) {
-            $id = $payload['soft_delete_schedule'];
+            $id = $payload['soft_delete_schedule']['arrayId'];
+            $user_id = $payload['soft_delete_schedule']['user_id'];
+            $user_type = $payload['soft_delete_schedule']['user_type'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -108,6 +120,14 @@ class API
             $updated = $this->db->update('tbl_animal_schedule', $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Update Schedule',
+                    'module' => 'Vet Schedule',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);

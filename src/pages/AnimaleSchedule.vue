@@ -395,22 +395,24 @@ export default {
           message: `Adding new Schedule. Please wait...`,
         })
         dataStorage.value.added_by = store.userData?.user_id ?? 84
-        addSchedule(dataStorage.value).then((response) => {
-          console.log(response)
-          setTimeout(() => {
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-          }, 1000)
-          setTimeout(() => {
-            getSchedule().then((response) => {
-              rows.value = response
-            })
-            showDialog.value = false
-            $q.loading.hide()
-          }, 2000)
-        })
+        addSchedule(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
+          (response) => {
+            console.log(response)
+            setTimeout(() => {
+              $q.loading.show({
+                group: 'update',
+                message: response.message,
+              })
+            }, 1000)
+            setTimeout(() => {
+              getSchedule().then((response) => {
+                rows.value = response
+              })
+              showDialog.value = false
+              $q.loading.hide()
+            }, 2000)
+          },
+        )
       } else if (mode.value == 'Edit') {
         $q.loading.show({
           group: 'update',
@@ -461,20 +463,22 @@ export default {
         group: 'update',
         message: 'Deleting Schedule info. Please wait...',
       })
-      softDeleteSchedule(arrayOfId.value).then((response) => {
-        $q.loading.show({
-          group: 'update',
-          message: response.message,
-        })
-        setTimeout(() => {
-          $q.loading.hide()
-          if (response.status == 'success') {
-            getSchedule().then((response) => {
-              rows.value = response
-            })
-          }
-        }, 2000)
-      })
+      softDeleteSchedule(arrayOfId.value, store.userData.user_id, store.userData.user_type).then(
+        (response) => {
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+          setTimeout(() => {
+            $q.loading.hide()
+            if (response.status == 'success') {
+              getSchedule().then((response) => {
+                rows.value = response
+              })
+            }
+          }, 2000)
+        },
+      )
     }
 
     const preventAction = () => {

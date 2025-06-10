@@ -861,11 +861,11 @@ export const softDeleteInventoryData = (arrayId, tableName) => {
   })
 }
 
-export const softDeleteSchedule = (arrayId) => {
+export const softDeleteSchedule = (arrayId, user_id, user_type) => {
   return new Promise((resolve, reject) => {
     api
       .put('schedule.php', {
-        soft_delete_schedule: arrayId,
+        soft_delete_schedule: { arrayId, user_id, user_type },
       })
       .then((response) => {
         resolve(response.data)
@@ -922,11 +922,11 @@ export const addInventoryList = (obj) => {
   })
 }
 
-export const addSchedule = (obj) => {
+export const addSchedule = (obj, user_id, user_type) => {
   return new Promise((resolve, reject) => {
     api
       .post('schedule.php', {
-        add_schedule: obj,
+        add_schedule: { obj, user_id, user_type },
       })
       .then((response) => {
         resolve(response.data)

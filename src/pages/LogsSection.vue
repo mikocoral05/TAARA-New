@@ -59,7 +59,7 @@ export default {
       store,
       rows,
       columns: [
-        { name: 'id', label: 'ID', field: 'id', align: 'left' },
+        { name: 'id', label: 'ID', field: 'id', align: 'left', sortable: true },
         {
           name: 'created_at',
           label: 'Date and Time',

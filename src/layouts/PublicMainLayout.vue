@@ -59,6 +59,7 @@
                 : 'bg-white text-black'
             "
           />
+
           <q-btn
             label="Contact"
             no-caps
@@ -145,6 +146,21 @@
               >
                 <q-item-section>
                   <q-item-label>Pet Transfer</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item
+                clickable
+                v-close-popup
+                to="/public/report-and-rescue"
+                @click="headerColor = 'white'"
+                :class="
+                  $route.fullPath == '/public/report-and-rescue' || ''
+                    ? 'bg-primary text-white'
+                    : 'bg-white text-black'
+                "
+              >
+                <q-item-section>
+                  <q-item-label>Report & Rescue</q-item-label>
                 </q-item-section>
               </q-item>
             </q-list>

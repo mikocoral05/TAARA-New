@@ -14,6 +14,9 @@
       v-model:dialog="showDialog"
       :tableAction="tableAction"
       :preventAction="preventAction"
+      v-model:status="status"
+      v-model:showStatusFilter="showStatusFilter"
+      v-model:statusOption="statusOption"
       :visible-columns="[
         'id',
         'name',
@@ -39,7 +42,7 @@
           :class="statusColor(row.status)"
         >
           <q-icon :name="statusIcon(row.status)" size="1rem" class="q-mr-sm" />
-          {{ row.status }}
+          {{ donationStatusText(row.status) }}
         </div>
       </template>
       <template #cell-rescue_status="{ row }">
@@ -300,9 +303,13 @@ import {
   getRescueReport,
   softDeleteRescueReport,
 } from 'src/composable/latestComposable'
-import { convertDaysToInterval, getImageLink } from 'src/composable/simpleComposable'
+import {
+  convertDaysToInterval,
+  donationStatusText,
+  getImageLink,
+} from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
-import { onMounted, watchEffect } from 'vue'
+import { onMounted, watch, watchEffect } from 'vue'
 import { ref } from 'vue'
 export default {
   components: { ReusableTable, ImageViewer, NoAccessDialog },
@@ -321,7 +328,14 @@ export default {
     const search = ref(null)
     const animalOption = ref([])
     const store = globalStore()
-
+    const showStatusFilter = ref(true)
+    const statusOption = ref([
+      { label: 'All', value: 0 },
+      { label: 'Pending', value: 1 },
+      { label: 'Approved', value: 2 },
+      { label: 'Disapproved', value: 3 },
+    ])
+    const status = ref(0)
     const myFile = ref(null)
     const triggerUpload = () => {
       myFile.value.pickFiles()
@@ -355,38 +369,42 @@ export default {
           message: 'Adding new Rescue report. Please wait...',
         })
         dataStorage.value.created_by = store.userData?.user_id ?? 84
-        addRescueRerport(dataStorage.value).then((response) => {
-          console.log(response)
-          setTimeout(() => {
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-          }, 1000)
-          setTimeout(() => {
-            getRescueReport().then((response) => {
-              rows.value = response
-            })
-            showDialog.value = false
-            $q.loading.hide()
-          }, 2000)
-        })
+        addRescueRerport(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
+          (response) => {
+            console.log(response)
+            setTimeout(() => {
+              $q.loading.show({
+                group: 'update',
+                message: response.message,
+              })
+            }, 1000)
+            setTimeout(() => {
+              getRescueReport().then((response) => {
+                rows.value = response
+              })
+              showDialog.value = false
+              $q.loading.hide()
+            }, 2000)
+          },
+        )
       } else if (mode.value == 'Edit') {
         $q.loading.show({
           group: 'update',
           message: 'Updating Announcement. Please wait...',
         })
-        editRescueReport(dataStorage.value).then((response) => {
-          console.log(response)
-          $q.loading.show({
-            group: 'update',
-            message: response.message,
-          })
-          setTimeout(() => {
-            showDialog.value = false
-            $q.loading.hide()
-          }, 2000)
-        })
+        editRescueReport(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
+          (response) => {
+            console.log(response)
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+            setTimeout(() => {
+              showDialog.value = false
+              $q.loading.hide()
+            }, 2000)
+          },
+        )
       }
     }
 
@@ -401,18 +419,18 @@ export default {
 
     const statusColor = (status) => {
       const obj = {
-        pending: 'bg-orange',
-        approved: 'bg-positive q-px-sm',
-        disapproved: 'bg-negative q-px-sm',
+        1: 'bg-orange',
+        2: 'bg-positive q-px-sm',
+        3: 'bg-negative q-px-sm',
       }
       return obj[status]
     }
 
     const statusIcon = (status) => {
       const obj = {
-        pending: 'sym_r_assignment',
-        approved: 'sym_r_thumb_up',
-        disapproved: 'sym_r_thumb_down',
+        1: 'sym_r_assignment',
+        2: 'sym_r_thumb_up',
+        3: 'sym_r_thumb_down',
       }
       return obj[status]
     }
@@ -465,6 +483,13 @@ export default {
       }
     })
 
+    watch(status, (newVal) => {
+      console.log(newVal)
+      getRescueReport(newVal).then((response) => {
+        rows.value = response
+        console.log(rows.value)
+      })
+    })
     const softDeleteFn = () => {
       $q.loading.show({
         group: 'update',
@@ -522,12 +547,16 @@ export default {
     }
 
     onMounted(() => {
-      getRescueReport().then((response) => {
+      getRescueReport(status.value).then((response) => {
         rows.value = response
         console.log(rows.value)
       })
     })
     return {
+      donationStatusText,
+      status,
+      statusOption,
+      showStatusFilter,
       preventAction,
       showNoAccess,
       showImage,

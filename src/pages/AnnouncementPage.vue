@@ -284,38 +284,42 @@ export default {
           message: 'Adding new Announcement. Please wait...',
         })
         dataStorage.value.created_by = store.userData?.user_id ?? 84
-        addAnnouncement(dataStorage.value).then((response) => {
-          console.log(response)
-          setTimeout(() => {
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-          }, 1000)
-          setTimeout(() => {
-            getAnnouncement().then((response) => {
-              rows.value = response
-            })
-            showDialog.value = false
-            $q.loading.hide()
-          }, 2000)
-        })
+        addAnnouncement(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
+          (response) => {
+            console.log(response)
+            setTimeout(() => {
+              $q.loading.show({
+                group: 'update',
+                message: response.message,
+              })
+            }, 1000)
+            setTimeout(() => {
+              getAnnouncement().then((response) => {
+                rows.value = response
+              })
+              showDialog.value = false
+              $q.loading.hide()
+            }, 2000)
+          },
+        )
       } else if (mode.value == 'Edit') {
         $q.loading.show({
           group: 'update',
           message: 'Updating Announcement. Please wait...',
         })
-        editAnnouncement(dataStorage.value).then((response) => {
-          console.log(response)
-          $q.loading.show({
-            group: 'update',
-            message: response.message,
-          })
-          setTimeout(() => {
-            showDialog.value = false
-            $q.loading.hide()
-          }, 2000)
-        })
+        editAnnouncement(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
+          (response) => {
+            console.log(response)
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+            setTimeout(() => {
+              showDialog.value = false
+              $q.loading.hide()
+            }, 2000)
+          },
+        )
       }
     }
 
@@ -352,7 +356,11 @@ export default {
         group: 'update',
         message: 'Deleting Schedule info. Please wait...',
       })
-      softDeleteAnnouncement(arrayOfId.value).then((response) => {
+      softDeleteAnnouncement(
+        arrayOfId.value,
+        store.userData.user_id,
+        store.userData.user_type,
+      ).then((response) => {
         $q.loading.show({
           group: 'update',
           message: response.message,

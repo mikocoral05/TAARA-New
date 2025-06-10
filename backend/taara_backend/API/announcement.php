@@ -55,7 +55,9 @@ class API
     public function httpPost($payload)
     {
         if (isset($payload['add_announcement'])) {
-            $data = $payload['add_announcement'];
+            $data = $payload['add_announcement']['data'];
+            $user_id = $payload['add_announcement']['user_id'];
+            $user_type = $payload['add_announcement']['user_id'];
 
             $insertData = [
                 'title'               => $data['title'] ?? null,
@@ -68,6 +70,14 @@ class API
             $id = $this->db->getInsertId();
 
             if ($insert) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Add New Announcement ',
+                    'module' => 'Announcement',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Announcement info successfully added',
@@ -77,7 +87,7 @@ class API
             } else {
                 echo json_encode([
                     'status' => 'error',
-                    'message' => 'Failed to save animal info',
+                    'message' => 'Failed to save announcement info',
                     'method' => 'POST'
                 ]);
             }
@@ -94,7 +104,10 @@ class API
     public function httpPut($payload)
     {
         if (isset($payload['soft_delete_announcement'])) {
-            $id = $payload['soft_delete_announcement'];
+            $id = $payload['soft_delete_announcement']['arrayId'];
+            $user_id = $payload['soft_delete_announcement']['user_id'];
+            $user_type = $payload['soft_delete_announcement']['user_type'];
+
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -109,12 +122,22 @@ class API
             $updated = $this->db->update('tbl_announcements', $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Archieve announcement ',
+                    'module' => 'Announcement',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
             }
         } else if (isset($payload['edit_announcement'])) {
-            $obj = $payload['edit_announcement'];
+            $obj = $payload['edit_announcement']['data'];
+            $user_id = $payload['edit_announcement']['user_id'];
+            $user_type = $payload['edit_announcement']['user_type'];
 
             $update_values = [
                 'title' => $obj['title'] ?? '',
@@ -129,20 +152,28 @@ class API
             $updated = $this->db->update('tbl_announcements', $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Edit announcement ',
+                    'module' => 'Announcement',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
-                    'message' => 'Animal info updated successfully',
+                    'message' => 'Announcement info updated successfully',
                     'method' => 'PUT'
                 ]);
             } else {
                 echo json_encode([
                     'status' => 'error',
-                    'message' => 'Failed to update animal info',
+                    'message' => 'Failed to update announcement info',
                     'method' => 'PUT'
                 ]);
             }
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Missing Animal info in the payload']);
+            echo json_encode(['status' => 'error', 'message' => 'Missing Announcement info in the payload']);
         }
     }
 

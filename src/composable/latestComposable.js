@@ -937,12 +937,12 @@ export const addSchedule = (obj) => {
   })
 }
 
-export const addAnnouncement = (obj) => {
+export const addAnnouncement = (obj, user_id, user_type) => {
   const { file, ...data } = obj
   return new Promise((resolve, reject) => {
     api
       .post('announcement.php', {
-        add_announcement: data,
+        add_announcement: { data, user_id, user_type },
       })
       .then((response) => {
         if (response.data.status == 'success') {
@@ -988,12 +988,12 @@ export const addRescueRerport = (obj, user_id, user_type) => {
   })
 }
 
-export const editAnnouncement = (obj) => {
+export const editAnnouncement = (obj, user_id, user_type) => {
   const { file, ...data } = obj
   return new Promise((resolve, reject) => {
     api
       .put('announcement.php', {
-        edit_announcement: data,
+        edit_announcement: { data, user_id, user_type },
       })
       .then((response) => {
         if (response.data.status == 'success') {
@@ -1035,11 +1035,11 @@ export const editRescueReport = (obj, user_id, user_type) => {
   })
 }
 
-export const softDeleteAnnouncement = (arrayId) => {
+export const softDeleteAnnouncement = (arrayId, user_id, user_type) => {
   return new Promise((resolve, reject) => {
     api
       .put('announcement.php', {
-        soft_delete_announcement: arrayId,
+        soft_delete_announcement: { arrayId, user_id, user_type },
       })
       .then((response) => {
         resolve(response.data)

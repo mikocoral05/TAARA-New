@@ -41,7 +41,6 @@
               </template>
             </q-input>
             <q-select
-              outlined
               dense
               v-if="showStatusFilter"
               :model-value="status"
@@ -136,7 +135,7 @@ export default {
     preventAction: { type: Function, default: () => {} }, // Accept function as a prop
     status: { type: Number, default: 0 },
     showStatusFilter: { type: Boolean, default: false },
-    statusOption: { type: Function, default: () => [] },
+    statusOption: { type: Array, default: () => [] },
     showUpload: { type: Boolean, default: false },
     showDownload: { type: Boolean, default: false },
     showBtns: { type: Boolean, default: true },

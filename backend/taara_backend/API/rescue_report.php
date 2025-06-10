@@ -16,9 +16,11 @@ class API
     {
 
         if (array_key_exists('get_rescue_report', $payload)) {
-
+            $status = $payload['get_rescue_report'];
             $this->db->where("rr.is_deleted", 0);
-
+            if (!empty($status) && $status !== 0) {
+                $this->db->where("rr.status", $status);
+            }
             $select = "
                 rr.*,
                 u.user_id,
@@ -75,7 +77,9 @@ class API
     public function httpPost($payload)
     {
         if (isset($payload['add_rescue_report'])) {
-            $data = $payload['add_rescue_report'];
+            $data = $payload['add_rescue_report']['data'];
+            $user_id = $payload['add_rescue_report']['user_id'];
+            $user_type = $payload['add_rescue_report']['user_type'];
 
             $insertData = [
                 'reporter_type'               => $data['reporter_type'] ?? 2,
@@ -95,6 +99,14 @@ class API
             $id = $this->db->getInsertId();
 
             if ($insert) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Add New Rescue Report ',
+                    'module' => 'Rescue Report',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Rescue Report info successfully added',
@@ -141,7 +153,9 @@ class API
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
             }
         } else if (isset($payload['edit_rescue_report'])) {
-            $obj = $payload['edit_rescue_report'];
+            $obj = $payload['edit_rescue_report']['data'];
+            $user_id = $payload['edit_rescue_report']['user_id'];
+            $user_type = $payload['edit_rescue_report']['user_type'];
 
             $update_values = [
                 'phone_number'            => $obj['phone_number'] ?? null,
@@ -161,6 +175,14 @@ class API
             $updated = $this->db->update('tbl_rescue_report', $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Edit Rescue Report ',
+                    'module' => 'Rescue Report',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Animal info updated successfully',

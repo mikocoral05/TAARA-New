@@ -133,7 +133,9 @@ class API
     public function httpPut($payload)
     {
         if (isset($payload['soft_delete_rescue_report'])) {
-            $id = $payload['soft_delete_rescue_report'];
+            $id = $payload['soft_delete_rescue_report']['arrayId'];
+            $user_id = $payload['soft_delete_rescue_report']['user_id'];
+            $user_type = $payload['soft_delete_rescue_report']['user_type'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -148,6 +150,14 @@ class API
             $updated = $this->db->update('tbl_rescue_report', $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Archieve Rescue Report',
+                    'module' => 'Rescue Report',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);

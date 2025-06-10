@@ -1050,11 +1050,11 @@ export const softDeleteAnnouncement = (arrayId, user_id, user_type) => {
   })
 }
 
-export const softDeleteRescueReport = (arrayId) => {
+export const softDeleteRescueReport = (arrayId, user_id, user_type) => {
   return new Promise((resolve, reject) => {
     api
       .put('rescue_report.php', {
-        soft_delete_rescue_report: arrayId,
+        soft_delete_rescue_report: { arrayId, user_id, user_type },
       })
       .then((response) => {
         resolve(response.data)

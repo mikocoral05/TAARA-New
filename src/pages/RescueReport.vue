@@ -495,7 +495,11 @@ export default {
         group: 'update',
         message: 'Deleting Report info. Please wait...',
       })
-      softDeleteRescueReport(arrayOfId.value).then((response) => {
+      softDeleteRescueReport(
+        arrayOfId.value,
+        store.userData.user_id,
+        store.userData.user_type,
+      ).then((response) => {
         $q.loading.show({
           group: 'update',
           message: response.message,

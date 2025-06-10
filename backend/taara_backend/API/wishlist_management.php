@@ -37,11 +37,21 @@ class API
     public function httpPost($payload)
     {
         if (array_key_exists("add_wishlist", $payload)) {
-            $table = $payload['add_wishlist']['table']; // Extract table name
-            $data = $payload['add_wishlist'];
+            $table = $payload['add_wishlist']['obj']['table']; // Extract table name
+            $data = $payload['add_wishlist']['obj'];
+            $user_id = $payload['add_wishlist']['user_id'];
+            $user_type = $payload['add_wishlist']['user_type'];
             unset($data['table']); // Remove table key from data before insert
 
             if ($this->db->insert($table, $data)) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Add New Wishlist',
+                    'module' => 'Wishlist',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'successfully add wishlist',
@@ -69,6 +79,8 @@ class API
             $id = $payload['update_wishlist']['data']['id'];
             $status = $payload['update_wishlist']['data']['status'] ?? '';
             $table = $payload['update_wishlist']['table'];
+            $user_id = $payload['update_wishlist']['user_id'];
+            $user_type = $payload['update_wishlist']['user_type'];
             if ($status) {
                 $update_values = [
                     'is_priority' => $status,
@@ -81,6 +93,14 @@ class API
             $updated = $this->db->update($table, $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Update Wishlist list',
+                    'module' => 'Wishlist',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode(['status' => 'success', 'message' => 'Records updated successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to updated records', 'method' => 'PUT']);
@@ -88,6 +108,8 @@ class API
         } else   if (array_key_exists('delete_wishlist', $payload)) {
             $id = $payload['delete_wishlist']['id'];
             $table = $payload['delete_wishlist']['table'];
+            $user_id = $payload['delete_wishlist']['user_id'];
+            $user_type = $payload['delete_wishlist']['user_type'];
             $ids = is_array($id) ? $id : explode(',', $id);
 
             $update_values = [
@@ -99,6 +121,14 @@ class API
             $updated = $this->db->update($table, $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Archieve Wishlist list',
+                    'module' => 'Wishlist',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode(['status' => 'success', 'message' => 'Records delete successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to delete records', 'method' => 'PUT']);

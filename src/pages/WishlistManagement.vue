@@ -269,25 +269,32 @@ export default {
           message: `${obj3[mode.value]}. Please wait...`,
         })
         dataStorage.value.table = obj[tab.value]
-        addWishlist(dataStorage.value).then((response) => {
-          setTimeout(() => {
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-          }, 1000)
-          setTimeout(() => {
-            $q.loading.hide()
-            fetchData()
-          }, 2000)
-        })
+        addWishlist(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
+          (response) => {
+            setTimeout(() => {
+              $q.loading.show({
+                group: 'update',
+                message: response.message,
+              })
+            }, 1000)
+            setTimeout(() => {
+              $q.loading.hide()
+              fetchData()
+            }, 2000)
+          },
+        )
       } else if (['Edit', 'EditP'].includes(mode.value)) {
         $q.loading.show({
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
 
-        updateWishlist(obj[tab.value], dataStorage.value).then((response) => {
+        updateWishlist(
+          obj[tab.value],
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+        ).then((response) => {
           $q.loading.show({
             group: 'update',
             message: response.message,
@@ -307,7 +314,12 @@ export default {
         group: 'update',
         message: `${obj3[mode.value]}. Please wait...`,
       })
-      deleteWishlist(obj[tab.value], arrayOfId.value).then((response) => {
+      deleteWishlist(
+        obj[tab.value],
+        arrayOfId.value,
+        store.userData.user_id,
+        store.userData.user_type,
+      ).then((response) => {
         $q.loading.show({
           group: 'update',
           message: response.message,

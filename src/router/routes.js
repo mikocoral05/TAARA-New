@@ -130,7 +130,7 @@ const routes = [
       },
 
       {
-        path: 'reportAndRescue',
+        path: 'report-and-rescue',
         component: () => import('src/pages/ReportAndRescue.vue'),
       },
       {

@@ -378,7 +378,11 @@ export default {
       showFileError.value = false
       $q.loading.show({ group: 'post', message: 'Submitting pet transfer. Pleast wait ...' })
       petTransferInfo.value.user_id = store.userData.user_id
-      const response = await submitPetTransfer(petTransferInfo.value)
+      const response = await submitPetTransfer(
+        petTransferInfo.value,
+        store.userData.user_id,
+        store.userData.user_type,
+      )
       $q.loading.show({ group: 'post', message: response.message })
       console.log(response)
       if (response.status == 'success') {

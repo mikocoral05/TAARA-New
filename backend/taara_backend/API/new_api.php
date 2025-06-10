@@ -178,8 +178,10 @@ class API
                 ]);
             }
         } else if (isset($payload['submit_pet_transfer'])) {
-            $image = $payload['submit_pet_transfer']['new_image'];
-            $data = $payload['submit_pet_transfer'];
+            $image = $payload['submit_pet_transfer']['data']['new_image'];
+            $data = $payload['submit_pet_transfer']['data'];
+            $user_id = $payload['submit_pet_transfer']['user_id'];
+            $user_type = $payload['submit_pet_transfer']['user_type'];
 
             if ($image) {
                 // 1. Save the image
@@ -197,6 +199,14 @@ class API
                 $update = $this->db->insert('tbl_pet_transfer', $data);
 
                 if ($update) {
+                    $logs = [
+                        'user_id' => $user_id,
+                        'user_type' => $user_type,
+                        'action' => 'Add new Pet transfer request ',
+                        'module' => 'Rescue Report',
+                    ];
+
+                    $this->db->insert("tbl_logs", $logs);
                     echo json_encode([
                         'status' => 'success',
                         'message' => 'Pet transfer form submitted successfully',

@@ -97,13 +97,15 @@ export const updatePublicUserPassword = async (new_password, user_id) => {
   return response.data
 }
 
-export const submitPetTransfer = async (obj) => {
+export const submitPetTransfer = async (obj, user_id, user_type) => {
   const { file, ...data } = obj
   if (file) {
     const res = await uploadImages([file])
     data.new_image = res.data.images[0]
   }
-  const response = await api.post('new_api.php', { submit_pet_transfer: data })
+  const response = await api.post('new_api.php', {
+    submit_pet_transfer: { data, user_id, user_type },
+  })
   console.log(response)
   return response.data
 }

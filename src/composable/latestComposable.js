@@ -269,6 +269,14 @@ export const updateUser = (data, user_id, user_type) => {
   })
 }
 
+export const activateOrDeactivate = async (actOrDac, rowUserId, user_id, user_type) => {
+  const response = await api.put('authorization.php', {
+    activate_or_deactivate: { val: actOrDac, rowUserId, user_id, user_type },
+  })
+  console.log(response)
+  return response.data
+}
+
 export const updateBudgetAllocation = async (obj, user_id, user_type) => {
   const { id, ...data } = obj
   const response = await api.put('budget_expenses.php', {

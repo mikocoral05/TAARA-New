@@ -43,6 +43,7 @@
       v-model:confirm="confirm"
       :tableAction="tableAction"
       :preventAction="preventAction"
+      :showBtns="false"
     >
       <template #cell-fullName="{ row }">
         <q-img
@@ -80,13 +81,14 @@
       <template #cell-btn="{ row }">
         <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
           <q-menu anchor="bottom left" self="top right">
-            <q-list dense style="min-width: 100px">
+            <q-list dense style="min-width: 100px" v-if="tab != 2">
               <q-item clickable v-close-popup @click="tableAction(row, 'View')">
                 <q-item-section>View</q-item-section>
                 <q-item-section side>
                   <q-icon name="sym_r_visibility" size="1.2rem" />
                 </q-item-section>
               </q-item>
+
               <q-item clickable v-close-popup @click="tableAction(row, 'Edit')">
                 <q-item-section>Edit</q-item-section>
                 <q-item-section side>
@@ -94,10 +96,90 @@
                 </q-item-section>
               </q-item>
               <q-separator />
-              <q-item clickable @click="tableAction(row, 'Archieve')">
-                <q-item-section>Archieve</q-item-section>
+              <q-item clickable @click="tableAction(row, 'Deactivate')">
+                <q-item-section>{{
+                  row.is_activated == 0 ? 'Activate' : 'Deactivate'
+                }}</q-item-section>
                 <q-item-section side>
-                  <q-icon name="sym_r_keyboard_arrow_right" size="1.2rem" />
+                  <q-icon
+                    :name="row.is_activated == 0 ? 'sym_r_toggle_off' : 'sym_r_toggle_on'"
+                    size="1.2rem"
+                    :color="row.is_activated == 0 ? 'negative' : 'positive'"
+                  />
+                </q-item-section>
+              </q-item>
+            </q-list>
+            <q-list dense style="min-width: 100px" v-if="tab == 2">
+              <q-item
+                v-if="row.application_status != 1"
+                clickable
+                v-close-popup
+                @click="tableAction(row, 'View')"
+              >
+                <q-item-section>View</q-item-section>
+                <q-item-section side>
+                  <q-icon name="sym_r_visibility" size="1.2rem" />
+                </q-item-section>
+              </q-item>
+              <q-item
+                v-if="row.application_status == 1"
+                clickable
+                v-close-popup
+                @click="tableAction(row, 'View')"
+              >
+                <q-item-section>View Form</q-item-section>
+                <q-item-section side>
+                  <q-icon name="sym_r_fact_check" size="1.2rem" />
+                </q-item-section>
+              </q-item>
+              <q-item
+                v-if="row.application_status == 1"
+                clickable
+                v-close-popup
+                @click="tableAction(row, 'Approve')"
+              >
+                <q-item-section>Approve</q-item-section>
+                <q-item-section side>
+                  <q-icon name="sym_r_thumb_up" size="1.2rem" />
+                </q-item-section>
+              </q-item>
+              <q-item
+                v-if="row.application_status == 1"
+                clickable
+                v-close-popup
+                @click="tableAction(row, 'Disapprove')"
+              >
+                <q-item-section>Disapprove</q-item-section>
+                <q-item-section side>
+                  <q-icon name="sym_r_thumb_down" size="1.2rem" />
+                </q-item-section>
+              </q-item>
+              <q-item
+                clickable
+                v-close-popup
+                @click="tableAction(row, 'Edit')"
+                v-if="row.application_status != 1"
+              >
+                <q-item-section>Edit</q-item-section>
+                <q-item-section side>
+                  <q-icon name="sym_r_edit" size="1.2rem" />
+                </q-item-section>
+              </q-item>
+              <q-separator />
+              <q-item
+                clickable
+                @click="tableAction(row, 'Deactivate')"
+                v-if="row.application_status != 1"
+              >
+                <q-item-section>{{
+                  row.is_activated == 0 ? 'Activate' : 'Deactivate'
+                }}</q-item-section>
+                <q-item-section side>
+                  <q-icon
+                    :name="row.is_activated == 0 ? 'sym_r_toggle_off' : 'sym_r_toggle_on'"
+                    size="1.2rem"
+                    :color="row.is_activated == 0 ? 'negative' : 'positive'"
+                  />
                 </q-item-section>
               </q-item>
             </q-list>
@@ -250,6 +332,8 @@
                     dense
                     v-model="userData.civil_status"
                     :options="civilStatusOption"
+                    emit-value
+                    map-options
                     :rules="[(val) => !!val || 'Civil status required!']"
                     hide-bottom-space
                   />
@@ -547,21 +631,29 @@
         </q-card-actions>
       </q-card>
     </q-dialog>
+    <OutputDialog v-model:outputDialog="outputDialog" v-model:outputObj="outputObj" />
   </q-page>
 </template>
 <script>
 import ReusableTable from 'src/components/ReusableTable.vue'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
-import { getUserByType, softDeleteUser, updateUser } from 'src/composable/latestComposable'
+import {
+  activateOrDeactivate,
+  getUserByType,
+  softDeleteUser,
+  updateUser,
+} from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
 import { calculateAge, getImageLink } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 import { updatePublicUserImage } from 'src/composable/latestPublicComposable'
 import { watch } from 'vue'
+import OutputDialog from 'src/components/OutputDialog.vue'
 export default {
   components: {
     ReusableTable,
+    OutputDialog,
   },
   setup() {
     const obj = { 3: 'Officials', 2: 'Volunteer', 1: 'Public Users' }
@@ -580,8 +672,10 @@ export default {
     const tableConfig = ref({ title: '', columns: [] })
     const store = globalStore()
     const fileStorage = ref(null)
-
-    const tableAction = (data, modeParam) => {
+    const outputDialog = ref(false)
+    const outputObj = ref({})
+    const tableAction = async (data, modeParam) => {
+      editTab.value = '1'
       mode.value = modeParam
       userData.value = { ...data }
       console.log(userData.value)
@@ -589,6 +683,26 @@ export default {
       previewImage.value = data.image_path
       if (['Edit', 'View'].includes(modeParam)) {
         editDialog.value = !editDialog.value
+      } else if (modeParam == 'Deactivate') {
+        const text = data.is_activated == 0 ? 'Activating' : 'Deactivating'
+        $q.loading.show({ group: 'update', message: `${text}. please wait ...` })
+        const response = await activateOrDeactivate(
+          data.is_activated == 0 ? 1 : 0,
+          data.user_id,
+          store.userData.user_id,
+          store.userData.user_type,
+        )
+        setTimeout(() => {
+          const text1 = data.is_activated == 0 ? 'Activated' : 'Deactivated'
+          $q.loading.hide()
+          outputDialog.value = true
+          outputObj.value = {
+            icon: 'check_circle',
+            title: response.message,
+            subtext: `The user has been successfully ${text1}.`,
+          }
+          fetchFn()
+        }, 1000)
       } else {
         arrayOfId.value.push(data.user_id)
         confirm.value = !confirm.value
@@ -735,6 +849,8 @@ export default {
     )
 
     return {
+      outputObj,
+      outputDialog,
       preventAction,
       showNoAccess,
       triggerUpload,

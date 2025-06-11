@@ -53,8 +53,10 @@ class API
     public function httpPost($payload)
     {
         if (isset($payload['add_donation'])) {
-            $data = $payload['add_donation'];
-            $table = $payload['add_donation']['donation_type'] == 'cash' ? 'tbl_cash_donations' : 'tbl_material_donations';
+            $data = $payload['add_donation']['donationData'];
+            $user_id = $payload['add_donation']['user_id'];
+            $user_type = $payload['add_donation']['user_type'];
+            $table = $data['donation_type'] == 'cash' ? 'tbl_cash_donations' : 'tbl_material_donations';
 
             $insertData = [
                 'donor_id'         => $data['donor_id'] ?? null,
@@ -96,6 +98,14 @@ class API
 
 
             if ($insertMain) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Add New ' . ucfirst($data['donation_type']) . ' Donation',
+                    'module' => 'Donation',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Donation info successfully added',
@@ -122,7 +132,9 @@ class API
     public function httpPut($payload)
     {
         if (isset($payload['soft_delete_donation'])) {
-            $id = $payload['soft_delete_donation'];
+            $id = $payload['soft_delete_donation']['arrayId'];
+            $user_id = $payload['soft_delete_donation']['user_id'];
+            $user_type = $payload['soft_delete_donation']['user_type'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -137,14 +149,24 @@ class API
             $updated = $this->db->update('tbl_funds', $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Archieve ' . ucfirst($data['donation_type']) . ' Donation list',
+                    'module' => 'Donation',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
             }
         } else if (isset($payload['edit_donation'])) {
-            $obj = $payload['edit_donation'];
-            $fund_id = $payload['edit_donation']['fund_id'];
-            $table = $payload['edit_donation']['donation_type'] == 'cash' ? 'tbl_cash_donations' : 'tbl_material_donations';
+            $obj = $payload['edit_donation']['donation_data'];
+            $user_id = $payload['edit_donation']['user_id'];
+            $user_type = $payload['edit_donation']['user_type'];
+            $fund_id = $obj['fund_id'];
+            $table = $obj['donation_type'] == 'cash' ? 'tbl_cash_donations' : 'tbl_material_donations';
             $new_img =  $obj['new_image'] ?? '';
             $last_insert_id = "";
             if (!empty($new_img)) {
@@ -196,6 +218,14 @@ class API
 
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Update ' . ucfirst($obj['donation_type']) . ' Donation',
+                    'module' => 'Donation',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Donation info updated successfully',

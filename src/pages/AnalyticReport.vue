@@ -76,7 +76,75 @@
         </div>
         <div class="row no-wrap justify-between items-center">
           <q-btn icon="sym_r_event" dense unelevated @click="filterDialog = !filterDialog" />
-          <q-btn icon="sym_r_download" dense unelevated @click="printPage()" />
+          <q-btn icon="sym_r_download" dense unelevated>
+            <q-menu>
+              <q-list style="min-width: 160px">
+                <q-item
+                  clickable
+                  v-close-popup
+                  class="row no-wrap items-center"
+                  @click="printPage()"
+                >
+                  <q-item-section>Print Page</q-item-section>
+                  <q-item-section avatar>
+                    <q-icon name="sym_r_print" />
+                  </q-item-section>
+                </q-item>
+
+                <q-separator></q-separator>
+                <q-item
+                  v-close-popup
+                  clickable
+                  class="row no-wrap items-center"
+                  @click="downloadExcellData()"
+                >
+                  <q-item-section>Download Excell Report </q-item-section>
+                  <q-item-section avatar>
+                    <q-icon name="sym_r_dataset" />
+                  </q-item-section>
+
+                  <!-- <q-menu anchor="top end" self="top start">
+                    <q-list>
+                      <q-item dense clickable>
+                        <q-item-section>Pet available</q-item-section>
+                        <q-item-section side>
+                          <q-icon name="keyboard_arrow_right" />
+                        </q-item-section>
+                      </q-item>
+                      <q-separator></q-separator>
+                      <q-item dense clickable>
+                        <q-item-section>Pet Rescue</q-item-section>
+                        <q-item-section side>
+                          <q-icon name="keyboard_arrow_right" />
+                        </q-item-section>
+                      </q-item>
+                      <q-separator></q-separator>
+                      <q-item dense clickable>
+                        <q-item-section>Pet Adopted</q-item-section>
+                        <q-item-section side>
+                          <q-icon name="keyboard_arrow_right" />
+                        </q-item-section>
+                      </q-item>
+                      <q-separator></q-separator>
+                      <q-item dense clickable>
+                        <q-item-section>Pet Deceased</q-item-section>
+                        <q-item-section side>
+                          <q-icon name="keyboard_arrow_right" />
+                        </q-item-section>
+                      </q-item>
+                      <q-separator></q-separator>
+                      <q-item dense clickable>
+                        <q-item-section>Geographical Hotspots</q-item-section>
+                        <q-item-section side>
+                          <q-icon name="keyboard_arrow_right" />
+                        </q-item-section>
+                      </q-item>
+                    </q-list>
+                  </q-menu> -->
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
           <q-btn icon="sym_r_more_vert" dense unelevated>
             <q-menu>
               <q-list style="min-width: 160px">
@@ -264,7 +332,75 @@
         </div>
         <div class="row no-wrap justify-between items-center">
           <q-btn icon="sym_r_event" dense unelevated @click="filterDialog = !filterDialog" />
-          <q-btn icon="sym_r_download" dense unelevated @click="printPage()" />
+          <q-btn icon="sym_r_download" dense unelevated>
+            <q-menu>
+              <q-list style="min-width: 160px">
+                <q-item
+                  clickable
+                  v-close-popup
+                  class="row no-wrap items-center"
+                  @click="printPage()"
+                >
+                  <q-item-section>Print Page</q-item-section>
+                  <q-item-section avatar>
+                    <q-icon name="sym_r_print" />
+                  </q-item-section>
+                </q-item>
+
+                <q-separator></q-separator>
+                <q-item
+                  v-close-popup
+                  clickable
+                  class="row no-wrap items-center"
+                  @click="downloadExcellData()"
+                >
+                  <q-item-section>Download Excell Report </q-item-section>
+                  <q-item-section avatar>
+                    <q-icon name="sym_r_dataset" />
+                  </q-item-section>
+
+                  <!-- <q-menu anchor="top end" self="top start">
+                    <q-list>
+                      <q-item dense clickable>
+                        <q-item-section>Pet available</q-item-section>
+                        <q-item-section side>
+                          <q-icon name="keyboard_arrow_right" />
+                        </q-item-section>
+                      </q-item>
+                      <q-separator></q-separator>
+                      <q-item dense clickable>
+                        <q-item-section>Pet Rescue</q-item-section>
+                        <q-item-section side>
+                          <q-icon name="keyboard_arrow_right" />
+                        </q-item-section>
+                      </q-item>
+                      <q-separator></q-separator>
+                      <q-item dense clickable>
+                        <q-item-section>Pet Adopted</q-item-section>
+                        <q-item-section side>
+                          <q-icon name="keyboard_arrow_right" />
+                        </q-item-section>
+                      </q-item>
+                      <q-separator></q-separator>
+                      <q-item dense clickable>
+                        <q-item-section>Pet Deceased</q-item-section>
+                        <q-item-section side>
+                          <q-icon name="keyboard_arrow_right" />
+                        </q-item-section>
+                      </q-item>
+                      <q-separator></q-separator>
+                      <q-item dense clickable>
+                        <q-item-section>Geographical Hotspots</q-item-section>
+                        <q-item-section side>
+                          <q-icon name="keyboard_arrow_right" />
+                        </q-item-section>
+                      </q-item>
+                    </q-list>
+                  </q-menu> -->
+                </q-item>
+              </q-list>
+            </q-menu>
+          </q-btn>
           <q-btn icon="sym_r_more_vert" dense unelevated>
             <q-menu>
               <q-list style="min-width: 160px">
@@ -407,6 +543,8 @@ import DoughnutChart from 'src/components/DoughnutChart.vue'
 import NoAccessDialog from 'src/components/NoAccessDialog.vue'
 import StackBarLine from 'src/components/StackBarLine.vue'
 import {
+  downloadReportAnimal,
+  downloadReportBudget,
   getAnimalByHealtStatus,
   getClassification,
   getExpenseSummary,
@@ -537,6 +675,13 @@ export default {
       monthlyExpense.value = await getMonthlyExpense(selectedYear.value)
     }
 
+    const downloadExcellData = () => {
+      if (tab.value == 1) {
+        downloadReportAnimal(selectedYear.value)
+      } else {
+        downloadReportBudget(selectedYear.value)
+      }
+    }
     watchEffect(() => {
       if (tab.value == 1) {
         fetchFn()
@@ -573,7 +718,9 @@ export default {
     onUnmounted(() => {
       window.onafterprint = null // Clean up
     })
+
     return {
+      downloadExcellData,
       preventAction,
       showNoAccess,
       monthlyBalance,

@@ -576,7 +576,11 @@ export default {
       })
       if (tab.value == 1) {
         if (mode.value == 'Add')
-          addBudgetAllocation(expenseData.value).then((response) => {
+          addBudgetAllocation(
+            expenseData.value,
+            store.userData.user_id,
+            store.userData.user_type,
+          ).then((response) => {
             $q.loading.show({
               group: 'save',
               message: response.message,
@@ -590,7 +594,11 @@ export default {
             }, 1000)
           })
         else {
-          updateBudgetAllocation(expenseData.value).then((response) => {
+          updateBudgetAllocation(
+            expenseData.value,
+            store.userData.user_id,
+            store.userData.user_type,
+          ).then((response) => {
             $q.loading.show({
               group: 'save',
               message: response.message,

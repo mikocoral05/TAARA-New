@@ -38,6 +38,7 @@ class API
                 'tbl_users.sex',
                 'tbl_users.date_created',
                 'tbl_users.username',
+                'tbl_users.is_activated',
             ];
 
             if ($type == 3) {
@@ -210,6 +211,34 @@ class API
                 echo json_encode(['status' => 'success', 'message' => 'User delete successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete user', 'method' => 'PUT']);
+            }
+        } else if (isset($payload['activate_or_deactivate'])) {
+            $user_id = $payload['activate_or_deactivate']['user_id'];
+            $user_type = $payload['activate_or_deactivate']['user_type'];
+            $user_id_to_update = $payload['activate_or_deactivate']['rowUserId'];
+            $val = $payload['activate_or_deactivate']['val'];
+
+            $update_values = [
+                'is_activated' => $val,
+            ];
+
+            // Update records matching the IDs
+            $this->db->where('user_id', $user_id_to_update);
+            $updated = $this->db->update('tbl_users', $update_values);
+
+            $state = $val == 0 ? 'Deactivate' : 'Activate';
+            if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => $state . ' a User',
+                    'module' => 'User Management',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
+                echo json_encode(['status' => 'success', 'message' => 'User ' . $state . ' successfully', 'method' => 'PUT']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to  ' . $state . 'user', 'method' => 'PUT']);
             }
         } else {
             // Handle the case where 'updateUser' key is missing

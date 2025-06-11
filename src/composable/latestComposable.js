@@ -659,12 +659,12 @@ const updateDonationFileId = async (array_link, id) => {
   console.log(reponse.data.data)
 }
 
-export const saveDonation = (obj) => {
+export const saveDonation = (obj, user_id, user_type) => {
   const { file, ...donationData } = obj // separate the files
   return new Promise((resolve, reject) => {
     api
       .post('donation.php', {
-        add_donation: donationData,
+        add_donation: { donationData, user_id, user_type },
       })
       .then(async (response) => {
         if (response.data.status == 'success') {
@@ -681,7 +681,7 @@ export const saveDonation = (obj) => {
   })
 }
 
-export const editDonation = async (obj) => {
+export const editDonation = async (obj, user_id, user_type) => {
   const { file, ...donation_data } = obj
   console.log(donation_data)
   if (file) {
@@ -689,15 +689,15 @@ export const editDonation = async (obj) => {
     donation_data.new_image = res.data.images[0]
   }
   const response = await api.put('donation.php', {
-    edit_donation: donation_data,
+    edit_donation: { donation_data, user_id, user_type },
   })
 
   return response.data
 }
 
-export const softDeleteDonation = async (arrayId) => {
+export const softDeleteDonation = async (arrayId, user_id, user_type) => {
   const response = await api.put('donation.php', {
-    soft_delete_donation: arrayId,
+    soft_delete_donation: { arrayId, user_id, user_type },
   })
   return response.data
 }

@@ -606,33 +606,37 @@ export default {
         }
       } else {
         if (mode.value == 'Add') {
-          addExpense(expenseData.value).then((response) => {
-            $q.loading.show({
-              group: 'save',
-              message: response.message,
-            })
-            setTimeout(() => {
-              if (response.status == 'success') {
-                fetchFn()
-                editDialog.value = false
-              }
-              $q.loading.hide()
-            }, 1000)
-          })
+          addExpense(expenseData.value, store.userData.user_id, store.userData.user_type).then(
+            (response) => {
+              $q.loading.show({
+                group: 'save',
+                message: response.message,
+              })
+              setTimeout(() => {
+                if (response.status == 'success') {
+                  fetchFn()
+                  editDialog.value = false
+                }
+                $q.loading.hide()
+              }, 1000)
+            },
+          )
         } else {
-          updateExpense(expenseData.value).then((response) => {
-            $q.loading.show({
-              group: 'save',
-              message: response.message,
-            })
-            setTimeout(() => {
-              if (response.status == 'success') {
-                fetchFn()
-                editDialog.value = false
-              }
-              $q.loading.hide()
-            }, 1000)
-          })
+          updateExpense(expenseData.value, store.userData.user_id, store.userData.user_type).then(
+            (response) => {
+              $q.loading.show({
+                group: 'save',
+                message: response.message,
+              })
+              setTimeout(() => {
+                if (response.status == 'success') {
+                  fetchFn()
+                  editDialog.value = false
+                }
+                $q.loading.hide()
+              }, 1000)
+            },
+          )
         }
       }
     }
@@ -643,7 +647,12 @@ export default {
         message: `${obj2[mode.value]}. Please wait...`,
       })
       const tableName = tab.value == 1 ? 'tbl_budget_allocation' : 'tbl_expenses'
-      softDeleteBudgetAndExpenses(arrayOfId.value, tableName).then((response) => {
+      softDeleteBudgetAndExpenses(
+        arrayOfId.value,
+        tableName,
+        store.userData.user_id,
+        store.userData.user_type,
+      ).then((response) => {
         $q.loading.show({
           group: 'save',
           message: response.message,

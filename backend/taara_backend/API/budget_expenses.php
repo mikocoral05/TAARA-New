@@ -142,11 +142,21 @@ class API
                 ]);
             }
         } else if (isset($payload['add_expense'])) {
-            $data = $payload['add_expense'];
+            $data = $payload['add_expense']['data'];
+            $user_id = $payload['add_expense']['user_id'];
+            $user_type = $payload['add_expense']['user_type'];
 
             $insert = $this->db->insert('tbl_expenses', $data);
 
             if ($insert) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Add New Expense ' . $data['expense_title'],
+                    'module' => 'Budget and Expense',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Expense list successfully added',
@@ -196,6 +206,8 @@ class API
             // Extract the user data
             $id = $payload['update_expense']['id'];
             $data = $payload['update_expense']['data'];
+            $user_id = $payload['update_expense']['user_id'];
+            $user_type = $payload['update_expense']['user_type'];
 
             $new_img =  $data['new_image'] ?? '';
             $last_insert_id = "";
@@ -215,6 +227,14 @@ class API
 
             // Return a response based on whether the update was successful
             if ($update_success) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Update Expense ' . $data['expense_title'],
+                    'module' => 'Budget and Expenses',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Expense updated successfully.',
@@ -231,6 +251,8 @@ class API
             // Extract the user data
             $id = $payload['soft_delete_budget_expenses'];
             $table = $payload['table'];
+            $user_id = $payload['user_id'];
+            $user_type = $payload['user_type'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -252,6 +274,15 @@ class API
             $updated = $this->db->update($table, $update_values);
 
             if ($updated) {
+                $tab = $table == 'tbl_expenses' ? 'Expense' : 'Budget Allocation';
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Archieve List from ' . $tab,
+                    'module' => 'Budget and Expenses',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);

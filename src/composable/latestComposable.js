@@ -262,7 +262,7 @@ export const updateBudgetAllocation = async (obj) => {
   return response.data
 }
 
-export const updateExpense = async (obj) => {
+export const updateExpense = async (obj, user_id, user_type) => {
   const { file, id, ...data } = obj
   if (file) {
     const res = await uploadImages([file])
@@ -271,7 +271,7 @@ export const updateExpense = async (obj) => {
   // Remove image_path if it exists
   delete data.image_path
   const response = await api.put('budget_expenses.php', {
-    update_expense: { id: id, data: data },
+    update_expense: { id: id, data: data, user_id, user_type },
   })
   return response.data
 }
@@ -283,17 +283,19 @@ export const addBudgetAllocation = async (data) => {
   return response.data
 }
 
-export const addExpense = async (data) => {
+export const addExpense = async (data, user_id, user_type) => {
   const response = await api.post('budget_expenses.php', {
-    add_expense: data,
+    add_expense: { data, user_id, user_type },
   })
   return response.data
 }
 
-export const softDeleteBudgetAndExpenses = async (arrayId, tableName) => {
+export const softDeleteBudgetAndExpenses = async (arrayId, tableName, user_id, user_type) => {
   const response = await api.put('budget_expenses.php', {
     soft_delete_budget_expenses: arrayId,
     table: tableName,
+    user_id,
+    user_type,
   })
   return response.data
 }

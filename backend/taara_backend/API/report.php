@@ -388,37 +388,7 @@ class API
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_expense_summary', $payload)) {
-            // $year = $payload['get_expense_summary']['year'];
-            // $month = str_pad($payload['get_expense_summary']['month'], 2, '0', STR_PAD_LEFT);
-            // $operation = $payload['get_expense_summary']['operation'];
 
-            // // Get total donations for the selected month (still using LIKE to match month)
-            // $this->db->join('tbl_cash_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
-            // $this->db->where('YEAR(tbl1.received_date)', $year);
-            // $this->db->where('MONTH(tbl1.received_date)', $month);
-            // $this->db->where('tbl1.status', 2);
-
-            // $this->db->where('tbl1.is_deleted', 0);
-            // $totalCashDonations = $this->db->getValue('tbl_funds tbl1', 'SUM(tbl2.amount)');
-
-            // // Get total expenses up to (or for) the selected date, using the dynamic operation
-            // $this->db->where('MONTH(expense_date)', $month);
-            // $this->db->where('YEAR(expense_date)', $year);
-            // $this->db->where('is_deleted', 0);
-            // $totalExpenses = $this->db->getValue('tbl_expenses', 'SUM(amount)');
-
-            // // Calculate balance
-            // $finalBalance = floatval($totalCashDonations) - floatval($totalExpenses);
-
-            // echo json_encode([
-            //     'status' => 'success',
-            //     'data' => [
-            //         'donations' => $totalCashDonations ?: 0,
-            //         'expenses' => $totalExpenses ?: 0,
-            //         'balance' => $finalBalance
-            //     ],
-            //     'method' => 'GET'
-            // ]);
             $year = $payload['get_expense_summary']['year'];
             $month = str_pad($payload['get_expense_summary']['month'], 2, '0', STR_PAD_LEFT);
             $operation = $payload['get_expense_summary']['operation'];
@@ -505,6 +475,150 @@ class API
                 'status' => 'success',
                 'year' => $year,
                 'data' => $monthlyBalances, // Example: [500, -200, 0, 1000, ...]
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists('download_report_animal', $payload)) {
+            $year = isset($payload['download_report_animal']) ? intval($payload['download_report_animal']) : date('Y');
+
+            // Define base months
+            $months = [
+                1 => 'January',
+                2 => 'February',
+                3 => 'March',
+                4 => 'April',
+                5 => 'May',
+                6 => 'June',
+                7 => 'July',
+                8 => 'August',
+                9 => 'September',
+                10 => 'October',
+                11 => 'November',
+                12 => 'December'
+            ];
+
+            // Initialize structure
+            $monthlyCounts = [];
+            foreach ($months as $num => $name) {
+                $monthlyCounts[$num] = [
+                    'month' => $name,
+                    'rescued' => 0,
+                    'adopted' => 0,
+                    'in_medication' => 0,
+                    'in_rehabilitation' => 0,
+                    'deceased' => 0,
+                    'available' => 0
+                ];
+            }
+
+            function mergeCounts(&$monthlyCounts, $results, $targetKey, $sourceKey)
+            {
+                foreach ($results as $row) {
+                    $monthNum = intval($row['month']);
+                    $monthlyCounts[$monthNum][$targetKey] = intval($row[$sourceKey] ?? 0);
+                }
+            }
+
+            // Rescued
+            $rescued = $this->db->rawQuery("SELECT MONTH(date_rescued) AS month, COUNT(*) AS rescued_count FROM tbl_animal_info WHERE YEAR(date_rescued) = $year AND is_deleted = 1 GROUP BY MONTH(date_rescued)");
+            mergeCounts($monthlyCounts, $rescued, 'rescued', 'rescued_count');
+            // Adopted
+            $adopted = $this->db->rawQuery("SELECT MONTH(updated_at) AS month, COUNT(*) AS adopted_count FROM tbl_adoption_form WHERE YEAR(updated_at) = $year AND adoption_status = 4 GROUP BY MONTH(updated_at)");
+            mergeCounts($monthlyCounts, $adopted, 'adopted', 'adopted_count');
+
+            // In Medication
+            $in_medication = $this->db->rawQuery("SELECT MONTH(date_rescued) AS month, COUNT(*) AS rescued_count FROM tbl_animal_info WHERE YEAR(updated_at) = $year AND is_deleted = 1 AND health_status = 3 GROUP BY MONTH(date_rescued)");
+            mergeCounts($monthlyCounts, $in_medication, 'in_medication', 'rescued_count');
+
+            // In Rehabilitation
+            $in_rehabilitation = $this->db->rawQuery("SELECT MONTH(date_rescued) AS month, COUNT(*) AS rescued_count FROM tbl_animal_info WHERE YEAR(updated_at) = $year AND is_deleted = 1 AND health_status = 2 GROUP BY MONTH(date_rescued)");
+            mergeCounts($monthlyCounts, $in_rehabilitation, 'in_rehabilitation', 'rescued_count');
+
+            // Deceased
+            $deceased = $this->db->rawQuery("SELECT MONTH(date_rescued) AS month, COUNT(*) AS rescued_count FROM tbl_animal_info WHERE YEAR(updated_at) = $year AND is_deleted = 1 AND health_status = 4 GROUP BY MONTH(date_rescued)");
+            mergeCounts($monthlyCounts, $deceased, 'deceased', 'rescued_count');
+
+            // Available
+            $pet_available = $this->db->rawQuery("SELECT 
+                    MONTH(date_rescued) AS month,
+                    COUNT(*) AS available
+                FROM 
+                    tbl_animal_info
+                WHERE 
+                    YEAR(date_rescued) = $year
+                    AND is_deleted = 1 
+                    AND health_status != 4
+                GROUP BY 
+                    MONTH(date_rescued)
+                ORDER BY 
+                    MONTH(date_rescued)");
+            mergeCounts($monthlyCounts, $pet_available, 'available', 'available');
+
+            // Reset to array format
+            $monthlyData = array_values($monthlyCounts);
+
+            // Output
+            echo json_encode([
+                'status' => 'success',
+                'year' => $year,
+                'data' => $monthlyData,
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists('download_report_budget', $payload)) {
+            $year = isset($payload['download_report_budget']) ? intval($payload['download_report_budget']) : date('Y');
+
+            // Raw query to get donations and expenses per month
+            $query = $this->db->rawQuery("
+                    SELECT 
+                        m.month,
+                        COALESCE(d.total_donations, 0) AS donations,
+                        COALESCE(e.total_expenses, 0) AS expenses,
+                        COALESCE(d.total_donations, 0) - COALESCE(e.total_expenses, 0) AS balance
+                    FROM (
+                        SELECT 1 AS month UNION SELECT 2 UNION SELECT 3 UNION SELECT 4
+                        UNION SELECT 5 UNION SELECT 6 UNION SELECT 7 UNION SELECT 8
+                        UNION SELECT 9 UNION SELECT 10 UNION SELECT 11 UNION SELECT 12
+                    ) AS m
+                    LEFT JOIN (
+                        SELECT 
+                            MONTH(f.received_date) AS month,
+                            SUM(cd.amount) AS total_donations
+                        FROM tbl_funds f
+                        LEFT JOIN tbl_cash_donations cd ON f.fund_id = cd.fund_id
+                        WHERE 
+                            f.is_deleted = 0
+                            AND f.donation_type = 'cash'
+                            AND f.status = 2
+                            AND YEAR(f.received_date) = ?
+                        GROUP BY MONTH(f.received_date)
+                    ) AS d ON m.month = d.month
+                    LEFT JOIN (
+                        SELECT 
+                            MONTH(expense_date) AS month,
+                            SUM(amount) AS total_expenses
+                        FROM tbl_expenses
+                        WHERE 
+                            is_deleted = 0
+                            AND YEAR(expense_date) = ?
+                        GROUP BY MONTH(expense_date)
+                    ) AS e ON m.month = e.month
+                    ORDER BY m.month ASC
+                ", [$year, $year]);
+
+            // Prepare response
+            $monthlyData = [];
+            foreach ($query as $row) {
+                $monthlyData[] = [
+                    'month' => intval($row['month']),
+                    'donations' => floatval($row['donations']),
+                    'expenses' => floatval($row['expenses']),
+                    'balance' => floatval($row['balance'])
+                ];
+            }
+
+            echo json_encode([
+                'status' => 'success',
+                'year' => $year,
+                'data' => $monthlyData, // Example: [{month: 1, donations: 1000, expenses: 300, balance: 700}, ...]
                 'method' => 'GET'
             ]);
         } else {

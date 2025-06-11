@@ -182,19 +182,45 @@ class API
             $toWhere = trim($payload['change_password']['username']);
             $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
 
-            $update_values = [
-                'password' => $hashedPassword,
-            ];
-
-            // Update records matching the IDs
+            // Fetch user first
             $this->db->where("phone_number", $toWhere);
-            $this->db->orwhere("email_address", $toWhere);
-            $updated = $this->db->update('tbl_users', $update_values);
+            $this->db->orWhere("email_address", $toWhere);
+            $user = $this->db->getOne("tbl_users", "user_id");
 
-            if ($updated) {
-                echo json_encode(['status' => 'success', 'message' => 'Password update successfully', 'method' => 'PUT']);
+            if ($user) {
+                $update_values = ['password' => $hashedPassword];
+
+                $this->db->where("user_id", $user['user_id']); // safer to use ID than ambiguous phone/email
+                $updated = $this->db->update('tbl_users', $update_values);
+
+                if ($updated) {
+                    $logs = [
+                        'user_id' => $user['user_id'],
+                        'user_type' => $user['user_type'],
+                        'action' => 'User Change password',
+                        'module' => 'Login (Forgot password)',
+                    ];
+
+                    $this->db->insert("tbl_logs", $logs);
+                    echo json_encode([
+                        'status' => 'success',
+                        'message' => 'Password updated successfully',
+                        'updated_id' => $user['id'],
+                        'method' => 'PUT'
+                    ]);
+                } else {
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => 'Failed to update password',
+                        'method' => 'PUT'
+                    ]);
+                }
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to udpate password', 'method' => 'PUT']);
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'User not found',
+                    'method' => 'PUT'
+                ]);
             }
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Missing Animal info in the payload']);

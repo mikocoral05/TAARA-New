@@ -162,7 +162,7 @@ class API
             }
         } else if (isset($payload['edit_animal_info'])) {
             $obj = $payload['edit_animal_info']['animal_data'];
-            $animal_name = $payload['edit_animal_info']['animal_data']['name'];
+            $animal_name = $obj['name'];
             $user_id = $payload['edit_animal_info']['user_id'];
             $user_type = $payload['edit_animal_info']['user_type'];
 

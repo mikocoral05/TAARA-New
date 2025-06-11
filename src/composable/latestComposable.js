@@ -235,13 +235,13 @@ export const getRescueReport = (status) => {
   })
 }
 
-export const updateUser = (data) => {
+export const updateUser = (data, user_id, user_type) => {
   const clone = { ...data }
   delete clone.image_path
   return new Promise((resolve, reject) => {
     api
       .put('authorization.php', {
-        updateUser: clone,
+        updateUser: { clone, user_id, user_type },
       })
       .then((response) => {
         if (response.data.status == 'success') {
@@ -254,10 +254,10 @@ export const updateUser = (data) => {
   })
 }
 
-export const updateBudgetAllocation = async (obj) => {
+export const updateBudgetAllocation = async (obj, user_id, user_type) => {
   const { id, ...data } = obj
   const response = await api.put('budget_expenses.php', {
-    update_buget_allocation: { id: id, data: data },
+    update_buget_allocation: { id: id, data: data, user_id, user_type },
   })
   return response.data
 }
@@ -276,9 +276,9 @@ export const updateExpense = async (obj, user_id, user_type) => {
   return response.data
 }
 
-export const addBudgetAllocation = async (data) => {
+export const addBudgetAllocation = async (data, user_id, user_type) => {
   const response = await api.post('budget_expenses.php', {
-    add_budget_allocation: data,
+    add_budget_allocation: { data, user_id, user_type },
   })
   return response.data
 }
@@ -1210,9 +1210,9 @@ export const updateWishlist = async (table, obj, user_id, user_type) => {
   return response.data
 }
 
-export const updatePetTransfer = async (obj) => {
+export const updatePetTransfer = async (obj, user_id, user_type) => {
   const response = await api.put('pet_transfer.php', {
-    update_pet_transfer: obj,
+    update_pet_transfer: { obj, user_id, user_type },
   })
   return response.data
 }
@@ -1224,9 +1224,9 @@ export const deleteWishlist = async (table, arrayId, user_id, user_type) => {
   return response.data
 }
 
-export const deletePetTransfer = async (arrayId) => {
+export const deletePetTransfer = async (arrayId, user_id, user_type) => {
   const response = await api.put('pet_transfer.php', {
-    delete_pet_transfer: arrayId,
+    delete_pet_transfer: { arrayId, user_id, user_type },
   })
   return response.data
 }

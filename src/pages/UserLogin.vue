@@ -427,7 +427,7 @@
                 />
                 <q-separator class="q-mt-md"></q-separator>
                 <p @click="tab = 'register'">
-                  <u>Don't have an account yet? Crete now</u>
+                  <u>Don't have an account yet? Create now</u>
                 </p>
               </q-form>
             </div>
@@ -550,6 +550,7 @@
                   no-caps
                   class="bg-primary text-white full-width q-mt-xl"
                   type="submit"
+                  :disable="loadingVar"
                 >
                   <q-spinner-ios color="white" size="1.2rem" class="q-ml-md" v-if="loadingVar" />
                 </q-btn>

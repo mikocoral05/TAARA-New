@@ -25,6 +25,7 @@ import {
   checkUsername,
   logIn,
   registerUser,
+  sendChangePasswordOtp,
   sendEmailActiviationOtp,
 } from 'src/composable/latestComposable'
 import { globalStore } from 'src/stores/global-store'
@@ -439,7 +440,7 @@ export default {
       loadingVar.value = true
       const res = checkEmailOrPhone(forgotPasswordField.value)
       if (res.type == 'email') {
-        const response = await sendEmailActiviationOtp(res.value, referenceCode.value)
+        const response = await sendChangePasswordOtp(res.value, referenceCode.value)
         if (response.status == 'success') {
           forgotPasswordStep.value = 2
         }
@@ -481,6 +482,7 @@ export default {
         setTimeout(() => {
           if (response.status == 'success') {
             tab.value = 'login'
+            userInfo.value.password = null
           }
           $q.loading.hide()
         }, 1000)

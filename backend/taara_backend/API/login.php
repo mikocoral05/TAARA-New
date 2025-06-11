@@ -185,14 +185,13 @@ class API
             // Fetch user first
             $this->db->where("phone_number", $toWhere);
             $this->db->orWhere("email_address", $toWhere);
-            $user = $this->db->getOne("tbl_users", "user_id");
+            $user = $this->db->getOne("tbl_users", "user_id,user_type");
 
             if ($user) {
                 $update_values = ['password' => $hashedPassword];
 
                 $this->db->where("user_id", $user['user_id']); // safer to use ID than ambiguous phone/email
                 $updated = $this->db->update('tbl_users', $update_values);
-
                 if ($updated) {
                     $logs = [
                         'user_id' => $user['user_id'],
@@ -205,7 +204,7 @@ class API
                     echo json_encode([
                         'status' => 'success',
                         'message' => 'Password updated successfully',
-                        'updated_id' => $user['id'],
+                        'updated_id' => $user['user_id'],
                         'method' => 'PUT'
                     ]);
                 } else {

@@ -23,7 +23,6 @@
         'scheduled_date',
         'next_due_interval',
         'next_due_date',
-        'amount',
         'color',
         'behavior',
         'adoptedStatus',
@@ -75,7 +74,7 @@
     </ReusableTable>
     <q-dialog position="right" maximized full-height v-model="showDialog">
       <q-card style="min-width: 750px; height: 500px" class="text-black">
-        <q-form @submit="saveFn()" class="full-height column justify-between">
+        <q-form @submit="saveFn()" class="full-height column justify-between no-wrap">
           <div class="column no-wrap">
             <q-card-section class="q-py-md row no-wrap justify-between items-center">
               <div class="text-body1">{{ mode }} Pet Schedule</div>
@@ -101,8 +100,7 @@
                     class="q-mt-sm"
                     placeholder="Schedule name"
                     style="width: 300px"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
+                    :rules="[(val) => !!val || 'Schedule name is required!']"
                   />
                 </div>
                 <div class="column no-wrap">
@@ -121,12 +119,11 @@
                     dense
                     style="width: 250px"
                     behavior="menu"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
+                    :rules="[(val) => !!val || 'This is required!']"
                   />
                 </div>
               </div>
-              <div class="row no-wrap q-mt-md">
+              <div class="row no-wrap q-mt-sm">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">Dose No.<span class="text-negative">*</span></div>
                   <q-input
@@ -134,8 +131,7 @@
                     type="number"
                     v-model="dataStorage.dose_number"
                     dense
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
+                    :rules="[(val) => !!val || 'Dose number is required!']"
                     class="q-mt-sm"
                   />
                 </div>
@@ -147,8 +143,7 @@
                     type="number"
                     dense
                     class="q-mt-sm"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
+                    :rules="[(val) => (val !== null && val !== '') || 'Dose taken is required!']"
                   />
                 </div>
                 <div class="column no-wrap q-mr-md">
@@ -161,8 +156,7 @@
                     class="q-mt-sm"
                     v-model="dataStorage.scheduled_date"
                     mask="####-##-##"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
+                    :rules="[(val) => !!val || 'Schedule date is required!']"
                   >
                     <template v-slot:append>
                       <q-icon name="event" class="cursor-pointer">
@@ -178,7 +172,7 @@
                   </q-input>
                 </div>
               </div>
-              <div class="row no-wrap q-mt-md">
+              <div class="row no-wrap q-mt-sm">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">
                     Next Due Interval<span class="text-negative">*</span>
@@ -193,8 +187,7 @@
                     map-options
                     dense
                     style="width: 280px"
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
+                    :rules="[(val) => !!val || 'Interval is required!']"
                     behavior="menu"
                     hint="if interval is not present please click the icon"
                     v-if="!showInputInterval"
@@ -212,8 +205,7 @@
                     outlined
                     v-model="dataStorage.next_due_inteval"
                     dense
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
+                    :rules="[(val) => !!val || 'This is required!']"
                     type="number"
                     class="q-mt-sm"
                     hint="Please input a number by days"
@@ -240,22 +232,8 @@
                     v-model="dataStorage.next_due_date"
                     mask="####-##-##"
                     :rules="[(val) => !!val || '']"
-                    hide-bottom-space
                     disable
                     hint="Automatically generated"
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">Amount<span class="text-negative">*</span></div>
-                  <q-input
-                    :rules="[(val) => !!val || '']"
-                    hide-bottom-space
-                    outlined
-                    type="number"
-                    v-model="dataStorage.amount"
-                    dense
-                    class="q-mt-sm"
-                    prefix="₱"
                   />
                 </div>
               </div>
@@ -331,15 +309,18 @@
       </q-card>
     </q-dialog>
     <NoAccessDialog v-model:showNoAccess="showNoAccess" />
+    <OutputDialog v-model:outputDialog="outputDialog" v-model:outputObj="outputObj" />
   </q-page>
 </template>
 
 <script>
 import { useQuasar } from 'quasar'
 import NoAccessDialog from 'src/components/NoAccessDialog.vue'
+import OutputDialog from 'src/components/OutputDialog.vue'
 import ReusableTable from 'src/components/ReusableTable.vue'
 import {
   addSchedule,
+  editSchedule,
   getAnimalOption,
   getSchedule,
   softDeleteSchedule,
@@ -349,7 +330,7 @@ import { globalStore } from 'src/stores/global-store'
 import { onMounted, watchEffect } from 'vue'
 import { ref } from 'vue'
 export default {
-  components: { ReusableTable, NoAccessDialog },
+  components: { ReusableTable, NoAccessDialog, OutputDialog },
   setup() {
     const rows = ref([])
     const $q = useQuasar()
@@ -364,6 +345,8 @@ export default {
     const animalOption = ref([])
     const showNoAccess = ref(false)
     const store = globalStore()
+    const outputDialog = ref(false)
+    const outputObj = ref({})
     const tableAction = (data, modeParam) => {
       if (!preventAction()) {
         return
@@ -388,46 +371,53 @@ export default {
       }
     }
 
-    const saveFn = () => {
+    const saveFn = async () => {
       if (mode.value == 'Add') {
         $q.loading.show({
           group: 'update',
           message: `Adding new Schedule. Please wait...`,
         })
         dataStorage.value.added_by = store.userData?.user_id ?? 84
-        addSchedule(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
-          (response) => {
-            console.log(response)
-            setTimeout(() => {
-              $q.loading.show({
-                group: 'update',
-                message: response.message,
-              })
-            }, 1000)
-            setTimeout(() => {
-              getSchedule().then((response) => {
-                rows.value = response
-              })
-              showDialog.value = false
-              $q.loading.hide()
-            }, 2000)
-          },
+        const response = await addSchedule(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
         )
+        setTimeout(() => {
+          $q.loading.hide()
+          showDialog.value = false
+          outputDialog.value = true
+          outputObj.value = {
+            icon: 'check_circle',
+            title: response.message,
+            subtext: 'New Schedule has been successfully added',
+          }
+          getSchedule().then((response) => {
+            rows.value = response
+          })
+        }, 1000)
       } else if (mode.value == 'Edit') {
         $q.loading.show({
           group: 'update',
           message: `Updating Schedule. Please wait...`,
         })
-        // editAnimalInfo(dataStorage.value).then((response) => {
-        //   console.log(response)
-        //   $q.loading.show({
-        //     group: 'update',
-        //     message: response.message,
-        //   })
-        //   setTimeout(() => {
-        //     $q.loading.hide()
-        //   }, 2000)
-        // })
+        const response = await editSchedule(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+        )
+        console.log(response)
+
+        setTimeout(() => {
+          $q.loading.hide()
+          showDialog.value = false
+          outputDialog.value = true
+          outputObj.value = {
+            icon: 'check_circle',
+            title: response.message,
+            subtext: 'Schedule has been successfully updated for the selected veterinary animal.',
+          }
+        }, 1000)
       }
     }
 
@@ -439,6 +429,7 @@ export default {
       }
       return z
     }
+
     watchEffect(() => {
       let dateVar = dataStorage.value.scheduled_date // format: "YYYY-MM-DD"
       let interVar = dataStorage.value.next_due_interval // number of days (e.g. 365)
@@ -476,7 +467,7 @@ export default {
                 rows.value = response
               })
             }
-          }, 2000)
+          }, 1000)
         },
       )
     }
@@ -501,6 +492,8 @@ export default {
       })
     })
     return {
+      outputDialog,
+      outputObj,
       preventAction,
       showNoAccess,
       softDeleteFn,

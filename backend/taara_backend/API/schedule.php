@@ -62,7 +62,6 @@ class API
                 'scheduled_date'          => $data['scheduled_date'] ?? null,
                 'next_due_interval'          => $data['next_due_interval'] ?? null,
                 'next_due_date'                => $data['next_due_date'] ?? null,
-                'amount'             => $data['amount'] ?? null,
                 'notes'             => $data['notes'] ?? null,
                 'added_by'   => $data['added_by'] ?? null,
             ];
@@ -132,53 +131,54 @@ class API
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
             }
-        } else if (isset($payload['edit_animal_info'])) {
-            $obj = $payload['edit_animal_info'];
+        } else if (isset($payload['edit_schedule'])) {
+            $obj = $payload['edit_schedule']['obj'];
+            $user_id = $payload['edit_schedule']['user_id'];
+            $user_type = $payload['edit_schedule']['user_type'];
 
             $update_values = [
-                'name' => $obj['name'] ?? null,
-                'species' => $obj['species'] ?? null,
-                'breed' => $obj['breed'] ?? null,
-                'fur_color' => $obj['fur_color'] ?? null,
-                'eye_color' => $obj['eye_color'] ?? null,
-                'date_of_birth' => $obj['date_of_birth'] ?? null,
-                'weight' => $obj['weight'] ?? null,
-                'height' => $obj['height'] ?? null,
-                'sex' => $obj['sex'] ?? null,
-                'spayed_neutered' => $obj['spayed_neutered'] ?? null,
-                'vaccination_status' => $obj['vaccination_status'] ?? null,
-                'temperament' => $obj['temperament'] ?? null, // stored as JSON string
-                'skills' => $obj['skills'] ?? null,           // stored as JSON string
-                'favorite_food' => $obj['favorite_food'] ?? null,
-                'story_background' => $obj['story_background'] ?? null,
-                'rescue_status' => $obj['rescue_status'] ?? null,
-                'health_status' => $obj['health_status'] ?? null,
-                'medical_needs' => $obj['medical_needs'] ?? null,
-                'date_rescued' => $obj['date_rescued'] ?? null,
-                'primary_image' => $obj['primary_image'] ?? 0,
+                'animal_id' => $obj['animal_id'],
+                'schedule_category' => $obj['schedule_category'],
+                'schedule_name' => $obj['schedule_name'],
+                'dose_number' => $obj['dose_number'],
+                'dose_taken' => $obj['dose_taken'],
+                'scheduled_date' => $obj['scheduled_date'],
+                'next_due_interval' => $obj['next_due_interval'],
+                'next_due_date' => $obj['next_due_date'],
+                'notes' => $obj['notes'],
+                'added_by' => $user_id,
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
 
-            $animal_id = $obj['animal_id'];
 
-            $this->db->where('animal_id', $animal_id);
-            $updated = $this->db->update('tbl_animal_info', $update_values);
+            $id = $obj['id'];
+
+            $this->db->where('id', $id);
+            $updated = $this->db->update('tbl_animal_schedule', $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Update Schedule info',
+                    'module' => 'Vet Schedule',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
-                    'message' => 'Animal info updated successfully',
+                    'message' => 'Vet Schedule info updated successfully',
                     'method' => 'PUT'
                 ]);
             } else {
                 echo json_encode([
                     'status' => 'error',
-                    'message' => 'Failed to update animal info',
+                    'message' => 'Failed to update animal schedule info',
                     'method' => 'PUT'
                 ]);
             }
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Missing Animal info in the payload']);
+            echo json_encode(['status' => 'error', 'message' => 'Missing Schedule info in the payload']);
         }
     }
 

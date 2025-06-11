@@ -1101,6 +1101,13 @@ export const editInventoryList = (obj, user_id, user_type) => {
   })
 }
 
+export const editSchedule = async (obj, user_id, user_type) => {
+  const response = await api.put('schedule.php', {
+    edit_schedule: { obj, user_id, user_type },
+  })
+  return response.data
+}
+
 export const logIn = (obj) => {
   return new Promise((resolve, reject) => {
     api

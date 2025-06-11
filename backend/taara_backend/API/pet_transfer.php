@@ -84,18 +84,30 @@ class API
     public function httpPut($payload)
     {
         if (array_key_exists('update_pet_transfer', $payload)) {
-            $data = $payload['update_pet_transfer'];
-            $id = $payload['update_pet_transfer']['id'];
+            $data = $payload['update_pet_transfer']['obj'];
+            $user_id = $payload['update_pet_transfer']['user_id'];
+            $user_type = $payload['update_pet_transfer']['user_type'];
+            $id = $data['id'];
             $this->db->where('id', $id);
             $updated = $this->db->update('tbl_pet_transfer', $data);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Update Pet Transfer info',
+                    'module' => 'Pet Transfer',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode(['status' => 'success', 'message' => 'Records updated successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to updated records', 'method' => 'PUT']);
             }
         } else   if (array_key_exists('delete_pet_transfer', $payload)) {
-            $id = $payload['delete_pet_transfer'];
+            $id = $payload['delete_pet_transfer']['arrayId'];
+            $user_id = $payload['delete_pet_transfer']['user_id'];
+            $user_type = $payload['delete_pet_transfer']['user_type'];
             $ids = is_array($id) ? $id : explode(',', $id);
 
             $update_values = [
@@ -107,6 +119,14 @@ class API
             $updated = $this->db->update('tbl_pet_transfer', $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Archieve Pet Transfer list',
+                    'module' => 'Pet Transfer',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode(['status' => 'success', 'message' => 'Records delete successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to delete records', 'method' => 'PUT']);

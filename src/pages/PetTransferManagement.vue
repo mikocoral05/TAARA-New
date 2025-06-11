@@ -665,19 +665,21 @@ export default {
           message: `Updating. Please wait...`,
         })
 
-        updatePetTransfer(dataStorage.value).then((response) => {
-          setTimeout(() => {
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-          }, 500)
-          setTimeout(() => {
-            $q.loading.hide()
-            addDialog.value = false
-            fetchData()
-          }, 1000)
-        })
+        updatePetTransfer(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
+          (response) => {
+            setTimeout(() => {
+              $q.loading.show({
+                group: 'update',
+                message: response.message,
+              })
+            }, 500)
+            setTimeout(() => {
+              $q.loading.hide()
+              addDialog.value = false
+              fetchData()
+            }, 1000)
+          },
+        )
       }
     }
 
@@ -686,18 +688,20 @@ export default {
         group: 'update',
         message: `Deleting Pet Transfer list. Please wait...`,
       })
-      deletePetTransfer(arrayOfId.value).then((response) => {
-        setTimeout(() => {
-          $q.loading.show({
-            group: 'update',
-            message: response.message,
-          })
-        }, 500)
-        setTimeout(() => {
-          $q.loading.hide()
-          fetchData()
-        }, 1000)
-      })
+      deletePetTransfer(arrayOfId.value, store.userData.user_id, store.userData.user_type).then(
+        (response) => {
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 500)
+          setTimeout(() => {
+            $q.loading.hide()
+            fetchData()
+          }, 1000)
+        },
+      )
     }
     const preventAction = () => {
       const userType = store.userData.user_type

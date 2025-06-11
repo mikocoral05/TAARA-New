@@ -42,6 +42,21 @@ export const downloadExampleExcelFormat = async (table, colums, excelName) => {
   exportToExcel(response.data.data, `${excelName}.xlsx`)
 }
 
+export const downloadReportAnimal = async (year) => {
+  const response = await api.get('report.php', {
+    params: { download_report_animal: year },
+  })
+  exportToExcel(response.data.data, `animal_report.xlsx`)
+  return response.data
+}
+export const downloadReportBudget = async (year) => {
+  const response = await api.get('report.php', {
+    params: { download_report_budget: year },
+  })
+  exportToExcel(response.data.data, `budget_report.xlsx`)
+  return response.data
+}
+
 export const uploadExcel = async (table, data, user_id, user_type) => {
   const processedPets = data.map((pet) => ({
     ...pet,

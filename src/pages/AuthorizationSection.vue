@@ -601,25 +601,27 @@ export default {
         message: 'Updating. Please wait...',
       })
 
-      updateUser(userData.value).then((response) => {
-        setTimeout(() => {
-          $q.loading.show({
-            group: 'update',
-            message: response.message,
-          })
-        }, 500)
-        if (response.status == 'success') {
-          const index = userRows.value.findIndex((row) => row.user_id === userData.value.user_id)
+      updateUser(userData.value, store.userData.user_id, store.userData.user_type).then(
+        (response) => {
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 500)
+          if (response.status == 'success') {
+            const index = userRows.value.findIndex((row) => row.user_id === userData.value.user_id)
 
-          if (index !== -1) {
-            userRows.value[index] = { ...userData.value }
+            if (index !== -1) {
+              userRows.value[index] = { ...userData.value }
+            }
           }
-        }
-        setTimeout(() => {
-          editDialog.value = false
-          $q.loading.hide()
-        }, 1000)
-      })
+          setTimeout(() => {
+            editDialog.value = false
+            $q.loading.hide()
+          }, 1000)
+        },
+      )
     }
 
     const softDeleteFn = () => {

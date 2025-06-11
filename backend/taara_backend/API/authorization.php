@@ -109,7 +109,9 @@ class API
     {
         if (array_key_exists('updateUser', $payload)) {
             // Extract the user data
-            $user_data = $payload['updateUser'];
+            $user_data = $payload['updateUser']['clone'];
+            $user_id = $payload['updateUser']['user_id'];
+            $user_type = $payload['updateUser']['user_type'];
             $password = $user_data['password'] ?? '';
 
             // Ensure user_id is provided
@@ -169,6 +171,14 @@ class API
 
             // Return a response based on whether the update was successful
             if ($update_success) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Update User info',
+                    'module' => 'User Management',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'User information updated successfully.',

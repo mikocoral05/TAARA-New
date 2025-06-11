@@ -124,11 +124,21 @@ class API
     public function httpPost($payload)
     {
         if (isset($payload['add_budget_allocation'])) {
-            $data = $payload['add_budget_allocation'];
+            $data = $payload['add_budget_allocation']['data'];
+            $user_id = $payload['add_budget_allocation']['user_id'];
+            $user_type = $payload['add_budget_allocation']['user_type'];
 
             $insert = $this->db->insert('tbl_budget_allocation', $data);
 
             if ($insert) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Add New Budget Allocation',
+                    'module' => 'Budget and Expenses',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Budget allocation successfully added',
@@ -184,12 +194,22 @@ class API
             // Extract the user data
             $id = $payload['update_buget_allocation']['id'];
             $data = $payload['update_buget_allocation']['data'];
+            $user_id = $payload['update_buget_allocation']['user_id'];
+            $user_type = $payload['update_buget_allocation']['user_type'];
 
             $this->db->where('id', $id);
             $update_success = $this->db->update('tbl_budget_allocation', $data);
 
             // Return a response based on whether the update was successful
             if ($update_success) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Update Budget Allocation ' . $data['name'],
+                    'module' => 'Budget and Expense',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Budget allocation updated successfully.',

@@ -148,8 +148,8 @@ class API
                 $logs = [
                     'user_id' => $user_id,
                     'user_type' => $user_type,
-                    'action' => 'Add new Inventory List ' . $data['item_name'],
-                    'module' => 'Medicine Inventory',
+                    'action' => 'Add New ' . ucfirst($data['category']) . 'Inventory List ' . $data['item_name'],
+                    'module' => 'Inventory',
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
@@ -181,8 +181,8 @@ class API
                 $logs = [
                     'user_id' => $user_id,
                     'user_type' => $user_type,
-                    'action' => 'Add new Inventory Group ' . $data['group_name'],
-                    'module' => 'Medicine Inventory',
+                    'action' => 'Add new Inventory Group',
+                    'module' => 'Inventory Group',
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
@@ -236,10 +236,11 @@ class API
             $updated = $this->db->update($table, $update_values);
 
             if ($updated) {
+                $Module = $table == 'tbl_inventory' ? 'Inventory' : 'Group';
                 $logs = [
                     'user_id' => $user_id,
                     'user_type' => $user_type,
-                    'action' => 'Archieve Inventory List',
+                    'action' => 'Archive ' . $Module . ' Inventory List',
                     'module' => 'Medicine Inventory',
                 ];
 
@@ -274,9 +275,10 @@ class API
                 $logs = [
                     'user_id' => $user_id,
                     'user_type' => $user_type,
-                    'action' => 'Update Inventory List ' . $data['group_name'],
-                    'module' => 'Medicine Inventory',
+                    'action' => 'Update ' . ucfirst($data['category']) . ' Inventory List',
+                    'module' => 'Inventory',
                 ];
+
 
                 $this->db->insert("tbl_logs", $logs);
                 echo json_encode([

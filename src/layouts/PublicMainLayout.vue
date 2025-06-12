@@ -204,9 +204,155 @@
           <q-btn class="q-ml-md text-white" label="Log In" no-caps flat to="/user-login" />
         </div>
       </div>
-      <q-btn icon="menu" dense color="black" flat />
+      <q-btn icon="menu" dense color="black" flat @click="drawerLeft = !drawerLeft" />
     </q-header>
 
+    <q-drawer
+      v-model="drawerLeft"
+      show-if-above
+      :width="300"
+      :breakpoint="500"
+      class="column justify-between no-wrap"
+    >
+      <q-list padding class="menu-list">
+        <q-item
+          clickable
+          v-ripple
+          to="home"
+          :class="
+            ['/public', '/public/home'].includes($route.fullPath) || ''
+              ? 'bg-primary text-white'
+              : 'bg-white text-black'
+          "
+        >
+          <q-item-section> Home </q-item-section>
+        </q-item>
+
+        <q-item
+          active
+          clickable
+          v-ripple
+          to="/public/pet-list?page=1"
+          :class="
+            $route.fullPath.indexOf('/public/pet-list') !== -1
+              ? 'bg-primary text-white'
+              : 'bg-white text-black'
+          "
+        >
+          <q-item-section> Star </q-item-section>
+        </q-item>
+
+        <q-item
+          clickable
+          v-ripple
+          to="/public/taara-charts"
+          :class="
+            $route.fullPath == '/public/taara-charts'
+              ? 'bg-primary text-white'
+              : 'bg-white text-black'
+          "
+        >
+          <q-item-section> Charts </q-item-section>
+        </q-item>
+
+        <q-item
+          clickable
+          v-ripple
+          :class="
+            $route.fullPath == '/public/contact' ? 'bg-primary text-white' : 'bg-white text-black'
+          "
+          @click="goToContactUs()"
+        >
+          <q-item-section> Contact </q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-close-popup
+          to="/public/taara-faqs"
+          @click="headerColor = '#ffd7ef'"
+          :class="
+            $route.fullPath == '/public/taara-faqs' || ''
+              ? 'bg-primary text-white'
+              : 'bg-white text-black'
+          "
+        >
+          <q-item-section>
+            <q-item-label>FAQs</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-close-popup
+          to="/public/pet-care"
+          @click="headerColor = 'white'"
+          :class="
+            $route.fullPath == '/public/pet-care' || ''
+              ? 'bg-primary text-white'
+              : 'bg-white text-black'
+          "
+        >
+          <q-item-section>
+            <q-item-label>Pet Care</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-item
+          clickable
+          v-close-popup
+          to="/public/donation-channel?wish=0"
+          @click="headerColor = 'white'"
+          :class="
+            $route.fullPath == '/public/donation-channel?wish=0' || ''
+              ? 'bg-primary text-white'
+              : 'bg-white text-black'
+          "
+        >
+          <q-item-section>
+            <q-item-label>Shelter Wishlist</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-separator></q-separator>
+        <q-item
+          clickable
+          v-close-popup
+          to="/public/pet-transfer"
+          @click="headerColor = 'white'"
+          :class="
+            $route.fullPath == '/public/pet-transfer' || ''
+              ? 'bg-primary text-white'
+              : 'bg-white text-black'
+          "
+        >
+          <q-item-section>
+            <q-item-label>Pet Transfer</q-item-label>
+          </q-item-section>
+        </q-item>
+
+        <q-item
+          clickable
+          v-close-popup
+          to="/public/report-and-rescue"
+          @click="headerColor = 'white'"
+          :class="
+            $route.fullPath == '/public/report-and-rescue' || ''
+              ? 'bg-primary text-white'
+              : 'bg-white text-black'
+          "
+        >
+          <q-item-section>
+            <q-item-label>Report & Rescue</q-item-label>
+          </q-item-section>
+        </q-item>
+        <q-separator></q-separator>
+        <q-item clickable v-close-popup @click="logOuts()">
+          <q-item-section avatar>
+            <q-icon name="sym_r_logout" />
+          </q-item-section>
+          <q-item-section>
+            <q-item-label>Logout</q-item-label>
+          </q-item-section>
+        </q-item>
+      </q-list>
+    </q-drawer>
     <q-page-container>
       <loginModal v-if="counterStore.showDialog == true" style="position: absolute"></loginModal>
       <router-view />

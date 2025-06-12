@@ -2,7 +2,7 @@
   <q-page>
     <q-scroll-observer @scroll="onScroll" />
     <div class="first-layer row justify-center items-center">
-      <div class="row no-wrap q-my-lg first-child items-end">
+      <div class="row q-my-lg first-child items-end">
         <div class="intro-layer column no-wrap">
           <div class="heading-1 q-mb-lg fade-in">
             Find Your
@@ -83,8 +83,8 @@
           </div>
         </div>
       </div>
-      <div class="second-child row no-wrap justify-between">
-        <div class="column no-wrap">
+      <div class="second-child row justify-between">
+        <div class="column fd no-wrap">
           <img src="~assets/1.jpg" alt="" class="q-mb-lg" />
           <div>
             <h6 class="q-ma-none q-mb-md">Adoption Process</h6>
@@ -95,7 +95,7 @@
             </p>
           </div>
         </div>
-        <div class="column no-wrap">
+        <div class="column fd no-wrap">
           <img src="~assets/2.jpg" alt="" class="q-mb-lg" />
           <div>
             <h6 class="q-ma-none q-mb-md">Community Engagement</h6>
@@ -106,7 +106,7 @@
             </p>
           </div>
         </div>
-        <div class="column no-wrap" @click="$router.push('/rescue-reports')">
+        <div class="column fd no-wrap" @click="$router.push('/rescue-reports')">
           <img src="~assets/3.jpg" alt="" class="q-mb-lg" />
           <div>
             <h6 class="q-ma-none q-mb-md">Report & Rescue</h6>
@@ -117,7 +117,7 @@
             </p>
           </div>
         </div>
-        <div class="column no-wrap" @click="$router.push('/pet-transfer')">
+        <div class="column fd no-wrap" @click="$router.push('/pet-transfer')">
           <img src="~assets/4.jpg" alt="" class="q-mb-lg" />
           <div>
             <h6 class="q-ma-none q-mb-md">Pet Transfer</h6>
@@ -165,7 +165,7 @@
         </div>
       </div>
     </div>
-    <div class="fifth-layer column justify-center items-center">
+    <!-- <div class="fifth-layer column justify-center items-center">
       <div class="first-child">
         <h2 class="q-ma-none q-mb-lg text-weight-medium">Trusted Among Animal Lovers</h2>
         <p class="q-ma-none">
@@ -173,7 +173,7 @@
           perfect companions through TAARA.
         </p>
       </div>
-    </div>
+    </div> -->
     <div class="sixth-layer column justify-center items-center">
       <div class="first-child">
         <h2 class="text-weight-medium">What Our Adopters Say</h2>

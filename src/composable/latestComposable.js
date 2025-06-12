@@ -113,6 +113,13 @@ export const getUserByType = (type) => {
   })
 }
 
+export const approveDisapproveVolunteer = async (val, val_user_id, user_id, user_type) => {
+  const response = await api.put('authorization.php', {
+    approve_disapprove_volunteer: { val, val_user_id, user_id, user_type },
+  })
+  return response.data
+}
+
 export const getPendingRescueReport = () => {
   return new Promise((resolve, reject) => {
     api

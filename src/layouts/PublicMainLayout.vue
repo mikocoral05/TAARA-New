@@ -209,7 +209,6 @@
 
     <q-drawer
       v-model="drawerLeft"
-      show-if-above
       :width="300"
       :breakpoint="500"
       class="column justify-between no-wrap"

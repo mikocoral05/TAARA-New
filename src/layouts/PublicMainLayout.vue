@@ -239,7 +239,7 @@
               : 'bg-white text-black'
           "
         >
-          <q-item-section> Star </q-item-section>
+          <q-item-section> Pets </q-item-section>
         </q-item>
 
         <q-item

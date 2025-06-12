@@ -204,6 +204,7 @@
           <q-btn class="q-ml-md text-white" label="Log In" no-caps flat to="/user-login" />
         </div>
       </div>
+      <q-btn icon="menu" dense color="black" flat />
     </q-header>
 
     <q-page-container>

@@ -33,32 +33,33 @@ export default defineComponent({
     const router = useRouter()
     const route = useRoute()
     const rightDrawerNotification = ref(false)
-    let headerColor = ref('white')
-    let secondDialog = ref()
+    const headerColor = ref('white')
+    const secondDialog = ref()
     const $q = useQuasar()
-    let fundRaiser = ref(false)
-    let rescueReport = ref(false)
-    let ourPetsMenu = ref(false)
-    let contactUs = ref(false)
-    let responsiveNav = ref(false)
-    let responsiveNavAll = ref(false)
+    const fundRaiser = ref(false)
+    const rescueReport = ref(false)
+    const ourPetsMenu = ref(false)
+    const contactUs = ref(false)
+    const drawerLeft = ref(false)
+    const responsiveNav = ref(false)
+    const responsiveNavAll = ref(false)
     let myFavorites
     let myNotification
     let mySettings
-    let rightDrawerFavorites = ref(false)
-    let menu = ref(false)
-    let responsiveNavAllSlideHide = ref('slide-left')
-    let responsiveNavAllSlideShow = ref('slide-left')
+    const rightDrawerFavorites = ref(false)
+    const menu = ref(false)
+    const responsiveNavAllSlideHide = ref('slide-left')
+    const responsiveNavAllSlideShow = ref('slide-left')
     let resizeTimeout = null
 
-    let showDropDown = (payload) => {
+    const showDropDown = (payload) => {
       ourPetsMenu.value = payload == 1
       fundRaiser.value = payload == 2
       rescueReport.value = payload == 3
       contactUs.value = payload == 4
     }
 
-    let logOuts = () => {
+    const logOuts = () => {
       $q.loading.show({
         message: 'Logging Out. Please wait...',
       })
@@ -69,7 +70,7 @@ export default defineComponent({
         $q.loading.hide()
       }, 1000)
     }
-    let goToContactUs = () => {
+    const goToContactUs = () => {
       if (route.fullPath == '/public/home') {
         counterStore.incrementFooter()
       } else {
@@ -79,13 +80,13 @@ export default defineComponent({
         }, 500)
       }
     }
-    let likeShow = () => {
+    const likeShow = () => {
       // logInDetails.value == null ? '' : getLikes(logInDetails.value[0].user_id)
       rightDrawerFavorites.value = !rightDrawerFavorites.value
       console.log(rightDrawerFavorites.value)
       rightDrawerNotification.value = false
     }
-    let showLikeAnimal = (payload) => {
+    const showLikeAnimal = (payload) => {
       localStorage.setItem('specificAnimalId', JSON.stringify(payload))
       viewSpecificAnimal(payload)
       rightDrawerFavorites.value = false
@@ -97,10 +98,10 @@ export default defineComponent({
     // dates.setDate(dates.getDate() + 30)
 
     const numberNotif = ref([])
-    let notificationShow = () => {
+    const notificationShow = () => {
       rightDrawerNotification.value = !rightDrawerNotification.value
     }
-    let viewNotification = (payload, notif_id) => {
+    const viewNotification = (payload, notif_id) => {
       if (payload == 'rescue_report') {
         if (route.path == '/rescue-reports') {
           counterStore.changeReport(notif_id)
@@ -122,7 +123,7 @@ export default defineComponent({
         router.push('/activitiesAndEventsViewEvent')
       }
     }
-    // let readNotif = (pay, user_id, notif) => {
+    // const readNotif = (pay, user_id, notif) => {
     //   for (var i = 0; i < pay.length; i++) {
     //     v.value.push(pay[i])
     //   }
@@ -143,12 +144,12 @@ export default defineComponent({
         }
       }, 250)
     }
-    let navigateMobileMenu = (navigate) => {
+    const navigateMobileMenu = (navigate) => {
       responsiveNavAll.value = true
       secondDialog.value = navigate
     }
 
-    let suppliesFormControl = (logDetails) => {
+    const suppliesFormControl = (logDetails) => {
       responsiveNavAll.value = false
       responsiveNav.value = false
       logDetails == null ? (counterStore.showDialog = true) : router.push('/donateSuppliesForm')
@@ -210,6 +211,7 @@ export default defineComponent({
     })
 
     return {
+      drawerLeft,
       getImageLink,
       store,
       secondDialog,

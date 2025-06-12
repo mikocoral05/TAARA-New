@@ -1,6 +1,6 @@
 <template>
   <q-page class="flex flex-center q-pa-lg q-py-xl">
-    <q-card flat class="radius-10" style="min-width: 600px; min-height: 500px">
+    <q-card flat class="radius-10" style="max-width: 600px; width: 100%; min-height: 500px">
       <q-form @submit="submitReport()" ref="reportForm">
         <q-card-section class="text-center">
           <div class="text-bold text-h6">Animal Report Incident</div>

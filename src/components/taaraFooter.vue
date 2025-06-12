@@ -13,7 +13,7 @@
         </div>
       </div>
     </div>
-    <div class="row no-wrap justify-between items-center second-layer">
+    <div class="row justify-between items-center second-layer">
       <div class="colum no-wrap justify-start items-center">
         <p class="paragraph1">Contact</p>
         <p class="paragraph2">P-3 Burac St., San Lorenzo, Tabaco, Philippines</p>
@@ -87,53 +87,4 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
-.containerFooter {
-  // background-color: #ffbf23;
-  min-height: 60vh;
-  .left-header {
-    padding-left: 100px;
-    margin-top: 100px;
-    margin-bottom: 50px;
-    img {
-      padding: 3px;
-      background: white;
-      border-radius: 100%;
-      margin-top: 8px;
-      border: 1px solid lightgray;
-      margin-right: 10px;
-      color: white;
-      height: 50px;
-      width: 50px;
-    }
-    .title {
-      font-family: 'Space Grotesk', sans-serif;
-      font-size: 22px;
-      font-weight: bold;
-    }
-    .sub-title {
-      font-family: 'Proxima Nova', sans-serif;
-      font-size: 14px;
-    }
-  }
-  .second-layer {
-    width: 1150px;
-    div {
-      min-height: 260px;
-      width: 200px;
-      margin: 20px; // background: green;
-      .paragraph1 {
-        font-family: 'Proxima Nova', sans-serif;
-        font-size: 20px;
-        font-weight: bold;
-      }
-      .paragraph2 {
-        font-family: 'Proxima Nova', sans-serif; // font-size: 16px;
-      }
-    }
-  }
-  .reserve {
-    font-family: 'Proxima Nova', sans-serif;
-  }
-}
-</style>
+<style lang="scss" src="pages/css/taaraFooter.scss" scoped></style>

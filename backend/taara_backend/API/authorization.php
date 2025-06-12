@@ -240,6 +240,39 @@ class API
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to  ' . $state . 'user', 'method' => 'PUT']);
             }
+        } else if (isset($payload['approve_disapprove_volunteer'])) {
+            $user_id = $payload['approve_disapprove_volunteer']['user_id'];
+            $user_type = $payload['approve_disapprove_volunteer']['user_type'];
+            $user_id_to_update = $payload['approve_disapprove_volunteer']['val_user_id'];
+            $val = $payload['approve_disapprove_volunteer']['val'];
+
+            $update_values = [
+                'application_status' => $val,
+            ];
+
+            // Update records matching the IDs
+            $this->db->where('user_id', $user_id_to_update);
+            $updated = $this->db->update('tbl_volunteer_form', $update_values);
+
+            $state = $val == 2 ? 'Approve' : 'Disapprove';
+
+            if ($val == 2) {
+                $this->db->where('user_id', $user_id_to_update);
+                $updated = $this->db->update('tbl_users', ['user_type' => 2, 'roles_type' => 2]);
+            }
+            if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => $state . ' a Volunteer',
+                    'module' => 'User Management',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
+                echo json_encode(['status' => 'success', 'message' => 'Volunteer ' . $state . ' successfully', 'method' => 'PUT']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to  ' . $state . 'user', 'method' => 'PUT']);
+            }
         } else {
             // Handle the case where 'updateUser' key is missing
             echo json_encode(['status' => 'error', 'message' => 'Missing updateUser key in the payload']);

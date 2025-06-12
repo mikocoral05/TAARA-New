@@ -140,7 +140,7 @@
               >
                 <q-item-section>Approve</q-item-section>
                 <q-item-section side>
-                  <q-icon name="sym_r_thumb_up" size="1.2rem" />
+                  <q-icon name="sym_r_thumb_up" size="1.2rem" color="positive" />
                 </q-item-section>
               </q-item>
               <q-item
@@ -151,7 +151,7 @@
               >
                 <q-item-section>Disapprove</q-item-section>
                 <q-item-section side>
-                  <q-icon name="sym_r_thumb_down" size="1.2rem" />
+                  <q-icon name="sym_r_thumb_down" size="1.2rem" color="negative" />
                 </q-item-section>
               </q-item>
               <q-item
@@ -639,6 +639,7 @@ import ReusableTable from 'src/components/ReusableTable.vue'
 import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
 import {
   activateOrDeactivate,
+  approveDisapproveVolunteer,
   getUserByType,
   softDeleteUser,
   updateUser,
@@ -700,6 +701,42 @@ export default {
             icon: 'check_circle',
             title: response.message,
             subtext: `The user has been successfully ${text1}.`,
+          }
+          fetchFn()
+        }, 1000)
+      } else if (modeParam == 'Approve') {
+        $q.loading.show({ group: 'update', message: `Approving Volunteer. please wait ...` })
+        const response = await approveDisapproveVolunteer(
+          2,
+          data.user_id,
+          store.userData.user_id,
+          store.userData.user_type,
+        )
+        setTimeout(() => {
+          $q.loading.hide()
+          outputDialog.value = true
+          outputObj.value = {
+            icon: 'check_circle',
+            title: response.message,
+            subtext: `The volunteer has been successfully Approve.`,
+          }
+          fetchFn()
+        }, 1000)
+      } else if (modeParam == 'Disapprove') {
+        $q.loading.show({ group: 'update', message: `Disapproving Volunteer. please wait ...` })
+        const response = await approveDisapproveVolunteer(
+          3,
+          data.user_id,
+          store.userData.user_id,
+          store.userData.user_type,
+        )
+        setTimeout(() => {
+          $q.loading.hide()
+          outputDialog.value = true
+          outputObj.value = {
+            icon: 'check_circle',
+            title: response.message,
+            subtext: `The volunteer has been successfully Disapprove.`,
           }
           fetchFn()
         }, 1000)

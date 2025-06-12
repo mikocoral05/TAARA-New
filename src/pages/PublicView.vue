@@ -58,11 +58,7 @@
         </div>
       </div>
     </div>
-    <div
-      class="second-layer row no-wrap justify-center items-center"
-      id="ourMission"
-      ref="ourMission"
-    >
+    <div class="second-layer row justify-center items-center" id="ourMission" ref="ourMission">
       <h2 class="mission-title row justify-start items-center pt-md q-ma-none">Our Mission</h2>
       <p class="mission-text row justify-start items-center q-ma-none">
         To rescue, rehabilitate and rehome abandoned and neglected animals, ensure healthy pets
@@ -130,7 +126,7 @@
         </div>
       </div>
     </div>
-    <div class="fourth-layer row no-wrap">
+    <div class="fourth-layer row">
       <div class="left-image column justify-center items-center relative-position">
         <div class="absolute-left blue-circle"></div>
         <img src="~assets/5.jpg" alt="" />
@@ -177,7 +173,7 @@
     <div class="sixth-layer column justify-center items-center">
       <div class="first-child">
         <h2 class="text-weight-medium">What Our Adopters Say</h2>
-        <div class="row no-wrap justify-between items-center">
+        <div class="row no-wrap fc justify-between items-center">
           <div class="column no-wrap feddback-container">
             <div class="head"></div>
             <div class="content column no-wrap justify-between items-center q-pa-md">
@@ -221,7 +217,7 @@
           </p>
           <q-btn
             label="Donate Now"
-            class="bg-black text-white q-pa-sm q-mt-xl"
+            class="bg-black dqbtn text-white q-pa-sm q-mt-xl"
             flat
             no-caps
             to="/public/donation-channel"
@@ -247,7 +243,7 @@
                     class="bg-white text-black q-pa-sm"
                     flat
                     no-caps
-                    @click="scrollToDiv('mission')"
+                    to="/public/donation-channel"
                     style="width: 200px"
                   />
                 </div>

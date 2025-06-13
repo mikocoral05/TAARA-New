@@ -7,6 +7,7 @@
         <h6 class="q-ma-none q-mb-md text-center">Simple steps to</h6>
         <h3 class="q-ma-none text-center">Pet Care</h3>
       </div>
+
       <div class="row no-wrap justify-around details full-width">
         <div class="column no-wrap justify-center items-center details-container">
           <q-icon name="pets" size="xl" />
@@ -147,7 +148,6 @@
 
 <script>
 import { ref } from 'vue'
-// import PageFooter from "src/components/PageFooter.vue";
 import TaaraFooter from 'src/components/TaaraFooter.vue'
 export default {
   components: {

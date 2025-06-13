@@ -51,47 +51,6 @@
         </div>
       </div>
 
-      <!-- <div
-        class="q-mt-xl q-mb-md q-stepper-container"
-        v-show="accountActive(adoptedAnimalOnProgress, specific.animal_id)"
-      >
-        <q-stepper
-          v-model="step"
-          ref="stepper"
-          alternative-labels
-          color="primary"
-          animated
-          flat
-          :contracted="contactedQStepper"
-        >
-          <q-step
-            :name="1"
-            title="Request Submitted"
-            icon="add_task"
-            :done="step != 0"
-          />
-          <q-step
-            :name="2"
-            title="Reviewing Request"
-            icon="mark_email_read"
-            :done="step > 2"
-          />
-
-          <q-step
-            :name="3"
-            title="Qualified"
-            icon="sports_handball"
-            :done="step > 3"
-          />
-          <q-step
-            :name="4"
-            title="Ready for Pickup"
-            icon="local_shipping"
-            :done="step > 4"
-          />
-          <q-step :name="5" title="Adopted" icon="pets" :done="step > 5" />
-        </q-stepper>
-      </div> -->
       <div class="flex justify-center items-center">
         <div class="animal-label" style="text-transform: capitalize">
           {{ specificAnimal.animal_name }}

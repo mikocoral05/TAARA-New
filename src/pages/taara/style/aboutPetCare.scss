@@ -9,8 +9,6 @@
   font-size: 15px;
 }
 .container {
-  font-family: "Space Grotesk", sans-serif;
-  // height: 85vh;
   padding: 0px 100px;
   .title-container {
     border-radius: 10px;
@@ -41,57 +39,13 @@
 .footer {
   margin-top: 100px;
 }
-// @media only screen and (max-width: 933px) {
-//   .about-cat-care {
-//     font-size: 30px;
-//     font-weight: bold;
-//   }
-//   .button {
-//     font-size: 11px;
-//   }
-//   .text-body1 {
-//     font-size: 12px;
-//   }
-//   .button-text {
-//     font-size: 13px;
-//   }
-//   .container {
-//     height: 87vh;
-//   }
-// }
-
-// @media only screen and (max-width: 701px) {
-//   .container {
-//     height: 92vh;
-//   }
-// }
-// @media only screen and (max-width: 536px) {
-//   .about-cat-care {
-//     font-size: 25px;
-//   }
-//   .button {
-//     font-size: 9px;
-//   }
-//   .text-body1 {
-//     font-size: 12px;
-//   }
-// }
-// @media only screen and (max-width: 501px) {
-//   .container {
-//     height: 94vh;
-//   }
-// }
-// @media only screen and (max-width: 376px) {
-//   .about-cat-care {
-//     font-size: 23px;
-//   }
-//   .button-text {
-//     font-size: 12px;
-//   }
-//   .text-body1 {
-//     font-size: 12px;
-//   }
-//   .label {
-//     font-size: 12px;
-//   }
-// }
+@media only screen and (max-width: 432px) {
+  .container {
+    width: 100%;
+    padding: 0px 15px;
+    .title-container {
+      margin-top: 20px;
+      width: 100%;
+    }
+  }
+}

@@ -4,7 +4,7 @@
   .background-image {
     height: 300px;
     z-index: -1;
-    background: url("../../../image/fifth-layer-image.png");
+    background: url('../../../image/fifth-layer-image.png');
     transform: rotate(180deg);
   }
   .first-child-terms {
@@ -15,12 +15,12 @@
     }
     .title {
       font-size: 50px;
-      font-family: "Space Grotesk", sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       margin-top: 100px;
       margin-bottom: 100px;
     }
     .questions {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 22px;
       margin-top: 100px;
       margin-bottom: 50px;
@@ -29,12 +29,12 @@
       margin: 0px;
       li {
         margin: 0px;
-        font-family: "Proxima Nova", sans-serif;
+        font-family: 'Proxima Nova', sans-serif;
         font-size: 16px;
       }
     }
     p {
-      font-family: "Proxima Nova", sans-serif;
+      font-family: 'Proxima Nova', sans-serif;
       font-size: 16px;
     }
   }
@@ -46,18 +46,18 @@
     }
     .title {
       font-size: 50px;
-      font-family: "Space Grotesk", sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       margin-top: 100px;
       margin-bottom: 100px;
     }
     .questions {
-      font-family: "Space Grotesk", sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       font-size: 22px;
       margin-top: 100px;
       margin-bottom: 50px;
     }
     p {
-      font-family: "Proxima Nova", sans-serif;
+      font-family: 'Proxima Nova', sans-serif;
       font-size: 16px;
     }
   }
@@ -65,13 +65,12 @@
     width: 1150px;
     .title {
       font-size: 50px;
-      font-family: "Space Grotesk", sans-serif;
+      font-family: 'Space Grotesk', sans-serif;
       margin-top: 100px;
       margin-bottom: 100px;
     }
     .tab-container {
       border-bottom: 1px solid black;
-      // width: 600px;
       min-width: auto;
     }
     .tab-details {
@@ -80,13 +79,13 @@
         border-radius: 10px;
         color: white;
         .questions {
-          font-family: "Space Grotesk", sans-serif;
+          font-family: 'Space Grotesk', sans-serif;
           font-size: 22px;
         }
         p,
         .q-btn,
         ul li {
-          font-family: "Proxima Nova", sans-serif;
+          font-family: 'Proxima Nova', sans-serif;
           font-size: 15px;
         }
         ul li {
@@ -97,119 +96,19 @@
   }
 }
 
-// @media only screen and (max-width: 933px) {
-//   .title {
-//     font-size: 30px;
-//     margin: 20px 20px 10px 20px;
-//   }
-//   .button {
-//     width: 185px;
-//     font-size: 11px;
-//   }
-//   .inside-title {
-//     font-size: 28px;
-//     margin: 12px 10px 8px 10px;
-//   }
-//   .questions {
-//     font-size: 18px;
-//   }
-//   .four-div-container {
-//     margin-top: -22px;
-//     padding-bottom: 20px;
-//   }
-// }
-// @media only screen and (max-width: 870px) {
-//   .button {
-//     width: 160px;
-//   }
-//   .footer {
-//     margin-top: 50px;
-//   }
-// }
-// @media only screen and (max-width: 768px) {
-//   .button {
-//     width: 140px;
-//   }
-//   .inside-title {
-//     margin: 5px 5px 5px 5px;
-//   }
-//   .four-div-container {
-//     margin-top: -32px;
-//   }
-// }
-// @media only screen and (max-width: 700px) {
-//   .title {
-//     font-size: 28px;
-//   }
-//   .button {
-//     width: 120px;
-//   }
-//   .questions {
-//     font-size: 15px;
-//     padding: 0;
-//   }
-//   p {
-//     font-size: 14px;
-//   }
-//   ul li {
-//     font-size: 14px;
-//   }
-// }
-// @media only screen and (max-width: 609px) {
-//   .button {
-//     width: 110px;
-//     font-size: 10px;
-//     margin: 5px;
-//   }
-//   .inside-title {
-//     font-size: 25px;
-//     margin: 5px 0px 0px 0px;
-//   }
-//   p {
-//     font-size: 13px;
-//   }
-//   .link {
-//     font-size: 13px;
-//   }
-//   ul li {
-//     font-size: 13px;
-//   }
-// }
-// @media only screen and (max-width: 536px) {
-//   .title {
-//     font-size: 25px;
-//   }
-//   .aboutUsText {
-//     font-size: 12px;
-//   }
-//   .inside-title {
-//     font-size: 23px;
-//     margin: 0px 4px -10px 4px;
-//   }
-//   .four-div-container {
-//     border: none;
-//   }
-// }
-
-// @media only screen and (max-width: 376px) {
-//   .title {
-//     font-size: 23px;
-//   }
-
-//   .four-div-container {
-//     margin: -40px 10px 0px 10px;
-//     padding-bottom: 0;
-//   }
-//   .inside-title {
-//     font-size: 20px;
-//   }
-//   .link {
-//     font-size: 12px;
-//   }
-//   p {
-//     font-size: 12px;
-//   }
-//   ul li {
-//     font-size: 12px;
-//   }
-// }
+@media only screen and (max-width: 432px) {
+  .container {
+    .first-child {
+      width: 90%;
+      .title {
+        font-size: 30px;
+        margin-top: 50px;
+      }
+      .tab-container {
+        .text-body1 {
+          padding: 0px 1px;
+        }
+      }
+    }
+  }
+}

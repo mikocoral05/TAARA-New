@@ -347,14 +347,14 @@
             :icon-right="categorizeByName ? 'arrow_drop_up' : 'arrow_drop_down'"
             no-caps
             dense
-            class="text-weight-regular"
+            class="text-weight-regular q-btn"
             @click="sortByName(allAnimalData)"
           />
           <q-btn
             label="Age"
             no-caps
             dense
-            class="text-weight-regular"
+            class="text-weight-regular q-btn"
             :icon-right="categorizeByAge ? 'arrow_drop_up' : 'arrow_drop_down'"
             @click="sortByAge(allAnimalData)"
           />
@@ -362,7 +362,7 @@
             label="Weight"
             no-caps
             dense
-            class="text-weight-regular"
+            class="text-weight-regular q-btn"
             :icon-right="categorizeByWeight ? 'arrow_drop_up' : 'arrow_drop_down'"
             @click="sortByWeight(allAnimalData)"
           />
@@ -370,7 +370,7 @@
             label="Height"
             no-caps
             dense
-            class="text-weight-regular"
+            class="text-weight-regular q-btn"
             :icon-right="categorizeByHeight ? 'arrow_drop_up' : 'arrow_drop_down'"
             @click="sortByHeight(allAnimalData)"
           />
@@ -378,7 +378,7 @@
             label="Year Rescued"
             no-caps
             dense
-            class="text-weight-regular"
+            class="text-weight-regular q-btn"
             :icon-right="categorizeByYearRescued ? 'arrow_drop_up' : 'arrow_drop_down'"
             @click="sortByDateRescued(allAnimalData)"
           />

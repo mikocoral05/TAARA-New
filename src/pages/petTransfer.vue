@@ -1,5 +1,5 @@
 <template>
-  <q-page class="column items-center justify-center">
+  <q-page class="column items-center justify-center q-page">
     <div style="width: 100%; max-width: 800px" class="bg-white q-my-md q-py-lg radius-10">
       <h5 class="q-ma-none q-px-lg text-bold">Transfer in 3 Steps</h5>
       <q-form @submit="submitTransfer()">
@@ -424,4 +424,10 @@ export default {
   },
 }
 </script>
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@media only screen and (max-width: 432px) {
+  .q-page {
+    padding: 0px 15px;
+  }
+}
+</style>

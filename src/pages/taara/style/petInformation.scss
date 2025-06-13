@@ -19,13 +19,7 @@
   .my-card {
     width: 250px;
     border-radius: 10px;
-    // q-img {
-    //   height: 250px;
-    //   width: 100%;
-    //   object-fit: cover;
-    //   object-position: center;
-    //   border-radius: 10px;
-    // }
+
     .animal-name {
       padding: 5px;
       font-size: 15px;
@@ -131,6 +125,48 @@
     padding: 0px 70px;
     .q-btn {
       width: 150px;
+    }
+  }
+}
+@media only screen and (max-width: 432px) {
+  .first-layer {
+    .title {
+      font-size: 30px;
+    }
+    .sub-text {
+      font-size: 14px;
+      line-height: normal;
+    }
+    .q-btn-container {
+      width: 1310px;
+      .search-field {
+        width: 100%;
+        max-width: 400px;
+      }
+    }
+    .categorize-container {
+      margin-top: 0px;
+      padding-top: 0px;
+      flex-wrap: wrap;
+      width: 100%;
+      .q-btn {
+        width: 200px;
+        font-size: 14px;
+      }
+    }
+    .my-card {
+      width: 180px;
+      border-radius: 10px;
+
+      .animal-name {
+        padding: 5px;
+        font-size: 15px;
+        letter-spacing: 1px;
+        color: #b157ae;
+      }
+      .q-btn {
+        border-radius: 10px;
+      }
     }
   }
 }

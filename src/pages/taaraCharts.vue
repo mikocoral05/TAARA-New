@@ -6,7 +6,7 @@
         {{ formattedString }}
       </h3>
       <p class="text-center text-white">“Uncover patterns in rescues, adoptions, and donations.”</p>
-      <div class="flex row justify-center items-center">
+      <div class="flex row justify-center items-center chart-container">
         <div class="flex justify-center items-center q-ma-sm squares-container">
           <div class="squares flex column">
             <div class="flex row justify-center items-center text-white q-mx-md">
@@ -117,7 +117,6 @@
         </div>
       </div>
     </div>
-    <!-- <div class="second-layer column no-wrap items-center q-mt-xl"></div> -->
 
     <TaaraFooter class="footer full-width"></TaaraFooter>
   </q-page>

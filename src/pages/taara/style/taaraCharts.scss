@@ -7,10 +7,10 @@
     transform: rotate(180deg);
   }
   h3 {
-    font-family: "Space Grotesk", sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
   }
   p {
-    font-family: "Space Grotesk", sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
   }
 }
 
@@ -142,6 +142,7 @@
     }
   }
 }
+
 @media only screen and (max-width: 695px) {
   .squares {
     .total-container {
@@ -175,6 +176,7 @@
     }
   }
 }
+
 @media only screen and (max-width: 536px) {
   .uppertext {
     font-size: 25px;
@@ -209,6 +211,22 @@
     }
   }
 }
+
+@media only screen and (max-width: 432px) {
+  .chart-container {
+    flex-direction: column;
+  }
+  .almost-container {
+    width: 100%;
+    flex-direction: column;
+    margin-top: 30px;
+  }
+  .bottom-div {
+    width: 100%;
+    margin: 0px;
+  }
+}
+
 @media only screen and (max-width: 418px) {
   .uppertext {
     font-size: 25px;

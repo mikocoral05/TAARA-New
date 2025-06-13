@@ -64,7 +64,6 @@
   }
 }
 .walkin-donation {
-  // width: 1170px;
   min-height: 80vh;
   border-radius: 10px;
   .box {
@@ -72,23 +71,13 @@
     background-color: #f6f5f5;
     border: 1px solid #e0e0e0;
     border-radius: 10px;
-    // box-shadow: 0px 10px 6px rgba(0, 0, 0, 0.25);
     border-radius: 10px;
     width: 360px;
     max-width: 420px;
   }
 }
 .thanks-donor-section {
-  width: 1160px;
-  // overflow: hidden;
-  // div {
-  //   background-color: pink;
-  //   animation: flowRightToLeft 6s linear infinite;
-  //   img {
-  //     object-fit: cover;
-  //     object-position: center;
-  //   }
-  // }
+  width: 100%;
 }
 .q-carousel-slide {
   width: 1160px;
@@ -101,5 +90,30 @@
     object-position: center;
     border-radius: 100%;
     border: 1px solid goldenrod;
+  }
+}
+@media only screen and (max-width: 432px) {
+  .container {
+    width: 90%;
+    .donation-container {
+      h3 {
+        font-size: 30px;
+        text-align: center;
+      }
+      p {
+        font-size: 14px;
+      }
+      margin-bottom: 70px;
+    }
+    .bv-container {
+      flex-direction: column;
+      .best-value-container {
+        margin-top: 10px;
+      }
+    }
+    .donor-summary-section {
+      flex-direction: column;
+      width: 100%;
+    }
   }
 }

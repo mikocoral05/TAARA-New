@@ -1,5 +1,5 @@
 <template>
-  <q-page class="column justify-start items-center relative-position">
+  <q-page class="q-page column justify-start items-center relative-position">
     <div class="background-image absolute-top"></div>
     <div class="container column justify-start items-center relative-position">
       <div class="donation-container q-pt-xl">
@@ -178,18 +178,18 @@
           <span class="text-caption">{{ countOtherDonator() }}</span>
         </div>
       </div>
-      <div class="q-my-xl row items-center">
-        <div class="column no-wrap items-center q-mr-md">
+      <div class="q-my-xl row items-center donation-way">
+        <div class="column dc no-wrap items-center q-mr-md">
           <q-img src="~assets/bdo.png" width="300px" class="radius-10" />
           <div class="text-bold q-mt-md">Ednalyn De Lara Cristo</div>
           <div class="text-grey-7">0051 5034 3794</div>
         </div>
-        <div class="column no-wrap items-center q-mr-md">
+        <div class="column dc no-wrap items-center q-mr-md">
           <q-img src="~assets/paypal.png" width="340px" class="radius-10" />
           <div class="text-bold q-mt-md">Ednalyn De Lara Cristo</div>
           <div class="text-grey-7">0905-523-8105</div>
         </div>
-        <div class="column no-wrap items-center">
+        <div class="column dc no-wrap items-center">
           <q-img src="~assets/gcash.png" width="300px" class="radius-10" />
           <div class="text-bold q-mt-md">Ednalyn De Lara Cristo</div>
           <div class="text-grey-7">0905-523-8105</div>
@@ -205,8 +205,7 @@
       </div>
       <div class="thanks-donor-section">
         <q-scroll-area
-          style="height: 230px; max-width: 80vw"
-          class="rounded-borders"
+          class="rounded-borders q-scroll-area"
           :horizontal-thumb-style="{
             right: '4px',
             borderRadius: '5px',

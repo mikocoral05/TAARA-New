@@ -1,6 +1,10 @@
 <template>
   <q-page class="column items-center justify-center q-page">
-    <div style="width: 100%; max-width: 800px" class="bg-white q-my-md q-py-lg radius-10">
+    <div
+      v-if="store.userData?.user_id"
+      style="width: 100%; max-width: 800px"
+      class="bg-white q-my-md q-py-lg radius-10"
+    >
       <h5 class="q-ma-none q-px-lg text-bold">Transfer in 3 Steps</h5>
       <q-form @submit="submitTransfer()">
         <q-stepper class="q-mt-md" v-model="step" color="primary" animated flat>
@@ -240,12 +244,12 @@
                     <div
                       class="row no-wrap items-center q-px-md"
                       :style="
-                        transferTransaction.status == 1
+                        transferTransaction?.status == 1
                           ? {
                               border: '1px solid orange',
                               borderRadius: '2px',
                             }
-                          : transferTransaction.status == 2
+                          : transferTransaction?.status == 2
                             ? {
                                 border: '1px solid green',
                                 borderRadius: '2px',
@@ -255,18 +259,18 @@
                     >
                       <q-icon
                         :name="
-                          transferTransaction.status == 1
+                          transferTransaction?.status == 1
                             ? 'sym_r_schedule'
-                            : transferTransaction.status == 2
+                            : transferTransaction?.status == 2
                               ? 'sym_r_check_circle'
                               : 'sym_r_cancel'
                         "
                         size="xs"
                         class="q-mr-sm"
                         :color="
-                          transferTransaction.status == 1
+                          transferTransaction?.status == 1
                             ? 'orange'
-                            : transferTransaction.status == 2
+                            : transferTransaction?.status == 2
                               ? 'positive'
                               : 'negative'
                         "
@@ -274,22 +278,22 @@
                       <p
                         class="q-ma-none"
                         :class="{
-                          'text-orange': transferTransaction.status == 1,
-                          'text-positive': transferTransaction.status == 2,
-                          'text-negative': transferTransaction.status == 3,
+                          'text-orange': transferTransaction?.status == 1,
+                          'text-positive': transferTransaction?.status == 2,
+                          'text-negative': transferTransaction?.status == 3,
                         }"
                       >
                         {{
-                          transferTransaction.status == 1
+                          transferTransaction?.status == 1
                             ? 'Pending'
-                            : transferTransaction.status == 2
+                            : transferTransaction?.status == 2
                               ? 'Approved'
                               : 'Disapproved'
                         }}
                       </p>
                     </div>
                   </div>
-                  <p v-if="transferTransaction.status == 1">
+                  <p v-if="transferTransaction?.status == 1">
                     Your transfer request has been received and is currently under review. Please
                     allow up to
                     <strong>3 working days</strong> for our team to carefully evaluate your request.
@@ -298,7 +302,7 @@
                     decision has been made. Thank you for your continued commitment to animal
                     welfare.
                   </p>
-                  <p v-if="transferTransaction.status == 3">
+                  <p v-if="transferTransaction?.status == 3">
                     Thank you for submitting your transfer request. After careful consideration, we
                     regret to inform you that your request has been declined. Unfortunately, due to
                     limitations in shelter capacity or other factors, we are unable to accommodate
@@ -309,12 +313,12 @@
                     feel free to reach out to us. Thank you for your compassion and commitment to
                     animals.
                   </p>
-                  <p v-if="transferTransaction.status == 2">
+                  <p v-if="transferTransaction?.status == 2">
                     Your transfer request has been approved! You can deliver your pet to our shelter
                     at your convenience. We look forward to welcoming them into our organization.
                     Thank you for your compassion and commitment to animals.
                   </p>
-                  <div v-if="[2, 3].includes(transferTransaction.status)">
+                  <div v-if="[2, 3].includes(transferTransaction?.status)">
                     <q-separator class="q-mb-sm" />
                     <div>Note: You can apply again after 30 days!</div>
                   </div>
@@ -342,6 +346,18 @@
           />
         </div>
       </q-form>
+    </div>
+    <div
+      v-if="!store.userData?.user_id"
+      style="height: 80vh"
+      class="column items-center justify-center no-wrap"
+    >
+      <q-img src="registration-icon.svg" width="250px" />
+      <div class="q-mt-md">
+        You must <u class="text-primary text-body1">LOGIN</u> or
+        <u class="text-primary">REGISTER</u> first before you can apply for Pet transfer!
+      </div>
+      <div class="text-caption text-grey-7">Thank you for understanding.</div>
     </div>
   </q-page>
 </template>
@@ -398,13 +414,15 @@ export default {
       previewImage.value = URL.createObjectURL(petTransferInfo.value.file)
     }
     onMounted(async () => {
-      transferTransaction.value = await getPetTransferRequest(store.userData.user_id)
-      console.log(transferTransaction.value)
-      step.value = transferTransaction.value?.status
-        ? 3
-        : isPastThirtyDays(transferTransaction.value?.date_request)
-          ? 1
-          : 3
+      if (store.userData?.user_id) {
+        transferTransaction.value = await getPetTransferRequest(store.userData.user_id)
+        console.log(transferTransaction.value)
+        step.value = transferTransaction.value?.status
+          ? 3
+          : isPastThirtyDays(transferTransaction.value?.date_request)
+            ? 1
+            : 3
+      }
     })
     return {
       transferTransaction,
@@ -416,6 +434,7 @@ export default {
       petSizes,
       sexOption,
       requestResult,
+      store,
       petTransferInfo,
       miniStep: ref(1),
       step,

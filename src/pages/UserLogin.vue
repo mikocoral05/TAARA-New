@@ -1,15 +1,12 @@
 <template>
   <q-page class="full-height no-padding fig-tree relative-position bg-white">
     <div class="row no-wrap q-pa-md" style="height: 100vh">
-      <div
-        class="column no-wrap items-center justify-center q-mr-md"
-        style="height: 100%; width: 45%"
-      >
-        <q-tab-panels v-model="tab" animated>
-          <q-tab-panel name="register" class="column no-wrap justify-center q-px-xl">
+      <div class="column left-contianer no-wrap items-center justify-center q-mr-md">
+        <q-tab-panels v-model="tab" animated class="q-tab-panels">
+          <q-tab-panel name="register" class="column no-wrap justify-center q-px-xl q-tab-panel">
             <q-form
               @submit="logInTaara(email_address, password)"
-              class="full-width full-height column justify-center items-center no-wrap q-mt-lg q-px-lg"
+              class="full-width full-height column q-form justify-center items-center no-wrap q-mt-lg q-px-lg"
             >
               <div class="column no-wrap q-px-md">
                 <div class="text-h5 text-bold fig-tree">
@@ -369,8 +366,8 @@
             </q-form>
           </q-tab-panel>
 
-          <q-tab-panel name="login" class="column no-wrap justify-center q-px-xl">
-            <div class="column no-wrap q-mr-md justify-center q-px-xl">
+          <q-tab-panel name="login" class="column q-tab-panel no-wrap justify-center q-px-xl">
+            <div class="column no-wrap q-mr-md justify-center q-px-xl fd">
               <div class="text-h5 text-bold fig-tree">Welcome Back!</div>
               <div class="text-grey-7 fig-tree">
                 Log in to continue supporting animals in need and access your account.
@@ -433,8 +430,11 @@
             </div>
           </q-tab-panel>
 
-          <q-tab-panel name="forgot-password" class="column no-wrap justify-center q-px-xl">
-            <div class="column no-wrap q-mr-md justify-center q-px-xl">
+          <q-tab-panel
+            name="forgot-password"
+            class="q-tab-panel column no-wrap justify-center q-px-xl"
+          >
+            <div class="column no-wrap q-mr-md justify-center q-px-xl fd">
               <div class="text-h5 text-bold fig-tree">Forgot Password</div>
               <div class="text-grey-7 fig-tree">
                 Enter your registered email or mobile number to reset your password and regain
@@ -443,7 +443,7 @@
 
               <q-form
                 @submit="forgotPasswordStep > 1 ? validateForgotPassword() : forgotFn()"
-                class="full-width column justify-center items-center q-mt-lg"
+                class="full-width q-form column justify-center items-center q-mt-lg"
               >
                 <div class="column no-wrap q-pt-md full-width" v-if="forgotPasswordStep == 1">
                   <p class="q-ma-none q-mb-sm">
@@ -563,7 +563,7 @@
           </q-tab-panel>
         </q-tab-panels>
       </div>
-      <div class="bg-white radius-10" style="width: 55%">
+      <div class="bg-white radius-10 carousel-container" style="width: 55%">
         <q-carousel
           animated
           class="radius-10"

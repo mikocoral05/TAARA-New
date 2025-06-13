@@ -12,7 +12,7 @@
         </p>
       </div>
 
-      <div class="row no-wrap justify-center items-center">
+      <div class="row no-wrap justify-center items-center bv-container">
         <div class="column no-wrap best-value-container justify-center items-center">
           <div class="column no-wrap">
             <div class="bg-amber text-black price column no-wrap q-pa-xl">

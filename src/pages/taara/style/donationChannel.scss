@@ -78,6 +78,10 @@
 }
 .thanks-donor-section {
   width: 100%;
+  .q-scroll-area {
+    height: 230px;
+    max-width: 80vw;
+  }
 }
 .q-carousel-slide {
   width: 1160px;
@@ -93,27 +97,50 @@
   }
 }
 @media only screen and (max-width: 432px) {
+  .q-page {
+    display: block;
+    padding: 0px 10px;
+  }
+  .background-image {
+    display: none;
+  }
   .container {
-    width: 90%;
+    width: 100%;
     .donation-container {
       h3 {
         font-size: 30px;
         text-align: center;
       }
+      h4 {
+        font-size: 30px;
+      }
       p {
         font-size: 14px;
       }
-      margin-bottom: 70px;
+      margin-bottom: 30px;
     }
     .bv-container {
+      margin-top: 0px;
       flex-direction: column;
       .best-value-container {
-        margin-top: 10px;
+        margin-top: 20px;
       }
     }
     .donor-summary-section {
       flex-direction: column;
       width: 100%;
+    }
+    .donation-way {
+      flex-direction: column;
+      align-items: center;
+      .dc {
+        margin-bottom: 20px;
+      }
+    }
+    .thanks-donor-section {
+      .q-scroll-area {
+        max-width: 100%;
+      }
     }
   }
 }

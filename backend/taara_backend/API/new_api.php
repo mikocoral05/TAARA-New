@@ -144,6 +144,47 @@ class API
                 'data' => $query,
                 'method' => 'GET'
             ]);
+        } else if (array_key_exists("get_favorites", $payload)) {
+            $user_id = $payload['get_favorites'];
+            $this->db->where('user_id', $user_id);
+            $query = $this->db->getOne('tbl_likes');
+
+            if (!empty($query)) {
+                $array_of_animal_id = json_decode($query['animal_id'], true); // decode as array
+
+                if (is_array($array_of_animal_id) && !empty($array_of_animal_id)) {
+                    $this->db->where('ai.animal_id', $array_of_animal_id, 'IN');
+                    $this->db->join('tbl_files f', 'ai.primary_image = f.id', 'left');
+                    $query2 = $this->db->get('tbl_animal_info ai', null, 'ai.animal_id,ai.sex,ai.name, f.image_path');
+
+
+                    if ($query2) {
+                        echo json_encode([
+                            'status' => 'success',
+                            'data' => $query2,
+                            'method' => 'GET'
+                        ]);
+                    } else {
+                        echo json_encode([
+                            'status' => 'failed',
+                            'message' => 'No matching animals found for the user\'s liked list.',
+                            'method' => 'GET'
+                        ]);
+                    }
+                } else {
+                    echo json_encode([
+                        'status' => 'failed',
+                        'message' => 'Animal ID list is empty or invalid.',
+                        'method' => 'GET'
+                    ]);
+                }
+            } else {
+                echo json_encode([
+                    'status' => 'failed',
+                    'message' => 'No favorites found for this user.',
+                    'method' => 'GET'
+                ]);
+            }
         } else {
             // Return error if 'get_user_by_type' is not provided
             echo json_encode([

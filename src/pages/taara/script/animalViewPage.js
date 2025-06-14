@@ -45,7 +45,6 @@ export default {
     let reference = ref(null)
     let controlSpinner = ref(false)
     let inFront = ref([])
-    let petId = ref()
     let step = ref(1)
     const textNoAccount = ref('')
     const noAccount = ref(false)
@@ -141,12 +140,15 @@ export default {
       contactedQStepper.value = window.innerWidth < 779
     }
 
-    watch(petId, (newVal) => {
-      viewSpecificAnimal(decodeAnimalId(newVal)).then((response) => {
-        specificAnimal.value = response
-      })
-      inFront.value = []
-    })
+    watch(
+      () => route.query.pet,
+      (newVal) => {
+        viewSpecificAnimal(decodeAnimalId(newVal)).then((response) => {
+          specificAnimal.value = response
+        })
+        inFront.value = []
+      },
+    )
 
     const donateBtnFn = () => {
       if (checkUserIfPublic()) {
@@ -270,7 +272,6 @@ export default {
       checkUserIfPublic,
       getImageLink,
       store,
-      petId,
       encodeAnimalId,
       donatorsInfo,
       submitPublicDonation,

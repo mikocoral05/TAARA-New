@@ -12,10 +12,11 @@ import {
   getNotification,
   notifData,
 } from 'src/composable/taaraComposable.js'
-import { getImageLink, timeAgo } from 'src/composable/simpleComposable'
+import { encodeAnimalId, getImageLink, timeAgo } from 'src/composable/simpleComposable'
 import { useCounterStore } from 'src/stores/example-store'
 import { useQuasar } from 'quasar'
 import { globalStore } from 'src/stores/global-store'
+import { getFavorites } from 'src/composable/latestPublicComposable'
 export default defineComponent({
   name: 'MainLayout',
 
@@ -198,19 +199,30 @@ export default defineComponent({
         }
       },
     )
-
-    onMounted(() => {
+    const favoriteList = ref([])
+    const fetchFavoriteFn = async () => {
+      if (Object.keys(store.userData).length !== 0) {
+        // logInDetails.value == null ? '' : getNotification(0)
+        rightDrawerFavorites.value = !rightDrawerFavorites.value
+        favoriteList.value = (await getFavorites(store.userData.user_id)) ?? []
+        console.log(favoriteList.value)
+      }
+    }
+    onMounted(async () => {
+      if (Object.keys(store.userData).length !== 0) {
+        // logInDetails.value == null ? '' : getNotification(0)
+      }
       // window.addEventListener('resize', handleResize)
-      // logInDetails.value == null ? '' : getNotification(0)
-      // logInDetails.value == null ? '' : getLikes(logInDetails.value[0].user_id)
     })
     onBeforeUnmount(() => {
       window.removeEventListener('resize', handleResize)
       document.removeEventListener('click', checkIfClickedOutsideFavorites)
       document.removeEventListener('click', checkIfClickedOutsideNotification)
     })
-
     return {
+      encodeAnimalId,
+      fetchFavoriteFn,
+      favoriteList,
       drawerLeft,
       getImageLink,
       store,

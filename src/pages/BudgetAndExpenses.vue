@@ -16,45 +16,45 @@
     <q-separator color="grey-3" class="q-mb-md" />
     <div class="column no-wrap" v-if="tab == 1">
       <div class="row q-mb-md">
-        <q-card class="q-mr-md radius-10 q-px-lg q-pb-lg" flat>
+        <q-card class="q-mr-md radius-10 q-px-lg" flat>
           <q-card-section>
             <div class="text-grey-7 text-caption">TOTAL BALANCE</div>
             <div class="text-h6 text-bold q-mt-lg">
               {{ formatNumber(Number(totalBalance) + Number(totalExpense)) }}
             </div>
-            <!-- <div class="text-grey-7 text-caption q-mt-sm">
+            <div class="text-grey-7 text-caption q-mt-sm">
               <q-icon name="sym_r_trending_up" class="text-positive text-bold q-mr-xs" /><span
                 class="text-positive text-bold"
                 >25%</span
               >
               from last month
-            </div> -->
+            </div>
           </q-card-section>
         </q-card>
-        <q-card class="q-mr-md radius-10 q-px-lg q-pb-lg" flat>
+        <q-card class="q-mr-md radius-10 q-px-lg" flat>
           <q-card-section>
             <div class="text-grey-7 text-caption">TOTAL EXPENSES</div>
             <div class="text-h6 text-bold q-mt-lg">{{ formatNumber(totalExpense) }}</div>
-            <!-- <div class="text-grey-7 text-caption q-mt-sm">
+            <div class="text-grey-7 text-caption q-mt-sm">
               <q-icon name="sym_r_trending_down" class="text-negative text-bold q-mr-xs" /><span
                 class="text-negative text-bold"
                 >-5%</span
               >
               from last month
-            </div> -->
+            </div>
           </q-card-section>
         </q-card>
-        <q-card class="q-mr-md radius-10 q-px-lg q-pb-lg" flat>
+        <q-card class="q-mr-md radius-10 q-px-lg" flat>
           <q-card-section>
             <div class="text-grey-7 text-caption">AVAILABLE BUDGET</div>
             <div class="text-h6 text-bold q-mt-lg">{{ formatNumber(totalBalance) }}</div>
-            <!-- <div class="text-grey-7 text-caption q-mt-sm">
+            <div class="text-grey-7 text-caption q-mt-sm">
               <q-icon name="sym_r_trending_up" class="text-positive text-bold q-mr-xs" /><span
                 class="text-positive text-bold"
                 >15%</span
               >
               from last month
-            </div> -->
+            </div>
           </q-card-section>
         </q-card>
       </div>

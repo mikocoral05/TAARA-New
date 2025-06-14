@@ -116,18 +116,10 @@
               <q-btn
                 class="q-ma-sm q-pa-none button-heart"
                 icon="favorite"
-                @click="
-                  restrictionHeart(
-                    specificAnimal.animal_id,
-                    store.userData,
-                    dateToday,
-                    specificAnimal.file[0].name,
-                    specificAnimal.animal_name,
-                  )
-                "
+                @click="likeFn()"
                 flat
                 dense
-                :class="like ? 'red-button' : 'blue-button'"
+                :class="likesData.includes(specificAnimal.animal_id) ? 'red-button' : 'blue-button'"
               />
             </div>
           </div>

@@ -146,10 +146,9 @@
               :key="data.animal_id"
               flat
               @click="
-                ((petId = encodeAnimalId(data.animal_id)),
                 $router.push({
                   query: { pet: encodeAnimalId(data.animal_id) },
-                }))
+                })
               "
             >
               <img

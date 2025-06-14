@@ -18,15 +18,13 @@ import {
   viewSpecificAnimal,
   adoptedAnimalOnProgress,
   getSubmitAdoptionForm,
-  likes,
-  removeLikes,
-  getLikes,
   moreAnimalForAdoption,
   submitPublicDonation,
   getRandomAnimal,
 } from 'src/composable/taaraComposable'
 import DonationDialog from 'src/components/DonationDialog.vue'
 import NeedToLogin from 'src/components/NeedToLogin.vue'
+import { getLikes, likes, removeLikes } from 'src/composable/latestPublicComposable'
 
 export default {
   components: {
@@ -75,16 +73,24 @@ export default {
       inFront.value = temp
     }
 
-    const restrictionHeart = (animal_id, logInDetails, dateToday, animalImage, animalName) => {
+    const likeFn = async () => {
       if (Object.keys(store.userData).length == 0) {
         textNoAccount.value = `Save ${specificAnimal.value.name} to your Likes`
         noAccount.value = true
       } else {
-        like.value = !like.value
-        if (like.value == true) {
-          likes(animal_id, store.userData.user_id, dateToday, animalImage, animalName)
+        if (!likesData.value.includes(specificAnimal.value.animal_id)) {
+          const response = await likes(
+            [...likesData.value, specificAnimal.value.animal_id],
+            store.userData.user_id,
+          )
+          if (response.status == 'success') {
+            likesData.value.push(specificAnimal.value.animal_id)
+          }
         } else {
-          removeLikes(animal_id, store.userData.user_id, dateToday, animalImage, animalName)
+          likesData.value = likesData.value.filter(
+            (animalId) => animalId !== specificAnimal.value.animal_id,
+          )
+          removeLikes(likesData.value, store.userData.user_id)
         }
       }
     }
@@ -232,7 +238,7 @@ export default {
       },
     )
 
-    onMounted(() => {
+    onMounted(async () => {
       window.addEventListener('resize', handleWindowResize)
       viewSpecificAnimal(decodeAnimalId(route.query.pet)).then((response) => {
         specificAnimal.value = response
@@ -244,10 +250,12 @@ export default {
         getSubmitAdoptionForm(store.userData.user_id).then((response) => {
           console.log(response)
         })
-        getLikes(store.userData.user_id).then((response) => {
-          console.log(response)
-          likesData.value = response
-        })
+        const response = await getLikes(store.userData.user_id)
+        console.log(response)
+        if (response) {
+          likesData.value = response?.animal_id ? JSON.parse(response.animal_id) : []
+          console.log(likesData.value)
+        }
       }
       moreAnimalForAdoption()
     })
@@ -280,7 +288,7 @@ export default {
       showPorgressAndOther,
       getSubmitAdoptionForm,
       adoptedAnimalOnProgress,
-      restrictionHeart,
+      likeFn,
       dateToday,
       rearrangeImage,
       likesData,

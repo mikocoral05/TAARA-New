@@ -134,6 +134,16 @@ class API
                 'data' => $query,
                 'method' => 'GET'
             ]);
+        } else if (array_key_exists("get_likes", $payload)) {
+            $user_id = $payload['get_likes'];
+            $this->db->where('user_id', $user_id);
+            $query = $this->db->getOne('tbl_likes');
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => $query,
+                'method' => 'GET'
+            ]);
         } else {
             // Return error if 'get_user_by_type' is not provided
             echo json_encode([
@@ -408,6 +418,110 @@ class API
                     'message' => 'No image provided',
                     'method' => 'PUT'
                 ]);
+            }
+        } else if (isset($payload['like_animal'])) {
+            $animal_id = $payload['like_animal']['animal_ids'];
+            $user_id = $payload['like_animal']['user_id'];
+
+            $this->db->where('user_id', $user_id);
+            $get_query = $this->db->getOne('tbl_likes');
+
+            $animal_id_to_update = [
+                "animal_id" => json_encode($animal_id)
+            ];
+
+            if ($get_query) {
+                // Update existing record
+                $this->db->where('user_id', $user_id);
+                $update = $this->db->update('tbl_likes', $animal_id_to_update);
+
+                if ($update) {
+                    echo json_encode([
+                        'status' => 'success',
+                        'message' => 'User like updated successfully',
+                        'method' => 'PUT'
+                    ]);
+                } else {
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => 'Failed to update user like',
+                        'method' => 'PUT'
+                    ]);
+                }
+            } else {
+                // Insert new record
+                $animal_id_to_insert = [
+                    "user_id" => $user_id,
+                    "animal_id" => json_encode($animal_id)
+                ];
+
+                $insert = $this->db->insert('tbl_likes', $animal_id_to_insert);
+
+                if ($insert) {
+                    echo json_encode([
+                        'status' => 'success',
+                        'message' => 'User like added successfully',
+                        'method' => 'POST'
+                    ]);
+                } else {
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => 'Failed to add user like',
+                        'method' => 'POST'
+                    ]);
+                }
+            }
+        } else if (isset($payload['unlike_animal'])) {
+            $animal_id = $payload['unlike_animal']['animal_ids'];
+            $user_id = $payload['unlike_animal']['user_id'];
+
+            $this->db->where('user_id', $user_id);
+            $get_query = $this->db->getOne('tbl_likes');
+
+            $animal_id_to_update = [
+                "animal_id" => json_encode($animal_id)
+            ];
+
+            if ($get_query) {
+                // Update existing record
+                $this->db->where('user_id', $user_id);
+                $update = $this->db->update('tbl_likes', $animal_id_to_update);
+
+                if ($update) {
+                    echo json_encode([
+                        'status' => 'success',
+                        'message' => 'User like updated successfully',
+                        'method' => 'PUT'
+                    ]);
+                } else {
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => 'Failed to update user like',
+                        'method' => 'PUT'
+                    ]);
+                }
+            } else {
+                // Insert new record
+                $animal_id_to_insert = [
+                    "user_id" => $user_id,
+                    "animal_id" => json_encode($animal_id)
+                ];
+
+                $insert = $this->db->insert('tbl_likes', $animal_id_to_insert);
+
+                if ($insert) {
+                    echo json_encode([
+                        'status' => 'success',
+                        'message' => 'User like added successfully',
+                        'method' => 'POST'
+                    ]);
+                } else {
+                    echo json_encode([
+                        'status' => 'error',
+                        'message' => 'Failed to add user like',
+                        'method' => 'POST'
+                    ]);
+                }
             }
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Missing Animal info in the payload']);

@@ -34,7 +34,7 @@ class API
         } else if (array_key_exists('get_budget_allocation', $payload)) {
             $this->db->where('is_deleted', 0);
             $query = $this->db->get("tbl_budget_allocation");
-            // Respond with success and the query data
+
             echo json_encode([
                 'status' => 'success',
                 'data' => $query,

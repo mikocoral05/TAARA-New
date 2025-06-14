@@ -230,7 +230,7 @@
             <q-icon name="sym_r_star" class="q-mr-sm" size="1.2rem" />
             <div>Favorites</div>
           </div>
-          <q-icon name="sym_r_search" size="1.2rem" />
+          <!-- <q-icon name="sym_r_search" size="1.2rem" /> -->
         </q-card-section>
         <q-separator></q-separator>
         <q-card-section class="column no-wrap">

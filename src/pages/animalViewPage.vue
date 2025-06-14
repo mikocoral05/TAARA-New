@@ -98,16 +98,7 @@
                       ? 'check_circle'
                       : 'pets'
                   "
-                  @click="
-                    checkUserIfPublic()
-                      ? $router.push({
-                          path: '/public/pet-adoption-form',
-                          query: {
-                            adopt: encodeAnimalId(specificAnimal.animal_id),
-                          },
-                        })
-                      : (counterStore.showDialog = true)
-                  "
+                  @click="adoptBtnFn()"
                   flat
                   filled
                 />
@@ -116,9 +107,7 @@
                   class="q-my-sm q-ml-sm q-px-lg buttons"
                   label="DONATE"
                   icon-right="volunteer_activism"
-                  @click="
-                    checkUserIfPublic() ? (donateDialog = true) : (counterStore.showDialog = true)
-                  "
+                  @click="donateBtnFn()"
                   flat
                   filled
                 />
@@ -185,7 +174,7 @@
           </div>
         </div>
       </div>
-      <q-dialog v-model="donateDialog" persistent>
+      <!-- <q-dialog v-model="donateDialog" persistent>
         <div class="my-div column no-wrap q-pa-md">
           <q-form @submit="(submitPublicDonation(donatorsInfo), (donateDialog = false))">
             <div class="container-update-icon">
@@ -319,10 +308,11 @@
             </div>
           </q-form>
         </div>
-      </q-dialog>
+      </q-dialog> -->
       <TaaraFooter />
     </div>
     <DonationDialog />
+    <NeedToLogin v-model="noAccount" v-model:text="textNoAccount" />
   </q-page>
 </template>
 <script src="pages/taara/script/animalViewPage"></script>

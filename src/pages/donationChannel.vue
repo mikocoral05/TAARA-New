@@ -389,7 +389,7 @@
       </div>
     </div>
   </q-page>
-  <donationDialog />
+  <DonationDialog />
   <TaaraFooter style="margin-top: 100px" />
 </template>
 <script src="pages/taara/script/donationChannel.js"></script>

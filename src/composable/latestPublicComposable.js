@@ -144,3 +144,9 @@ export const removeLikes = async (animal_ids, user_id) => {
   })
   return response.data
 }
+export const getFavorites = async (user_id) => {
+  const response = await api.get('new_api.php', {
+    params: { get_favorites: user_id },
+  })
+  return response.data.data
+}

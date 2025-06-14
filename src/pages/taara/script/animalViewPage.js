@@ -2,7 +2,7 @@ import { ref, onMounted, watch, onUnmounted } from 'vue'
 import TaaraFooter from 'src/components/TaaraFooter.vue'
 import { useCounterStore } from 'src/stores/example-store'
 import { createWorker } from 'tesseract.js'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { globalStore } from 'src/stores/global-store'
 import {
   dateToday,
@@ -26,15 +26,18 @@ import {
   getRandomAnimal,
 } from 'src/composable/taaraComposable'
 import DonationDialog from 'src/components/DonationDialog.vue'
+import NeedToLogin from 'src/components/NeedToLogin.vue'
 
 export default {
   components: {
     TaaraFooter,
     DonationDialog,
+    NeedToLogin,
   },
   setup() {
     const store = globalStore()
     const route = useRoute()
+    const router = useRouter()
     const counterStore = useCounterStore()
     let showPorgressAndOther = ref(false)
     let contactedQStepper = ref(false)
@@ -46,6 +49,8 @@ export default {
     let inFront = ref([])
     let petId = ref()
     let step = ref(1)
+    const textNoAccount = ref('')
+    const noAccount = ref(false)
     const like = ref()
     const specificAnimal = ref({})
     const allAnimalData6 = ref([])
@@ -70,9 +75,10 @@ export default {
       inFront.value = temp
     }
 
-    let restrictionHeart = (animal_id, logInDetails, dateToday, animalImage, animalName) => {
+    const restrictionHeart = (animal_id, logInDetails, dateToday, animalImage, animalName) => {
       if (Object.keys(store.userData).length == 0) {
-        counterStore.showDialog = true
+        textNoAccount.value = `Save ${specificAnimal.value.name} to your Likes`
+        noAccount.value = true
       } else {
         like.value = !like.value
         if (like.value == true) {
@@ -139,6 +145,37 @@ export default {
       })
       inFront.value = []
     })
+
+    const donateBtnFn = () => {
+      if (checkUserIfPublic()) {
+        counterStore.donationDialog = true
+        router.push({
+          query: {
+            ...route.query,
+            amount: 0,
+            allocated: `For ${specificAnimal.value.name}`,
+          },
+        })
+      } else {
+        textNoAccount.value = `Donate for ${specificAnimal.value.name}`
+        noAccount.value = true
+      }
+    }
+
+    const adoptBtnFn = () => {
+      if (checkUserIfPublic()) {
+        router.push({
+          path: '/public/pet-adoption-form',
+          query: {
+            adopt: encodeAnimalId(specificAnimal.value.animal_id),
+          },
+        })
+      } else {
+        textNoAccount.value = `Proceed to adopting ${specificAnimal.value.name}`
+        noAccount.value = true
+      }
+    }
+
     watch(
       () => [donationImage.value, reference.value],
       () => {
@@ -198,6 +235,7 @@ export default {
         })()
       },
     )
+
     onMounted(() => {
       window.addEventListener('resize', handleWindowResize)
       viewSpecificAnimal(decodeAnimalId(route.query.pet)).then((response) => {
@@ -221,6 +259,10 @@ export default {
       window.removeEventListener('resize', handleWindowResize)
     })
     return {
+      adoptBtnFn,
+      noAccount,
+      textNoAccount,
+      donateBtnFn,
       checkUserIfPublic,
       getImageLink,
       store,

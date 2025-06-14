@@ -59,7 +59,6 @@
                 : 'bg-white text-black'
             "
           />
-
           <q-btn
             label="Contact"
             no-caps
@@ -198,7 +197,8 @@
               </q-list>
             </q-menu>
           </q-btn>
-          <q-btn bordered icon="notifications" round flat dense class="q-ml-sm" />
+          <q-btn bordered icon="sym_r_notifications" round flat dense class="q-ml-sm" />
+          <q-btn bordered icon="sym_r_heart_plus" round flat dense class="q-ml-sm" color="red" />
         </div>
         <div class="get-started" v-else>
           <q-btn class="q-ml-md text-white" label="Log In" no-caps flat to="/user-login" />

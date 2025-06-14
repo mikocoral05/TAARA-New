@@ -358,45 +358,6 @@
                   <q-item-section avatar>
                     <q-icon name="sym_r_dataset" />
                   </q-item-section>
-
-                  <!-- <q-menu anchor="top end" self="top start">
-                    <q-list>
-                      <q-item dense clickable>
-                        <q-item-section>Pet available</q-item-section>
-                        <q-item-section side>
-                          <q-icon name="keyboard_arrow_right" />
-                        </q-item-section>
-                      </q-item>
-                      <q-separator></q-separator>
-                      <q-item dense clickable>
-                        <q-item-section>Pet Rescue</q-item-section>
-                        <q-item-section side>
-                          <q-icon name="keyboard_arrow_right" />
-                        </q-item-section>
-                      </q-item>
-                      <q-separator></q-separator>
-                      <q-item dense clickable>
-                        <q-item-section>Pet Adopted</q-item-section>
-                        <q-item-section side>
-                          <q-icon name="keyboard_arrow_right" />
-                        </q-item-section>
-                      </q-item>
-                      <q-separator></q-separator>
-                      <q-item dense clickable>
-                        <q-item-section>Pet Deceased</q-item-section>
-                        <q-item-section side>
-                          <q-icon name="keyboard_arrow_right" />
-                        </q-item-section>
-                      </q-item>
-                      <q-separator></q-separator>
-                      <q-item dense clickable>
-                        <q-item-section>Geographical Hotspots</q-item-section>
-                        <q-item-section side>
-                          <q-icon name="keyboard_arrow_right" />
-                        </q-item-section>
-                      </q-item>
-                    </q-list>
-                  </q-menu> -->
                 </q-item>
               </q-list>
             </q-menu>

@@ -160,7 +160,7 @@ export default defineComponent({
       donation_type: 'cash',
       anonymous: 'no',
       amount: '',
-      allocated_for: '',
+      allocated_for: route.query.allocated || '',
       notes: '',
       image: null,
       method: 'online',

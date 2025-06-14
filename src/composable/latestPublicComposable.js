@@ -125,3 +125,22 @@ export const submitPublicDonation = async (obj) => {
   })
   return response.data
 }
+
+export const getLikes = async (user_id) => {
+  const response = await api.get('new_api.php', {
+    params: { get_likes: user_id },
+  })
+  return response.data.data
+}
+export const likes = async (animal_ids, user_id) => {
+  const response = await api.put('new_api.php', {
+    like_animal: { animal_ids, user_id },
+  })
+  return response.data
+}
+export const removeLikes = async (animal_ids, user_id) => {
+  const response = await api.put('new_api.php', {
+    unlike_animal: { animal_ids, user_id },
+  })
+  return response.data
+}

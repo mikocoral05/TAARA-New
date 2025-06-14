@@ -198,7 +198,16 @@
             </q-menu>
           </q-btn>
           <q-btn bordered icon="sym_r_notifications" round flat dense class="q-ml-sm" />
-          <q-btn bordered icon="sym_r_heart_plus" round flat dense class="q-ml-sm" color="red" />
+          <q-btn
+            bordered
+            icon="sym_r_heart_plus"
+            @click="fetchFavoriteFn()"
+            round
+            flat
+            dense
+            class="q-ml-sm"
+            color="red"
+          />
         </div>
         <div class="get-started" v-else>
           <q-btn class="q-ml-md text-white" label="Log In" no-caps flat to="/user-login" />
@@ -213,7 +222,48 @@
         @click="drawerLeft = !drawerLeft"
       />
     </q-header>
-
+    <q-dialog v-model="rightDrawerFavorites" maximized position="right">
+      <q-card style="width: 350px">
+        <q-space />
+        <q-card-section class="row justify-between items-center no-wrap">
+          <div class="row no-wrap">
+            <q-icon name="sym_r_star" class="q-mr-sm" size="1.2rem" />
+            <div>Favorites</div>
+          </div>
+          <q-icon name="sym_r_search" size="1.2rem" />
+        </q-card-section>
+        <q-separator></q-separator>
+        <q-card-section class="column no-wrap">
+          <div v-for="(likes, index) in favoriteList" :key="index" class="column no-wrap">
+            <div class="row no-wrap justify-between items-center">
+              <div class="row no-wrap items-center">
+                <q-img
+                  :src="likes.image_path"
+                  height="40px"
+                  width="40px"
+                  class="radius-100 q-mr-md"
+                />
+                <div class="column no-wrap">
+                  <div><span class="text-grey-7">Name:</span> {{ likes.name }}</div>
+                  <div><span class="text-grey-7 q-mt-xs">Sex:</span> {{ likes.sex }}</div>
+                </div>
+              </div>
+              <q-icon
+                name="sym_r_arrow_forward"
+                size="1.3rem"
+                @click="
+                  $router.push({
+                    path: '/public/view-specific-animal',
+                    query: { pet: encodeAnimalId(likes.animal_id) },
+                  })
+                "
+              />
+            </div>
+            <q-separator class="q-my-md"></q-separator>
+          </div>
+        </q-card-section>
+      </q-card>
+    </q-dialog>
     <q-drawer
       v-model="drawerLeft"
       :width="300"

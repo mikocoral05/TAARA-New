@@ -165,6 +165,7 @@
           label="Other Amount"
           class="other-amount q-mt-lg bg-white"
           @click="counterStore.donationDialog = true"
+          to="/public/donation-channel?amount=0"
         />
         <div class="row no-wrap q-mt-md overlooping-avatar items-center">
           <q-avatar

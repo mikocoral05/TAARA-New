@@ -13,7 +13,7 @@
         </div>
       </div>
     </div>
-    <div class="row justify-between items-center second-layer">
+    <div class="row justify-between items-start second-layer">
       <div class="colum no-wrap justify-start items-center">
         <p class="paragraph1">Contact</p>
         <p class="paragraph2">P-3 Burac St., San Lorenzo, Tabaco, Philippines</p>

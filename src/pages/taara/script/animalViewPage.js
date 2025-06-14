@@ -100,7 +100,7 @@ export default {
       }
     }
 
-    function getAge(age) {
+    const getAge = (age) => {
       var today = new Date()
       var birthDate = new Date(age)
       age = today.getFullYear() - birthDate.getFullYear()
@@ -110,11 +110,7 @@ export default {
       }
       if (age < 2) {
         return 'Young'
-      }
-      //  else if ((age) => 2 && age <= 10) {
-      //   return 'Adult'
-      // }
-      else {
+      } else {
         return 'Senior'
       }
     }

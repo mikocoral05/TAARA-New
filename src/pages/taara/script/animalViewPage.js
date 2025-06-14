@@ -3,6 +3,7 @@ import TaaraFooter from 'src/components/TaaraFooter.vue'
 import { useCounterStore } from 'src/stores/example-store'
 import { createWorker } from 'tesseract.js'
 import { useRoute } from 'vue-router'
+import { globalStore } from 'src/stores/global-store'
 import {
   dateToday,
   timeNow,
@@ -24,11 +25,12 @@ import {
   submitPublicDonation,
   getRandomAnimal,
 } from 'src/composable/taaraComposable'
-import { globalStore } from 'src/stores/global-store'
+import DonationDialog from 'src/components/DonationDialog.vue'
 
 export default {
   components: {
     TaaraFooter,
+    DonationDialog,
   },
   setup() {
     const store = globalStore()

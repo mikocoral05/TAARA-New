@@ -90,22 +90,6 @@
             </div>
             <div class="flex justify-between items-center button-container no-wrap full-width">
               <div class="flex row no-wrap full-width">
-                <!-- :disable="
-                    accountActive(adoptedAnimalOnProgress, specificAnimal.animal_id)
-                  " -->
-                <!-- :style="
-                    Object.keys(store.userData).length == 0
-                      ? {
-                          background: '#B157AE',
-                        }
-                      : {
-                          background: adoptedAnimalOnProgress.some(
-                            (obj) => obj.animal_id === specificAnimal.animal_id
-                          )
-                            ? 'gray'
-                            : '#B157AE',
-                        }
-                  " -->
                 <q-btn
                   class="q-my-sm q-px-lg buttons"
                   label="ADOPT "
@@ -139,15 +123,7 @@
                   filled
                 />
               </div>
-              <!--
-              <p class="hidden">
-                {{
-                  like =
-                    Object.keys(store.userData).length == 0
-                      ? false
-                      : likesData.some((obj) => obj.animal_id === specificAnimal.animal_id)
-                }}
-              </p> -->
+
               <q-btn
                 class="q-ma-sm q-pa-none button-heart"
                 icon="favorite"
@@ -346,7 +322,7 @@
       </q-dialog>
       <TaaraFooter />
     </div>
-    <donationDialog />
+    <DonationDialog />
   </q-page>
 </template>
 <script src="pages/taara/script/animalViewPage"></script>

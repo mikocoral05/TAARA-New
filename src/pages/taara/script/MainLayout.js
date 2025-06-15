@@ -33,7 +33,6 @@ export default defineComponent({
     const counterStore = useCounterStore()
     const router = useRouter()
     const route = useRoute()
-    const rightDrawerNotification = ref(false)
     const headerColor = ref('white')
     const secondDialog = ref()
     const $q = useQuasar()
@@ -44,6 +43,7 @@ export default defineComponent({
     const drawerLeft = ref(false)
     const responsiveNav = ref(false)
     const responsiveNavAll = ref(false)
+    const rightDrawerNotification = ref(false)
     let myFavorites
     let myNotification
     let mySettings
@@ -220,6 +220,7 @@ export default defineComponent({
       document.removeEventListener('click', checkIfClickedOutsideNotification)
     })
     return {
+      rightDrawerNotification,
       encodeAnimalId,
       fetchFavoriteFn,
       favoriteList,

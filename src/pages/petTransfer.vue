@@ -378,6 +378,7 @@ export default {
     const fileInput = ref(null)
     const transferTransaction = ref([])
     const showFileError = ref(false)
+
     const showFolder = () => {
       fileInput.value && fileInput.value.$el.querySelector('input').click()
     }
@@ -409,6 +410,7 @@ export default {
         $q.loading.hide()
       }, 500)
     }
+
     const previewImage = ref(null)
     const imageFnUpdate = () => {
       previewImage.value = URL.createObjectURL(petTransferInfo.value.file)
@@ -419,9 +421,11 @@ export default {
         console.log(transferTransaction.value)
         step.value = transferTransaction.value?.status
           ? 3
-          : isPastThirtyDays(transferTransaction.value?.date_request)
+          : !transferTransaction.value
             ? 1
-            : 3
+            : isPastThirtyDays(transferTransaction.value?.date_request)
+              ? 1
+              : 3
       }
     })
     return {

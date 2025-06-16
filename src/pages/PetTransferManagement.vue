@@ -618,6 +618,7 @@ export default {
         return
       }
       mode.value = modeParam
+
       if (['View', 'Edit', 'Add'].includes(modeParam)) {
         if (modeParam == 'Add') {
           addDialog.value = true

@@ -1248,5 +1248,4 @@
   </q-page>
 </template>
 <script src="pages/taara/script/volunteerForm"></script>
-
 <style scoped lang="scss" src="pages/taara/style/volunteerForm.scss"></style>

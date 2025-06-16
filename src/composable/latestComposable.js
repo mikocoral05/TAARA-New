@@ -1325,3 +1325,10 @@ export const getLogs = async () => {
   })
   return response.data
 }
+
+export const getNotif = async (arrOfUserKey) => {
+  const response = await api.get('new_api.php', {
+    params: { get_notif: arrOfUserKey },
+  })
+  return response.data.data
+}

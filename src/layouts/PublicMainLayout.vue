@@ -280,18 +280,21 @@
     <q-dialog v-model="rightDrawerNotification" maximized position="right" seamless>
       <q-card style="width: 350px">
         <q-space />
-        <q-card-section class="row justify-between items-center no-wrap">
-          <div class="row no-wrap">
-            <q-icon name="sym_r_star" class="q-mr-sm" size="1.2rem" />
-            <div>Favorites</div>
+        <q-card-section class="q-mb-none">
+          <div class="row justify-between items-center no-wrap">
+            <div>Notifications</div>
+            <q-icon
+              name="sym_r_close"
+              size="1.2rem"
+              @click="rightDrawerFavorites = !rightDrawerFavorites"
+            />
           </div>
-          <q-icon
-            name="sym_r_close"
-            size="1.2rem"
-            @click="rightDrawerFavorites = !rightDrawerFavorites"
-          />
+          <div class="row no-wrap q-mt-md">
+            <div class="q-mr-md">All</div>
+            <div>Announcement</div>
+          </div>
+          <q-separator />
         </q-card-section>
-        <q-separator></q-separator>
         <q-card-section class="column no-wrap">
           <div v-for="(likes, index) in favoriteList" :key="index" class="column no-wrap">
             <div class="row no-wrap justify-between items-center">

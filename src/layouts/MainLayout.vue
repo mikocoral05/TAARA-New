@@ -142,7 +142,7 @@
       <q-scroll-area class="fit">
         <q-list>
           <q-item>
-            <q-item-section class="q-mt-md">
+            <q-item-section class="q-mt-sm">
               <q-item-label class="row no-wrap justify-between items-center">
                 <div class="text-bold text-body1">Notification</div>
               </q-item-label>
@@ -160,9 +160,14 @@
               </q-item-label>
             </q-item-section>
           </q-item>
-          <q-separator horizontal class="shadow-1 q-mb-md" size="md" />
+          <q-separator horizontal class="shadow-1" size="md" />
           <div class="column no-wrap" v-for="(notif, index) in notifData" :key="index">
-            <q-item>
+            <q-item
+              class="q-py-md"
+              :class="{
+                'bg-grey-1': !JSON.parse(notif.is_read).includes(store.userData.user_id),
+              }"
+            >
               <q-item-section avatar>
                 <q-avatar>
                   <img :src="notif.image_path" />
@@ -178,7 +183,7 @@
                 <!-- <q-icon name="star" color="yellow" /> -->
               </q-item-section>
             </q-item>
-            <q-separator spaced inset />
+            <q-separator inset />
           </div>
         </q-list>
       </q-scroll-area>

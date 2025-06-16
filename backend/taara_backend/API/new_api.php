@@ -186,6 +186,27 @@ class API
                     'method' => 'GET'
                 ]);
             }
+        } else if (array_key_exists("get_notif", $payload)) {
+            $notfi_key = $payload['get_notif'];
+            $this->db->where('n.for_user', $notfi_key, 'In');
+            $this->db->join('tbl_users u', 'n.created_by = u.user_id', 'left');
+            $this->db->join('tbl_files f', 'u.image_id = f.id', 'left');
+            $this->db->orderBy('n.id', 'DESC');
+            $query = $this->db->get('tbl_notification n', null, 'n.*,u.first_name,u.last_name,f.image_path');
+
+            if (!empty($query)) {
+                echo json_encode([
+                    'status' => 'success',
+                    'data' => $query,
+                    'method' => 'GET'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'failed',
+                    'message' => 'No Notif for this user.',
+                    'method' => 'GET'
+                ]);
+            }
         } else {
             // Return error if 'get_user_by_type' is not provided
             echo json_encode([
@@ -259,6 +280,22 @@ class API
                     ];
 
                     $this->db->insert("tbl_logs", $logs);
+
+                    $notif = [
+                        'for_user'     => -2, // Example: -1 = all public_user, -2 = all management
+                        'created_by'    => $user_id, // Assuming the one triggering the notification is the updater
+                        'title'        => 'New Pet Transfer Request',
+                        'message'      => 'A new pet transfer request has been submitted and is pending for review.',
+                        'type'         => 2, // 1 = announcement, 2 = notification
+                        'related_url'  => '/management/pet-transfer',
+                        'is_read'      => json_encode([]), // 0 = unread
+                    ];
+
+
+                    $this->db->insert("tbl_notification", $notif);
+
+
+
                     echo json_encode([
                         'status' => 'success',
                         'message' => 'Pet transfer form submitted successfully',

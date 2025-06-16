@@ -24,7 +24,15 @@
           </q-input>
         </div>
         <div class="row no-wrap items-center q-mr-xl">
-          <q-btn round icon="notifications" color="primary" class="q-mr-xl" flat dense>
+          <q-btn
+            round
+            icon="notifications"
+            color="primary"
+            class="q-mr-xl"
+            flat
+            dense
+            @click="showNotifFn()"
+          >
             <q-badge color="red" floating>4</q-badge>
           </q-btn>
 
@@ -122,6 +130,59 @@
       </q-scroll-area>
     </q-drawer>
 
+    <q-drawer
+      v-model="notificationDrawer"
+      :width="400"
+      :breakpoint="500"
+      overlay
+      bordered
+      side="right"
+      class="bg-white shadow-1"
+    >
+      <q-scroll-area class="fit">
+        <q-list>
+          <q-item>
+            <q-item-section class="q-mt-md">
+              <q-item-label class="row no-wrap justify-between items-center">
+                <div class="text-bold text-body1">Notification</div>
+              </q-item-label>
+            </q-item-section>
+
+            <q-item-section side class="q-mt-md">
+              <q-item-label class="text-primary"> Mark all as read </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-item>
+            <q-item-section>
+              <q-item-label class="row no-wrap">
+                <div class="q-mr-md">All</div>
+                <div>Rescue</div>
+              </q-item-label>
+            </q-item-section>
+          </q-item>
+          <q-separator horizontal class="shadow-1 q-mb-md" size="md" />
+          <div class="column no-wrap" v-for="(notif, index) in notifData" :key="index">
+            <q-item>
+              <q-item-section avatar>
+                <q-avatar>
+                  <img :src="notif.image_path" />
+                </q-avatar>
+              </q-item-section>
+              <q-item-section>
+                <q-item-label>{{ notif.title }}</q-item-label>
+                <q-item-label caption lines="2">{{ notif.message }}</q-item-label>
+              </q-item-section>
+
+              <q-item-section side top>
+                <q-item-label caption>{{ timeAgo(notif.created_at) }}</q-item-label>
+                <!-- <q-icon name="star" color="yellow" /> -->
+              </q-item-section>
+            </q-item>
+            <q-separator spaced inset />
+          </div>
+        </q-list>
+      </q-scroll-area>
+    </q-drawer>
     <q-page-container>
       <router-view class="q-pa-lg" />
     </q-page-container>
@@ -135,7 +196,8 @@ import { useRoute, useRouter } from 'vue-router'
 import { globalStore } from 'src/stores/global-store'
 import { computed } from 'vue'
 import { useQuasar } from 'quasar'
-import { getImageLink } from 'src/composable/simpleComposable'
+import { getImageLink, timeAgo } from 'src/composable/simpleComposable'
+import { getNotif } from 'src/composable/latestComposable'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -151,6 +213,7 @@ export default defineComponent({
     const myScrollArea = ref(null)
     const scrollPosition = ref(0)
     const language = ref('English')
+    const notificationDrawer = ref(false)
     const pathExclude = ref(['/management/user-login', '/management/user-registration'])
     const $q = useQuasar()
     let logOuts = () => {
@@ -297,6 +360,13 @@ export default defineComponent({
       sessionStorage.setItem('myScrollPos', scrollPosition.value)
     }
 
+    const notifData = ref([])
+    const showNotifFn = async () => {
+      notificationDrawer.value = !notificationDrawer.value
+      notifData.value = await getNotif([store.userData.user_id, '-2'])
+      console.log(notifData.value)
+    }
+
     watchEffect(() => {
       store.showLayout = !pathExclude.value.includes(route.path)
     })
@@ -306,6 +376,10 @@ export default defineComponent({
       myScrollArea.value?.setScrollPosition('vertical', savedPosition)
     })
     return {
+      timeAgo,
+      notifData,
+      showNotifFn,
+      notificationDrawer,
       store,
       getImageLink,
       logOuts,

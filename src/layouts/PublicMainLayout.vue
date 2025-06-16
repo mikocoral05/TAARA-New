@@ -278,7 +278,7 @@
       </q-card>
     </q-dialog>
     <q-dialog v-model="rightDrawerNotification" maximized position="right" seamless>
-      <q-card style="width: 350px">
+      <q-card style="width: 400px">
         <q-space />
         <q-card-section class="q-mb-none">
           <div class="row justify-between items-center no-wrap">
@@ -286,7 +286,7 @@
             <q-icon
               name="sym_r_close"
               size="1.2rem"
-              @click="rightDrawerFavorites = !rightDrawerFavorites"
+              @click="rightDrawerNotification = !rightDrawerNotification"
             />
           </div>
           <div class="row no-wrap q-mt-md">
@@ -299,12 +299,9 @@
           <div v-for="(likes, index) in favoriteList" :key="index" class="column no-wrap">
             <div class="row no-wrap justify-between items-center">
               <div class="row no-wrap items-center">
-                <q-img
-                  :src="likes.image_path"
-                  height="40px"
-                  width="40px"
-                  class="radius-100 q-mr-md"
-                />
+                <q-avatar>
+                  <img src="https://cdn.quasar.dev/img/avatar.png" />
+                </q-avatar>
                 <div class="column no-wrap">
                   <div><span class="text-grey-7">Name:</span> {{ likes.name }}</div>
                   <div><span class="text-grey-7 q-mt-xs">Sex:</span> {{ likes.sex }}</div>

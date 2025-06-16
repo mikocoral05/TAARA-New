@@ -31,7 +31,7 @@
             />
           </div>
           <div class="column justify-end items-end">
-            <h4 class="q-ma-md">
+            <h4 class="q-ma-md name">
               {{ store.userData.first_name + ' ' + store.userData.last_name }}
             </h4>
           </div>
@@ -61,7 +61,7 @@
         </div>
       </div>
       <div class="details q-pa-md column no-wrap" v-if="tab == 1">
-        <div class="row no-wrap justify-between">
+        <div class="row no-wrap justify-between header">
           <h5 class="q-ma-none account-title">Account</h5>
           <div class="row no-wrap btn-container">
             <q-btn
@@ -78,7 +78,7 @@
         <h6 class="q-mb-md">Personal Info</h6>
         <p class="q-mb-lg">Update your personal info.</p>
 
-        <div class="row no-wrap justify-between q-mb-lg">
+        <div class="row no-wrap justify-between q-mb-md input-container">
           <div class="column no-wrap each-div">
             <p class="q-mb-sm">First name</p>
             <q-input
@@ -86,7 +86,6 @@
               dense
               v-model="userInfo.first_name"
               :rules="[(val) => !!val || '']"
-              hide-bottom-space
               :readonly="more == false"
             />
           </div>
@@ -97,13 +96,12 @@
               dense
               v-model="userInfo.last_name"
               :rules="[(val) => !!val || '']"
-              hide-bottom-space
               :readonly="more == false"
             />
           </div>
         </div>
-        <div class="row no-wrap justify-between q-mb-lg">
-          <div class="column no-wrap each-div">
+        <div class="row no-wrap justify-between q-mb-md input-container">
+          <div class="column no-wrap each-div q-mb-md">
             <p class="q-mb-sm">Middle name <span class="text-grey-7">( optional )</span></p>
             <q-input outlined dense v-model="userInfo.middle_name" :readonly="more == false" />
           </div>
@@ -118,7 +116,7 @@
             />
           </div>
         </div>
-        <div class="row no-wrap justify-between q-mb-lg">
+        <div class="row no-wrap justify-between q-mb-md input-container">
           <div class="column no-wrap each-div">
             <p class="q-mb-sm">Phone</p>
             <q-input
@@ -126,7 +124,6 @@
               v-model="userInfo.phone_number"
               prefix="+63"
               :rules="[(val) => !!val || '']"
-              hide-bottom-space
               dense
               outlined
               :readonly="more == false"
@@ -135,7 +132,7 @@
         </div>
 
         <div v-if="more == true">
-          <div class="row no-wrap justify-between q-mb-lg">
+          <div class="row no-wrap justify-between q-mb-lg input-container">
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">BirthDate</p>
 
@@ -146,7 +143,6 @@
                 mask="####-##-##"
                 :rules="[(val) => !!val || '']"
                 emit-value
-                hide-bottom-space
                 :readonly="more == false"
               >
                 <template v-slot:append>
@@ -173,7 +169,6 @@
               <q-select
                 v-model="userInfo.sex"
                 :rules="[(val) => !!val || '']"
-                hide-bottom-space
                 dense
                 emit-value
                 map-options
@@ -183,8 +178,8 @@
               />
             </div>
           </div>
-          <div class="row no-wrap justify-between q-mb-lg">
-            <div class="column no-wrap each-div">
+          <div class="row no-wrap justify-between q-mb-lg input-container">
+            <div class="column no-wrap each-div q-mb-md">
               <p class="q-mb-sm">Occupation <span class="text-grey-7">( optional )</span></p>
               <q-input v-model="userInfo.occupation" dense outlined :readonly="more == false" />
             </div>
@@ -194,7 +189,6 @@
               <q-select
                 v-model="userInfo.civil_status"
                 :rules="[(val) => !!val || '']"
-                hide-bottom-space
                 dense
                 outlined
                 emit-value
@@ -217,13 +211,12 @@
             </div>
           </div>
           <h6 class="q-mb-md">Address</h6>
-          <div class="row no-wrap justify-between q-mb-lg">
+          <div class="row no-wrap justify-between q-mb-lg input-container">
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">House No. / Apartment No. / Street</p>
               <q-input
                 v-model="userInfo.street"
                 :rules="[(val) => !!val || '']"
-                hide-bottom-space
                 dense
                 outlined
                 :readonly="more == false"
@@ -234,20 +227,18 @@
               <q-input
                 v-model="userInfo.brgy_name"
                 :rules="[(val) => !!val || '']"
-                hide-bottom-space
                 dense
                 outlined
                 :readonly="more == false"
               />
             </div>
           </div>
-          <div class="row no-wrap justify-between q-mb-lg">
+          <div class="row no-wrap justify-between q-mb-lg input-container">
             <div class="column no-wrap each-div">
               <p class="q-mb-sm">City/Municipality</p>
               <q-input
                 v-model="userInfo.city_municipality"
                 :rules="[(val) => !!val || '']"
-                hide-bottom-space
                 dense
                 outlined
                 :readonly="more == false"
@@ -258,7 +249,6 @@
               <q-input
                 v-model="userInfo.province"
                 :rules="[(val) => !!val || '']"
-                hide-bottom-space
                 dense
                 outlined
                 :readonly="more == false"
@@ -303,7 +293,6 @@
                 dense
                 v-model="userInfo.email_address"
                 :rules="[(val) => !!val || '']"
-                hide-bottom-space
                 readonly
               />
             </div>
@@ -326,7 +315,6 @@
                 dense
                 outlined
                 :rules="[(val) => !!val || '']"
-                hide-bottom-space
               />
             </div>
             <q-btn
@@ -438,7 +426,6 @@
                 dense
                 v-model="newEmailAddress"
                 :rules="[(val) => !!val || 'Please input new email address!']"
-                hide-bottom-space
                 :error="showErrorEmailExist"
                 error-message="This email already exist!"
               />

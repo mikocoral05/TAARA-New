@@ -43,7 +43,7 @@ export default defineComponent({
     const drawerLeft = ref(false)
     const responsiveNav = ref(false)
     const responsiveNavAll = ref(false)
-    const rightDrawerNotification = ref(false)
+    const rightDrawerNotification = ref(true)
     let myFavorites
     let myNotification
     let mySettings
@@ -264,7 +264,6 @@ export default defineComponent({
       ourPetsMenu,
       contactUs,
       logInDetails,
-      rightDrawerNotification,
       viewSpecificAnimal,
       drawer: ref(false),
       miniState: ref(true),

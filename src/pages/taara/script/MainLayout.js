@@ -43,7 +43,7 @@ export default defineComponent({
     const drawerLeft = ref(false)
     const responsiveNav = ref(false)
     const responsiveNavAll = ref(false)
-    const rightDrawerNotification = ref(true)
+    const rightDrawerNotification = ref(false)
     let myFavorites
     let myNotification
     let mySettings

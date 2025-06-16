@@ -92,11 +92,6 @@ export default defineComponent({
       viewSpecificAnimal(payload)
       rightDrawerFavorites.value = false
     }
-    // const thirtyDaysAgo = new Date()
-    // thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30)
-    // const givenDate = logInDetails.value == null ? '' : logInDetails.value[0].date_created
-    // const dates = new Date(givenDate)
-    // dates.setDate(dates.getDate() + 30)
 
     const numberNotif = ref([])
     const notificationShow = () => {

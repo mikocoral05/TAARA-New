@@ -269,7 +269,7 @@
         making a donation. Let's make a difference together!
       </h2>
       <q-btn
-        label="Get Involved"
+        label="Join Our Mission"
         class="bg-black text-white q-pa-sm q-mb-lg q-px-md"
         flat
         no-caps

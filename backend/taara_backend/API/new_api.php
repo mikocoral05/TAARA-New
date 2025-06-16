@@ -33,6 +33,7 @@ class API
             $user_id = $payload['get_pet_transfer_request'];
 
             $this->db->where("user_id", $user_id);
+            $this->db->where("is_deleted", 0);
             $this->db->orderBy("id", "DESC");
             $query = $this->db->getOne('tbl_pet_transfer');
 

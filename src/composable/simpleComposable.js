@@ -61,35 +61,6 @@ export const wordifyTime = (time) => {
   }
 }
 
-export const timeAgo = (date, time) => {
-  var dateTimeString = date + 'T' + time
-  var givenDate = new Date(dateTimeString)
-  var currentDate = new Date()
-  var difference = currentDate - givenDate
-  var secondsDifference = Math.floor(difference / 1000)
-  var minutesDifference = Math.floor(secondsDifference / 60)
-  var hoursDifference = Math.floor(minutesDifference / 60)
-  var daysDifference = Math.floor(hoursDifference / 24)
-  var weeksDifference = Math.floor(daysDifference / 7)
-  var monthsDifference = Math.floor(daysDifference / 30.44) // Approximation
-  var yearsDifference = Math.floor(daysDifference / 365.25) // Approximation
-  if (yearsDifference > 0) {
-    return yearsDifference + (yearsDifference === 1 ? ' year ago' : ' years ago')
-  } else if (monthsDifference > 0) {
-    return monthsDifference + (monthsDifference === 1 ? ' month ago' : ' months ago')
-  } else if (weeksDifference > 0) {
-    return weeksDifference + (weeksDifference === 1 ? ' week ago' : ' weeks ago')
-  } else if (daysDifference > 0) {
-    return daysDifference + (daysDifference === 1 ? ' day ago' : ' days ago')
-  } else if (hoursDifference > 0) {
-    return hoursDifference + (hoursDifference === 1 ? ' hour ago' : ' hours ago')
-  } else if (minutesDifference > 0) {
-    return minutesDifference + (minutesDifference === 1 ? ' minute ago' : ' minutes ago')
-  } else {
-    return secondsDifference + (secondsDifference === 1 ? ' second ago' : ' seconds ago')
-  }
-}
-
 export const threeWordsAbbMonth = [
   { month: 'Jan' },
   { month: 'Feb' },
@@ -629,4 +600,29 @@ export const isPastThirtyDays = (date) => {
   const diffInDays = diffInMs / (1000 * 60 * 60 * 24)
 
   return diffInDays > 30
+}
+
+export const timeAgo = (dateString) => {
+  const now = new Date()
+  const past = new Date(dateString.replace(' ', 'T')) // ensure compatibility
+  const seconds = Math.floor((now - past) / 1000)
+
+  const intervals = {
+    year: 31536000,
+    month: 2592000,
+    week: 604800,
+    day: 86400,
+    hour: 3600,
+    minute: 60,
+    second: 1,
+  }
+
+  for (const [unit, value] of Object.entries(intervals)) {
+    const count = Math.floor(seconds / value)
+    if (count > 0) {
+      return `${count} ${unit}${count !== 1 ? 's' : ''} ago`
+    }
+  }
+
+  return 'just now'
 }

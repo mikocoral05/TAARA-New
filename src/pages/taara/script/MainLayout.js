@@ -10,13 +10,13 @@ import {
   lastObjectNotif,
   items,
   getNotification,
-  notifData,
 } from 'src/composable/taaraComposable.js'
 import { encodeAnimalId, getImageLink, timeAgo } from 'src/composable/simpleComposable'
 import { useCounterStore } from 'src/stores/example-store'
 import { useQuasar } from 'quasar'
 import { globalStore } from 'src/stores/global-store'
 import { getFavorites } from 'src/composable/latestPublicComposable'
+import { getNotif } from 'src/composable/latestComposable'
 export default defineComponent({
   name: 'MainLayout',
 
@@ -166,6 +166,14 @@ export default defineComponent({
         menu.value = false // Hide the div when a click is detected outside of it
       }
     }
+
+    const notifData = ref([])
+    const showNotifFn = async () => {
+      rightDrawerNotification.value = !rightDrawerNotification.value
+      notifData.value = await getNotif([store.userData.user_id, '-1'])
+      console.log(notifData.value)
+    }
+
     watch(
       () => [
         counterStore.notif,
@@ -194,6 +202,7 @@ export default defineComponent({
         }
       },
     )
+
     const favoriteList = ref([])
     const fetchFavoriteFn = async () => {
       if (Object.keys(store.userData).length !== 0) {
@@ -214,7 +223,10 @@ export default defineComponent({
       document.removeEventListener('click', checkIfClickedOutsideFavorites)
       document.removeEventListener('click', checkIfClickedOutsideNotification)
     })
+
     return {
+      notifData,
+      showNotifFn,
       rightDrawerNotification,
       encodeAnimalId,
       fetchFavoriteFn,
@@ -247,7 +259,6 @@ export default defineComponent({
       viewNotification,
       notifCount,
       counterStore,
-      notifData,
       getNotification,
       notificationShow,
       likeShow,

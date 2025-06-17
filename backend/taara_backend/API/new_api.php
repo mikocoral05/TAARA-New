@@ -207,6 +207,31 @@ class API
                     'method' => 'GET'
                 ]);
             }
+        } else if (array_key_exists("get_all_annoucement", $payload)) {
+            $this->db->where('a.is_deleted', 0);
+            $this->db->join('tbl_files f1', 'f1.id = a.img_id', 'LEFT');
+            $this->db->join('tbl_users u', 'a.created_by = u.user_id', 'LEFT');
+            $this->db->join('tbl_files f2', 'f2.id = u.image_id', 'LEFT');
+
+            $this->db->orderBy('a.id', 'DESC');
+
+            $columns = 'a.*, f1.image_path AS announcement_image_path, f2.image_path AS user_image_path';
+
+            $query = $this->db->get('tbl_announcements a', null, $columns);
+
+            if (!empty($query)) {
+                echo json_encode([
+                    'status' => 'success',
+                    'data' => $query,
+                    'method' => 'GET'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'failed',
+                    'message' => 'No Notif for this user.',
+                    'method' => 'GET'
+                ]);
+            }
         } else {
             // Return error if 'get_user_by_type' is not provided
             echo json_encode([

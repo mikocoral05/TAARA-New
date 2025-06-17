@@ -627,6 +627,30 @@ class API
                     ]);
                 }
             }
+        } else if (isset($payload['read_notif'])) {
+            $id = $payload['read_notif']['id'];
+            $array_user_id = $payload['read_notif']['user_ids'];
+
+            $this->db->where('id', $id);
+            $update_values = [
+                "id_read" => json_encode($array_user_id)
+            ];
+
+            $update = $this->db->update('tbl_notification', $update_values);
+
+            if ($update) {
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Read notification successfully',
+                    'method' => 'PUT'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to rerad notification',
+                    'method' => 'PUT'
+                ]);
+            }
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Missing Animal info in the payload']);
         }

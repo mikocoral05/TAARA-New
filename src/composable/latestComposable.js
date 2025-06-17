@@ -1247,9 +1247,9 @@ export const updateWishlist = async (table, obj, user_id, user_type) => {
   return response.data
 }
 
-export const updatePetTransfer = async (obj, user_id, user_type) => {
+export const updatePetTransfer = async (obj, user_id, user_type, mode) => {
   const response = await api.put('pet_transfer.php', {
-    update_pet_transfer: { obj, user_id, user_type },
+    update_pet_transfer: { obj, user_id, user_type, mode },
   })
   return response.data
 }

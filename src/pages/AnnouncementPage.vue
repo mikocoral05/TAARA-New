@@ -283,23 +283,19 @@ export default {
           group: 'update',
           message: 'Adding new Announcement. Please wait...',
         })
-        dataStorage.value.created_by = store.userData?.user_id ?? 84
+        dataStorage.value.created_by = store.userData?.user_id
         addAnnouncement(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
           (response) => {
             console.log(response)
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
             setTimeout(() => {
-              $q.loading.show({
-                group: 'update',
-                message: response.message,
-              })
-            }, 1000)
-            setTimeout(() => {
-              getAnnouncement().then((response) => {
-                rows.value = response
-              })
+              fetchFn()
               showDialog.value = false
               $q.loading.hide()
-            }, 2000)
+            }, 1000)
           },
         )
       } else if (mode.value == 'Edit') {
@@ -316,8 +312,9 @@ export default {
             })
             setTimeout(() => {
               showDialog.value = false
+              fetchFn()
               $q.loading.hide()
-            }, 2000)
+            }, 1000)
           },
         )
       }
@@ -368,9 +365,7 @@ export default {
         setTimeout(() => {
           $q.loading.hide()
           if (response.status == 'success') {
-            getAnnouncement().then((response) => {
-              rows.value = response
-            })
+            fetchFn()
           }
         }, 2000)
       })
@@ -393,12 +388,14 @@ export default {
       }
       return true
     }
-
-    onMounted(() => {
+    const fetchFn = () => {
       getAnnouncement().then((response) => {
         rows.value = response
         console.log(rows.value)
       })
+    }
+    onMounted(() => {
+      fetchFn()
     })
     return {
       showNoAccess,

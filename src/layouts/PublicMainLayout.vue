@@ -327,7 +327,7 @@
                   'bg-grey-1': !JSON.parse(notif.is_read).includes(store.userData.user_id),
                 }"
                 clickable
-                @click="$router.push(notif.related_url)"
+                @click="updateViewNotifFn(notif)"
               >
                 <q-item-section avatar>
                   <q-avatar>

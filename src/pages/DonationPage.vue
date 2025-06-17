@@ -574,6 +574,7 @@ export default {
         return
       }
       mode.value = modeParam
+      console.log(data)
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         if (filterTab.value !== 2) showDialog.value = !showDialog.value
 

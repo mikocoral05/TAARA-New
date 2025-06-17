@@ -3,7 +3,6 @@ import { useRouter, useRoute } from 'vue-router'
 import loginModal from 'src/components/loginModal.vue'
 import reportAnnouncementDialog from 'src/components/reportAnnouncementDialog.vue'
 import {
-  logInDetails,
   notifCount,
   likesData,
   viewSpecificAnimal,
@@ -16,7 +15,11 @@ import { useCounterStore } from 'src/stores/example-store'
 import { useQuasar } from 'quasar'
 import { globalStore } from 'src/stores/global-store'
 import { getFavorites } from 'src/composable/latestPublicComposable'
-import { getNotif } from 'src/composable/latestComposable'
+import {
+  getNotif,
+  readNotif,
+  //  readNotif
+} from 'src/composable/latestComposable'
 export default defineComponent({
   name: 'MainLayout',
 
@@ -28,7 +31,6 @@ export default defineComponent({
   setup() {
     const store = globalStore()
     notifCount.value = JSON.parse(localStorage.getItem('count'))
-    logInDetails.value = JSON.parse(localStorage.getItem('logInDetails'))
 
     const counterStore = useCounterStore()
     const router = useRouter()
@@ -71,6 +73,7 @@ export default defineComponent({
         $q.loading.hide()
       }, 1000)
     }
+
     const goToContactUs = () => {
       if (route.fullPath == '/public/home') {
         counterStore.incrementFooter()
@@ -81,6 +84,7 @@ export default defineComponent({
         }, 500)
       }
     }
+
     const likeShow = () => {
       // logInDetails.value == null ? '' : getLikes(logInDetails.value[0].user_id)
       rightDrawerFavorites.value = !rightDrawerFavorites.value
@@ -97,6 +101,7 @@ export default defineComponent({
     const notificationShow = () => {
       rightDrawerNotification.value = !rightDrawerNotification.value
     }
+
     const viewNotification = (payload, notif_id) => {
       if (payload == 'rescue_report') {
         if (route.path == '/rescue-reports') {
@@ -119,14 +124,17 @@ export default defineComponent({
         router.push('/activitiesAndEventsViewEvent')
       }
     }
-    // const readNotif = (pay, user_id, notif) => {
-    //   for (var i = 0; i < pay.length; i++) {
-    //     v.value.push(pay[i])
-    //   }
-    //   v.value.push(user_id)
-    //   notifUpdate(v.value.join(','), notif)
-    //   notifCount.value = JSON.parse(localStorage.getItem('count') - 1)
-    // }
+
+    const updateViewNotifFn = async (notif) => {
+      router.push(notif.related_url)
+      const isRead = JSON.parse(notif.is_read)
+
+      if (!isRead.includes(store.userData.user_id)) {
+        isRead.push(store.userData.user_id)
+        await readNotif(notif.id, isRead)
+        notifData.value = await getNotif([store.userData.user_id, '-1', '-3'])
+      }
+    }
 
     const handleResize = () => {
       clearTimeout(resizeTimeout)
@@ -140,6 +148,7 @@ export default defineComponent({
         }
       }, 250)
     }
+
     const navigateMobileMenu = (navigate) => {
       responsiveNavAll.value = true
       secondDialog.value = navigate
@@ -206,7 +215,6 @@ export default defineComponent({
     const favoriteList = ref([])
     const fetchFavoriteFn = async () => {
       if (Object.keys(store.userData).length !== 0) {
-        // logInDetails.value == null ? '' : getNotification(0)
         rightDrawerFavorites.value = !rightDrawerFavorites.value
         favoriteList.value = (await getFavorites(store.userData.user_id)) ?? []
         console.log(favoriteList.value)
@@ -225,6 +233,7 @@ export default defineComponent({
     })
 
     return {
+      updateViewNotifFn,
       notifData,
       showNotifFn,
       rightDrawerNotification,
@@ -269,7 +278,6 @@ export default defineComponent({
       rescueReport,
       ourPetsMenu,
       contactUs,
-      logInDetails,
       viewSpecificAnimal,
       drawer: ref(false),
       miniState: ref(true),

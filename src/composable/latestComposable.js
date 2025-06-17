@@ -113,9 +113,15 @@ export const getUserByType = (type) => {
   })
 }
 
-export const approveDisapproveVolunteer = async (val, val_user_id, user_id, user_type) => {
+export const approveDisapproveVolunteer = async (
+  val,
+  val_user_id,
+  volunteer_id,
+  user_id,
+  user_type,
+) => {
   const response = await api.put('authorization.php', {
-    approve_disapprove_volunteer: { val, val_user_id, user_id, user_type },
+    approve_disapprove_volunteer: { val, val_user_id, volunteer_id, user_id, user_type },
   })
   return response.data
 }
@@ -917,11 +923,11 @@ export const softDeleteSchedule = (arrayId, user_id, user_type) => {
   })
 }
 
-export const softDeleteUser = (arrayId) => {
+export const softDeleteUser = (arrayId, user_id, user_type) => {
   return new Promise((resolve, reject) => {
     api
       .put('authorization.php', {
-        soft_delete_user: arrayId,
+        soft_delete_user: { arrayId, user_id, user_type },
       })
       .then((response) => {
         resolve(response.data)

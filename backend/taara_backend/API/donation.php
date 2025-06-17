@@ -19,9 +19,9 @@ class API
             $type = $payload['get_donation'];
 
             if ($type == 'cash') {
-                $this->db->join('tbl_cash_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
+                $this->db->join('tbl_cash_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'INNER');
             } else {
-                $this->db->join('tbl_material_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'LEFT');
+                $this->db->join('tbl_material_donations tbl2', 'tbl1.fund_id = tbl2.fund_id', 'INNER');
             }
 
             $this->db->join('tbl_users tbl3', 'tbl1.donor_id = tbl3.user_id', 'LEFT');
@@ -56,6 +56,14 @@ class API
             $data = $payload['add_donation']['donationData'];
             $user_id = $payload['add_donation']['user_id'];
             $user_type = $payload['add_donation']['user_type'];
+            $new_image = $data['new_image'];
+
+            $image_id = '';
+
+            if ($new_image) {
+                $this->db->insert('tbl_files', ['image_path' => $new_image]);
+                $image_id = $this->db->getInsertId();
+            }
             $table = $data['donation_type'] == 'cash' ? 'tbl_cash_donations' : 'tbl_material_donations';
 
             $insertData = [
@@ -67,6 +75,10 @@ class API
                 'anonymous'          => $data['anonymous'] ?? null,
                 'created_by'          => $data['created_by'] ?? null,
             ];
+            if ($image_id) {
+                $insertData['file_id'] = $image_id;
+            }
+
 
             $insertMain = $this->db->insert('tbl_funds', $insertData);
             $id = $this->db->getInsertId();
@@ -105,7 +117,25 @@ class API
                     'module' => 'Donation',
                 ];
 
+
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // -2 = all management
+                    'created_by'   => $user_id,
+                    'title'        => 'New ' . ucfirst($data['donation_type']) . ' Donation',
+                    'message'      => 'A new ' . $data['donation_type'] . ' donation has been added and is awaiting your review.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '/management/donation',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+
+                $this->db->insert("tbl_notification", $notif);
+
+
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Donation info successfully added',
@@ -169,6 +199,7 @@ class API
             $table = $obj['donation_type'] == 'cash' ? 'tbl_cash_donations' : 'tbl_material_donations';
             $new_img =  $obj['new_image'] ?? '';
             $last_insert_id = "";
+
             if (!empty($new_img)) {
                 $this->db->insert('tbl_files', ['image_path' => $new_img]);
                 $last_insert_id = $this->db->getInsertId();
@@ -226,6 +257,23 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+
+                if ($obj['donor_id']) {
+                    $notif = [
+                        'for_user'     => $obj['donor_id'], // -2 = all management
+                        'created_by'   => $user_id,
+                        'title'        => ucfirst($obj['donation_type']) . ' Donation',
+                        'message'      => 'Your ' . $obj['donation_type'] . ' donation has been review.',
+                        'type'         => 2, // 1 = announcement, 2 = notification
+                        'related_url'  => '',
+                        'is_read'      => json_encode([]),
+                    ];
+
+
+
+                    $this->db->insert("tbl_notification", $notif);
+                }
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Donation info updated successfully',

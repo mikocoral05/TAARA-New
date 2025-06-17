@@ -59,35 +59,66 @@ class API
 
                     $this->db->where('user_id', $id);
                     $this->db->update('tbl_users', $copied_data);
+                    $query = $this->db->insert('tbl_volunteer_form', $form_data);
+                    if ($query) {
 
-                    if ($this->db->insert('tbl_volunteer_form', $form_data)) {
-                        $response = [
+                        $logs = [
+                            'user_id' => $id,
+                            'user_type' => 1,
+                            'action' => 'Add new Volunteer request ',
+                            'module' => 'Volunteer',
+                        ];
+
+                        $this->db->insert("tbl_logs", $logs);
+
+                        $notif = [
+                            'for_user'     => -2, // Example: -1 = all public_user, -2 = all management
+                            'created_by'    => $id, // Assuming the one triggering the notification is the updater
+                            'title'        => 'New Volunteer Request',
+                            'message'      => 'A new volunteer request has been submitted and is pending for review.',
+                            'type'         => 2, // 1 = announcement, 2 = notification
+                            'related_url'  => '/management/users',
+                            'is_read'      => json_encode([]), // 0 = unread
+                        ];
+
+
+                        $this->db->insert("tbl_notification", $notif);
+                        echo json_encode([
                             'status' => 'success',
                             'message' => 'Registration successful. Please wait for approval',
                             'method' => 'POST'
-                        ];
+                        ]);
                     } else {
-                        $response['message'] = 'Failed to insert volunteer form.';
+                        echo json_encode([
+                            'status' => 'failed',
+                            'message' => 'Failed to insert volunteer form.',
+                            'method' => 'POST'
+                        ]);
                     }
                 } else {
-                    $response = [
+
+                    echo json_encode([
                         'status' => 'success',
                         'message' => 'You have already submitted!',
                         'method' => 'POST'
-                    ];
+                    ]);
                 }
             } else {
                 if ($this->db->insert('tbl_users', $user_data)) {
                     $id = $this->db->getInsertId();
                     $form_data['user_id'] = $id;  // ensure form links to new user
                     if ($this->db->insert('tbl_volunteer_form', $form_data)) {
-                        $response = [
+                        echo json_encode([
                             'status' => 'success',
                             'message' => 'Registration successful. Please wait for approval',
                             'method' => 'POST'
-                        ];
+                        ]);
                     } else {
-                        $response['message'] = 'Failed to insert volunteer form.';
+                        echo json_encode([
+                            'status' => 'failed',
+                            'message' => 'Failed to insert volunteer form.',
+                            'method' => 'POST'
+                        ]);
                     }
                 } else {
                     $response['message'] = 'Failed to insert user data.';

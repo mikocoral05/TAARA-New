@@ -87,19 +87,38 @@ class API
             $data = $payload['update_pet_transfer']['obj'];
             $user_id = $payload['update_pet_transfer']['user_id'];
             $user_type = $payload['update_pet_transfer']['user_type'];
+            $mode = $payload['update_pet_transfer']['mode'];
             $id = $data['id'];
             $this->db->where('id', $id);
             $updated = $this->db->update('tbl_pet_transfer', $data);
 
             if ($updated) {
+                //logs
                 $logs = [
                     'user_id' => $user_id,
                     'user_type' => $user_type,
-                    'action' => 'Update Pet Transfer info',
+                    'action' => $mode . ' Pet Transfer info',
                     'module' => 'Pet Transfer',
                 ];
-
                 $this->db->insert("tbl_logs", $logs);
+
+                //notif
+                if ($mode != 'Edit') {
+
+                    $notif = [
+                        'for_user'     => $data['user_id'], // Example: -1 = all public_user, -2 = all management
+                        'created_by'    => $user_id, // Assuming the one triggering the notification is the updater
+                        'title'        => $mode . ' Pet Transfer Request',
+                        'message'      => 'Your pet transfer request has been ' . $mode,
+                        'type'         => 2, // 1 = announcement, 2 = notification
+                        'related_url'  => '/public/pet-transfer',
+                        'is_read'      => json_encode([]), // 0 = unread
+                    ];
+                    $this->db->insert("tbl_notification", $notif);
+                }
+
+
+
                 echo json_encode(['status' => 'success', 'message' => 'Records updated successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to updated records', 'method' => 'PUT']);

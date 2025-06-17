@@ -162,6 +162,21 @@
                   <q-item-label>Report & Rescue</q-item-label>
                 </q-item-section>
               </q-item>
+              <q-item
+                clickable
+                v-close-popup
+                to="/public/announcementsPage"
+                @click="headerColor = 'white'"
+                :class="
+                  $route.fullPath == '/public/announcementsPage' || ''
+                    ? 'bg-primary text-white'
+                    : 'bg-white text-black'
+                "
+              >
+                <q-item-section>
+                  <q-item-label>Announcement</q-item-label>
+                </q-item-section>
+              </q-item>
             </q-list>
           </q-btn-dropdown>
         </div>
@@ -289,14 +304,18 @@
               </q-item-section>
 
               <q-item-section side class="q-mt-md">
-                <q-item-label class="text-primary"> Mark all as read </q-item-label>
+                <q-icon
+                  name="sym_r_close"
+                  size="1.2rem"
+                  @click="rightDrawerNotification = !rightDrawerNotification"
+                ></q-icon>
               </q-item-section>
             </q-item>
             <q-item>
               <q-item-section>
                 <q-item-label class="row no-wrap">
                   <div class="q-mr-md">All</div>
-                  <div>Rescue</div>
+                  <div>Announcement</div>
                 </q-item-label>
               </q-item-section>
             </q-item>

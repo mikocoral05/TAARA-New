@@ -162,7 +162,6 @@ export default defineComponent({
       amount: '',
       allocated_for: route.query.allocated || '',
       notes: '',
-      image: null,
       method: 'online',
     })
     const reference = ref(null)
@@ -182,7 +181,7 @@ export default defineComponent({
           donatorsInfo.value.amount = null
         } else {
           controlSpinner.value = true
-
+          donatorsInfo.value.file = donationImage.value
           try {
             const reader = new FileReader()
             reader.readAsDataURL(donationImage.value)
@@ -238,11 +237,11 @@ export default defineComponent({
           donation_type: 'cash',
           anonymous: 'no',
           amount: 0,
-          allocated_for: '',
+          allocated_for: route.query.allocated || '',
           notes: '',
-          image: null,
           method: 'online',
         }
+        donationImage.value = null
       },
     )
 

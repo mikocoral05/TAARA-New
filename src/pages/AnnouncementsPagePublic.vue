@@ -1,9 +1,6 @@
 <template>
   <q-page>
-    <div
-      class="flex justify-center items-center q-pa-sm"
-      style="background: rgba(240, 242, 245, 255)"
-    >
+    <div class="flex justify-center items-center q-pa-sm">
       <div
         v-for="(data, index) in annoucementData"
         :key="index"
@@ -13,14 +10,14 @@
         <div class="row no-wrap justify-between items-center big-announcement-title-container">
           <div class="row no-wrap items-center">
             <q-avatar>
-              <img :src="data?.user_image_path || 'https://cdn.quasar.dev/img/avatar.png'" />
+              <img :src="data?.user_image_path || 'TAARA.png'" />
             </q-avatar>
             <div class="column no-wrap q-ml-md">
               <div class="text-bold">Tabaco Animal Rescue and Adoption</div>
               <div class="text-grey-7">{{ data.created_at }}</div>
             </div>
           </div>
-          <div class="row no-wrap">
+          <div class="row no-wrap" v-if="data.is_pinned == 1">
             <q-icon name="sym_r_keep" class="q-mr-md" color="green" size="1.3rem" />
             Pinned by Taara
           </div>
@@ -47,6 +44,7 @@ import { timeAgo, wordifyDate, wordifyTime } from 'src/composable/simpleComposab
 import { useCounterStore } from 'src/stores/example-store'
 import { getAllAnnouncement } from 'src/composable/latestComposable'
 import TaaraFooter from 'src/components/TaaraFooter.vue'
+import { useRoute } from 'vue-router'
 export default {
   components: {
     TaaraFooter,
@@ -57,9 +55,10 @@ export default {
     const myElement = ref(null)
     const annoucementData = ref([])
     let textLength = ref(150)
+    const route = useRoute()
     const scrollToElement = () => {
       setTimeout(() => {
-        const element = document.querySelector(`#report-${counterStore.announcement}`)
+        const element = document.querySelector(`#report-${route.query.id}`)
         if (element) {
           element.scrollIntoView({ behavior: 'smooth' })
         }

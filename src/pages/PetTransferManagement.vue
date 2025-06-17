@@ -657,19 +657,21 @@ export default {
           group: 'add',
           message: 'Adding Pet transfer. Please wait...',
         })
-        addPetListRequest(dataStorage.value).then((response) => {
-          setTimeout(() => {
-            $q.loading.show({
-              group: 'add',
-              message: response.message,
-            })
-          }, 500)
-          setTimeout(() => {
-            $q.loading.hide()
-            addDialog.value = false
-            fetchData()
-          }, 1000)
-        })
+        addPetListRequest(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
+          (response) => {
+            setTimeout(() => {
+              $q.loading.show({
+                group: 'add',
+                message: response.message,
+              })
+            }, 500)
+            setTimeout(() => {
+              $q.loading.hide()
+              addDialog.value = false
+              fetchData()
+            }, 1000)
+          },
+        )
       } else if (['Edit', 'Approve', 'Disapprove'].includes(mode.value)) {
         $q.loading.show({
           group: 'update',

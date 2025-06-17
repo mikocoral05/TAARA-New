@@ -727,6 +727,7 @@ export default {
         const response = await approveDisapproveVolunteer(
           3,
           data.user_id,
+          data.volunteer_id,
           store.userData.user_id,
           store.userData.user_type,
         )
@@ -780,22 +781,24 @@ export default {
         group: 'update',
         message: 'Archieving user. Please wait...',
       })
-      softDeleteUser(arrayOfId.value).then((response) => {
-        if (response.status == 'success') {
-          setTimeout(() => {
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
+      softDeleteUser(arrayOfId.value, store.userData.user_id, store.userData.type).then(
+        (response) => {
+          if (response.status == 'success') {
+            setTimeout(() => {
+              $q.loading.show({
+                group: 'update',
+                message: response.message,
+              })
+            }, 1000)
+            setTimeout(() => {
+              $q.loading.hide()
+            }, 2000)
+            getUserByType(tab.value).then((response) => {
+              userRows.value = response
             })
-          }, 1000)
-          setTimeout(() => {
-            $q.loading.hide()
-          }, 2000)
-          getUserByType(tab.value).then((response) => {
-            userRows.value = response
-          })
-        }
-      })
+          }
+        },
+      )
     }
 
     const fetchFn = () => {

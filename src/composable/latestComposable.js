@@ -120,6 +120,13 @@ export const approveDisapproveVolunteer = async (val, val_user_id, user_id, user
   return response.data
 }
 
+export const readNotif = async (id, user_ids) => {
+  const response = await api.put('new_api.php', {
+    read_notif: { id, user_ids },
+  })
+  return response.data
+}
+
 export const getPendingRescueReport = () => {
   return new Promise((resolve, reject) => {
     api

@@ -126,7 +126,9 @@ export default defineComponent({
     }
 
     const updateViewNotifFn = async (notif) => {
-      router.push(notif.related_url)
+      if (notif.related_url) {
+        router.push(notif.related_url)
+      }
       const isRead = JSON.parse(notif.is_read)
 
       if (!isRead.includes(store.userData.user_id)) {

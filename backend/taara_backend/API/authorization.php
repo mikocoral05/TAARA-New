@@ -52,6 +52,7 @@ class API
                 $columns[] = 'tbl_volunteer_position.position_title';
                 $columns[] = 'tbl_volunteer_position.position_description';
                 $columns[] = 'ff.application_status';
+                $columns[] = 'ff.id volunteer_id';
                 $columns[] = 'page_access';
                 $this->db->join('tbl_volunteer_position', 'tbl_users.roles = tbl_volunteer_position.id', 'left');
                 $this->db->join('tbl_volunteer_form ff', 'tbl_users.user_id = ff.user_id', 'left');
@@ -193,7 +194,9 @@ class API
                 ]);
             }
         } else if (isset($payload['soft_delete_user'])) {
-            $id = $payload['soft_delete_user'];
+            $id = $payload['soft_delete_user']['arrayId'];
+            $user_id = $payload['soft_delete_user']['user_id'];
+            $user_type = $payload['soft_delete_user']['user_type'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -208,6 +211,14 @@ class API
             $updated = $this->db->update('tbl_users', $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Deactivate Account',
+                    'module' => 'User Management',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode(['status' => 'success', 'message' => 'User delete successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete user', 'method' => 'PUT']);
@@ -243,7 +254,8 @@ class API
         } else if (isset($payload['approve_disapprove_volunteer'])) {
             $user_id = $payload['approve_disapprove_volunteer']['user_id'];
             $user_type = $payload['approve_disapprove_volunteer']['user_type'];
-            $user_id_to_update = $payload['approve_disapprove_volunteer']['val_user_id'];
+            $val_user_id = $payload['approve_disapprove_volunteer']['val_user_id'];
+            $volunteer_id = $payload['approve_disapprove_volunteer']['volunteer_id'];
             $val = $payload['approve_disapprove_volunteer']['val'];
 
             $update_values = [
@@ -251,13 +263,13 @@ class API
             ];
 
             // Update records matching the IDs
-            $this->db->where('user_id', $user_id_to_update);
+            $this->db->where('id', $volunteer_id);
             $updated = $this->db->update('tbl_volunteer_form', $update_values);
 
             $state = $val == 2 ? 'Approve' : 'Disapprove';
 
             if ($val == 2) {
-                $this->db->where('user_id', $user_id_to_update);
+                $this->db->where('user_id', $val_user_id);
                 $updated = $this->db->update('tbl_users', ['user_type' => 2, 'roles_type' => 2]);
             }
             if ($updated) {
@@ -269,6 +281,24 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => $val_user_id, // Example: -1 = all public_user, -2 = all management
+                    'created_by'    => $user_id, // Assuming the one triggering the notification is the updater
+                    'title'        => 'Volunteer Request' . $state,
+                    'message' => $state === 'Approved'
+                        ? 'A volunteer request has been approved. You may now assign roles or tasks.'
+                        : ($state === 'Disapproved'
+                            ? 'A volunteer request has been disapproved. No further action is needed.'
+                            : 'A new volunteer request has been submitted and is pending review.'),
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '/public/volunteer-form',
+                    'is_read'      => json_encode([]), // 0 = unread
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode(['status' => 'success', 'message' => 'Volunteer ' . $state . ' successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to  ' . $state . 'user', 'method' => 'PUT']);

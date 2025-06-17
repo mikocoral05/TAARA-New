@@ -326,6 +326,8 @@
                 :class="{
                   'bg-grey-1': !JSON.parse(notif.is_read).includes(store.userData.user_id),
                 }"
+                clickable
+                @click="$router.push(notif.related_url)"
               >
                 <q-item-section avatar>
                   <q-avatar>
@@ -334,12 +336,14 @@
                 </q-item-section>
                 <q-item-section>
                   <q-item-label>{{ notif.title }}</q-item-label>
-                  <q-item-label caption lines="2">{{ notif.message }}</q-item-label>
+                  <div
+                    class="text-caption text-grey-7 ellipsis-2-lines"
+                    v-html="notif.message"
+                  ></div>
                 </q-item-section>
 
                 <q-item-section side top>
                   <q-item-label caption>{{ timeAgo(notif.created_at) }}</q-item-label>
-                  <!-- <q-icon name="star" color="yellow" /> -->
                 </q-item-section>
               </q-item>
               <q-separator inset />

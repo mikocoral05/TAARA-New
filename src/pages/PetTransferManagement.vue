@@ -35,13 +35,23 @@
                     <q-icon name="sym_r_edit" size="1.2rem" />
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="tableAction(row, 'Approve')">
+                <q-item
+                  clickable
+                  v-close-popup
+                  v-if="row.status == 1"
+                  @click="tableAction(row, 'Approve')"
+                >
                   <q-item-section>Approve</q-item-section>
                   <q-item-section side>
                     <q-icon name="sym_r_check_circle" size="1.2rem" color="positive" />
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="tableAction(row, 'Disapprove')">
+                <q-item
+                  clickable
+                  v-close-popup
+                  v-if="row.status == 1"
+                  @click="tableAction(row, 'Disapprove')"
+                >
                   <q-item-section>Dispprove</q-item-section>
                   <q-item-section side>
                     <q-icon name="sym_r_cancel" color="red" size="1.2rem" />
@@ -88,7 +98,6 @@
           </div>
           <div class="q-mt-sm">Date: {{ row.date_request }}</div>
         </template>
-
         <template #cell-pet_name="{ row }">
           <div class="column no-wrap">
             <div class="text-left row no-wrap">
@@ -618,6 +627,7 @@ export default {
         return
       }
       mode.value = modeParam
+      console.log(row)
 
       if (['View', 'Edit', 'Add'].includes(modeParam)) {
         if (modeParam == 'Add') {
@@ -666,21 +676,24 @@ export default {
           message: `Updating. Please wait...`,
         })
 
-        updatePetTransfer(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
-          (response) => {
-            setTimeout(() => {
-              $q.loading.show({
-                group: 'update',
-                message: response.message,
-              })
-            }, 500)
-            setTimeout(() => {
-              $q.loading.hide()
-              addDialog.value = false
-              fetchData()
-            }, 1000)
-          },
-        )
+        updatePetTransfer(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+          mode.value,
+        ).then((response) => {
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 500)
+          setTimeout(() => {
+            $q.loading.hide()
+            addDialog.value = false
+            fetchData()
+          }, 1000)
+        })
       }
     }
 

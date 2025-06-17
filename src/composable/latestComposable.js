@@ -1022,27 +1022,16 @@ export const addRescueRerport = (obj, user_id, user_type) => {
   })
 }
 
-export const editAnnouncement = (obj, user_id, user_type) => {
+export const editAnnouncement = async (obj, user_id, user_type) => {
   const { file, ...data } = obj
-  return new Promise((resolve, reject) => {
-    api
-      .put('announcement.php', {
-        edit_announcement: { data, user_id, user_type },
-      })
-      .then((response) => {
-        if (response.data.status == 'success') {
-          if (file) {
-            uploadFiles([file], data.id, 'tbl_announcements', 'id', 'img_id').then((response) => {
-              console.log(response)
-            })
-          }
-        }
-        resolve(response.data)
-      })
-      .catch((error) => {
-        reject(error)
-      })
+  if (file) {
+    const res = await uploadImages([file])
+    data.new_image = res.data.images[0]
+  }
+  const response = await api.put('announcement.php', {
+    edit_announcement: { data, user_id, user_type },
   })
+  return response.data
 }
 
 export const editRescueReport = (obj, user_id, user_type) => {
@@ -1275,9 +1264,9 @@ export const addWishlist = async (obj, user_id, user_type) => {
   return response.data
 }
 
-export const addPetListRequest = async (obj) => {
+export const addPetListRequest = async (obj, user_id, user_type) => {
   const response = await api.post('pet_transfer.php', {
-    add_petList_request: obj,
+    add_petList_request: { obj, user_id, user_type },
   })
   return response.data
 }
@@ -1329,6 +1318,12 @@ export const getLogs = async () => {
 export const getNotif = async (arrOfUserKey) => {
   const response = await api.get('new_api.php', {
     params: { get_notif: arrOfUserKey },
+  })
+  return response.data.data
+}
+export const getAllAnnouncement = async () => {
+  const response = await api.get('new_api.php', {
+    params: { get_all_annoucement: 'get_all_annoucement' },
   })
   return response.data.data
 }

@@ -175,7 +175,7 @@
               </q-item-section>
               <q-item-section>
                 <q-item-label>{{ notif.title }}</q-item-label>
-                <q-item-label caption lines="2">{{ notif.message }}</q-item-label>
+                <div class="text-caption text-grey-7 ellipsis-2-lines" v-html="notif.message"></div>
               </q-item-section>
 
               <q-item-section side top>
@@ -368,7 +368,7 @@ export default defineComponent({
     const notifData = ref([])
     const showNotifFn = async () => {
       notificationDrawer.value = !notificationDrawer.value
-      notifData.value = await getNotif([store.userData.user_id, '-2'])
+      notifData.value = await getNotif([store.userData.user_id, '-2', '-3'])
       console.log(notifData.value)
     }
 

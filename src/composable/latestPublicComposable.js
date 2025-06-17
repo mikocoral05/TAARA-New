@@ -120,8 +120,13 @@ export const getPetTransferRequest = async (user_id) => {
 }
 
 export const submitPublicDonation = async (obj) => {
+  const { file, ...data } = obj
+  if (file) {
+    const res = await uploadImages([file])
+    data.new_image = res.data.images[0]
+  }
   const response = await api.post('donation.php', {
-    add_donation: obj,
+    add_donation: { donationData: data, user_id: obj.donor_id, user_type: 1 },
   })
   return response.data
 }

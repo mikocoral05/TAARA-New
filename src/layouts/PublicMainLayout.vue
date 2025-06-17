@@ -204,7 +204,7 @@
             flat
             dense
             class="q-ml-sm"
-            @click="rightDrawerNotification = !rightDrawerNotification"
+            @click="showNotifFn()"
           />
           <q-btn
             bordered
@@ -279,49 +279,54 @@
     </q-dialog>
     <q-dialog v-model="rightDrawerNotification" maximized position="right" seamless>
       <q-card style="width: 400px">
-        <q-space />
-        <q-card-section class="q-mb-none">
-          <div class="row justify-between items-center no-wrap">
-            <div>Notifications</div>
-            <q-icon
-              name="sym_r_close"
-              size="1.2rem"
-              @click="rightDrawerNotification = !rightDrawerNotification"
-            />
-          </div>
-          <div class="row no-wrap q-mt-md">
-            <div class="q-mr-md">All</div>
-            <div>Announcement</div>
-          </div>
-          <q-separator />
-        </q-card-section>
-        <q-card-section class="column no-wrap">
-          <div v-for="(likes, index) in favoriteList" :key="index" class="column no-wrap">
-            <div class="row no-wrap justify-between items-center">
-              <div class="row no-wrap items-center">
-                <q-avatar>
-                  <img src="https://cdn.quasar.dev/img/avatar.png" />
-                </q-avatar>
-                <div class="column no-wrap">
-                  <div><span class="text-grey-7">Name:</span> {{ likes.name }}</div>
-                  <div><span class="text-grey-7 q-mt-xs">Sex:</span> {{ likes.sex }}</div>
-                </div>
-              </div>
-              <q-icon
-                name="sym_r_arrow_forward"
-                size="1.3rem"
-                @click="
-                  ($router.push({
-                    path: '/public/view-specific-animal',
-                    query: { pet: encodeAnimalId(likes.animal_id) },
-                  }),
-                  (rightDrawerFavorites = !rightDrawerFavorites))
-                "
-              />
+        <q-scroll-area class="fit">
+          <q-list>
+            <q-item>
+              <q-item-section class="q-mt-sm">
+                <q-item-label class="row no-wrap justify-between items-center">
+                  <div class="text-bold text-body1">Notification</div>
+                </q-item-label>
+              </q-item-section>
+
+              <q-item-section side class="q-mt-md">
+                <q-item-label class="text-primary"> Mark all as read </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-item>
+              <q-item-section>
+                <q-item-label class="row no-wrap">
+                  <div class="q-mr-md">All</div>
+                  <div>Rescue</div>
+                </q-item-label>
+              </q-item-section>
+            </q-item>
+            <q-separator horizontal class="shadow-1" size="md" />
+            <div class="column no-wrap" v-for="(notif, index) in notifData" :key="index">
+              <q-item
+                class="q-py-md"
+                :class="{
+                  'bg-grey-1': !JSON.parse(notif.is_read).includes(store.userData.user_id),
+                }"
+              >
+                <q-item-section avatar>
+                  <q-avatar>
+                    <img :src="notif.image_path" />
+                  </q-avatar>
+                </q-item-section>
+                <q-item-section>
+                  <q-item-label>{{ notif.title }}</q-item-label>
+                  <q-item-label caption lines="2">{{ notif.message }}</q-item-label>
+                </q-item-section>
+
+                <q-item-section side top>
+                  <q-item-label caption>{{ timeAgo(notif.created_at) }}</q-item-label>
+                  <!-- <q-icon name="star" color="yellow" /> -->
+                </q-item-section>
+              </q-item>
+              <q-separator inset />
             </div>
-            <q-separator class="q-my-md"></q-separator>
-          </div>
-        </q-card-section>
+          </q-list>
+        </q-scroll-area>
       </q-card>
     </q-dialog>
     <q-drawer

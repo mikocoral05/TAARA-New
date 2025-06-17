@@ -170,7 +170,7 @@ export default defineComponent({
     const notifData = ref([])
     const showNotifFn = async () => {
       rightDrawerNotification.value = !rightDrawerNotification.value
-      notifData.value = await getNotif([store.userData.user_id, '-1'])
+      notifData.value = await getNotif([store.userData.user_id, '-1', '-3'])
       console.log(notifData.value)
     }
 

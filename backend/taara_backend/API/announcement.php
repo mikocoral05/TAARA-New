@@ -76,8 +76,19 @@ class API
                     'action' => 'Add New Announcement ',
                     'module' => 'Announcement',
                 ];
-
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -3, // Example: -1 = all public_user, -2 = all management
+                    'created_by'    => $user_id, // Assuming the one triggering the notification is the updater
+                    'title'        => 'New Announcement',
+                    'message'      =>  $data['content'],
+                    'type'         => 1, // 1 = announcement, 2 = notification
+                    'related_url'  => '/public/announcementsPage?id=' . $id,
+                    'is_read'      => json_encode([]), // 0 = unread
+                ];
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Announcement info successfully added',
@@ -138,7 +149,16 @@ class API
             $obj = $payload['edit_announcement']['data'];
             $user_id = $payload['edit_announcement']['user_id'];
             $user_type = $payload['edit_announcement']['user_type'];
+            $new_image = $obj['new_image'] ?? '';
+            $image_id = '';
 
+            // Insert new image if provided
+            if ($new_image) {
+                $this->db->insert('tbl_files', ['image_path' => $new_image]);
+                $image_id = $this->db->getInsertId();
+            }
+
+            // Build update array
             $update_values = [
                 'title' => $obj['title'] ?? '',
                 'content' => $obj['content'] ?? '',
@@ -146,10 +166,19 @@ class API
                 'updated_at' => date('Y-m-d H:i:s'),
             ];
 
-            $id = $obj['id'];
+            // Conditionally include img_id
+            if ($image_id) {
+                $update_values['img_id'] = $image_id;
+            }
 
+            // Remove unused field
+            unset($obj['new_image']);
+
+            // Perform update
+            $id = $obj['id'];
             $this->db->where('id', $id);
             $updated = $this->db->update('tbl_announcements', $update_values);
+
 
             if ($updated) {
                 $logs = [

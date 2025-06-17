@@ -57,9 +57,31 @@ class API
     public function httpPost($payload)
     {
         if (array_key_exists("add_petList_request", $payload)) {
-            $data = $payload['add_petList_request'];
+            $data = $payload['add_petList_request']['obj'];
+            $user_id = $payload['add_petList_request']['user_id'];
+            $user_type = $payload['add_petList_request']['user_type'];
 
             if ($this->db->insert('tbl_pet_transfer', $data)) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Add New Pet Transfer info',
+                    'module' => 'Pet Transfer',
+                ];
+                $this->db->insert("tbl_logs", $logs);
+
+                //notif
+                $notif = [
+                    'for_user'     => -2, // Example: -1 = all public_user, -2 = all management
+                    'created_by'    => $user_id, // Assuming the one triggering the notification is the updater
+                    'title'        => 'Add New Pet Transfer Request',
+                    'message'      => 'Your pet transfer request has been',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '/management/pet-transfer-request',
+                    'is_read'      => json_encode([]), // 0 = unread
+                ];
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Successfully add Pet request List',

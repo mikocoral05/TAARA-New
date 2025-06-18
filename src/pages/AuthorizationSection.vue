@@ -635,7 +635,7 @@
       <q-card style="width: 50vw; height: 500px" class="text-black">
         <q-card-section class="q-py-md row no-wrap justify-between items-center">
           <div>{{ mode }}</div>
-          <q-icon name="close" size="1.2rem" @click="editDialog = !editDialog" />
+          <q-icon name="close" size="1.2rem" @click="formDialog = !formDialog" />
         </q-card-section>
         <q-separator />
         <q-stepper v-model="step" ref="stepper" color="primary" animated flat class="full-height">
@@ -653,7 +653,7 @@
                     filled
                     dense
                     placeholder="Ex: Juan"
-                    v-model="userVolunteerData.first_name"
+                    v-model="volunteerData.first_name"
                     class="input"
                     readonly
                   />
@@ -665,7 +665,7 @@
                     dense
                     placeholder="Ex: Juan"
                     class="input"
-                    v-model="userVolunteerData.last_name"
+                    v-model="volunteerData.last_name"
                     readonly
                   />
                 </div>
@@ -679,9 +679,9 @@
                     class="age full-width"
                     map-options
                     emit-value
-                    :options="sex_options"
+                    :options="sexOption"
                     placeholder="Ex: Male"
-                    v-model="userVolunteerData.sex"
+                    v-model="volunteerData.sex"
                     readonly
                   />
                 </div>
@@ -695,7 +695,7 @@
                     mask="####-##-##"
                     placeholder="Ex: 2000/05/23"
                     readonly
-                    v-model="userVolunteerData.birth_date"
+                    v-model="volunteerData.birth_date"
                   >
                     <template v-slot:append>
                       <q-icon name="event" class="cursor-pointer">
@@ -706,7 +706,7 @@
                             emit-immediately
                             mask="YYYY-MM-DD"
                             default-year-month="2000/01"
-                            v-model="userVolunteerData.birth_date"
+                            v-model="volunteerData.birth_date"
                           >
                           </q-date>
                         </q-popup-proxy>
@@ -724,7 +724,7 @@
                     prefix="+63"
                     class="phone_number"
                     placeholder="9234567891"
-                    v-model="userVolunteerData.phone_number"
+                    v-model="volunteerData.phone_number"
                   />
                 </div>
                 <div class="q-pa-sm field-container">
@@ -734,9 +734,10 @@
                     dense
                     class="civil_status"
                     emit-value
-                    :options="civil_status_options"
+                    map-options
+                    :options="civilStatusOption"
                     placeholder="Ex: Married"
-                    v-model="userVolunteerData.civil_status"
+                    v-model="volunteerData.civil_status"
                     readonly
                   />
                 </div>
@@ -749,7 +750,7 @@
                     dense
                     placeholder="Ex: Juan"
                     class="input"
-                    v-model="userVolunteerData.occupation"
+                    v-model="volunteerData.occupation"
                     readonly
                   />
                 </div>
@@ -763,7 +764,7 @@
                     dense
                     placeholder="Ex: Juan"
                     class="input"
-                    v-model="userVolunteerData.street"
+                    v-model="volunteerData.street"
                     readonly
                   />
                 </div>
@@ -773,7 +774,7 @@
                     filled
                     dense
                     placeholder="Ex: Juan"
-                    v-model="userVolunteerData.brgy_name"
+                    v-model="volunteerData.brgy_name"
                     class="input"
                     readonly
                   />
@@ -785,7 +786,7 @@
                     dense
                     placeholder="Ex: Juan"
                     class="input"
-                    v-model="userVolunteerData.city_municipality"
+                    v-model="volunteerData.city_municipality"
                     readonly
                   />
                 </div>
@@ -798,7 +799,7 @@
                     dense
                     placeholder="Ex: Juan"
                     class="input"
-                    v-model="userVolunteerData.province"
+                    v-model="volunteerData.province"
                     readonly
                   />
                 </div>
@@ -1769,6 +1770,7 @@ import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optio
 import {
   activateOrDeactivate,
   approveDisapproveVolunteer,
+  getSpecificVolunteer,
   getUserByType,
   softDeleteUser,
   updateUser,
@@ -1806,7 +1808,7 @@ export default {
     const formDialog = ref(true)
     const outputObj = ref({})
     const step = ref(1)
-    const userVolunteerData = ref({})
+    const volunteerData = ref({})
     const tableAction = async (data, modeParam) => {
       editTab.value = '1'
       mode.value = modeParam
@@ -1875,6 +1877,7 @@ export default {
         }, 1000)
       } else if (modeParam == 'View_Form') {
         formDialog.value = !formDialog.value
+        volunteerData.value = await getSpecificVolunteer(data.volunteer_id)
       } else {
         arrayOfId.value.push(data.user_id)
         confirm.value = !confirm.value
@@ -2021,9 +2024,8 @@ export default {
         }
       },
     )
-
     return {
-      userVolunteerData,
+      volunteerData,
       formDialog,
       outputObj,
       outputDialog,

@@ -121,12 +121,7 @@
                   <q-icon name="sym_r_visibility" size="1.2rem" />
                 </q-item-section>
               </q-item>
-              <q-item
-                v-if="row.application_status == 1"
-                clickable
-                v-close-popup
-                @click="tableAction(row, 'View_Form')"
-              >
+              <q-item clickable v-close-popup @click="tableAction(row, 'View_Form')">
                 <q-item-section>View Form</q-item-section>
                 <q-item-section side>
                   <q-icon name="sym_r_fact_check" size="1.2rem" />
@@ -645,38 +640,36 @@
             icon="settings"
             :done="step > 1"
           >
-            <q-form class="full-width q-ma-none" @submit="step = 2">
+            <q-form class="w-100 q-ma-none" @submit="step = 2">
               <div class="row no-wrap">
-                <div class="q-pa-sm field-container">
-                  <p class="q-ma-none q-ml-sm">First Name</p>
+                <div class="q-pa-sm field-container w-100">
+                  <p class="q-ma-none">First Name</p>
                   <q-input
-                    filled
+                    outlined
                     dense
-                    placeholder="Ex: Juan"
                     v-model="volunteerData.first_name"
-                    class="input"
+                    class="input q-mt-xs"
                     readonly
                   />
                 </div>
-                <div class="q-pa-sm field-container">
+                <div class="q-pa-sm field-container w-100">
                   <p class="q-ma-none q-ml-sm">Last Name</p>
                   <q-input
-                    filled
+                    outlined
                     dense
-                    placeholder="Ex: Juan"
-                    class="input"
+                    class="input q-mt-xs"
                     v-model="volunteerData.last_name"
                     readonly
                   />
                 </div>
               </div>
               <div class="row no-wrap">
-                <div class="q-pa-sm field-container">
-                  <p class="q-ma-none q-ml-sm">Gender</p>
+                <div class="q-pa-sm field-container w-100">
+                  <p class="q-ma-none">Gender</p>
                   <q-select
-                    filled
+                    outlined
                     dense
-                    class="age full-width"
+                    class="age q-mt-xs"
                     map-options
                     emit-value
                     :options="sexOption"
@@ -685,13 +678,13 @@
                     readonly
                   />
                 </div>
-                <div class="q-pa-sm field-container">
+                <div class="q-pa-sm field-container w-100">
                   <p class="q-ma-none q-ml-sm">Birth Date</p>
 
                   <q-input
-                    filled
+                    outlined
                     dense
-                    class="input full-width"
+                    class="input q-mt-xs"
                     mask="####-##-##"
                     placeholder="Ex: 2000/05/23"
                     readonly
@@ -716,23 +709,23 @@
                 </div>
               </div>
               <div class="row no-wrap">
-                <div class="q-pa-sm field-container">
+                <div class="q-pa-sm field-container w-100">
                   <p class="q-ma-none q-ml-sm">Phone No.</p>
                   <q-input
-                    filled
+                    outlined
                     dense
                     prefix="+63"
-                    class="phone_number"
+                    class="phone_number q-mt-xs"
                     placeholder="9234567891"
                     v-model="volunteerData.phone_number"
                   />
                 </div>
-                <div class="q-pa-sm field-container">
+                <div class="q-pa-sm field-container w-100">
                   <p class="q-ma-none q-ml-sm">Civil Status</p>
                   <q-select
-                    filled
+                    outlined
                     dense
-                    class="civil_status"
+                    class="civil_status q-mt-xs"
                     emit-value
                     map-options
                     :options="civilStatusOption"
@@ -743,13 +736,13 @@
                 </div>
               </div>
               <div class="row no-wrap occupation-container">
-                <div class="q-pa-sm field-container">
+                <div class="q-pa-sm field-container w-50">
                   <p class="q-ma-none q-ml-sm">Occupation</p>
                   <q-input
-                    filled
+                    outlined
                     dense
                     placeholder="Ex: Juan"
-                    class="input"
+                    class="input q-mt-xs"
                     v-model="volunteerData.occupation"
                     readonly
                   />
@@ -757,55 +750,59 @@
               </div>
               <p class="q-mt-md q-mb-none q-pl-sm label">Address</p>
               <div class="row no-wrap">
-                <div class="q-pa-sm field-container">
+                <div class="q-pa-sm field-container w-100">
                   <p class="q-ma-none q-ml-sm">Street</p>
                   <q-input
-                    filled
+                    outlined
                     dense
                     placeholder="Ex: Juan"
-                    class="input"
+                    class="input q-mt-xs"
                     v-model="volunteerData.street"
                     readonly
                   />
                 </div>
-                <div class="q-pa-sm field-container">
+                <div class="q-pa-sm field-container w-100">
                   <p class="q-ma-none q-ml-sm">Barangay</p>
                   <q-input
-                    filled
+                    outlined
                     dense
                     placeholder="Ex: Juan"
                     v-model="volunteerData.brgy_name"
-                    class="input"
+                    class="input q-mt-xs"
                     readonly
                   />
                 </div>
-                <div class="q-pa-sm field-container">
+                <div class="q-pa-sm field-container w-100">
                   <p class="q-ma-none q-ml-sm">Municipality</p>
                   <q-input
-                    filled
+                    outlined
                     dense
                     placeholder="Ex: Juan"
-                    class="input"
+                    class="input q-mt-xs"
                     v-model="volunteerData.city_municipality"
                     readonly
                   />
                 </div>
               </div>
               <div class="row no-wrap province-container">
-                <div class="q-pa-sm field-container">
+                <div class="q-pa-sm field-container w-100">
                   <p class="q-ma-none q-ml-sm">Province</p>
                   <q-input
-                    filled
+                    outlined
                     dense
-                    placeholder="Ex: Juan"
-                    class="input"
+                    class="input q-mt-xs"
                     v-model="volunteerData.province"
                     readonly
                   />
                 </div>
               </div>
               <div class="row justify-end items-end q-pa-sm">
-                <q-btn class="bg-primary text-white q-px-lg" label="Next" no-caps type="submit" />
+                <q-btn
+                  class="bg-primary text-white q-px-lg w-50"
+                  label="Next"
+                  no-caps
+                  type="submit"
+                />
               </div>
             </q-form>
           </q-step>
@@ -816,24 +813,24 @@
             icon="create_new_folder"
             :done="step > 2"
           >
-            <q-form @submit="step = 3" class="q-ma-none q-pa-none full-width">
-              <div
-                class="column justify-center items-center full-width background-check text-body1"
-              >
-                <div class="row items-center full-width">
+            <q-form @submit="step = 3" class="q-ma-none q-pa-none w-100">
+              <div class="column justify-center items-center w-100 background-check">
+                <div class="row no-wrap justify-between w-100">
                   <div class="q-ma-sm p-div">
                     <p>Are you a member of any other animal welfare organization?</p>
                   </div>
-                  <div class="column justify-center radio-div">
+                  <div class="row no-wrap">
                     <q-radio
-                      v-model="volunteer_form.member_of_welfare_org"
+                      disable
+                      v-model="volunteerData.member_of_welfare_org"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="Yes"
                       label="Yes"
                     />
                     <q-radio
-                      v-model="volunteer_form.member_of_welfare_org"
+                      disable
+                      v-model="volunteerData.member_of_welfare_org"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="No"
@@ -841,20 +838,22 @@
                     />
                   </div>
                 </div>
-                <div class="row detials-conatiner items-center full-width">
+                <div class="row no-wrap justify-between items-center w-100">
                   <div class="q-ma-sm p-div">
                     <p>Do you have dogs/cats at home?</p>
                   </div>
-                  <div class="column justify-center radio-div">
+                  <div class="row no-wrap radio-div">
                     <q-radio
-                      v-model="volunteer_form.have_pets"
+                      disable
+                      v-model="volunteerData.have_pets"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="Yes"
                       label="Yes"
                     />
                     <q-radio
-                      v-model="volunteer_form.have_pets"
+                      disable
+                      v-model="volunteerData.have_pets"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="No"
@@ -863,20 +862,22 @@
                   </div>
                 </div>
 
-                <div class="row detials-conatiner items-center full-width">
+                <div class="row no-wrap justify-between items-center w-100">
                   <div class="q-ma-sm p-div">
                     <p>Do you have children in your home?</p>
                   </div>
-                  <div class="column justify-center radio-div">
+                  <div class="row no-wrap radio-div">
                     <q-radio
-                      v-model="volunteer_form.have_children"
+                      disable
+                      v-model="volunteerData.have_children"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="Yes"
                       label="Yes"
                     />
                     <q-radio
-                      v-model="volunteer_form.have_children"
+                      disable
+                      v-model="volunteerData.have_children"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="No"
@@ -885,20 +886,22 @@
                   </div>
                 </div>
 
-                <div class="row items-center detials-conatiner full-width">
+                <div class="row no-wrap justify-between items-center w-100">
                   <div class="q-ma-sm p-div">
                     <p>Do you have experience in rescuing stray animals?</p>
                   </div>
-                  <div class="column justify-center radio-div">
+                  <div class="row no-wrap radio-div">
                     <q-radio
-                      v-model="volunteer_form.experience_in_recue"
+                      disable
+                      v-model="volunteerData.experience_in_recue"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="Yes"
                       label="Yes"
                     />
                     <q-radio
-                      v-model="volunteer_form.experience_in_recue"
+                      disable
+                      v-model="volunteerData.experience_in_recue"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="No"
@@ -907,46 +910,45 @@
                   </div>
                 </div>
 
-                <div class="column items-start detials-conatiner full-width">
+                <div class="column items-start detials-conatiner w-100">
                   <div class="q-ma-sm p-div">
                     <p>If yes, please tell us about it?</p>
                   </div>
                   <q-input
-                    class="textarea q-mx-sm"
+                    class="textarea q-mx-sm w-100"
                     type="textarea"
                     :disable="
-                      volunteer_form.experience_in_recue == 'No' ||
-                      volunteer_form.experience_in_recue == null
+                      volunteerData.experience_in_recue == 'No' ||
+                      volunteerData.experience_in_recue == null
                     "
                     :value="
-                      volunteer_form.experience_in_recue == 'No'
-                        ? (volunteer_form.experience_details = null)
-                        : volunteer_form.experience_in_recue
+                      volunteerData.experience_in_recue == 'No'
+                        ? (volunteerData.experience_details = null)
+                        : volunteerData.experience_in_recue
                     "
                     outlined
-                    v-model="volunteer_form.experience_details"
+                    v-model="volunteerData.experience_details"
                     stack-label
                     dense
-                    :rules="
-                      volunteer_form.experience_in_recue == 'No' ? [(val) => val] : [(val) => !!val]
-                    "
                   />
                 </div>
 
-                <div class="row items-center detials-conatiner full-width">
+                <div class="row no-wrap justify-between items-center w-100">
                   <div class="q-ma-sm p-div">
                     <p>Are vaccinated with the anti-rabies vaccine?</p>
                   </div>
-                  <div class="column justify-center radio-div">
+                  <div class="row no-wrap radio-div">
                     <q-radio
-                      v-model="volunteer_form.vaccinated_anti_rabies"
+                      disable
+                      v-model="volunteerData.vaccinated_anti_rabies"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="Yes"
                       label="Yes"
                     />
                     <q-radio
-                      v-model="volunteer_form.vaccinated_anti_rabies"
+                      disable
+                      v-model="volunteerData.vaccinated_anti_rabies"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="No"
@@ -955,20 +957,22 @@
                   </div>
                 </div>
 
-                <div class="row items-center detials-conatiner full-width">
+                <div class="row no-wrap justify-between items-center w-100">
                   <div class="q-ma-sm p-div">
                     <p>If NO, are you willing to get vaccinated?</p>
                   </div>
-                  <div class="column justify-center radio-div">
+                  <div class="row no-wrap radio-div">
                     <q-radio
-                      v-model="volunteer_form.willing_to_be_vaccinated"
+                      disable
+                      v-model="volunteerData.willing_to_be_vaccinated"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="Yes"
                       label="Yes"
                     />
                     <q-radio
-                      v-model="volunteer_form.willing_to_be_vaccinated"
+                      disable
+                      v-model="volunteerData.willing_to_be_vaccinated"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="No"
@@ -977,20 +981,22 @@
                   </div>
                 </div>
 
-                <div class="row items-center detials-conatiner full-width">
+                <div class="row no-wrap justify-between items-center w-100">
                   <div class="q-ma-sm p-div">
                     <p>Are your family members in favour of you being a volunteer?</p>
                   </div>
-                  <div class="column justify-center radio-div">
+                  <div class="row no-wrap radio-div">
                     <q-radio
-                      v-model="volunteer_form.family_favor_being_volunteer"
+                      disable
+                      v-model="volunteerData.family_favor_being_volunteer"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="Yes"
                       label="Yes"
                     />
                     <q-radio
-                      v-model="volunteer_form.family_favor_being_volunteer"
+                      disable
+                      v-model="volunteerData.family_favor_being_volunteer"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="No"
@@ -999,23 +1005,25 @@
                   </div>
                 </div>
 
-                <div class="row items-center detials-conatiner full-width">
+                <div class="row no-wrap justify-between items-center w-100">
                   <div class="q-ma-sm p-div">
                     <p>
                       Are you related to any members<br />
                       of TAARA?
                     </p>
                   </div>
-                  <div class="column justify-center radio-div">
+                  <div class="row no-wrap radio-div">
                     <q-radio
-                      v-model="volunteer_form.related_member_in_organization"
+                      disable
+                      v-model="volunteerData.related_member_in_organization"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="Yes"
                       label="Yes"
                     />
                     <q-radio
-                      v-model="volunteer_form.related_member_in_organization"
+                      disable
+                      v-model="volunteerData.related_member_in_organization"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="No"
@@ -1024,78 +1032,67 @@
                   </div>
                 </div>
 
-                <div class="row items-center detials-conatiner mobile-column full-width">
+                <div class="row items-center detials-conatiner mobile-column w-100">
                   <div class="q-ma-sm p-div">
                     <p>If yes, please indicate *?</p>
                   </div>
-                  <div class="row no-wrap justify-center items-center" style="width: 80%">
+                  <div class="row no-wrap justify-center items-center w-100">
                     <q-input
-                      class="q-ma-sm"
+                      class="q-ma-sm w-100"
                       :disable="
-                        volunteer_form.related_member_in_organization == 'No' ||
-                        volunteer_form.related_member_in_organization == null
+                        volunteerData.related_member_in_organization == 'No' ||
+                        volunteerData.related_member_in_organization == null
                       "
                       :value="
-                        volunteer_form.related_member_in_organization == 'No'
-                          ? (volunteer_form.related_member_in_organization_name = null)
-                          : volunteer_form.related_member_in_organization
+                        volunteerData.related_member_in_organization == 'No'
+                          ? (volunteerData.related_member_in_organization_name = null)
+                          : volunteerData.related_member_in_organization
                       "
-                      filled
-                      v-model="volunteer_form.related_member_in_organization_name"
+                      outlined
+                      v-model="volunteerData.related_member_in_organization_name"
                       label="Name: Ex: Jessy"
                       stack-label
                       dense
-                      :rules="
-                        volunteer_form.related_member_in_organization == 'Yes'
-                          ? [(val) => !!val]
-                          : [(val) => val]
-                      "
                       readonly
                     />
                     <q-input
-                      class="q-ma-sm"
+                      class="q-ma-sm w-100"
                       :disable="
-                        volunteer_form.related_member_in_organization == 'No' ||
-                        volunteer_form.related_member_in_organization == null
+                        volunteerData.related_member_in_organization == 'No' ||
+                        volunteerData.related_member_in_organization == null
                       "
                       :value="
-                        volunteer_form.related_member_in_organization == 'No'
-                          ? (volunteer_form.related_member_in_organization_relationship = null)
-                          : volunteer_form.related_member_in_organization
+                        volunteerData.related_member_in_organization == 'No'
+                          ? (volunteerData.related_member_in_organization_relationship = null)
+                          : volunteerData.related_member_in_organization
                       "
-                      filled
-                      v-model="volunteer_form.related_member_in_organization_relationship"
+                      outlined
+                      v-model="volunteerData.related_member_in_organization_relationship"
                       label="Relationship: Ex: Mother"
                       stack-label
                       dense
-                      :rules="
-                        volunteer_form.related_member_in_organization == 'Yes'
-                          ? [(val) => !!val]
-                          : [(val) => val]
-                      "
                       readonly
                     />
                   </div>
                 </div>
-                <div class="column items-start detials-conatiner mobile-column full-width">
+                <div class="column items-start detials-conatiner mobile-column w-100">
                   <div class="p-div q-ma-sm">
                     <p>How did you know about our volunteer program?</p>
                   </div>
                   <div class="q-ma-sm autogrow-div column justify-center items-center">
                     <q-input
-                      class="autogrow"
+                      class="autogrow w-100"
                       autogrow
-                      filled
-                      v-model="volunteer_form.how_know_organization"
+                      outlined
+                      v-model="volunteerData.how_know_organization"
                       stack-label
                       label="Ex: Friend"
                       dense
-                      :rules="[(val) => !!val]"
                       readonly
                     />
                   </div>
                 </div>
-                <div class="column items-start q-mt-md detials-conatiner full-width">
+                <div class="column items-start q-mt-md detials-conatiner w-100">
                   <div class="q-ma-sm p-div">
                     <p>
                       Please indicate your most available days and time that you can be active as a
@@ -1104,81 +1101,90 @@
                   </div>
                   <div class="row no-wrap">
                     <div class="q-mx-xl q-option-group-div column justify-start items-start">
-                      <p class="hidden">
-                        {{ volunteer_form.most_available_day = group.join(',') }}
-                      </p>
                       <q-option-group
                         v-model="group"
-                        :options="options"
+                        :options="daysOptions"
                         color="green"
                         type="checkbox"
+                        disable
                       />
                     </div>
                     <div class="q-mx-lg column justify-start items-start" style="width: 150px">
                       <q-radio
-                        v-model="volunteer_form.most_available_time"
+                        disable
+                        v-model="volunteerData.most_available_time"
                         checked-icon="task_alt"
                         unchecked-icon="panorama_fish_eye"
                         val="1 hour"
                         label="1 hour"
                       />
                       <q-radio
-                        v-model="volunteer_form.most_available_time"
+                        disable
+                        v-model="volunteerData.most_available_time"
                         checked-icon="task_alt"
                         unchecked-icon="panorama_fish_eye"
                         val="2 hour"
                         label="2 hour"
                       />
                       <q-radio
-                        v-model="volunteer_form.most_available_time"
+                        disable
+                        v-model="volunteerData.most_available_time"
                         checked-icon="task_alt"
                         unchecked-icon="panorama_fish_eye"
                         val="3 hour"
                         label="3 hour"
                       />
                       <q-radio
-                        v-model="volunteer_form.most_available_time"
+                        disable
+                        v-model="volunteerData.most_available_time"
                         checked-icon="task_alt"
                         unchecked-icon="panorama_fish_eye"
                         val="4 hour"
                         label="4 hour"
                       />
                       <q-radio
-                        v-model="volunteer_form.most_available_time"
+                        disable
+                        v-model="volunteerData.most_available_time"
                         checked-icon="task_alt"
                         unchecked-icon="panorama_fish_eye"
                         val="5 hour"
                         label="5 hour"
                       />
                       <q-radio
-                        v-model="volunteer_form.most_available_time"
+                        disable
+                        v-model="volunteerData.most_available_time"
                         checked-icon="task_alt"
                         unchecked-icon="panorama_fish_eye"
                         val=" "
                         label="others"
                       />
                       <q-input
-                        v-if="volunteer_form.most_available_time == ' '"
+                        v-if="volunteerData.most_available_time == ' '"
                         dense
-                        filled
-                        v-model="volunteer_form.most_available_time"
+                        outlined
+                        v-model="volunteerData.most_available_time"
                       />
                     </div>
                   </div>
                 </div>
 
-                <p class="text-red q-ma-sm text-center full-width" v-if="warning == true">
+                <p class="text-red q-ma-sm text-center w-100" v-if="warning == true">
                   All fields are required!
                 </p>
 
-                <div class="row justify-between items-center q-pa-sm full-width q-mt-xl">
+                <div class="row no-wrap justify-between items-center q-pa-sm w-100 q-mt-xl">
                   <q-btn
-                    class="bg-primary text-white q-px-lg"
+                    class="bg-primary text-white q-px-lg w-50 q-mr-md"
                     label="Back"
                     no-caps
                     @click="step = 1"
                   />
-                  <q-btn class="bg-primary text-white q-px-lg" label="Next" no-caps type="submit" />
+                  <q-btn
+                    class="bg-primary text-white q-px-lg w-50"
+                    label="Next"
+                    no-caps
+                    type="submit"
+                  />
                 </div>
               </div>
             </q-form>
@@ -1190,25 +1196,27 @@
             icon="assignment"
             :done="step > 3"
           >
-            <q-form @submit="step = 4" class="full-width q-ma-none q-pa-none">
-              <div class="column justify-center items-center full-width skills">
-                <div class="row justify-start items-start small-label full-width">
-                  <h6>Skills & Experience</h6>
+            <q-form @submit="step = 4" class="w-100 q-ma-none q-pa-none">
+              <div class="column justify-start items-start w-100 skills">
+                <div class="row justify-start items-start small-label w-100 q-mb-lg">
+                  <div class="text-body1 text-bold">Skills & Experience</div>
                 </div>
-                <div class="row items-center detials-conatiner">
-                  <div class="q-ma-sm p-div">
+                <div class="row no-wrap items-center justify-between w-100 detials-conatiner">
+                  <div>
                     <p>Have you had any formal education in pet care or animal welfare?</p>
                   </div>
-                  <div class="q-ma-sm column justify-center radio-div">
+                  <div class="row no-wrap radio-div">
                     <q-radio
-                      v-model="volunteer_form.formal_education_pet_care"
+                      disable
+                      v-model="volunteerData.formal_education_pet_care"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="Yes"
                       label="Yes"
                     />
                     <q-radio
-                      v-model="volunteer_form.formal_education_pet_care"
+                      disable
+                      v-model="volunteerData.formal_education_pet_care"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="No"
@@ -1217,20 +1225,20 @@
                   </div>
                 </div>
 
-                <div class="row items-center detials-conatiner">
-                  <div class="q-ma-sm p-div">
-                    <p>Have you done any other volunteer work?</p>
-                  </div>
-                  <div class="q-ma-sm column justify-center radio-div">
+                <div class="row no-wrap justify-between items-center w-100 detials-conatiner">
+                  <p>Have you done any other volunteer work?</p>
+                  <div class="row no-wrap radio-div">
                     <q-radio
-                      v-model="volunteer_form.done_any_other_volunteer_work"
+                      disable
+                      v-model="volunteerData.done_any_other_volunteer_work"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="Yes"
                       label="Yes"
                     />
                     <q-radio
-                      v-model="volunteer_form.done_any_other_volunteer_work"
+                      disable
+                      v-model="volunteerData.done_any_other_volunteer_work"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="No"
@@ -1239,44 +1247,43 @@
                   </div>
                 </div>
 
-                <div class="justify-center column items-start detials-conatiner">
+                <div class="justify-center column items-start w-100 detials-conatiner">
                   <div class="q-ma-sm p-div">
                     <p>If yes, indicate if any.</p>
                   </div>
                   <q-input
                     :disable="
-                      volunteer_form.done_any_other_volunteer_work == 'No' ||
-                      volunteer_form.done_any_other_volunteer_work == null
+                      volunteerData.done_any_other_volunteer_work == 'No' ||
+                      volunteerData.done_any_other_volunteer_work == null
                     "
                     :value="
-                      volunteer_form.done_any_other_volunteer_work == 'No'
-                        ? (volunteer_form.done_any_other_volunteer_work_indicate = null)
-                        : volunteer_form.done_any_other_volunteer_work_indicate
-                    "
-                    :rules="
-                      volunteer_form.done_any_other_volunteer_work == 'Yes' ? [(val) => !!val] : []
+                      volunteerData.done_any_other_volunteer_work == 'No'
+                        ? (volunteerData.done_any_other_volunteer_work_indicate = null)
+                        : volunteerData.done_any_other_volunteer_work_indicate
                     "
                     readonly
-                    v-model="volunteer_form.done_any_other_volunteer_work_indicate"
-                    filled
+                    v-model="volunteerData.done_any_other_volunteer_work_indicate"
+                    outlined
                     type="textarea"
-                    class="second-text-area q-mx-sm"
+                    class="second-text-area q-mx-sm w-100"
                   />
                 </div>
-                <div class="row items-center detials-conatiner">
+                <div class="row justify-between no-wrap items-center detials-conatiner">
                   <div class="q-ma-sm p-div">
                     <p>Do you have any physical andpsychological limitations/disabilities?</p>
                   </div>
-                  <div class="q-ma-sm column justify-center radio-div">
+                  <div class="q-ma-sm row no-wrap radio-div">
                     <q-radio
-                      v-model="volunteer_form.physical_psychological_limitation"
+                      disable
+                      v-model="volunteerData.physical_psychological_limitation"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="Yes"
                       label="Yes"
                     />
                     <q-radio
-                      v-model="volunteer_form.physical_psychological_limitation"
+                      disable
+                      v-model="volunteerData.physical_psychological_limitation"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="No"
@@ -1285,30 +1292,25 @@
                   </div>
                 </div>
 
-                <div class="justify-center column items-start detials-conatiner">
+                <div class="justify-center column items-start w-100 detials-conatiner">
                   <div class="q-ma-sm p-div">
                     <p>If yes, indicate if any.</p>
                   </div>
                   <q-input
                     :disable="
-                      volunteer_form.physical_psychological_limitation == 'No' ||
-                      volunteer_form.physical_psychological_limitation == null
+                      volunteerData.physical_psychological_limitation == 'No' ||
+                      volunteerData.physical_psychological_limitation == null
                     "
                     :value="
-                      volunteer_form.physical_psychological_limitation == 'No'
-                        ? (volunteer_form.physical_psychological_limitation_indicate = null)
-                        : volunteer_form.physical_psychological_limitation_indicate
-                    "
-                    :rules="
-                      volunteer_form.physical_psychological_limitation == 'Yes'
-                        ? [(val) => !!val]
-                        : []
+                      volunteerData.physical_psychological_limitation == 'No'
+                        ? (volunteerData.physical_psychological_limitation_indicate = null)
+                        : volunteerData.physical_psychological_limitation_indicate
                     "
                     readonly
-                    v-model="volunteer_form.physical_psychological_limitation_indicate"
-                    filled
+                    v-model="volunteerData.physical_psychological_limitation_indicate"
+                    outlined
                     type="textarea"
-                    class="second-text-area q-mx-sm"
+                    class="second-text-area q-mx-sm w-100"
                   />
                 </div>
                 <div class="justify-center column items-start detials-conatiner">
@@ -1316,69 +1318,73 @@
                     <p>Person to contact in case of emergency.</p>
                   </div>
                   <div
-                    class="row no-wrap jutify-between items-center q-mt-none full-width second-input-div"
+                    class="row no-wrap jutify-between items-center q-mt-none w-100 second-input-div"
                   >
                     <q-input
                       class="q-mx-sm q-mr-lg"
                       standout
-                      v-model="volunteer_form.contact_person_emergency_name"
+                      v-model="volunteerData.contact_person_emergency_name"
                       label="Name"
                       stack-label
                       dense
                       type="text"
-                      :rules="[(val) => !!val || 'Please type your name']"
                     />
                     <q-input
                       class="q-mx-lg"
                       mask="phone"
                       prefix="+63"
                       standout
-                      v-model="volunteer_form.contact_person_emergency_number"
+                      v-model="volunteerData.contact_person_emergency_number"
                       label="Contact"
                       stack-label
                       dense
-                      :rules="[(val) => !!val || 'Please type your contact']"
                     />
                     <q-input
                       class="q-mx-lg"
                       standout
-                      v-model="volunteer_form.contact_person_emergency_relationship"
+                      v-model="volunteerData.contact_person_emergency_relationship"
                       label="Relationship: Ex: Mother"
                       stack-label
                       dense
-                      :rules="[(val) => !!val || 'Please input relation']"
                     />
                   </div>
                 </div>
                 <div class="row justify-center items-center q-mt-md">
                   <q-radio
+                    disable
                     class="q-ma-sm"
-                    v-model="volunteer_form.field_or_virtual_committee"
+                    v-model="volunteerData.field_or_virtual_committee"
                     checked-icon="task_alt"
                     unchecked-icon="panorama_fish_eye"
                     val="Field Committee"
                     label="Field Committe"
                   />
                   <q-radio
+                    disable
                     class="q-ma-sm"
-                    v-model="volunteer_form.field_or_virtual_committee"
+                    v-model="volunteerData.field_or_virtual_committee"
                     checked-icon="task_alt"
                     unchecked-icon="panorama_fish_eye"
                     val="Virtual Committee"
                     label="Virtual Committee"
                   />
                 </div>
-                <p class="text-red text-center full-width" v-if="warning == true">
+                <p class="text-red text-center w-100" v-if="warning == true">
                   All fields are required!
                 </p>
-                <div class="row justify-between items-center q-pa-sm full-width q-mt-xl">
+                <div class="row no-wrap justify-between items-center q-pa-sm w-100 q-mt-xl">
                   <q-btn
-                    class="bg-primary text-white q-px-lg"
+                    class="bg-primary text-white q-px-lg w-50 q-mr-md"
                     label="Back"
                     no-caps
                     @click="step = 2"
                   />
-                  <q-btn class="bg-primary text-white q-px-lg" label="Next" no-caps type="submit" />
+                  <q-btn
+                    class="bg-primary text-white q-px-lg w-50"
+                    label="Next"
+                    no-caps
+                    type="submit"
+                  />
                 </div>
               </div>
             </q-form>
@@ -1387,15 +1393,13 @@
           <q-step :name="4" title="Desire Position" icon="add_comment" :done="step > 4">
             <q-form
               @submit="step = 5"
-              class="full-width q-ma-none q-pa-none"
-              v-if="volunteer_form.field_or_virtual_committee == 'Field Committee'"
+              class="w-100 q-ma-none q-pa-none"
+              v-if="volunteerData.field_or_virtual_committee == 'Field Committee'"
             >
-              <div class="column justify-center items-center full-width field-committee">
-                <div class="row justify-start items-center">
-                  <h6>Field Committee</h6>
-                </div>
+              <div class="column justify-center items-center w-100 field-committee">
+                <div class="text-body1 text-bold">Field Committee</div>
 
-                <div class="choose-committee-pad">
+                <div class="choose-committee-pad w-100">
                   <q-checkbox
                     v-model="chooseWork"
                     checked-icon="task_alt"
@@ -1403,9 +1407,7 @@
                     val="Rescue/Medical Committee"
                     label="Rescue/Medical Committee"
                   />
-                  <p class="hidden">
-                    {{ volunteer_form.field_or_virtual_committee_position = chooseWork.join(',') }}
-                  </p>
+
                   <ul>
                     <li>Preferably 18 years old and above</li>
                     <li>willing to assist the head of a rescuer during rescue operation</li>
@@ -1419,7 +1421,7 @@
                     <li>Run errands related to TAARA.</li>
                   </ul>
                 </div>
-                <div class="choose-committee-pad">
+                <div class="choose-committee-pad w-100">
                   <q-checkbox
                     v-model="chooseWork"
                     checked-icon="task_alt"
@@ -1435,7 +1437,7 @@
                     <li>Bring the rescues to the vet clinic on their schedule check-ups</li>
                   </ul>
                 </div>
-                <div class="choose-committee-pad">
+                <div class="choose-committee-pad w-100">
                   <q-checkbox
                     v-model="chooseWork"
                     checked-icon="task_alt"
@@ -1453,7 +1455,7 @@
                     <li>Bringing the adopted cats/dogs to their new home</li>
                   </ul>
                 </div>
-                <div class="choose-committee-pad">
+                <div class="choose-committee-pad w-100">
                   <q-checkbox
                     v-model="chooseWork"
                     checked-icon="task_alt"
@@ -1468,7 +1470,7 @@
                     <li>Can be the spokesperson of TAARA</li>
                   </ul>
                 </div>
-                <div class="choose-committee-pad">
+                <div class="choose-committee-pad w-100">
                   <q-checkbox
                     v-model="chooseWork"
                     checked-icon="task_alt"
@@ -1504,14 +1506,16 @@
                   </div>
                   <div class="column justify-center q-button-div">
                     <q-radio
-                      v-model="volunteer_form.have_vehicle"
+                      disable
+                      v-model="volunteerData.have_vehicle"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="Yes"
                       label="Yes"
                     />
                     <q-radio
-                      v-model="volunteer_form.have_vehicle"
+                      disable
+                      v-model="volunteerData.have_vehicle"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="No"
@@ -1520,57 +1524,54 @@
                   </div>
                 </div>
 
-                <div class="column justify-start items-start detials-conatiner">
+                <div class="column justify-start items-start w-100 detials-conatiner">
                   <div class="q-ma-sm p-div">
                     <p>If yes, what type of vehicle it is?</p>
                   </div>
                   <q-input
-                    class="q-mx-sm"
-                    filled
+                    class="q-mx-sm w-100"
+                    outlined
                     :disable="
-                      volunteer_form.have_vehicle == 'No' || volunteer_form.have_vehicle == null
+                      volunteerData.have_vehicle == 'No' || volunteerData.have_vehicle == null
                     "
                     :value="
-                      volunteer_form.have_vehicle == 'No'
-                        ? (volunteer_form.vehicle_type = null)
-                        : volunteer_form.vehicle_type
+                      volunteerData.have_vehicle == 'No'
+                        ? (volunteerData.vehicle_type = null)
+                        : volunteerData.vehicle_type
                     "
-                    v-model="volunteer_form.vehicle_type"
+                    v-model="volunteerData.vehicle_type"
                     label="Vehicale type"
                     stack-label
                     dense
-                    :rules="volunteer_form.have_vehicle == 'Yes' ? [(val) => !!val] : []"
+                    :rules="volunteerData.have_vehicle == 'Yes' ? [(val) => !!val] : []"
                     readonly
                   />
                 </div>
 
-                <p class="text-red text-center full-width" v-if="warning == true">
+                <p class="text-red text-center w-100" v-if="warning == true">
                   All fields are required!
                 </p>
-                <div class="row justify-between items-center q-pa-sm full-width q-mt-xl">
+                <div class="row no-wrap justify-between items-center q-pa-sm w-100 q-mt-xl">
                   <q-btn
-                    class="bg-primary text-white q-px-lg"
+                    class="bg-primary text-white q-px-lg w-50 q-mr-md"
                     label="Back"
                     no-caps
                     @click="step = 3"
                   />
-                  <q-btn class="bg-primary text-white q-px-lg" label="Next" no-caps type="submit" />
+                  <!-- <q-btn class="bg-primary text-white q-px-lg" label="Next" no-caps type="submit" /> -->
                 </div>
               </div>
             </q-form>
             <q-form
               @submit="step = 5"
-              class="full-width q-ma-none q-pa-none"
-              v-if="volunteer_form.field_or_virtual_committee == 'Virtual Committee'"
+              class="w-100 q-ma-none q-pa-none"
+              v-if="volunteerData.field_or_virtual_committee == 'Virtual Committee'"
             >
-              <div class="column justify-center items-center full-width virtual-committee">
+              <div class="column justify-center items-center w-100 virtual-committee">
                 <div class="row justify-start items-center small-label">
-                  <h6>Virtual Committee</h6>
+                  <div class="text-body1 text-bold">Virtual Committee</div>
                 </div>
-                <div class="choose-committee-pad">
-                  <p class="hidden">
-                    {{ volunteer_form.field_or_virtual_committee_position = chooseWork.join(',') }}
-                  </p>
+                <div class="choose-committee-pad w-100">
                   <q-checkbox
                     v-model="chooseWork"
                     checked-icon="task_alt"
@@ -1592,7 +1593,7 @@
                     </li>
                   </ul>
                 </div>
-                <div class="choose-committee-pad">
+                <div class="choose-committee-pad w-100">
                   <q-checkbox
                     v-model="chooseWork"
                     checked-icon="task_alt"
@@ -1611,7 +1612,7 @@
                     <li>Can speak in person with partners if need be</li>
                   </ul>
                 </div>
-                <div class="choose-committee-pad">
+                <div class="choose-committee-pad w-100">
                   <q-checkbox
                     v-model="chooseWork"
                     checked-icon="task_alt"
@@ -1631,20 +1632,22 @@
                   </ul>
                 </div>
 
-                <div class="row justify-start items-start detials-conatiner">
+                <div class="row no-wrap justify-between items-center detials-conatiner">
                   <div class="q-ma-sm p-div">
                     <p>Do you have any experience related to managing social media pages?</p>
                   </div>
-                  <div class="column justify-center q-button-div">
+                  <div class="row no-wrap q-button-div">
                     <q-radio
-                      v-model="volunteer_form.experience_managing_social_media"
+                      disable
+                      v-model="volunteerData.experience_managing_social_media"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="Yes"
                       label="Yes"
                     />
                     <q-radio
-                      v-model="volunteer_form.experience_managing_social_media"
+                      disable
+                      v-model="volunteerData.experience_managing_social_media"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="No"
@@ -1652,7 +1655,7 @@
                     />
                   </div>
                 </div>
-                <div class="column justify-start items-start detials-conatiner">
+                <div class="column justify-start items-start detials-conatiner w-100">
                   <div class="q-ma-sm p-div">
                     <p>
                       What software or applications do you use in creating layouts or designs?,
@@ -1660,38 +1663,38 @@
                     </p>
                   </div>
                   <q-input
-                    class="q-mx-sm"
-                    filled
+                    class="q-mx-sm w-100"
+                    outlined
                     :disable="
-                      volunteer_form.experience_managing_social_media == 'No' ||
-                      volunteer_form.experience_managing_social_media == null
+                      volunteerData.experience_managing_social_media == 'No' ||
+                      volunteerData.experience_managing_social_media == null
                     "
                     :value="
-                      volunteer_form.experience_managing_social_media == 'No'
-                        ? (volunteer_form.software_use_in_design = null)
-                        : volunteer_form.software_use_in_design
+                      volunteerData.experience_managing_social_media == 'No'
+                        ? (volunteerData.software_use_in_design = null)
+                        : volunteerData.software_use_in_design
                     "
                     :rules="
-                      volunteer_form.experience_managing_social_media == 'Yes'
+                      volunteerData.experience_managing_social_media == 'Yes'
                         ? [(val) => !!val]
                         : [(val) => val]
                     "
                     readonly
-                    v-model="volunteer_form.software_use_in_design"
+                    v-model="volunteerData.software_use_in_design"
                     label="Ex:Figma"
                     stack-label
                     dense
                   />
                 </div>
 
-                <div class="column justify-start items-start detials-conatiner">
+                <div class="column justify-start items-start detials-conatiner w-100">
                   <div class="q-ma-sm p-div">
                     <p>Do you have internet connection at home?</p>
                   </div>
                   <q-input
-                    class="q-mx-sm"
-                    filled
-                    v-model="volunteer_form.have_internet_connection"
+                    class="q-mx-sm w-100"
+                    outlined
+                    v-model="volunteerData.have_internet_connection"
                     label="Ex: phone's data"
                     stack-label
                     dense
@@ -1699,20 +1702,22 @@
                     readonly
                   />
                 </div>
-                <div class="row justify-start items-start detials-conatiner">
+                <div class="row no-wrap justify-between items-center detials-conatiner">
                   <div class="q-ma-sm p-div">
                     <p>Do you have Desktop or Laptop?</p>
                   </div>
-                  <div class="column justify-center">
+                  <div class="row no-wrap">
                     <q-radio
-                      v-model="volunteer_form.device_use"
+                      disable
+                      v-model="volunteerData.device_use"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="Yes"
                       label="Yes"
                     />
                     <q-radio
-                      v-model="volunteer_form.device_use"
+                      disable
+                      v-model="volunteerData.device_use"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="No"
@@ -1720,20 +1725,22 @@
                     />
                   </div>
                 </div>
-                <div class="row justify-start items-start detials-conatiner">
+                <div class="row justify-between items-center no-wrap detials-conatiner">
                   <div class="q-ma-sm p-div">
                     <p>Are you willing to use it for the task of the virtual committee?</p>
                   </div>
-                  <div class="column justify-center">
+                  <div class="row no-wrap">
                     <q-radio
-                      v-model="volunteer_form.device_use_willing_to_use"
+                      disable
+                      v-model="volunteerData.device_use_willing_to_use"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="Yes"
                       label="Yes"
                     />
                     <q-radio
-                      v-model="volunteer_form.device_use_willing_to_use"
+                      disable
+                      v-model="volunteerData.device_use_willing_to_use"
                       checked-icon="task_alt"
                       unchecked-icon="panorama_fish_eye"
                       val="No"
@@ -1743,17 +1750,17 @@
                 </div>
               </div>
               <div class="row justify-between items-center">
-                <p class="text-red text-center full-width" v-if="warning == true">
+                <p class="text-red text-center w-100" v-if="warning == true">
                   All fields are required!
                 </p>
-                <div class="row justify-between items-center q-pa-sm full-width q-mt-xl">
+                <div class="row no-wrap justify-between items-center q-pa-sm w-100 q-mt-xl">
                   <q-btn
-                    class="bg-primary text-white q-px-lg"
+                    class="bg-primary text-white q-px-lg w-50 q-mr-md"
                     label="Back"
                     no-caps
                     @click="step = 3"
                   />
-                  <q-btn class="bg-primary text-white q-px-lg" label="Next" no-caps type="submit" />
+                  <!-- <q-btn class="bg-primary text-white q-px-lg" label="Next" no-caps type="submit" /> -->
                 </div>
               </div>
             </q-form>
@@ -1766,7 +1773,12 @@
 </template>
 <script>
 import ReusableTable from 'src/components/ReusableTable.vue'
-import { civilStatusOption, nameSuffixes, sexOption } from 'src/composable/optionsComposable'
+import {
+  civilStatusOption,
+  daysOptions,
+  nameSuffixes,
+  sexOption,
+} from 'src/composable/optionsComposable'
 import {
   activateOrDeactivate,
   approveDisapproveVolunteer,
@@ -1805,9 +1817,11 @@ export default {
     const store = globalStore()
     const fileStorage = ref(null)
     const outputDialog = ref(false)
-    const formDialog = ref(true)
+    const formDialog = ref(false)
     const outputObj = ref({})
     const step = ref(1)
+    const group = ref([])
+    const chooseWork = ref([])
     const volunteerData = ref({})
     const tableAction = async (data, modeParam) => {
       editTab.value = '1'
@@ -1878,6 +1892,9 @@ export default {
       } else if (modeParam == 'View_Form') {
         formDialog.value = !formDialog.value
         volunteerData.value = await getSpecificVolunteer(data.volunteer_id)
+        group.value = [volunteerData.value.most_available_day]
+        chooseWork.value = [volunteerData.value.field_or_virtual_committee_position]
+        console.log(volunteerData.value)
       } else {
         arrayOfId.value.push(data.user_id)
         confirm.value = !confirm.value
@@ -2025,6 +2042,9 @@ export default {
       },
     )
     return {
+      chooseWork,
+      group,
+      daysOptions,
       volunteerData,
       formDialog,
       outputObj,

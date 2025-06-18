@@ -1340,3 +1340,10 @@ export const getAllAnnouncement = async () => {
   })
   return response.data.data
 }
+
+export const getSpecificVolunteer = async (volunteer_id) => {
+  const response = await api.get('new_api.php', {
+    params: { get_specific_volunteer: volunteer_id },
+  })
+  return response.data.data
+}

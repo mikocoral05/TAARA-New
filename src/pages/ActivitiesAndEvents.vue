@@ -553,10 +553,12 @@ export default {
           store.userData.user_id,
           store.userData.user_type,
         ).then((response) => {
-          $q.loading.show({
-            group: 'update',
-            message: response.message,
-          })
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 500)
           setTimeout(() => {
             getActivitiesAndEvents().then((response) => {
               events.splice(0, events.length, ...response) // replaces the contents
@@ -576,10 +578,12 @@ export default {
           store.userData.user_type,
         ).then((response) => {
           console.log(response)
-          $q.loading.show({
-            group: 'update',
-            message: response.message,
-          })
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 500)
           setTimeout(() => {
             showDialog.value = false
             getActivitiesAndEvents().then((response) => {
@@ -597,10 +601,12 @@ export default {
         store.userData.user_id,
         store.userData.user_type,
       ).then((response) => {
-        $q.loading.show({
-          group: 'update',
-          message: response.message,
-        })
+        setTimeout(() => {
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+        }, 500)
         setTimeout(() => {
           showDialog.value = false
           getActivitiesAndEvents().then((response) => {

@@ -785,27 +785,16 @@ export const editAnimalInfo = (obj, user_id, user_type) => {
   })
 }
 
-export const saveActivitiesAndEvents = (obj) => {
+export const saveActivitiesAndEvents = async (obj, user_id, user_type) => {
   const { file, ...data } = obj // separate the files
-  return new Promise((resolve, reject) => {
-    api
-      .post('activities_and_events.php', {
-        save_activities_and_events: data,
-      })
-      .then((response) => {
-        if (response.data.status == 'success') {
-          if (file) {
-            // uploadAnimalImages(file, response.data.id).then((res) => {
-            //   console.log(res.data)
-            // })
-          }
-          resolve(response.data)
-        }
-      })
-      .catch((error) => {
-        reject(error)
-      })
+  if (file) {
+    const res = await uploadImages([file])
+    data.new_image = res.data.images[0]
+  }
+  const response = await api.post('activities_and_events.php', {
+    save_activities_and_events: { data, user_id, user_type },
   })
+  return response.data
 }
 
 export const uploadAnimalImages = (fileArray, animal_id) => {
@@ -1069,6 +1058,18 @@ export const editRescueReport = (obj, user_id, user_type) => {
         reject(error)
       })
   })
+}
+
+export const editActivitiesAndEvents = async (obj, user_id, user_type) => {
+  const { file, ...data } = obj
+  if (file) {
+    const res = await uploadImages([file])
+    data.new_image = res.data.images[0]
+  }
+  const response = await api.put('activities_and_events.php', {
+    edit_activities_and_events: { data, user_id, user_type },
+  })
+  return response.data
 }
 
 export const softDeleteAnnouncement = (arrayId, user_id, user_type) => {

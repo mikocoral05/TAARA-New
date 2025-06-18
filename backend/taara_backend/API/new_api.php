@@ -255,38 +255,7 @@ class API
 
     public function httpPost($payload)
     {
-        if (isset($payload['add_schedule'])) {
-            $data = $payload['add_schedule'];
-
-            $insertData = [
-                'animal_id'            => $data['animal_id'] ?? null,
-                'schedule_name'               => $data['schedule_name'] ?? null,
-                'dose_number'              => $data['dose_number'] ?? null,
-                'dose_taken'      => $data['dose_taken'] ?? null,
-                'scheduled_date'          => $data['scheduled_date'] ?? null,
-                'next_due_interval'          => $data['next_due_interval'] ?? null,
-                'next_due_date'                => $data['next_due_date'] ?? null,
-                'amount'             => $data['amount'] ?? null,
-                'notes'             => $data['notes'] ?? null,
-                'added_by'   => $data['added_by'] ?? null,
-            ];
-
-            $insert = $this->db->insert('tbl_animal_schedule', $insertData);
-
-            if ($insert) {
-                echo json_encode([
-                    'status' => 'success',
-                    'message' => 'New Schedule successfully added',
-                    'method' => 'POST',
-                ]);
-            } else {
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'Failed to new schedule',
-                    'method' => 'POST'
-                ]);
-            }
-        } else if (isset($payload['submit_pet_transfer'])) {
+        if (isset($payload['submit_pet_transfer'])) {
             $image = $payload['submit_pet_transfer']['data']['new_image'];
             $data = $payload['submit_pet_transfer']['data'];
             $user_id = $payload['submit_pet_transfer']['user_id'];
@@ -379,9 +348,9 @@ class API
             $updated = $this->db->update('tbl_animal_schedule', $update_values);
 
             if ($updated) {
-                echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
+                echo json_encode(['status' => 'success', 'message' => 'Records Archive successfully', 'method' => 'PUT']);
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
+                echo json_encode(['status' => 'error', 'message' => 'Failed to Archive records', 'method' => 'PUT']);
             }
         } else if (isset($payload['edit_animal_info'])) {
             $obj = $payload['edit_animal_info'];
@@ -446,6 +415,14 @@ class API
             $update = $this->db->update('tbl_users', $payload['update_public_user_details']);
 
             if ($update) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => 1,
+                    'action' => 'User udpate personal information',
+                    'module' => 'Account Maintenance',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'User data updated successfully',
@@ -466,6 +443,14 @@ class API
             $update = $this->db->update('tbl_users', ['email_address' => $email_address]);
 
             if ($update) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => 1,
+                    'action' => 'User update his/her email address',
+                    'module' => 'Account Management',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Email address updated successfully',
@@ -490,6 +475,14 @@ class API
             $update = $this->db->update('tbl_users', $update_values);
 
             if ($update) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => 1,
+                    'action' => 'User change password',
+                    'module' => 'Account Maintenance',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Password updated successfully',
@@ -515,6 +508,14 @@ class API
                 $update = $this->db->update('tbl_users', $update_values);
 
                 if ($update) {
+                    $logs = [
+                        'user_id' => $user_id,
+                        'user_type' => 1,
+                        'action' => 'User update profile image',
+                        'module' => 'Account Maintenance',
+                    ];
+
+                    $this->db->insert("tbl_logs", $logs);
                     echo json_encode([
                         'status' => 'success',
                         'message' => 'User image updated successfully',
@@ -551,6 +552,16 @@ class API
                 $update = $this->db->update('tbl_likes', $animal_id_to_update);
 
                 if ($update) {
+
+                    $logs = [
+                        'user_id' => $user_id,
+                        'user_type' => 1,
+                        'action' => 'User like an animal',
+                        'module' => 'Pet Information',
+                    ];
+
+                    $this->db->insert("tbl_logs", $logs);
+
                     echo json_encode([
                         'status' => 'success',
                         'message' => 'User like updated successfully',
@@ -603,6 +614,14 @@ class API
                 $update = $this->db->update('tbl_likes', $animal_id_to_update);
 
                 if ($update) {
+                    $logs = [
+                        'user_id' => $user_id,
+                        'user_type' => 1,
+                        'action' => 'User unlike an animal',
+                        'module' => 'Pet Information',
+                    ];
+
+                    $this->db->insert("tbl_logs", $logs);
                     echo json_encode([
                         'status' => 'success',
                         'message' => 'User like updated successfully',

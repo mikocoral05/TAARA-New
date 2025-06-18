@@ -82,7 +82,7 @@ class API
                     'for_user'     => -3, // Example: -1 = all public_user, -2 = all management
                     'created_by'    => $user_id, // Assuming the one triggering the notification is the updater
                     'title'        => 'New Announcement',
-                    'message'      =>  $data['content'],
+                    'message'      =>  $data['title'],
                     'type'         => 1, // 1 = announcement, 2 = notification
                     'related_url'  => '/public/announcementsPage?id=' . $id,
                     'is_read'      => json_encode([]), // 0 = unread

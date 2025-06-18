@@ -163,7 +163,7 @@ class API
                 $logs = [
                     'user_id' => $user_id,
                     'user_type' => $user_type,
-                    'action' => 'Archieve Pet Transfer list',
+                    'action' => 'Archive Pet Transfer list',
                     'module' => 'Pet Transfer',
                 ];
 

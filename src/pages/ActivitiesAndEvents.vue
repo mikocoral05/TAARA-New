@@ -331,8 +331,8 @@
                   </q-item-section>
                 </q-item>
                 <q-separator />
-                <q-item clickable @click="tableAction(row, 'Archieve')">
-                  <q-item-section>Archieve</q-item-section>
+                <q-item clickable @click="tableAction(row, 'Archive')">
+                  <q-item-section>Archive</q-item-section>
                   <q-item-section side>
                     <q-icon name="sym_r_keyboard_arrow_right" size="1.2rem" />
                   </q-item-section>

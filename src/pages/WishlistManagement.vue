@@ -70,7 +70,7 @@
                   </q-item-section>
                 </q-item>
                 <q-separator />
-                <q-item clickable @click="tableAction(row.id, 'Archieve')">
+                <q-item clickable @click="tableAction(row.id, 'Archive')">
                   <q-item-section>Delete</q-item-section>
                   <q-item-section side>
                     <q-icon name="sym_r_dangerous" size="1.2rem" />

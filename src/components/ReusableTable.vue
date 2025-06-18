@@ -91,7 +91,7 @@
                 class="q-mr-md"
                 @click="toggleSelection"
               >
-                <q-tooltip v-model="showingDeleteTooltip">Archieve {{ title }}</q-tooltip>
+                <q-tooltip v-model="showingDeleteTooltip">Archive {{ title }}</q-tooltip>
               </q-btn>
               <q-btn
                 icon="sym_r_close"

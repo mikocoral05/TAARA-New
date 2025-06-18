@@ -58,8 +58,8 @@
                   </q-item-section>
                 </q-item>
                 <q-separator />
-                <q-item clickable @click="tableAction(row.id, 'Archieve')">
-                  <q-item-section>Archieve</q-item-section>
+                <q-item clickable @click="tableAction(row.id, 'Archive')">
+                  <q-item-section>Archive</q-item-section>
                   <q-item-section side>
                     <q-icon name="sym_r_delete" size="1.2rem" color="negative" />
                   </q-item-section>

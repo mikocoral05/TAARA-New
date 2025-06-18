@@ -145,6 +145,16 @@ class API
                 'data' => $query,
                 'method' => 'GET'
             ]);
+        } else if (array_key_exists("get_specific_volunteer", $payload)) {
+            $volunteer_id = $payload['get_specific_volunteer'];
+            $this->db->where('id', $volunteer_id);
+            $query = $this->db->getOne('tbl_volunteer_form');
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => $query,
+                'method' => 'GET'
+            ]);
         } else if (array_key_exists("get_favorites", $payload)) {
             $user_id = $payload['get_favorites'];
             $this->db->where('user_id', $user_id);

@@ -346,7 +346,7 @@
               >
                 <q-item-section avatar>
                   <q-avatar>
-                    <img :src="notif.image_path" />
+                    <img src="TAARA.png" />
                   </q-avatar>
                 </q-item-section>
                 <q-item-section>

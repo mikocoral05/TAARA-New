@@ -136,14 +136,14 @@ class API
                 $logs = [
                     'user_id' => $user_id,
                     'user_type' => $user_type,
-                    'action' => 'Archieve announcement ',
+                    'action' => 'Archive announcement ',
                     'module' => 'Announcement',
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
-                echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
+                echo json_encode(['status' => 'success', 'message' => 'Records Archive successfully', 'method' => 'PUT']);
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
+                echo json_encode(['status' => 'error', 'message' => 'Failed to Archive records', 'method' => 'PUT']);
             }
         } else if (isset($payload['edit_announcement'])) {
             $obj = $payload['edit_announcement']['data'];

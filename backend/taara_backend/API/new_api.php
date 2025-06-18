@@ -147,8 +147,9 @@ class API
             ]);
         } else if (array_key_exists("get_specific_volunteer", $payload)) {
             $volunteer_id = $payload['get_specific_volunteer'];
-            $this->db->where('id', $volunteer_id);
-            $query = $this->db->getOne('tbl_volunteer_form');
+            $this->db->where('vf.id', $volunteer_id);
+            $this->db->join('tbl_users u', 'u.user_id = vf.user_id', 'left');
+            $query = $this->db->getOne('tbl_volunteer_form vf', null, 'vf.*,u.first_name,u.last_name,u.sex,u.birth_date,u.phine_number,u.civil_status,u.occupation,u.street,u.brgy_name,u.city_municipality,u.province');
 
             echo json_encode([
                 'status' => 'success',

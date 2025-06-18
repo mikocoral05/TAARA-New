@@ -221,7 +221,7 @@ class API
                 $this->db->insert("tbl_logs", $logs);
                 echo json_encode(['status' => 'success', 'message' => 'User delete successfully', 'method' => 'PUT']);
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete user', 'method' => 'PUT']);
+                echo json_encode(['status' => 'error', 'message' => 'Failed to Archive user', 'method' => 'PUT']);
             }
         } else if (isset($payload['activate_or_deactivate'])) {
             $user_id = $payload['activate_or_deactivate']['user_id'];

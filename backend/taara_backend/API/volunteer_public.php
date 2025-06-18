@@ -162,9 +162,9 @@ class API
             $updated = $this->db->update($table, $update_values);
 
             if ($updated) {
-                echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
+                echo json_encode(['status' => 'success', 'message' => 'Records Archive successfully', 'method' => 'PUT']);
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
+                echo json_encode(['status' => 'error', 'message' => 'Failed to Archive records', 'method' => 'PUT']);
             }
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Missing soft_delete_inventory_data in the payload']);

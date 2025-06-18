@@ -442,7 +442,7 @@ export default {
           label: 'Content',
           field: 'content',
           sortable: true,
-          style: 'min-width:250px;word-wrap: break-word; white-space: pre-wrap;',
+          style: 'min-width:240px;word-wrap: break-word; white-space: pre-wrap;',
           align: 'left',
         },
         {

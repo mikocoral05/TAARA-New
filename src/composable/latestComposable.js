@@ -897,6 +897,21 @@ export const softDeleteInventoryData = (arrayId, tableName, user_id, user_type) 
   })
 }
 
+export const softDeleteActivitiesAndEvents = (arrayId, user_id, user_type) => {
+  return new Promise((resolve, reject) => {
+    api
+      .put('activities_and_events.php', {
+        soft_delete_activities_and_events: { arrayId, user_id, user_type },
+      })
+      .then((response) => {
+        resolve(response.data)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
+}
+
 export const softDeleteSchedule = (arrayId, user_id, user_type) => {
   return new Promise((resolve, reject) => {
     api

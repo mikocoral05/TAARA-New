@@ -165,6 +165,21 @@
               <q-item
                 clickable
                 v-close-popup
+                to="/public/activitiesAndEvents"
+                @click="headerColor = 'white'"
+                :class="
+                  $route.fullPath == '/public/activitiesAndEvents' || ''
+                    ? 'bg-primary text-white'
+                    : 'bg-white text-black'
+                "
+              >
+                <q-item-section>
+                  <q-item-label>Activities and Events</q-item-label>
+                </q-item-section>
+              </q-item>
+              <q-item
+                clickable
+                v-close-popup
                 to="/public/announcementsPage"
                 @click="headerColor = 'white'"
                 :class="

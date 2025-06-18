@@ -10,7 +10,7 @@
         <div class="row no-wrap justify-between items-center big-announcement-title-container">
           <div class="row no-wrap items-center">
             <q-avatar>
-              <img :src="data?.user_image_path || 'TAARA.png'" />
+              <img src="TAARA.png" />
             </q-avatar>
             <div class="column no-wrap q-ml-md">
               <div class="text-bold">Tabaco Animal Rescue and Adoption</div>

@@ -182,14 +182,30 @@ class API
                 $logs = [
                     'user_id' => $user_id,
                     'user_type' => $user_type,
-                    'action' => 'Archieve ' . ucfirst($data['donation_type']) . ' Donation list',
+                    'action' => 'Archive  Donation list',
                     'module' => 'Donation',
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
-                echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
+
+                $notif = [
+                    'for_user'     => -2, // -2 = all management
+                    'created_by'   => $user_id,
+                    'title'        => 'Archive  Donation list',
+                    'message'      => 'Archive  Donation list',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+
+                $this->db->insert("tbl_notification", $notif);
+
+
+                echo json_encode(['status' => 'success', 'message' => 'Records Archive successfully', 'method' => 'PUT']);
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
+                echo json_encode(['status' => 'error', 'message' => 'Failed to Archive records', 'method' => 'PUT']);
             }
         } else if (isset($payload['edit_donation'])) {
             $obj = $payload['edit_donation']['donation_data'];

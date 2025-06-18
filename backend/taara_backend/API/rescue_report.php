@@ -153,14 +153,14 @@ class API
                 $logs = [
                     'user_id' => $user_id,
                     'user_type' => $user_type,
-                    'action' => 'Archieve Rescue Report',
+                    'action' => 'Archive Rescue Report',
                     'module' => 'Rescue Report',
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
-                echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
+                echo json_encode(['status' => 'success', 'message' => 'Records Archive successfully', 'method' => 'PUT']);
             } else {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
+                echo json_encode(['status' => 'error', 'message' => 'Failed to Archive records', 'method' => 'PUT']);
             }
         } else if (isset($payload['edit_rescue_report'])) {
             $obj = $payload['edit_rescue_report']['data'];

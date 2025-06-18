@@ -124,7 +124,7 @@ class API
                 $logs = [
                     'user_id' => $user_id,
                     'user_type' => $user_type,
-                    'action' => 'Archieve Wishlist list',
+                    'action' => 'Archive Wishlist list',
                     'module' => 'Wishlist',
                 ];
 

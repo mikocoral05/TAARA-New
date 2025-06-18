@@ -17,22 +17,10 @@ class API
 
         if (array_key_exists('get_activities_and_events', $payload)) {
 
-            $this->db->where("is_deleted", 0);
-            $data = $this->db->get("tbl_activities_and_events");
+            $this->db->where("ae.is_deleted", 0);
+            $this->db->join("tbl_files f", 'f.id = ae.image_id', 'left');
+            $data = $this->db->get("tbl_activities_and_events ae", null, 'ae.*,f.image_path');
 
-            // foreach ($animalRows as &$animal) {
-            //     $galleryIds = json_decode($animal['image_gallery'], true);
-
-            //     if (is_array($galleryIds) && count($galleryIds)) {
-            //         $this->db->where('id', $galleryIds, 'IN');
-            //         $files = $this->db->get('tbl_files');
-
-            //         $paths = array_column($files, 'image_path');
-            //         $animal['image_gallery'] = $paths;
-            //     } else {
-            //         $animal['image_gallery'] = [];
-            //     }
-            // }
 
             echo json_encode([
                 'status' => 'success',
@@ -52,8 +40,18 @@ class API
     public function httpPost($payload)
     {
         if (isset($payload['save_activities_and_events'])) {
-            $data = $payload['save_activities_and_events'];
+            $data = $payload['save_activities_and_events']['data'];
+            $user_id = $payload['save_activities_and_events']['user_id'];
+            $user_type = $payload['save_activities_and_events']['user_type'];
 
+            $new_image = $data['new_image'] ?? '';
+            $image_id = '';
+
+            // Insert new image if provided
+            if ($new_image) {
+                $this->db->insert('tbl_files', ['image_path' => $new_image]);
+                $image_id = $this->db->getInsertId();
+            }
             $insertData = [
                 'title'               => $data['title'] ?? null,
                 'details'            => $data['details'] ?? null,
@@ -64,11 +62,37 @@ class API
                 'bgcolor'                => $data['bgcolor'] ?? null,
                 'icon'             => $data['icon'] ?? null,
             ];
+            // Conditionally include img_id
+            if ($image_id) {
+                $insertData['image_id'] = $image_id;
+            }
 
             $insert = $this->db->insert('tbl_activities_and_events', $insertData);
             $id = $this->db->getInsertId();
 
             if ($insert) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Add New Event',
+                    'module' => 'Activities and Events',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -3, // Example: -1 = all public_user, -2 = all management
+                    'created_by'    => $user_id, // Assuming the one triggering the notification is the updater
+                    'title'        => 'New Event',
+                    'message'      =>  $data['details'],
+                    'type'         => 1, // 1 = announcement, 2 = notification
+                    'related_url'  => '/public/activitiesAndEvents?id=' . $id,
+                    'is_read'      => json_encode([]), // 0 = unread
+                ];
+                $this->db->insert("tbl_notification", $notif);
+
+
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Activities and Events successfully added',
@@ -95,67 +119,90 @@ class API
     public function httpPut($payload)
     {
         if (isset($payload['soft_delete_animal_info'])) {
-            $id = $payload['soft_delete_animal_info'];
+            $id = $payload['soft_delete_animal_info']['arrayOfIds'];
+            $user_id = $payload['soft_delete_animal_info']['user_id'];
+            $user_type = $payload['soft_delete_animal_info']['user_type'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
             // Set the update values here in the backend
             $update_values = [
-                'is_deleted' => 0,
+                'is_deleted' => 1,
                 'deleted_at' => date('Y-m-d H:i:s')
             ];
 
             // Update records matching the IDs
-            $this->db->where('animal_id', $ids, 'IN');
-            $updated = $this->db->update('tbl_animal_info', $update_values);
+            $this->db->where('id', $ids, 'IN');
+            $updated = $this->db->update('tbl_activities_and_events', $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Archieve Activities Events',
+                    'module' => 'Activities and Events',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode(['status' => 'success', 'message' => 'Records soft-deleted successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to soft delete records', 'method' => 'PUT']);
             }
-        } else if (isset($payload['edit_animal_info'])) {
-            $obj = $payload['edit_animal_info'];
+        } else if (isset($payload['edit_activities_and_events'])) {
+            $obj = $payload['edit_activities_and_events']['data'];
+            $user_id = $payload['edit_activities_and_events']['user_id'];
+            $user_type = $payload['edit_activities_and_events']['user_type'];
+
+            $new_image = $obj['new_image'] ?? '';
+            $image_id = '';
+
+            // Insert new image if provided
+            if ($new_image) {
+                $this->db->insert('tbl_files', ['image_path' => $new_image]);
+                $image_id = $this->db->getInsertId();
+            }
 
             $update_values = [
-                'name' => $obj['name'] ?? null,
-                'species' => $obj['species'] ?? null,
-                'breed' => $obj['breed'] ?? null,
-                'fur_color' => $obj['fur_color'] ?? null,
-                'eye_color' => $obj['eye_color'] ?? null,
-                'date_of_birth' => $obj['date_of_birth'] ?? null,
-                'weight' => $obj['weight'] ?? null,
-                'height' => $obj['height'] ?? null,
-                'sex' => $obj['sex'] ?? null,
-                'spayed_neutered' => $obj['spayed_neutered'] ?? null,
-                'vaccination_status' => $obj['vaccination_status'] ?? null,
-                'temperament' => $obj['temperament'] ?? null, // stored as JSON string
-                'skills' => $obj['skills'] ?? null,           // stored as JSON string
-                'favorite_food' => $obj['favorite_food'] ?? null,
-                'story_background' => $obj['story_background'] ?? null,
-                'rescue_status' => $obj['rescue_status'] ?? null,
-                'health_status' => $obj['health_status'] ?? null,
-                'medical_needs' => $obj['medical_needs'] ?? null,
-                'date_rescued' => $obj['date_rescued'] ?? null,
-                'primary_image' => $obj['primary_image'] ?? 0,
-                'updated_at' => date('Y-m-d H:i:s'),
+                'title'      =>  $obj['title'] ?? null,
+                'details'    =>  $obj['details'] ?? null,
+                'date'       =>  $obj['date'] ?? null,
+                'time'       =>  $obj['time'] ?? null,
+                'duration'   =>  $obj['duration'] ?? null,
+                'days'       =>  $obj['days'] ?? null,
+                'bgcolor'    =>  $obj['bgcolor'] ?? null,
+                'icon'       =>  $obj['icon'] ?? null,
+                'updated_at' =>  $obj['updated_at'] ?? date('Y-m-d H:i:s'),
             ];
 
-            $animal_id = $obj['animal_id'];
 
-            $this->db->where('animal_id', $animal_id);
-            $updated = $this->db->update('tbl_animal_info', $update_values);
+            // Conditionally include img_id
+            if ($image_id) {
+                $update_values['image_id'] = $image_id;
+            }
+
+            $id = $obj['id'];
+
+            $this->db->where('id', $id);
+            $updated = $this->db->update('tbl_activities_and_events', $update_values);
 
             if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => 'Update Activities Events ' .  $obj['title'],
+                    'module' => 'Activities and Events',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
                 echo json_encode([
                     'status' => 'success',
-                    'message' => 'Animal info updated successfully',
+                    'message' => 'Activities and Events info updated successfully',
                     'method' => 'PUT'
                 ]);
             } else {
                 echo json_encode([
                     'status' => 'error',
-                    'message' => 'Failed to update animal info',
+                    'message' => 'Failed to update Activities and Events info',
                     'method' => 'PUT'
                 ]);
             }

@@ -31,6 +31,8 @@
             class="bg-white"
           />
         </div>
+        <div class="text-bold text-body1">{{ currentMonthYear }}</div>
+
         <div class="row no-wrap items-center">
           <q-btn
             icon="sym_r_add"
@@ -67,7 +69,6 @@
             @change="onChange"
             @moved="onMoved"
             @click-date="onClickDate"
-            @click-day="onClickDay"
             @click-workweek="onClickWorkweek"
             @click-head-workweek="onClickHeadWorkweek"
             @click-head-day="onClickHeadDay"
@@ -78,6 +79,7 @@
                   :class="badgeClasses(event, 'day')"
                   :style="badgeStyles(event, 'day')"
                   class="row justify-start items-center no-wrap my-event"
+                  @click="onClickDay(event)"
                 >
                   <q-icon v-if="event?.icon" :name="event.icon" class="q-mr-xs"></q-icon>
                   <div class="title q-calendar__ellipsis">
@@ -387,7 +389,7 @@ import {
   today,
 } from '@quasar/quasar-ui-qcalendar'
 import '@quasar/quasar-ui-qcalendar/index.css'
-import { useQuasar } from 'quasar'
+import { date, useQuasar } from 'quasar'
 import ImageViewer from 'src/components/ImageViewer.vue'
 import ReusableTable from 'src/components/ReusableTable.vue'
 import {
@@ -472,13 +474,18 @@ export default {
     const onNext = () => {
       calendar.value && calendar.value.next()
     }
-
+    const currentData = ref({})
     const onMoved = (data) => {
       console.info('onMoved', data)
+      currentData.value = data
     }
+
+    const currentMonthYear = ref('')
 
     const onChange = (data) => {
       console.info('onChange', data)
+      const formattedString = date.formatDate(data.start, 'MMMM, YYYY')
+      currentMonthYear.value = formattedString
     }
 
     const onClickDate = (data) => {
@@ -487,6 +494,11 @@ export default {
 
     const onClickDay = (data) => {
       console.info('onClickDay', data)
+      showDialog.value = !showDialog.value
+      mode.value = 'View'
+      dataStorage.value = data
+      previewImage.value = data?.image_path ? getImageLink(data.image_path) : null
+      console.log(dataStorage.value)
     }
 
     const onClickWorkweek = (data) => {
@@ -598,6 +610,7 @@ export default {
         }, 1000)
       })
     }
+
     const showNoAccess = ref(false)
     const preventAction = () => {
       const userType = store.userData.user_type
@@ -641,6 +654,7 @@ export default {
     ]
 
     return {
+      preventAction,
       softDeleteFn,
       search,
       confirm,
@@ -675,6 +689,7 @@ export default {
       showDialog,
       calendar,
       selectedDate,
+      currentMonthYear,
       eventsMap,
       badgeClasses,
       badgeStyles,
@@ -683,6 +698,7 @@ export default {
       onNext,
       showImage,
       onMoved,
+      currentData,
       onChange,
       onClickDate,
       onClickDay,

@@ -291,6 +291,7 @@
         v-model:dialog="showDialog"
         :tableAction="tableAction"
         :visible-columns="['id', 'title', 'date', 'btn']"
+        :preventAction="preventAction"
       >
         <template #cell-id="{ rowIndex }">
           {{ rowIndex + 1 }}
@@ -329,7 +330,7 @@
                 </q-item>
                 <q-separator />
                 <q-item clickable @click="tableAction(row, 'Archieve')">
-                  <q-item-section>Delete</q-item-section>
+                  <q-item-section>Archieve</q-item-section>
                   <q-item-section side>
                     <q-icon name="sym_r_keyboard_arrow_right" size="1.2rem" />
                   </q-item-section>
@@ -339,6 +340,41 @@
           </q-btn>
         </template>
       </ReusableTable>
+    </q-dialog>
+    <q-dialog v-model="confirm" persistent>
+      <q-card class="q-pa-md" style="width: 450px; min-height: 230px">
+        <q-card-section class="column items-center">
+          <q-icon name="sym_r_inventory_2" color="primary" size="2.5rem" />
+          <span class="q-ml-sm text-black text-body1 q-mt-md text-center">
+            Are you sure you want to Delete this Event List?
+          </span>
+          <span class="q-ml-sm text-caption text-grey-7 q-mt-sm">
+            This action is irreversible.
+          </span>
+        </q-card-section>
+
+        <q-card-actions align="center">
+          <q-btn
+            outline
+            label="Cancel"
+            v-close-popup
+            color="primary"
+            no-caps
+            style="width: 180px"
+            dense
+          />
+          <q-btn
+            label="Confirm"
+            unelevated
+            color="primary"
+            no-caps
+            dense
+            v-close-popup
+            style="width: 180px"
+            @click="softDeleteFn()"
+          />
+        </q-card-actions>
+      </q-card>
     </q-dialog>
   </q-page>
 </template>
@@ -358,6 +394,7 @@ import {
   editActivitiesAndEvents,
   getActivitiesAndEvents,
   saveActivitiesAndEvents,
+  softDeleteActivitiesAndEvents,
 } from 'src/composable/latestComposable'
 import { getImageLink } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
@@ -468,6 +505,9 @@ export default {
     const arrayOfId = ref([])
     const previewImage = ref(null)
     const tableAction = (data, modeParam) => {
+      if (!preventAction()) {
+        return
+      }
       mode.value = modeParam
       console.log(data)
 
@@ -539,11 +579,45 @@ export default {
       }
     }
 
+    const softDeleteFn = () => {
+      softDeleteActivitiesAndEvents(
+        arrayOfId.value,
+        store.userData.user_id,
+        store.userData.user_type,
+      ).then((response) => {
+        $q.loading.show({
+          group: 'update',
+          message: response.message,
+        })
+        setTimeout(() => {
+          showDialog.value = false
+          getActivitiesAndEvents().then((response) => {
+            events.splice(0, events.length, ...response) // replaces the contents
+          })
+          $q.loading.hide()
+        }, 1000)
+      })
+    }
+    const showNoAccess = ref(false)
+    const preventAction = () => {
+      const userType = store.userData.user_type
+      const userRole = store.userData.roles
+      const official = [1, 2, 3, 4].includes(userRole) && userType == 3
+      const volunteer = [11, 4].includes(userRole) && userType == 2
+      const result = userType == 3 ? official : volunteer
+      if (!result) {
+        showNoAccess.value = true
+        return false
+      }
+      return true
+    }
+
     onMounted(() => {
       getActivitiesAndEvents().then((response) => {
         events.splice(0, events.length, ...response) // replaces the contents
       })
     })
+
     const eventColors = [
       'red',
       'pink',
@@ -567,6 +641,7 @@ export default {
     ]
 
     return {
+      softDeleteFn,
       search,
       confirm,
       events,

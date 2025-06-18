@@ -354,7 +354,11 @@ import '@quasar/quasar-ui-qcalendar/index.css'
 import { useQuasar } from 'quasar'
 import ImageViewer from 'src/components/ImageViewer.vue'
 import ReusableTable from 'src/components/ReusableTable.vue'
-import { getActivitiesAndEvents, saveActivitiesAndEvents } from 'src/composable/latestComposable'
+import {
+  editActivitiesAndEvents,
+  getActivitiesAndEvents,
+  saveActivitiesAndEvents,
+} from 'src/composable/latestComposable'
 import { getImageLink } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 import { ref, reactive, computed, onMounted } from 'vue'
@@ -371,6 +375,7 @@ export default {
     const showSummaryDialog = ref(false)
     const search = ref(null)
     const confirm = ref(false)
+    const showImage = ref(false)
     const mode = ref('Add')
     const dataStorage = ref({})
     const getCurrentDay = (day) => {
@@ -464,6 +469,8 @@ export default {
     const previewImage = ref(null)
     const tableAction = (data, modeParam) => {
       mode.value = modeParam
+      console.log(data)
+
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         showDialog.value = !showDialog.value
         if (modeParam == 'Add') {
@@ -489,38 +496,46 @@ export default {
           message: 'Adding Activities and Events. Please wait...',
         })
         dataStorage.value.created_by = store.userData?.user_id ?? 84
-        saveActivitiesAndEvents(dataStorage.value).then((response) => {
-          console.log(response)
-          setTimeout(() => {
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-          }, 1000)
+        saveActivitiesAndEvents(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+        ).then((response) => {
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
           setTimeout(() => {
             getActivitiesAndEvents().then((response) => {
               events.splice(0, events.length, ...response) // replaces the contents
             })
             showDialog.value = false
             $q.loading.hide()
-          }, 2000)
+          }, 1000)
         })
       } else if (mode.value == 'Edit') {
-        // $q.loading.show({
-        //   group: 'update',
-        //   message: 'Updating Announcement. Please wait...',
-        // })
-        // editRescueReport(dataStorage.value).then((response) => {
-        //   console.log(response)
-        //   $q.loading.show({
-        //     group: 'update',
-        //     message: response.message,
-        //   })
-        //   setTimeout(() => {
-        //     showDialog.value = false
-        //     $q.loading.hide()
-        //   }, 2000)
-        // })
+        $q.loading.show({
+          group: 'update',
+          message: 'Updating Activities and Events. Please wait...',
+        })
+        editActivitiesAndEvents(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+        ).then((response) => {
+          console.log(response)
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+          setTimeout(() => {
+            showDialog.value = false
+            getActivitiesAndEvents().then((response) => {
+              events.splice(0, events.length, ...response) // replaces the contents
+            })
+            $q.loading.hide()
+          }, 1000)
+        })
       }
     }
 
@@ -591,6 +606,7 @@ export default {
       onToday,
       onPrev,
       onNext,
+      showImage,
       onMoved,
       onChange,
       onClickDate,

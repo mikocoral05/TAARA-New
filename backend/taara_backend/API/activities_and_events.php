@@ -118,10 +118,10 @@ class API
 
     public function httpPut($payload)
     {
-        if (isset($payload['soft_delete_animal_info'])) {
-            $id = $payload['soft_delete_animal_info']['arrayOfIds'];
-            $user_id = $payload['soft_delete_animal_info']['user_id'];
-            $user_type = $payload['soft_delete_animal_info']['user_type'];
+        if (isset($payload['soft_delete_activities_and_events'])) {
+            $id = $payload['soft_delete_activities_and_events']['arrayId'];
+            $user_id = $payload['soft_delete_activities_and_events']['user_id'];
+            $user_type = $payload['soft_delete_activities_and_events']['user_type'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 

@@ -221,32 +221,14 @@ const routes = [
         path: 'editProfile',
         component: () => import('src/pages/EditProfile.vue'),
       },
-      // {
-      //   path: "loginModal",
-      //   component: () => import("../components//loginModal.vue"),
-      //   beforeEnter: (to, from, next) => {
-      //     if (logInDetails.value == null || logInDetails.value == undefined) {
-      //       if (to.path === "/loginModal") {
-      //         next(true);
-      //       }
-      //     } else {
-      //       if (logInDetails.value[0].account_identifier !== "publicUser") {
-      //         next("/404 + not + found");
-      //       } else {
-      //         if (to.path === "/loginModal") {
-      //           next("/404 + not + found");
-      //         }
-      //       }
-      //     }
-      //   },
-      // },
+
       {
         path: 'imageUpload',
         component: () => import('src/pages/ImageUpload.vue'),
       },
       {
         path: 'activitiesAndEvents',
-        component: () => import('src/pages/ActivitiesAndEvents.vue'),
+        component: () => import('src/pages/ActivitiesAndEventsPublic.vue'),
       },
       {
         path: 'activitiesAndEventsViewEvent',

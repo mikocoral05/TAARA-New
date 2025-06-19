@@ -18,6 +18,7 @@
         v-model:showStatusFilter="showStatusFilter"
         v-model:statusOption="statusOption"
         :tableAction="tableAction"
+        :preventAction="preventAction"
       >
         <template #cell-btn="{ row }">
           <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
@@ -719,6 +720,7 @@ export default {
         },
       )
     }
+
     const preventAction = () => {
       const userType = store.userData.user_type
       const userRole = store.userData.roles

@@ -499,6 +499,7 @@ export default {
     const selectedMonth = ref(monthToday)
     const selectedYear = ref(yearToday)
     const viewImage = ref(false)
+    const userName = store.userData.first_name + ' ' + store.userData.last_name
     const timeStamp = computed(() => {
       return new Date(
         selectedYear.value,
@@ -580,6 +581,7 @@ export default {
             expenseData.value,
             store.userData.user_id,
             store.userData.user_type,
+            userName,
           ).then((response) => {
             $q.loading.show({
               group: 'save',
@@ -598,6 +600,7 @@ export default {
             expenseData.value,
             store.userData.user_id,
             store.userData.user_type,
+            userName,
           ).then((response) => {
             $q.loading.show({
               group: 'save',
@@ -614,37 +617,43 @@ export default {
         }
       } else {
         if (mode.value == 'Add') {
-          addExpense(expenseData.value, store.userData.user_id, store.userData.user_type).then(
-            (response) => {
-              $q.loading.show({
-                group: 'save',
-                message: response.message,
-              })
-              setTimeout(() => {
-                if (response.status == 'success') {
-                  fetchFn()
-                  editDialog.value = false
-                }
-                $q.loading.hide()
-              }, 1000)
-            },
-          )
+          addExpense(
+            expenseData.value,
+            store.userData.user_id,
+            store.userData.user_type,
+            userName,
+          ).then((response) => {
+            $q.loading.show({
+              group: 'save',
+              message: response.message,
+            })
+            setTimeout(() => {
+              if (response.status == 'success') {
+                fetchFn()
+                editDialog.value = false
+              }
+              $q.loading.hide()
+            }, 1000)
+          })
         } else {
-          updateExpense(expenseData.value, store.userData.user_id, store.userData.user_type).then(
-            (response) => {
-              $q.loading.show({
-                group: 'save',
-                message: response.message,
-              })
-              setTimeout(() => {
-                if (response.status == 'success') {
-                  fetchFn()
-                  editDialog.value = false
-                }
-                $q.loading.hide()
-              }, 1000)
-            },
-          )
+          updateExpense(
+            expenseData.value,
+            store.userData.user_id,
+            store.userData.user_type,
+            userName,
+          ).then((response) => {
+            $q.loading.show({
+              group: 'save',
+              message: response.message,
+            })
+            setTimeout(() => {
+              if (response.status == 'success') {
+                fetchFn()
+                editDialog.value = false
+              }
+              $q.loading.hide()
+            }, 1000)
+          })
         }
       }
     }
@@ -660,6 +669,7 @@ export default {
         tableName,
         store.userData.user_id,
         store.userData.user_type,
+        userName,
       ).then((response) => {
         $q.loading.show({
           group: 'save',

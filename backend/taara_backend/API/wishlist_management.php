@@ -41,6 +41,7 @@ class API
             $data = $payload['add_wishlist']['obj'];
             $user_id = $payload['add_wishlist']['user_id'];
             $user_type = $payload['add_wishlist']['user_type'];
+            $user_name = $payload['add_wishlist']['user_name'];
             unset($data['table']); // Remove table key from data before insert
 
             if ($this->db->insert($table, $data)) {
@@ -52,6 +53,22 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Add New Wishlist',
+                    'message'      => 'A new Wishlist was added by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'successfully add wishlist',
@@ -81,6 +98,7 @@ class API
             $table = $payload['update_wishlist']['table'];
             $user_id = $payload['update_wishlist']['user_id'];
             $user_type = $payload['update_wishlist']['user_type'];
+            $user_name = $payload['update_wishlist']['user_name'];
             if ($status) {
                 $update_values = [
                     'is_priority' => $status,
@@ -101,6 +119,21 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Update New Wishlist',
+                    'message'      => 'A  Wishlist was updated by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
+
                 echo json_encode(['status' => 'success', 'message' => 'Records updated successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to updated records', 'method' => 'PUT']);
@@ -110,6 +143,7 @@ class API
             $table = $payload['delete_wishlist']['table'];
             $user_id = $payload['delete_wishlist']['user_id'];
             $user_type = $payload['delete_wishlist']['user_type'];
+            $user_name = $payload['delete_wishlist']['user_name'];
             $ids = is_array($id) ? $id : explode(',', $id);
 
             $update_values = [
@@ -129,6 +163,20 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Archive Wishlist list',
+                    'message'      => 'A  Wishlist was archive by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode(['status' => 'success', 'message' => 'Records delete successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to delete records', 'method' => 'PUT']);

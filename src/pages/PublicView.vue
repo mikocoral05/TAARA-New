@@ -161,15 +161,7 @@
         </div>
       </div>
     </div>
-    <!-- <div class="fifth-layer column justify-center items-center">
-      <div class="first-child">
-        <h2 class="q-ma-none q-mb-lg text-weight-medium">Trusted Among Animal Lovers</h2>
-        <p class="q-ma-none">
-          We have gained the trust of countless animal lovers and adopters who have found their
-          perfect companions through TAARA.
-        </p>
-      </div>
-    </div> -->
+
     <div class="sixth-layer column justify-center items-center">
       <div class="first-child">
         <h2 class="text-weight-medium">What Our Adopters Say</h2>

@@ -80,11 +80,12 @@ class API
             $data = $payload['add_rescue_report']['data'];
             $user_id = $payload['add_rescue_report']['user_id'];
             $user_type = $payload['add_rescue_report']['user_type'];
+            $user_name = $payload['add_rescue_report']['user_name'];
 
             $insertData = [
                 'reporter_type'               => $data['reporter_type'] ?? 2,
                 'phone_number'            => $data['phone_number'] ?? null,
-                'name'              => $data['name'] ?? '',
+                'name'                  => $data['name'] ?? '',
                 'reporter_id'              => $data['reporter_id'] ?? null,
                 'animal_type'              => $data['animal_type'] ?? 'Dog',
                 'description'              => $data['description'] ?? '',
@@ -107,6 +108,20 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Add New Rescue Report',
+                    'message'      => 'A new Rescue Report was added by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Rescue Report info successfully added',
@@ -136,6 +151,7 @@ class API
             $id = $payload['soft_delete_rescue_report']['arrayId'];
             $user_id = $payload['soft_delete_rescue_report']['user_id'];
             $user_type = $payload['soft_delete_rescue_report']['user_type'];
+            $user_name = $payload['soft_delete_rescue_report']['user_name'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -158,6 +174,21 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Archive a Rescue Report',
+                    'message'      => 'A Rescue Report was archive by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
+
                 echo json_encode(['status' => 'success', 'message' => 'Records Archive successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to Archive records', 'method' => 'PUT']);
@@ -166,6 +197,7 @@ class API
             $obj = $payload['edit_rescue_report']['data'];
             $user_id = $payload['edit_rescue_report']['user_id'];
             $user_type = $payload['edit_rescue_report']['user_type'];
+            $user_name = $payload['edit_rescue_report']['user_name'];
 
             $update_values = [
                 'phone_number'            => $obj['phone_number'] ?? null,
@@ -193,6 +225,19 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Archive a Rescue Report',
+                    'message'      => 'A Rescue Report was edited by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Animal info updated successfully',

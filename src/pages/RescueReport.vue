@@ -340,7 +340,7 @@ export default {
     const triggerUpload = () => {
       myFile.value.pickFiles()
     }
-
+    const userName = store.userData.first_name + ' ' + store.userData.last_name
     const tableAction = (data, modeParam) => {
       if (!preventAction()) {
         return
@@ -369,42 +369,48 @@ export default {
           message: 'Adding new Rescue report. Please wait...',
         })
         dataStorage.value.created_by = store.userData?.user_id ?? 84
-        addRescueRerport(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
-          (response) => {
-            console.log(response)
-            setTimeout(() => {
-              $q.loading.show({
-                group: 'update',
-                message: response.message,
-              })
-            }, 1000)
-            setTimeout(() => {
-              getRescueReport().then((response) => {
-                rows.value = response
-              })
-              showDialog.value = false
-              $q.loading.hide()
-            }, 2000)
-          },
-        )
+        addRescueRerport(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+          userName,
+        ).then((response) => {
+          console.log(response)
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 1000)
+          setTimeout(() => {
+            getRescueReport().then((response) => {
+              rows.value = response
+            })
+            showDialog.value = false
+            $q.loading.hide()
+          }, 2000)
+        })
       } else if (mode.value == 'Edit') {
         $q.loading.show({
           group: 'update',
           message: 'Updating Announcement. Please wait...',
         })
-        editRescueReport(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
-          (response) => {
-            console.log(response)
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-            setTimeout(() => {
-              showDialog.value = false
-              $q.loading.hide()
-            }, 2000)
-          },
-        )
+        editRescueReport(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+          userName,
+        ).then((response) => {
+          console.log(response)
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+          setTimeout(() => {
+            showDialog.value = false
+            $q.loading.hide()
+          }, 2000)
+        })
       }
     }
 
@@ -499,6 +505,7 @@ export default {
         arrayOfId.value,
         store.userData.user_id,
         store.userData.user_type,
+        userName,
       ).then((response) => {
         $q.loading.show({
           group: 'update',

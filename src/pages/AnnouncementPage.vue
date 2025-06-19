@@ -256,6 +256,7 @@ export default {
       myFile.value.pickFiles()
     }
 
+    const userName = store.userData.first_name + ' ' + store.userData.last_name
     const tableAction = (data, modeParam) => {
       if (!preventAction()) {
         return
@@ -284,39 +285,45 @@ export default {
           message: 'Adding new Announcement. Please wait...',
         })
         dataStorage.value.created_by = store.userData?.user_id
-        addAnnouncement(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
-          (response) => {
-            console.log(response)
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-            setTimeout(() => {
-              fetchFn()
-              showDialog.value = false
-              $q.loading.hide()
-            }, 1000)
-          },
-        )
+        addAnnouncement(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+          userName,
+        ).then((response) => {
+          console.log(response)
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+          setTimeout(() => {
+            fetchFn()
+            showDialog.value = false
+            $q.loading.hide()
+          }, 1000)
+        })
       } else if (mode.value == 'Edit') {
         $q.loading.show({
           group: 'update',
           message: 'Updating Announcement. Please wait...',
         })
-        editAnnouncement(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
-          (response) => {
-            console.log(response)
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-            setTimeout(() => {
-              showDialog.value = false
-              fetchFn()
-              $q.loading.hide()
-            }, 1000)
-          },
-        )
+        editAnnouncement(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+          userName,
+        ).then((response) => {
+          console.log(response)
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+          setTimeout(() => {
+            showDialog.value = false
+            fetchFn()
+            $q.loading.hide()
+          }, 1000)
+        })
       }
     }
 
@@ -357,6 +364,7 @@ export default {
         arrayOfId.value,
         store.userData.user_id,
         store.userData.user_type,
+        userName,
       ).then((response) => {
         $q.loading.show({
           group: 'update',

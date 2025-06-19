@@ -137,6 +137,7 @@ class API
 
     public function httpPut($payload)
     {
+        //unused delte put
         if (isset($payload['soft_delete_inventory_data'])) {
             $id = $payload['soft_delete_inventory_data'];
             $table = $payload['table'];

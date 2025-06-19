@@ -127,6 +127,7 @@ class API
             $data = $payload['add_budget_allocation']['data'];
             $user_id = $payload['add_budget_allocation']['user_id'];
             $user_type = $payload['add_budget_allocation']['user_type'];
+            $user_name = $payload['add_budget_allocation']['user_name'];
 
             $insert = $this->db->insert('tbl_budget_allocation', $data);
 
@@ -139,6 +140,20 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Add New Budget Allocation',
+                    'message'      => 'A new budget allocation was added by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Budget allocation successfully added',
@@ -155,6 +170,7 @@ class API
             $data = $payload['add_expense']['data'];
             $user_id = $payload['add_expense']['user_id'];
             $user_type = $payload['add_expense']['user_type'];
+            $user_name = $payload['add_expense']['user_name'];
 
             $insert = $this->db->insert('tbl_expenses', $data);
 
@@ -167,6 +183,22 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Add New Expense',
+                    'message'      => 'A new expense was added by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
+
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Expense list successfully added',
@@ -196,6 +228,7 @@ class API
             $data = $payload['update_buget_allocation']['data'];
             $user_id = $payload['update_buget_allocation']['user_id'];
             $user_type = $payload['update_buget_allocation']['user_type'];
+            $user_name = $payload['update_buget_allocation']['user_name'];
 
             $this->db->where('id', $id);
             $update_success = $this->db->update('tbl_budget_allocation', $data);
@@ -210,6 +243,20 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Update Budget Allocation',
+                    'message'      => 'Budget Allocation was updated by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Budget allocation updated successfully.',
@@ -228,6 +275,7 @@ class API
             $data = $payload['update_expense']['data'];
             $user_id = $payload['update_expense']['user_id'];
             $user_type = $payload['update_expense']['user_type'];
+            $user_name = $payload['update_expense']['user_name'];
 
             $new_img =  $data['new_image'] ?? '';
             $last_insert_id = "";
@@ -255,6 +303,23 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Update an Expenses',
+                    'message'      => $data['expense_title'] . ' was updated by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
+
+
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Expense updated successfully.',
@@ -273,6 +338,7 @@ class API
             $table = $payload['table'];
             $user_id = $payload['user_id'];
             $user_type = $payload['user_type'];
+            $user_name = $payload['user_name'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -303,6 +369,21 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Archive a Expenses',
+                    'message'      => 'An Expense was archive by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
+
                 echo json_encode(['status' => 'success', 'message' => 'Records Archive successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to Archive records', 'method' => 'PUT']);

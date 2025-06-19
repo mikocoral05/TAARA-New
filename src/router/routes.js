@@ -54,6 +54,11 @@ const routes = [
         component: () => import('src/pages/PetTransferManagement.vue'),
       },
       {
+        name: 'pet-adoption-request',
+        path: 'pet-adoption-request',
+        component: () => import('src/pages/PetAdoption.vue'),
+      },
+      {
         name: 'invetory',
         path: 'invetory',
         component: () => import('src/pages/InventorySection.vue'),

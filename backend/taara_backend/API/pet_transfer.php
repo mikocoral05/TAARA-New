@@ -77,7 +77,7 @@ class API
                     'title'        => 'Add New Pet Transfer Request',
                     'message'      => 'Your pet transfer request has been',
                     'type'         => 2, // 1 = announcement, 2 = notification
-                    'related_url'  => '/management/pet-transfer-request',
+                    'related_url'  => '',
                     'is_read'      => json_encode([]), // 0 = unread
                 ];
                 $this->db->insert("tbl_notification", $notif);

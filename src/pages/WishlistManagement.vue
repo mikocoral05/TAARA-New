@@ -46,6 +46,7 @@
         v-model:confirm="confirm"
         v-model:dialog="showDialog"
         :tableAction="tableAction"
+        :preventAction="preventAction"
       >
         <template #cell-btn="{ row }">
           <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
@@ -57,13 +58,23 @@
                     <q-icon name="sym_r_edit" size="1.2rem" />
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="tableAction(row.id, 'Edit', 'prio')">
+                <q-item
+                  v-if="row.is_priority != 1"
+                  clickable
+                  v-close-popup
+                  @click="tableAction(row.id, 'Edit', 'prio')"
+                >
                   <q-item-section>Priority</q-item-section>
                   <q-item-section side>
                     <q-icon name="sym_r_flag_circle" size="1.2rem" color="red" />
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="tableAction(row.id, 'Edit', 'not-prio')">
+                <q-item
+                  v-if="row.is_priority == 1"
+                  clickable
+                  v-close-popup
+                  @click="tableAction(row.id, 'Edit', 'not-prio')"
+                >
                   <q-item-section>Not priority</q-item-section>
                   <q-item-section side>
                     <q-icon name="sym_r_list" size="1.2rem" />
@@ -83,6 +94,11 @@
         <template #cell-is_priority="{ row }">
           <div>
             {{ row.is_priority == 1 ? 'Yes' : 'No' }}
+          </div>
+        </template>
+        <template #cell-name="{ row }">
+          <div :class="{ 'text-red': row.is_priority == 1 }">
+            {{ row.name }}
           </div>
         </template>
         <template #cell-id="{ rowIndex }">
@@ -275,16 +291,14 @@ export default {
           store.userData.user_type,
           userName,
         ).then((response) => {
-          setTimeout(() => {
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-          }, 1000)
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
           setTimeout(() => {
             $q.loading.hide()
             fetchData()
-          }, 2000)
+          }, 1000)
         })
       } else if (['Edit', 'EditP'].includes(mode.value)) {
         $q.loading.show({
@@ -305,10 +319,8 @@ export default {
           })
           setTimeout(() => {
             $q.loading.hide()
-            if (response.status == 'success') {
-              fetchData()
-            }
-          }, 2000)
+            fetchData()
+          }, 1500)
         })
       }
     }
@@ -331,10 +343,8 @@ export default {
         })
         setTimeout(() => {
           $q.loading.hide()
-          if (response.status == 'success') {
-            fetchData()
-          }
-        }, 2000)
+          fetchData()
+        }, 1500)
       })
     }
 

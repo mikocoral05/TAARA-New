@@ -1802,7 +1802,7 @@ export default {
   setup() {
     const obj = { 3: 'Officials', 2: 'Volunteer', 1: 'Public Users' }
     const $q = useQuasar()
-    const tab = ref('2')
+    const tab = ref('1')
     const editTab = ref('1')
     const search = ref(null)
     const userRows = ref([])

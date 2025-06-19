@@ -53,6 +53,7 @@ class API
             $data = $payload['add_schedule']['obj'];
             $user_id = $payload['add_schedule']['user_id'];
             $user_type = $payload['add_schedule']['user_type'];
+            $user_name = $payload['add_schedule']['user_name'];
 
             $insertData = [
                 'animal_id'            => $data['animal_id'] ?? null,
@@ -77,6 +78,21 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Add New Schedule',
+                    'message'      => 'A new schedule was added by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'New Schedule successfully added',
@@ -99,88 +115,7 @@ class API
     }
 
 
-    public function httpPut($payload)
-    {
-        if (isset($payload['soft_delete_schedule'])) {
-            $id = $payload['soft_delete_schedule']['arrayId'];
-            $user_id = $payload['soft_delete_schedule']['user_id'];
-            $user_type = $payload['soft_delete_schedule']['user_type'];
-
-            $ids = is_array($id) ? $id : explode(',', $id);
-
-            // Set the update values here in the backend
-            $update_values = [
-                'is_deleted' => 1,
-                'deleted_at' => date('Y-m-d H:i:s')
-            ];
-
-            // Update records matching the IDs
-            $this->db->where('id', $ids, 'IN');
-            $updated = $this->db->update('tbl_animal_schedule', $update_values);
-
-            if ($updated) {
-                $logs = [
-                    'user_id' => $user_id,
-                    'user_type' => $user_type,
-                    'action' => 'Update Schedule',
-                    'module' => 'Vet Schedule',
-                ];
-
-                $this->db->insert("tbl_logs", $logs);
-                echo json_encode(['status' => 'success', 'message' => 'Records Archive successfully', 'method' => 'PUT']);
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'Failed to Archive records', 'method' => 'PUT']);
-            }
-        } else if (isset($payload['edit_schedule'])) {
-            $obj = $payload['edit_schedule']['obj'];
-            $user_id = $payload['edit_schedule']['user_id'];
-            $user_type = $payload['edit_schedule']['user_type'];
-
-            $update_values = [
-                'animal_id' => $obj['animal_id'],
-                'schedule_category' => $obj['schedule_category'],
-                'schedule_name' => $obj['schedule_name'],
-                'dose_number' => $obj['dose_number'],
-                'dose_taken' => $obj['dose_taken'],
-                'scheduled_date' => $obj['scheduled_date'],
-                'next_due_interval' => $obj['next_due_interval'],
-                'next_due_date' => $obj['next_due_date'],
-                'notes' => $obj['notes'],
-                'added_by' => $user_id,
-                'updated_at' => date('Y-m-d H:i:s'),
-            ];
-
-
-            $id = $obj['id'];
-
-            $this->db->where('id', $id);
-            $updated = $this->db->update('tbl_animal_schedule', $update_values);
-
-            if ($updated) {
-                $logs = [
-                    'user_id' => $user_id,
-                    'user_type' => $user_type,
-                    'action' => 'Update Schedule info',
-                    'module' => 'Vet Schedule',
-                ];
-
-                $this->db->insert("tbl_logs", $logs);
-                echo json_encode([
-                    'status' => 'success',
-                    'message' => 'Vet Schedule info updated successfully',
-                    'method' => 'PUT'
-                ]);
-            } else {
-                echo json_encode([
-                    'status' => 'error',
-                    'message' => 'Failed to update animal schedule info',
-                    'method' => 'PUT'
-                ]);
-            }
-        } else {
-            echo json_encode(['status' => 'error', 'message' => 'Missing Schedule info in the payload']);
-        }
-    }
+    public function httpPut($payload) {}
 
 
     public function httpDelete($payload) {}

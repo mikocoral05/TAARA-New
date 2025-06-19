@@ -451,6 +451,7 @@ export default {
       return map
     })
 
+    const userName = store.userData.first_name + ' ' + store.userData.last_name
     const badgeClasses = (event) => {
       return {
         'text-white': true,
@@ -552,6 +553,7 @@ export default {
           dataStorage.value,
           store.userData.user_id,
           store.userData.user_type,
+          userName,
         ).then((response) => {
           setTimeout(() => {
             $q.loading.show({
@@ -576,6 +578,7 @@ export default {
           dataStorage.value,
           store.userData.user_id,
           store.userData.user_type,
+          userName,
         ).then((response) => {
           console.log(response)
           setTimeout(() => {
@@ -600,6 +603,7 @@ export default {
         arrayOfId.value,
         store.userData.user_id,
         store.userData.user_type,
+        userName,
       ).then((response) => {
         setTimeout(() => {
           $q.loading.show({

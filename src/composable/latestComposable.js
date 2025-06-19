@@ -763,6 +763,12 @@ export const updateImage = async (array, id, arrayOfId) => {
   })
   return response.data.status
 }
+export const updateHealtStatus = async (obj, user_id, user_type, user_name) => {
+  const response = await api.put('pet_info.php', {
+    update_health_status: { obj, user_id, user_type, user_name },
+  })
+  return response.data
+}
 
 export const editAnimalInfo = (obj, user_id, user_type, user_name) => {
   const { file, toRemoveId, ...animal_data } = obj

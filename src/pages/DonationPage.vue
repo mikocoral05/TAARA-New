@@ -537,6 +537,7 @@ export default {
     const tab = ref('1')
     const filterTab = ref('1')
     const editTab = ref('1')
+    const userName = store.userData.first_name + ' ' + store.userData.last_name
     const step = ref(1)
     const rows = ref([])
     const confirm = ref(false)
@@ -600,42 +601,48 @@ export default {
         })
         dataStorage.value.donation_type = tab.value == 1 ? 'cash' : 'material'
         dataStorage.value.created_by = store.userData.user_id
-        saveDonation(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
-          (response) => {
-            console.log(response)
-            setTimeout(() => {
-              $q.loading.show({
-                group: 'update',
-                message: response.message,
-              })
-            }, 500)
-            setTimeout(() => {
-              fetchFn()
-              showDialog.value = false
-              $q.loading.hide()
-            }, 1000)
-          },
-        )
+        saveDonation(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+          userName,
+        ).then((response) => {
+          console.log(response)
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 500)
+          setTimeout(() => {
+            fetchFn()
+            showDialog.value = false
+            $q.loading.hide()
+          }, 1000)
+        })
       } else if (mode.value == 'Edit') {
         $q.loading.show({
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
-        editDonation(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
-          (response) => {
-            console.log(response)
-            setTimeout(() => {
-              $q.loading.show({
-                group: 'update',
-                message: response.message,
-              })
-            }, 500)
-            setTimeout(() => {
-              showDialog.value = false
-              $q.loading.hide()
-            }, 1000)
-          },
-        )
+        editDonation(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+          userName,
+        ).then((response) => {
+          console.log(response)
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 500)
+          setTimeout(() => {
+            showDialog.value = false
+            $q.loading.hide()
+          }, 1000)
+        })
       }
     }
 
@@ -644,22 +651,26 @@ export default {
         group: 'update',
         message: 'Deleting Pet info. Please wait...',
       })
-      softDeleteDonation(arrayOfId.value, store.userData.user_id, store.userData.user_type).then(
-        (response) => {
-          setTimeout(() => {
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-          }, 500)
-          setTimeout(() => {
-            $q.loading.hide()
-            if (response.status == 'success') {
-              fetchFn()
-            }
-          }, 1000)
-        },
-      )
+
+      softDeleteDonation(
+        arrayOfId.value,
+        store.userData.user_id,
+        store.userData.user_type,
+        userName,
+      ).then((response) => {
+        setTimeout(() => {
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+        }, 500)
+        setTimeout(() => {
+          $q.loading.hide()
+          if (response.status == 'success') {
+            fetchFn()
+          }
+        }, 1000)
+      })
     }
 
     const previewImage = ref(null)

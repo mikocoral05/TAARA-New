@@ -347,6 +347,7 @@ export default {
     const store = globalStore()
     const outputDialog = ref(false)
     const outputObj = ref({})
+    const userName = store.userData.first_name + ' ' + store.userData.last_name
     const tableAction = (data, modeParam) => {
       if (!preventAction()) {
         return
@@ -382,6 +383,7 @@ export default {
           dataStorage.value,
           store.userData.user_id,
           store.userData.user_type,
+          userName,
         )
         setTimeout(() => {
           $q.loading.hide()
@@ -405,6 +407,7 @@ export default {
           dataStorage.value,
           store.userData.user_id,
           store.userData.user_type,
+          userName,
         )
         console.log(response)
 
@@ -454,22 +457,25 @@ export default {
         group: 'update',
         message: 'Deleting Schedule info. Please wait...',
       })
-      softDeleteSchedule(arrayOfId.value, store.userData.user_id, store.userData.user_type).then(
-        (response) => {
-          $q.loading.show({
-            group: 'update',
-            message: response.message,
-          })
-          setTimeout(() => {
-            $q.loading.hide()
-            if (response.status == 'success') {
-              getSchedule().then((response) => {
-                rows.value = response
-              })
-            }
-          }, 1000)
-        },
-      )
+      softDeleteSchedule(
+        arrayOfId.value,
+        store.userData.user_id,
+        store.userData.user_type,
+        userName,
+      ).then((response) => {
+        $q.loading.show({
+          group: 'update',
+          message: response.message,
+        })
+        setTimeout(() => {
+          $q.loading.hide()
+          if (response.status == 'success') {
+            getSchedule().then((response) => {
+              rows.value = response
+            })
+          }
+        }, 1000)
+      })
     }
 
     const preventAction = () => {

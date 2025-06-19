@@ -94,7 +94,7 @@
       >
         <q-list class="q-px-lg">
           <q-item-label header class="text-h6 flex flex-center text-bold">
-            <span class="text-primary">Dash</span> Stack
+            <span class="text-primary">Dash</span>Board
           </q-item-label>
 
           <EssentialLink
@@ -297,7 +297,7 @@ export default defineComponent({
         showTab: true,
       },
       {
-        title: 'Schedule',
+        title: 'Vet Schedule',
         icon: 'schedule',
         nav: '/management/animal-schedule',
         showTab: true,
@@ -347,7 +347,7 @@ export default defineComponent({
       '/management/donation': 'Donation',
       '/management/invetory': 'Medicine Inventory',
       '/management/pending-application': 'Pending',
-      '/management/animal-schedule': 'Schedule',
+      '/management/animal-schedule': 'Vet Schedule',
       '/management/supplies': 'Supplies',
       '/management/activities-and-events': 'Activities & Events',
       '/management/announcement': 'Announcement',

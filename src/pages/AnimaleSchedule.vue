@@ -131,8 +131,12 @@
                     type="number"
                     v-model="dataStorage.dose_number"
                     dense
-                    :rules="[(val) => !!val || 'Dose number is required!']"
+                    :rules="[
+                      (val) => !!val || 'Dose number is required!',
+                      (val) => val >= 1 || 'Dose number must be atleast 1!',
+                    ]"
                     class="q-mt-sm"
+                    hint="Dose no. required!"
                   />
                 </div>
                 <div class="column no-wrap q-mr-md">
@@ -143,7 +147,13 @@
                     type="number"
                     dense
                     class="q-mt-sm"
-                    :rules="[(val) => (val !== null && val !== '') || 'Dose taken is required!']"
+                    :rules="[
+                      (val) => (val !== null && val !== '') || 'Dose taken is required!',
+                      (val) =>
+                        val < dataStorage.dose_number ||
+                        'Dose taken must be less than the total dose number!',
+                    ]"
+                    hint="Dose taken!"
                   />
                 </div>
                 <div class="column no-wrap q-mr-md">
@@ -172,7 +182,7 @@
                   </q-input>
                 </div>
               </div>
-              <div class="row no-wrap q-mt-sm">
+              <div class="row no-wrap q-mt-md">
                 <div class="column no-wrap q-mr-md">
                   <div class="text-capitalize">
                     Next Due Interval<span class="text-negative">*</span>
@@ -335,7 +345,7 @@ export default {
     const rows = ref([])
     const $q = useQuasar()
     const confirm = ref(false)
-    const showDialog = ref(false)
+    const showDialog = ref(true)
     const showInputInterval = ref(false)
     const dataStorage = ref({ file: [] })
     const mode = ref('')
@@ -481,7 +491,7 @@ export default {
     const preventAction = () => {
       const userType = store.userData.user_type
       const userRole = store.userData.roles
-      const official = [1, 2, 3, 4].includes(userRole) && userType == 3
+      const official = [1, 2, 3].includes(userRole) && userType == 3
       const volunteer = [2, 3].includes(userRole) && userType == 2
       const result = userType == 3 ? official : volunteer
       if (!result) {

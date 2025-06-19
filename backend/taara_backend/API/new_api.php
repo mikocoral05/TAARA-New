@@ -333,6 +333,7 @@ class API
     public function httpPut($payload)
     {
         if (isset($payload['soft_delete_schedule'])) {
+            //unused
             $id = $payload['soft_delete_schedule'];
 
             $ids = is_array($id) ? $id : explode(',', $id);

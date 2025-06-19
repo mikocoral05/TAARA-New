@@ -114,6 +114,7 @@ class API
             $user_data = $payload['updateUser']['clone'];
             $user_id = $payload['updateUser']['user_id'];
             $user_type = $payload['updateUser']['user_type'];
+            $user_name = $payload['updateUser']['user_name'];
             $password = $user_data['password'] ?? '';
 
             // Ensure user_id is provided
@@ -181,6 +182,21 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Update a User',
+                    'message'      => $user_data['first_name'] . ' info was updated by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'User information updated successfully.',
@@ -197,6 +213,7 @@ class API
             $id = $payload['soft_delete_user']['arrayId'];
             $user_id = $payload['soft_delete_user']['user_id'];
             $user_type = $payload['soft_delete_user']['user_type'];
+            $user_name = $payload['soft_delete_user']['user_name'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -219,6 +236,21 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Account Deativation',
+                    'message'      => 'An account was deactivated by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
+
                 echo json_encode(['status' => 'success', 'message' => 'User delete successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to Archive user', 'method' => 'PUT']);
@@ -228,6 +260,7 @@ class API
             $user_type = $payload['activate_or_deactivate']['user_type'];
             $user_id_to_update = $payload['activate_or_deactivate']['rowUserId'];
             $val = $payload['activate_or_deactivate']['val'];
+            $user_name = $payload['activate_or_deactivate']['user_name'];
 
             $update_values = [
                 'is_activated' => $val,
@@ -247,6 +280,21 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Account Deativation',
+                    'message'      => 'An account was ' . $state . ' by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
+
                 echo json_encode(['status' => 'success', 'message' => 'User ' . $state . ' successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to  ' . $state . 'user', 'method' => 'PUT']);
@@ -257,6 +305,7 @@ class API
             $val_user_id = $payload['approve_disapprove_volunteer']['val_user_id'];
             $volunteer_id = $payload['approve_disapprove_volunteer']['volunteer_id'];
             $val = $payload['approve_disapprove_volunteer']['val'];
+            $user_name = $payload['approve_disapprove_volunteer']['user_name'];
 
             $update_values = [
                 'application_status' => $val,

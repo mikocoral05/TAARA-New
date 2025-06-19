@@ -419,7 +419,7 @@ export default {
     const scrollListRef = ref(null)
     const arrayOfId = ref([])
     const tableConfig = ref({ title: '', columns: [] })
-
+    const userName = store.userData.first_name + ' ' + store.userData.last_name
     const groupNameOptions = ref([])
     const tableAction = (data, modeParam) => {
       if (!preventAction()) {
@@ -456,6 +456,7 @@ export default {
             dataStorage.value,
             store.userData.user_id,
             store.userData.user_type,
+            userName,
           ).then((response) => {
             console.log(response)
             setTimeout(() => {
@@ -469,39 +470,45 @@ export default {
             }, 2000)
           })
         } else {
-          addGroupName(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
-            (response) => {
-              console.log(response)
-              setTimeout(() => {
-                $q.loading.show({
-                  group: 'update',
-                  message: response.message,
-                })
-              }, 1000)
-              setTimeout(() => {
-                groupDialog.value = false
-                $q.loading.hide()
-              }, 2000)
-            },
-          )
+          addGroupName(
+            dataStorage.value,
+            store.userData.user_id,
+            store.userData.user_type,
+            userName,
+          ).then((response) => {
+            console.log(response)
+            setTimeout(() => {
+              $q.loading.show({
+                group: 'update',
+                message: response.message,
+              })
+            }, 1000)
+            setTimeout(() => {
+              groupDialog.value = false
+              $q.loading.hide()
+            }, 2000)
+          })
         }
       } else if (mode.value == 'Edit') {
         $q.loading.show({
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
-        editInventoryList(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
-          (response) => {
-            console.log(response)
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-            setTimeout(() => {
-              $q.loading.hide()
-            }, 2000)
-          },
-        )
+        editInventoryList(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+          userName,
+        ).then((response) => {
+          console.log(response)
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
+          setTimeout(() => {
+            $q.loading.hide()
+          }, 2000)
+        })
       }
     }
 
@@ -552,6 +559,7 @@ export default {
         tableName,
         store.userData.user_id,
         store.userData.user_type,
+        userName,
       ).then((response) => {
         if (response == 'success') {
           filterInventory(filterTab.value)

@@ -56,6 +56,7 @@ class API
             $data = $payload['add_donation']['donationData'];
             $user_id = $payload['add_donation']['user_id'];
             $user_type = $payload['add_donation']['user_type'];
+            $user_name = $payload['add_donation']['user_name'];
             $new_image = $data['new_image'];
 
             $image_id = '';
@@ -124,7 +125,7 @@ class API
                     'for_user'     => -2, // -2 = all management
                     'created_by'   => $user_id,
                     'title'        => 'New ' . ucfirst($data['donation_type']) . ' Donation',
-                    'message'      => 'A new ' . $data['donation_type'] . ' donation has been added and is awaiting your review.',
+                    'message'      => 'A new ' . $data['donation_type'] . ' donation has been added and is awaiting for review.',
                     'type'         => 2, // 1 = announcement, 2 = notification
                     'related_url'  => '/management/donation',
                     'is_read'      => json_encode([]),
@@ -165,6 +166,7 @@ class API
             $id = $payload['soft_delete_donation']['arrayId'];
             $user_id = $payload['soft_delete_donation']['user_id'];
             $user_type = $payload['soft_delete_donation']['user_type'];
+            $user_name = $payload['soft_delete_donation']['user_name'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -182,7 +184,7 @@ class API
                 $logs = [
                     'user_id' => $user_id,
                     'user_type' => $user_type,
-                    'action' => 'Archive  Donation list',
+                    'action' => 'Archive Donation list',
                     'module' => 'Donation',
                 ];
 
@@ -191,8 +193,8 @@ class API
                 $notif = [
                     'for_user'     => -2, // -2 = all management
                     'created_by'   => $user_id,
-                    'title'        => 'Archive  Donation list',
-                    'message'      => 'Archive  Donation list',
+                    'title'        => 'Archive Donation list',
+                    'message'      => 'A donation list has been archived by ' . $user_name,
                     'type'         => 2, // 1 = announcement, 2 = notification
                     'related_url'  => '',
                     'is_read'      => json_encode([]),
@@ -211,6 +213,7 @@ class API
             $obj = $payload['edit_donation']['donation_data'];
             $user_id = $payload['edit_donation']['user_id'];
             $user_type = $payload['edit_donation']['user_type'];
+            $user_name = $payload['edit_donation']['user_name'];
             $fund_id = $obj['fund_id'];
             $table = $obj['donation_type'] == 'cash' ? 'tbl_cash_donations' : 'tbl_material_donations';
             $new_img =  $obj['new_image'] ?? '';
@@ -277,6 +280,20 @@ class API
 
                 if ($obj['donor_id']) {
                     $notif = [
+                        'for_user'     => -2, // all management 
+                        'created_by'   => $user_id,
+                        'title'        => ucfirst($obj['donation_type']) . ' Donation',
+                        'message'      => 'A ' . ucfirst($obj['donation_type']) . ' was edited by ' . $user_name,
+                        'type'         => 2, // 1 = announcement, 2 = notification
+                        'related_url'  => '',
+                        'is_read'      => json_encode([]),
+                    ];
+
+
+
+                    $this->db->insert("tbl_notification", $notif);
+
+                    $notif2 = [
                         'for_user'     => $obj['donor_id'], // -2 = all management
                         'created_by'   => $user_id,
                         'title'        => ucfirst($obj['donation_type']) . ' Donation',
@@ -288,7 +305,7 @@ class API
 
 
 
-                    $this->db->insert("tbl_notification", $notif);
+                    $this->db->insert("tbl_notification", $notif2);
                 }
                 echo json_encode([
                     'status' => 'success',

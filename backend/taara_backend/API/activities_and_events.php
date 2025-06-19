@@ -122,6 +122,7 @@ class API
             $id = $payload['soft_delete_activities_and_events']['arrayId'];
             $user_id = $payload['soft_delete_activities_and_events']['user_id'];
             $user_type = $payload['soft_delete_activities_and_events']['user_type'];
+            $user_name = $payload['soft_delete_activities_and_events']['user_name'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -144,6 +145,19 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Archive Activities Events',
+                    'message'      => 'An activity or event was archive by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode(['status' => 'success', 'message' => 'Records Archive successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to Archive records', 'method' => 'PUT']);
@@ -152,6 +166,7 @@ class API
             $obj = $payload['edit_activities_and_events']['data'];
             $user_id = $payload['edit_activities_and_events']['user_id'];
             $user_type = $payload['edit_activities_and_events']['user_type'];
+            $user_name = $payload['edit_activities_and_events']['user_name'];
 
             $new_image = $obj['new_image'] ?? '';
             $image_id = '';
@@ -194,6 +209,20 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Edit Activities Events',
+                    'message'      => 'An activity or event was edited by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+                $this->db->insert("tbl_notification", $notif);
+
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Activities and Events info updated successfully',

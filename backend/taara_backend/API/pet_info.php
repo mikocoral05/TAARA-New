@@ -301,6 +301,68 @@ class API
                     'method' => 'PUT'
                 ]);
             }
+        } else if (isset($payload['update_health_status'])) {
+            $obj = $payload['update_health_status']['obj'];
+            $user_id = $payload['update_health_status']['user_id'];
+            $user_type = $payload['update_health_status']['user_type'];
+            $user_name = $payload['update_health_status']['user_name'];
+
+            $update_values = [
+                'health_status' => $obj['health_status'] ?? null,
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+
+            $animal_id = $obj['animal_id'];
+            $animal_name = $obj['name'];
+
+            $this->db->where('animal_id', $animal_id);
+            $updated = $this->db->update('tbl_animal_info', $update_values);
+
+            $map = [
+                1 => 'Ready for Adoption',
+                2 => 'Under Rehabilitation',
+                3 => 'Under Medication',
+                4 => 'Deceased'
+            ];
+
+
+            if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' => $animal_name . ' was move to ' . $map[$obj['health_status']],
+                    'module' => 'Pet Info',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
+
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Update Pet record',
+                    'message'      => $animal_name . ' was move to ' . $map[$obj['health_status']] . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
+
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Animal info updated successfully',
+                    'method' => 'PUT'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'error',
+                    'message' => 'Failed to update animal info',
+                    'method' => 'PUT'
+                ]);
+            }
         } else {
             echo json_encode(['status' => 'error', 'message' => 'Missing Animal info in the payload']);
         }

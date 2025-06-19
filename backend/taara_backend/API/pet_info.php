@@ -73,6 +73,7 @@ class API
             $data = $payload['save_animal_list']['animalData'];
             $user_id = $payload['save_animal_list']['user_id'];
             $user_type = $payload['save_animal_list']['user_type'];
+            $user_name = $payload['save_animal_list']['user_name'];
 
             $insertData = [
                 'name'               => $data['name'] ?? null,
@@ -106,6 +107,20 @@ class API
                     'module' => 'Pet Info',
                 ];
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'New Pet added',
+                    'message'      => 'A new pet was added by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Animal info successfully added',
@@ -135,6 +150,7 @@ class API
             $id = $payload['soft_delete_animal_info']['arrayId'];
             $user_id = $payload['soft_delete_animal_info']['user_id'];
             $user_type = $payload['soft_delete_animal_info']['user_type'];
+            $user_name = $payload['soft_delete_animal_info']['user_name'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -156,6 +172,21 @@ class API
                     'module' => 'Pet Info',
                 ];
                 $this->db->insert("tbl_logs", $logs);
+
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Archive a Pet record',
+                    'message'      => 'A Pet record was archive by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode(['status' => 'success', 'message' => 'Records Archive successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to Archive records', 'method' => 'PUT']);
@@ -165,6 +196,7 @@ class API
             $animal_name = $obj['name'];
             $user_id = $payload['edit_animal_info']['user_id'];
             $user_type = $payload['edit_animal_info']['user_type'];
+            $user_name = $payload['edit_animal_info']['user_name'];
 
             $update_values = [
                 'name' => $obj['name'] ?? null,
@@ -203,6 +235,22 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Update Pet record',
+                    'message'      => 'A Pet record was updated by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Animal info updated successfully',

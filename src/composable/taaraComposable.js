@@ -1,16 +1,6 @@
 import { ref, computed } from 'vue'
 import * as XLSX from 'xlsx/xlsx.mjs'
-import {
-  calculateAge,
-  wordifySex,
-  // getAge,
-  // switchCaseSize,
-  // goodWith,
-  wordifyCurrentState,
-  // wordifyGoodWith,
-  // dateToday,
-  // timeNow,
-} from 'src/composable/simpleComposable'
+import { calculateAge, wordifySex, wordifyCurrentState } from 'src/composable/simpleComposable'
 import { api } from 'src/boot/axios'
 let dearUserName = ref(null)
 let dearUserEmail = ref(null)

@@ -99,7 +99,7 @@ class API
             $user_id = $payload['update_wishlist']['user_id'];
             $user_type = $payload['update_wishlist']['user_type'];
             $user_name = $payload['update_wishlist']['user_name'];
-            if ($status) {
+            if (isset($payload['update_wishlist']['data']['status'])) {
                 $update_values = [
                     'is_priority' => $status,
                 ];

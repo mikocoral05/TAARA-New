@@ -57,14 +57,14 @@ export const downloadReportBudget = async (year) => {
   return response.data
 }
 
-export const uploadExcel = async (table, data, user_id, user_type) => {
+export const uploadExcel = async (table, data, user_id, user_type, user_name) => {
   const processedPets = data.map((pet) => ({
     ...pet,
     date_of_birth: excelDateToISO(pet.date_of_birth),
     date_rescued: excelDateToISO(pet.date_rescued),
   }))
   const response = await api.post('excel.php', {
-    upload_excel: { table, processedPets, user_id, user_type },
+    upload_excel: { table, processedPets, user_id, user_type, user_name },
   })
   console.log(response.data)
   return response.data
@@ -119,9 +119,10 @@ export const approveDisapproveVolunteer = async (
   volunteer_id,
   user_id,
   user_type,
+  user_name,
 ) => {
   const response = await api.put('authorization.php', {
-    approve_disapprove_volunteer: { val, val_user_id, volunteer_id, user_id, user_type },
+    approve_disapprove_volunteer: { val, val_user_id, volunteer_id, user_id, user_type, user_name },
   })
   return response.data
 }
@@ -270,13 +271,13 @@ export const getRescueReport = (status) => {
   })
 }
 
-export const updateUser = (data, user_id, user_type) => {
+export const updateUser = (data, user_id, user_type, user_name) => {
   const clone = { ...data }
   delete clone.image_path
   return new Promise((resolve, reject) => {
     api
       .put('authorization.php', {
-        updateUser: { clone, user_id, user_type },
+        updateUser: { clone, user_id, user_type, user_name },
       })
       .then((response) => {
         if (response.data.status == 'success') {
@@ -289,18 +290,18 @@ export const updateUser = (data, user_id, user_type) => {
   })
 }
 
-export const activateOrDeactivate = async (actOrDac, rowUserId, user_id, user_type) => {
+export const activateOrDeactivate = async (actOrDac, rowUserId, user_id, user_type, user_name) => {
   const response = await api.put('authorization.php', {
-    activate_or_deactivate: { val: actOrDac, rowUserId, user_id, user_type },
+    activate_or_deactivate: { val: actOrDac, rowUserId, user_id, user_type, user_name },
   })
   console.log(response)
   return response.data
 }
 
-export const updateBudgetAllocation = async (obj, user_id, user_type) => {
+export const updateBudgetAllocation = async (obj, user_id, user_type, user_name) => {
   const { id, ...data } = obj
   const response = await api.put('budget_expenses.php', {
-    update_buget_allocation: { id: id, data: data, user_id, user_type },
+    update_buget_allocation: { id: id, data: data, user_id, user_type, user_name },
   })
   return response.data
 }
@@ -319,26 +320,33 @@ export const updateExpense = async (obj, user_id, user_type) => {
   return response.data
 }
 
-export const addBudgetAllocation = async (data, user_id, user_type) => {
+export const addBudgetAllocation = async (data, user_id, user_type, user_name) => {
   const response = await api.post('budget_expenses.php', {
-    add_budget_allocation: { data, user_id, user_type },
+    add_budget_allocation: { data, user_id, user_type, user_name },
   })
   return response.data
 }
 
-export const addExpense = async (data, user_id, user_type) => {
+export const addExpense = async (data, user_id, user_type, user_name) => {
   const response = await api.post('budget_expenses.php', {
-    add_expense: { data, user_id, user_type },
+    add_expense: { data, user_id, user_type, user_name },
   })
   return response.data
 }
 
-export const softDeleteBudgetAndExpenses = async (arrayId, tableName, user_id, user_type) => {
+export const softDeleteBudgetAndExpenses = async (
+  arrayId,
+  tableName,
+  user_id,
+  user_type,
+  user_name,
+) => {
   const response = await api.put('budget_expenses.php', {
     soft_delete_budget_expenses: arrayId,
     table: tableName,
     user_id,
     user_type,
+    user_name,
   })
   return response.data
 }
@@ -677,12 +685,12 @@ export const uploadImages = async (fileArray) => {
   })
 }
 
-export const saveAnimalDetail = (obj, user_id, user_type) => {
+export const saveAnimalDetail = (obj, user_id, user_type, user_name) => {
   const { file, ...animalData } = obj // separate the files
   return new Promise((resolve, reject) => {
     api
       .post('pet_info.php', {
-        save_animal_list: { animalData, user_id, user_type },
+        save_animal_list: { animalData, user_id, user_type, user_name },
       })
       .then(async (response) => {
         if (response.data.status == 'success') {
@@ -704,12 +712,12 @@ const updateDonationFileId = async (array_link, id) => {
   console.log(reponse.data.data)
 }
 
-export const saveDonation = (obj, user_id, user_type) => {
+export const saveDonation = (obj, user_id, user_type, user_name) => {
   const { file, ...donationData } = obj // separate the files
   return new Promise((resolve, reject) => {
     api
       .post('donation.php', {
-        add_donation: { donationData, user_id, user_type },
+        add_donation: { donationData, user_id, user_type, user_name },
       })
       .then(async (response) => {
         if (response.data.status == 'success') {
@@ -726,7 +734,7 @@ export const saveDonation = (obj, user_id, user_type) => {
   })
 }
 
-export const editDonation = async (obj, user_id, user_type) => {
+export const editDonation = async (obj, user_id, user_type, user_name) => {
   const { file, ...donation_data } = obj
   console.log(donation_data)
   if (file) {
@@ -734,15 +742,15 @@ export const editDonation = async (obj, user_id, user_type) => {
     donation_data.new_image = res.data.images[0]
   }
   const response = await api.put('donation.php', {
-    edit_donation: { donation_data, user_id, user_type },
+    edit_donation: { donation_data, user_id, user_type, user_name },
   })
 
   return response.data
 }
 
-export const softDeleteDonation = async (arrayId, user_id, user_type) => {
+export const softDeleteDonation = async (arrayId, user_id, user_type, user_name) => {
   const response = await api.put('donation.php', {
-    soft_delete_donation: { arrayId, user_id, user_type },
+    soft_delete_donation: { arrayId, user_id, user_type, user_name },
   })
   return response.data
 }
@@ -756,12 +764,12 @@ export const updateImage = async (array, id, arrayOfId) => {
   return response.data.status
 }
 
-export const editAnimalInfo = (obj, user_id, user_type) => {
+export const editAnimalInfo = (obj, user_id, user_type, user_name) => {
   const { file, toRemoveId, ...animal_data } = obj
   return new Promise((resolve, reject) => {
     api
       .put('pet_info.php', {
-        edit_animal_info: { animal_data, user_id, user_type },
+        edit_animal_info: { animal_data, user_id, user_type, user_name },
       })
       .then(async (response) => {
         if (response.data.status == 'success') {
@@ -785,14 +793,14 @@ export const editAnimalInfo = (obj, user_id, user_type) => {
   })
 }
 
-export const saveActivitiesAndEvents = async (obj, user_id, user_type) => {
+export const saveActivitiesAndEvents = async (obj, user_id, user_type, user_name) => {
   const { file, ...data } = obj // separate the files
   if (file) {
     const res = await uploadImages([file])
     data.new_image = res.data.images[0]
   }
   const response = await api.post('activities_and_events.php', {
-    save_activities_and_events: { data, user_id, user_type },
+    save_activities_and_events: { data, user_id, user_type, user_name },
   })
   return response.data
 }
@@ -879,7 +887,7 @@ export const getInventoryGroup = (category) => {
   })
 }
 
-export const softDeleteInventoryData = (arrayId, tableName, user_id, user_type) => {
+export const softDeleteInventoryData = (arrayId, tableName, user_id, user_type, user_name) => {
   return new Promise((resolve, reject) => {
     api
       .put('inventory.php', {
@@ -887,6 +895,7 @@ export const softDeleteInventoryData = (arrayId, tableName, user_id, user_type) 
         table: tableName,
         user_id,
         user_type,
+        user_name,
       })
       .then((response) => {
         resolve(response.data.status)
@@ -897,11 +906,11 @@ export const softDeleteInventoryData = (arrayId, tableName, user_id, user_type) 
   })
 }
 
-export const softDeleteActivitiesAndEvents = (arrayId, user_id, user_type) => {
+export const softDeleteActivitiesAndEvents = (arrayId, user_id, user_type, user_name) => {
   return new Promise((resolve, reject) => {
     api
       .put('activities_and_events.php', {
-        soft_delete_activities_and_events: { arrayId, user_id, user_type },
+        soft_delete_activities_and_events: { arrayId, user_id, user_type, user_name },
       })
       .then((response) => {
         resolve(response.data)
@@ -912,11 +921,11 @@ export const softDeleteActivitiesAndEvents = (arrayId, user_id, user_type) => {
   })
 }
 
-export const softDeleteSchedule = (arrayId, user_id, user_type) => {
+export const softDeleteSchedule = (arrayId, user_id, user_type, user_name) => {
   return new Promise((resolve, reject) => {
     api
       .put('schedule.php', {
-        soft_delete_schedule: { arrayId, user_id, user_type },
+        soft_delete_schedule: { arrayId, user_id, user_type, user_name },
       })
       .then((response) => {
         resolve(response.data)
@@ -927,11 +936,11 @@ export const softDeleteSchedule = (arrayId, user_id, user_type) => {
   })
 }
 
-export const softDeleteUser = (arrayId, user_id, user_type) => {
+export const softDeleteUser = (arrayId, user_id, user_type, user_name) => {
   return new Promise((resolve, reject) => {
     api
       .put('authorization.php', {
-        soft_delete_user: { arrayId, user_id, user_type },
+        soft_delete_user: { arrayId, user_id, user_type, user_name },
       })
       .then((response) => {
         resolve(response.data)
@@ -942,11 +951,11 @@ export const softDeleteUser = (arrayId, user_id, user_type) => {
   })
 }
 
-export const softDeleteAnimal = (arrayId, user_id, user_type) => {
+export const softDeleteAnimal = (arrayId, user_id, user_type, user_name) => {
   return new Promise((resolve, reject) => {
     api
       .put('pet_info.php', {
-        soft_delete_animal_info: { arrayId, user_id, user_type },
+        soft_delete_animal_info: { arrayId, user_id, user_type, user_name },
       })
       .then((response) => {
         resolve(response.data)
@@ -957,12 +966,12 @@ export const softDeleteAnimal = (arrayId, user_id, user_type) => {
   })
 }
 
-export const addInventoryList = (obj, user_id, user_type) => {
+export const addInventoryList = (obj, user_id, user_type, user_name) => {
   obj.date_received = dateToday
   return new Promise((resolve, reject) => {
     api
       .post('inventory.php', {
-        add_inventory_list: { obj, user_id, user_type },
+        add_inventory_list: { obj, user_id, user_type, user_name },
       })
       .then((response) => {
         resolve(response.data)
@@ -973,11 +982,11 @@ export const addInventoryList = (obj, user_id, user_type) => {
   })
 }
 
-export const addSchedule = (obj, user_id, user_type) => {
+export const addSchedule = (obj, user_id, user_type, user_name) => {
   return new Promise((resolve, reject) => {
     api
       .post('schedule.php', {
-        add_schedule: { obj, user_id, user_type },
+        add_schedule: { obj, user_id, user_type, user_name },
       })
       .then((response) => {
         resolve(response.data)
@@ -988,12 +997,12 @@ export const addSchedule = (obj, user_id, user_type) => {
   })
 }
 
-export const addAnnouncement = (obj, user_id, user_type) => {
+export const addAnnouncement = (obj, user_id, user_type, user_name) => {
   const { file, ...data } = obj
   return new Promise((resolve, reject) => {
     api
       .post('announcement.php', {
-        add_announcement: { data, user_id, user_type },
+        add_announcement: { data, user_id, user_type, user_name },
       })
       .then((response) => {
         if (response.data.status == 'success') {
@@ -1013,12 +1022,12 @@ export const addAnnouncement = (obj, user_id, user_type) => {
   })
 }
 
-export const addRescueRerport = (obj, user_id, user_type) => {
+export const addRescueRerport = (obj, user_id, user_type, user_name) => {
   const { file, ...data } = obj
   return new Promise((resolve, reject) => {
     api
       .post('rescue_report.php', {
-        add_rescue_report: { data, user_id, user_type },
+        add_rescue_report: { data, user_id, user_type, user_name },
       })
       .then((response) => {
         if (response.data.status == 'success') {
@@ -1039,24 +1048,24 @@ export const addRescueRerport = (obj, user_id, user_type) => {
   })
 }
 
-export const editAnnouncement = async (obj, user_id, user_type) => {
+export const editAnnouncement = async (obj, user_id, user_type, user_name) => {
   const { file, ...data } = obj
   if (file) {
     const res = await uploadImages([file])
     data.new_image = res.data.images[0]
   }
   const response = await api.put('announcement.php', {
-    edit_announcement: { data, user_id, user_type },
+    edit_announcement: { data, user_id, user_type, user_name },
   })
   return response.data
 }
 
-export const editRescueReport = (obj, user_id, user_type) => {
+export const editRescueReport = (obj, user_id, user_type, user_name) => {
   const { file, ...data } = obj
   return new Promise((resolve, reject) => {
     api
       .put('rescue_report.php', {
-        edit_rescue_report: { data, user_id, user_type },
+        edit_rescue_report: { data, user_id, user_type, user_name },
       })
       .then((response) => {
         if (response.data.status == 'success') {
@@ -1075,23 +1084,23 @@ export const editRescueReport = (obj, user_id, user_type) => {
   })
 }
 
-export const editActivitiesAndEvents = async (obj, user_id, user_type) => {
+export const editActivitiesAndEvents = async (obj, user_id, user_type, user_name) => {
   const { file, ...data } = obj
   if (file) {
     const res = await uploadImages([file])
     data.new_image = res.data.images[0]
   }
   const response = await api.put('activities_and_events.php', {
-    edit_activities_and_events: { data, user_id, user_type },
+    edit_activities_and_events: { data, user_id, user_type, user_name },
   })
   return response.data
 }
 
-export const softDeleteAnnouncement = (arrayId, user_id, user_type) => {
+export const softDeleteAnnouncement = (arrayId, user_id, user_type, user_name) => {
   return new Promise((resolve, reject) => {
     api
       .put('announcement.php', {
-        soft_delete_announcement: { arrayId, user_id, user_type },
+        soft_delete_announcement: { arrayId, user_id, user_type, user_name },
       })
       .then((response) => {
         resolve(response.data)
@@ -1102,11 +1111,11 @@ export const softDeleteAnnouncement = (arrayId, user_id, user_type) => {
   })
 }
 
-export const softDeleteRescueReport = (arrayId, user_id, user_type) => {
+export const softDeleteRescueReport = (arrayId, user_id, user_type, user_name) => {
   return new Promise((resolve, reject) => {
     api
       .put('rescue_report.php', {
-        soft_delete_rescue_report: { arrayId, user_id, user_type },
+        soft_delete_rescue_report: { arrayId, user_id, user_type, user_name },
       })
       .then((response) => {
         resolve(response.data)
@@ -1117,13 +1126,13 @@ export const softDeleteRescueReport = (arrayId, user_id, user_type) => {
   })
 }
 
-export const addGroupName = (obj, user_id, user_type) => {
+export const addGroupName = (obj, user_id, user_type, user_name) => {
   console.log(obj)
 
   return new Promise((resolve, reject) => {
     api
       .post('inventory.php', {
-        add_group_name: { obj, user_id, user_type },
+        add_group_name: { obj, user_id, user_type, user_name },
       })
       .then((response) => {
         resolve(response.data)
@@ -1134,11 +1143,11 @@ export const addGroupName = (obj, user_id, user_type) => {
   })
 }
 
-export const editInventoryList = (obj, user_id, user_type) => {
+export const editInventoryList = (obj, user_id, user_type, user_name) => {
   return new Promise((resolve, reject) => {
     api
       .put('inventory.php', {
-        edit_inventory_list: { obj, user_id, user_type },
+        edit_inventory_list: { obj, user_id, user_type, user_name },
       })
       .then((response) => {
         resolve(response.data)
@@ -1149,9 +1158,9 @@ export const editInventoryList = (obj, user_id, user_type) => {
   })
 }
 
-export const editSchedule = async (obj, user_id, user_type) => {
+export const editSchedule = async (obj, user_id, user_type, user_name) => {
   const response = await api.put('schedule.php', {
-    edit_schedule: { obj, user_id, user_type },
+    edit_schedule: { obj, user_id, user_type, user_name },
   })
   return response.data
 }
@@ -1170,7 +1179,7 @@ export const logIn = (obj) => {
       })
   })
 }
-
+//not yet
 export const changePassword = async (username, password) => {
   const response = await api.put('login.php', {
     change_password: { username, password },
@@ -1258,9 +1267,9 @@ export const getPetTransferList = async (status) => {
   return response.data.data
 }
 
-export const updateWishlist = async (table, obj, user_id, user_type) => {
+export const updateWishlist = async (table, obj, user_id, user_type, user_name) => {
   const response = await api.put('wishlist_management.php', {
-    update_wishlist: { table: table, data: obj, user_id, user_type },
+    update_wishlist: { table: table, data: obj, user_id, user_type, user_name },
   })
   return response.data
 }
@@ -1272,9 +1281,9 @@ export const updatePetTransfer = async (obj, user_id, user_type, mode) => {
   return response.data
 }
 
-export const deleteWishlist = async (table, arrayId, user_id, user_type) => {
+export const deleteWishlist = async (table, arrayId, user_id, user_type, user_name) => {
   const response = await api.put('wishlist_management.php', {
-    delete_wishlist: { table: table, id: arrayId, user_id, user_type },
+    delete_wishlist: { table: table, id: arrayId, user_id, user_type, user_name },
   })
   return response.data
 }
@@ -1286,9 +1295,9 @@ export const deletePetTransfer = async (arrayId, user_id, user_type) => {
   return response.data
 }
 
-export const addWishlist = async (obj, user_id, user_type) => {
+export const addWishlist = async (obj, user_id, user_type, user_name) => {
   const response = await api.post('wishlist_management.php', {
-    add_wishlist: { obj, user_id, user_type },
+    add_wishlist: { obj, user_id, user_type, user_name },
   })
   return response.data
 }

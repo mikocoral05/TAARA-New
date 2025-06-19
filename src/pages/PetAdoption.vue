@@ -69,11 +69,7 @@
             </q-menu>
           </q-btn>
         </template>
-        <template #cell-owner_first_name="{ row }">
-          <div class="column no-wrap">
-            {{ row.owner_first_name + ' ' + row.owner_middle_name + ' ' + row.owner_last_name }}
-          </div>
-        </template>
+
         <template #cell-status="{ row }">
           <div
             class="row no-wrap radius-5 text-white items-center justify-center"
@@ -99,73 +95,9 @@
           </div>
           <div class="q-mt-sm">Date: {{ row.date_request }}</div>
         </template>
-        <template #cell-pet_name="{ row }">
-          <div class="column no-wrap">
-            <div class="text-left row no-wrap">
-              <div class="text-grey-7">Pet Name:</div>
-              <span class="q-ml-sm">
-                {{ row.pet_name }}
-              </span>
-            </div>
-            <div class="text-left row no-wrap">
-              <div class="text-grey-7">Breed:</div>
-              <span class="q-ml-sm">
-                {{ row.pet_breed }}
-              </span>
-            </div>
-            <div class="text-left row no-wrap">
-              <div class="text-grey-7">Size:</div>
-              <span class="q-ml-sm">
-                {{ row.size }}
-              </span>
-            </div>
-            <div class="text-left row no-wrap">
-              <div class="text-grey-7">Fur Color:</div>
-              <span class="q-ml-sm">
-                {{ row.fur_color }}
-              </span>
-            </div>
-            <div class="text-left row no-wrap">
-              <div class="text-grey-7">Birthdate:</div>
-              <span class="q-ml-sm">
-                {{ row.birth_date }}
-              </span>
-            </div>
-            <div class="text-left row no-wrap">
-              <div class="text-grey-7">Sex:</div>
-              <span class="q-ml-sm">
-                {{ row.sex == 1 ? 'Male' : 'Female' }}
-              </span>
-            </div>
-            <div class="text-left row no-wrap">
-              <div class="text-grey-7">Pet Sleeping Place:</div>
-              <span class="q-ml-sm">
-                {{ row.pet_sleeping_place == 1 ? 'Indoor' : 'Outdoor' }}
-              </span>
-            </div>
-          </div>
-        </template>
-        <template #cell-has_been_dewormed="{ row }">
-          <div class="column no-wrap">
-            <div class="text-left row no-wrap">
-              <div class="text-grey-7">Has Anti Rabies:</div>
-              <span class="q-ml-sm">
-                {{ row.has_anti_rabies == 1 ? 'Yes' : 'No' }}
-              </span>
-            </div>
-            <div class="text-left row no-wrap">
-              <div class="text-grey-7">Has Been Dewormed:</div>
-              <span class="q-ml-sm">
-                {{ row.has_been_dewormed == 1 ? 'Yes' : 'No' }}
-              </span>
-            </div>
-            <div class="text-left row no-wrap">
-              <div class="text-grey-7">Has Anti Rabies:</div>
-              <span class="q-ml-sm">
-                {{ row.has_anti_rabies == 1 ? 'Yes' : 'No' }}
-              </span>
-            </div>
-          </div>
+
+        <template #cell-phone_number="{ row }">
+          <div>+63 {{ row.phone_number }}</div>
         </template>
         <template #cell-id="{ rowIndex }">
           <div>{{ rowIndex + 1 }}</div>
@@ -550,7 +482,7 @@ import {
   updatePetTransfer,
   deletePetTransfer,
   addPetListRequest,
-  getPetTransferList,
+  getPetAdoptionList,
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -611,16 +543,18 @@ export default {
     const groupNameOptions = ref([])
     const showNoAccess = ref(false)
     const fetchData = async () => {
-      const response = await getPetTransferList(status.value)
+      const response = await getPetAdoptionList(status.value)
       tableConfig.value.columns = [
         'id',
-        'owner_first_name',
-        'pet_name',
-        'has_been_dewormed',
+        'first_name',
+        'name',
+        'phone_number',
         'status',
+        'adoption_status',
         'btn',
       ]
       rows.value = response
+      console.log(rows.value)
     }
 
     const tableAction = (row, modeParam, action) => {
@@ -782,22 +716,22 @@ export default {
       columns: [
         { name: 'id', label: 'ID', field: 'id', align: 'center' },
         {
-          name: 'owner_first_name',
-          label: 'Owner Name',
-          field: 'owner_first_name',
+          name: 'first_name',
+          label: 'Adopter Name',
+          field: 'first_name',
           sortable: true,
           align: 'center',
         },
         {
-          name: 'pet_name',
-          label: 'Pet Details',
-          field: 'pet_name',
+          name: 'name',
+          label: 'Pet Name',
+          field: 'name',
           align: 'center',
         },
         {
-          name: 'has_been_dewormed',
-          label: 'Health Status',
-          field: 'has_been_dewormed',
+          name: 'phone_number',
+          label: 'Phone Number',
+          field: 'phone_number',
           sortable: true,
           align: 'center',
         },
@@ -805,6 +739,13 @@ export default {
           name: 'status',
           label: 'Status',
           field: 'status',
+          sortable: true,
+          align: 'center',
+        },
+        {
+          name: 'adoption_status',
+          label: 'Progress',
+          field: 'adoption_status',
           sortable: true,
           align: 'center',
         },

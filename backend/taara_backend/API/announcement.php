@@ -58,6 +58,7 @@ class API
             $data = $payload['add_announcement']['data'];
             $user_id = $payload['add_announcement']['user_id'];
             $user_type = $payload['add_announcement']['user_id'];
+            $user_name = $payload['add_announcement']['user_name'];
 
             $insertData = [
                 'title'               => $data['title'] ?? null,
@@ -79,10 +80,21 @@ class API
                 $this->db->insert("tbl_logs", $logs);
 
                 $notif = [
-                    'for_user'     => -3, // Example: -1 = all public_user, -2 = all management
+                    'for_user'     => -1, // Example: -1 = all public_user, -2 = all management, -3 = all user
                     'created_by'    => $user_id, // Assuming the one triggering the notification is the updater
                     'title'        => 'New Announcement',
                     'message'      =>  $data['title'],
+                    'type'         => 1, // 1 = announcement, 2 = notification
+                    'related_url'  => '/public/announcementsPage?id=' . $id,
+                    'is_read'      => json_encode([]), // 0 = unread
+                ];
+                $this->db->insert("tbl_notification", $notif);
+
+                $notif = [
+                    'for_user'     => -2, // Example: -1 = all public_user, -2 = all management, -3 = all user
+                    'created_by'    => $user_id, // Assuming the one triggering the notification is the updater
+                    'title'        => 'New Announcement',
+                    'message'      => 'A new announcement was  created by ' . $user_name . '.',
                     'type'         => 1, // 1 = announcement, 2 = notification
                     'related_url'  => '/public/announcementsPage?id=' . $id,
                     'is_read'      => json_encode([]), // 0 = unread
@@ -118,6 +130,7 @@ class API
             $id = $payload['soft_delete_announcement']['arrayId'];
             $user_id = $payload['soft_delete_announcement']['user_id'];
             $user_type = $payload['soft_delete_announcement']['user_type'];
+            $user_name = $payload['soft_delete_announcement']['user_name'];
 
 
             $ids = is_array($id) ? $id : explode(',', $id);
@@ -136,11 +149,25 @@ class API
                 $logs = [
                     'user_id' => $user_id,
                     'user_type' => $user_type,
-                    'action' => 'Archive announcement ',
+                    'action' => 'Archive a announcement ',
                     'module' => 'Announcement',
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Archive a Announcement',
+                    'message'      => 'An announcement was archive by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode(['status' => 'success', 'message' => 'Records Archive successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to Archive records', 'method' => 'PUT']);
@@ -149,6 +176,7 @@ class API
             $obj = $payload['edit_announcement']['data'];
             $user_id = $payload['edit_announcement']['user_id'];
             $user_type = $payload['edit_announcement']['user_type'];
+            $user_name = $payload['edit_announcement']['user_name'];
             $new_image = $obj['new_image'] ?? '';
             $image_id = '';
 
@@ -189,6 +217,20 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Announcement Update',
+                    'message'      => 'An announcement was edited by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Announcement info updated successfully',

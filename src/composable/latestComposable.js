@@ -1273,6 +1273,14 @@ export const getPetTransferList = async (status) => {
   return response.data.data
 }
 
+export const getPetAdoptionList = async (status) => {
+  const response = await api.get('adoption.php', {
+    params: { get_pet_adoption_list: status },
+  })
+
+  return response.data.data
+}
+
 export const updateWishlist = async (table, obj, user_id, user_type, user_name) => {
   const response = await api.put('wishlist_management.php', {
     update_wishlist: { table: table, data: obj, user_id, user_type, user_name },

@@ -10,6 +10,7 @@
           no-caps
         />
         <q-tab name="3" icon="sym_r_monitor_heart" label="Under Medication" no-caps />
+        <q-tab name="4" icon="sym_r_femur" label="Deceased" no-caps />
       </q-tabs>
       <div class="row no-wrap justify-between items-center">
         <div class="row no-wrap">
@@ -74,10 +75,67 @@
                 </q-item>
                 <q-separator />
                 <q-item clickable @click="tableAction(row, 'Archive')">
-                  <q-item-section>Delete</q-item-section>
+                  <q-item-section>Archive</q-item-section>
+                  <q-item-section side>
+                    <q-icon name="sym_r_delete" size="1.2rem" />
+                  </q-item-section>
+                </q-item>
+                <q-item clickable>
+                  <q-item-section>Move to</q-item-section>
                   <q-item-section side>
                     <q-icon name="sym_r_keyboard_arrow_right" size="1.2rem" />
                   </q-item-section>
+                  <q-menu anchor="bottom left" self="top right">
+                    <q-list dense style="min-width: 100px">
+                      <q-item
+                        v-if="row.health_status != 1"
+                        clickable
+                        v-close-popup
+                        @click="tableAction(row, 'Ready')"
+                      >
+                        <q-item-section>Ready for Adoption</q-item-section>
+                        <q-item-section side>
+                          <q-icon name="sym_r_pets" size="1.2rem" />
+                        </q-item-section>
+                      </q-item>
+                      <q-separator />
+                      <q-item
+                        v-if="row.health_status != 2"
+                        clickable
+                        v-close-popup
+                        @click="tableAction(row, 'Rehab')"
+                      >
+                        <q-item-section>Under Rehabilitation</q-item-section>
+                        <q-item-section side>
+                          <q-icon name="sym_r_sound_detection_dog_barking" size="1.2rem" />
+                        </q-item-section>
+                      </q-item>
+                      <q-separator />
+                      <q-item
+                        v-if="row.health_status != 3"
+                        clickable
+                        v-close-popup
+                        @click="tableAction(row, 'Medic')"
+                      >
+                        <q-item-section>Under Medication</q-item-section>
+                        <q-item-section side>
+                          <q-icon name="sym_r_monitor_heart" size="1.2rem" />
+                        </q-item-section>
+                      </q-item>
+                      <q-separator />
+                      <q-item
+                        v-if="row.health_status != 4"
+                        clickable
+                        v-close-popup
+                        @click="tableAction(row, 'Deceased')"
+                      >
+                        <q-item-section>Deceased</q-item-section>
+                        <q-item-section side>
+                          <q-icon name="sym_r_femur" size="1.2rem" />
+                        </q-item-section>
+                      </q-item>
+                    </q-list>
+                  </q-menu>
                 </q-item>
               </q-list>
             </q-menu>
@@ -671,6 +729,7 @@ import {
   downloadExampleExcelFormat,
   readExcelFileToJson,
   uploadExcel,
+  updateHealtStatus,
   // uploadExcel,
 } from 'src/composable/latestComposable'
 import { ref, watch, watchEffect } from 'vue'
@@ -729,9 +788,36 @@ export default {
     const triggerUpload = () => {
       myFile.value.pickFiles()
     }
-
+    const healthStatuUpdate = async (objParam) => {
+      const obj = {
+        1: 'Ready for Adoption',
+        2: 'Under Rehabilitation',
+        3: 'Under Medication',
+        4: 'Deceased',
+      }
+      $q.loading.show({
+        group: 'update',
+        message: `Moving to ${obj[objParam.health_status]}. Please wait...`,
+      })
+      const response = await updateHealtStatus(
+        objParam,
+        store.userData.user_id,
+        store.userData.user_type,
+        userName,
+      )
+      $q.loading.show({
+        group: 'update',
+        message: response.message,
+      })
+      setTimeout(() => {
+        $q.loading.hide()
+        getAnimalList(tab.value).then((response) => {
+          rows.value = response
+        })
+      }, 1500)
+    }
     const groupNameOptions = ref([])
-    const tableAction = (data, modeParam) => {
+    const tableAction = async (data, modeParam) => {
       if (!preventAction()) {
         return
       }
@@ -779,6 +865,34 @@ export default {
           'classification',
         ]
         downloadExampleExcelFormat('tbl_animal_info', columnsToGet, 'pet_info_excel_structure')
+      } else if (modeParam == 'Ready') {
+        const obj2 = {
+          animal_id: data.animal_id,
+          health_status: 1,
+          name: data.name,
+        }
+        healthStatuUpdate(obj2)
+      } else if (modeParam == 'Rehab') {
+        const obj2 = {
+          animal_id: data.animal_id,
+          health_status: 2,
+          name: data.name,
+        }
+        healthStatuUpdate(obj2)
+      } else if (modeParam == 'Medic') {
+        const obj2 = {
+          animal_id: data.animal_id,
+          health_status: 3,
+          name: data.name,
+        }
+        healthStatuUpdate(obj2)
+      } else if (modeParam == 'Deceased') {
+        const obj2 = {
+          animal_id: data.animal_id,
+          health_status: 4,
+          name: data.name,
+        }
+        healthStatuUpdate(obj2)
       } else {
         arrayOfId.value.push(data.animal_id)
         confirm.value = !confirm.value
@@ -864,7 +978,7 @@ export default {
               rows.value = response
             })
           }
-        }, 2000)
+        }, 1500)
       })
     }
 

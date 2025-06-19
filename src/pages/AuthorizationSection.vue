@@ -1823,6 +1823,7 @@ export default {
     const group = ref([])
     const chooseWork = ref([])
     const volunteerData = ref({})
+    const userName = store.userData.first_name + ' ' + store.userData.last_name
     const tableAction = async (data, modeParam) => {
       editTab.value = '1'
       mode.value = modeParam
@@ -1840,6 +1841,7 @@ export default {
           data.user_id,
           store.userData.user_id,
           store.userData.user_type,
+          userName,
         )
         setTimeout(() => {
           const text1 = data.is_activated == 0 ? 'Activated' : 'Deactivated'
@@ -1859,6 +1861,7 @@ export default {
           data.user_id,
           store.userData.user_id,
           store.userData.user_type,
+          userName,
         )
         setTimeout(() => {
           $q.loading.hide()
@@ -1878,6 +1881,7 @@ export default {
           data.volunteer_id,
           store.userData.user_id,
           store.userData.user_type,
+          userName,
         )
         setTimeout(() => {
           $q.loading.hide()
@@ -1907,7 +1911,7 @@ export default {
         message: 'Updating. Please wait...',
       })
 
-      updateUser(userData.value, store.userData.user_id, store.userData.user_type).then(
+      updateUser(userData.value, store.userData.user_id, store.userData.user_type, userName).then(
         (response) => {
           setTimeout(() => {
             $q.loading.show({
@@ -1935,7 +1939,7 @@ export default {
         group: 'update',
         message: 'Archieving user. Please wait...',
       })
-      softDeleteUser(arrayOfId.value, store.userData.user_id, store.userData.type).then(
+      softDeleteUser(arrayOfId.value, store.userData.user_id, store.userData.type, userName).then(
         (response) => {
           if (response.status == 'success') {
             setTimeout(() => {

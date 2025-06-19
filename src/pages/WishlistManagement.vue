@@ -220,7 +220,7 @@ export default {
     const selectedYear = ref(yearToday)
     const selectedDay = ref(dayToday)
     const totalExpense = ref(null)
-
+    const userName = store.userData.first_name + ' ' + store.userData.last_name
     const totalBalance = ref(null)
     const dailyExpenseTotal = ref([])
     const itemsCount = ref([])
@@ -269,20 +269,23 @@ export default {
           message: `${obj3[mode.value]}. Please wait...`,
         })
         dataStorage.value.table = obj[tab.value]
-        addWishlist(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
-          (response) => {
-            setTimeout(() => {
-              $q.loading.show({
-                group: 'update',
-                message: response.message,
-              })
-            }, 1000)
-            setTimeout(() => {
-              $q.loading.hide()
-              fetchData()
-            }, 2000)
-          },
-        )
+        addWishlist(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+          userName,
+        ).then((response) => {
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 1000)
+          setTimeout(() => {
+            $q.loading.hide()
+            fetchData()
+          }, 2000)
+        })
       } else if (['Edit', 'EditP'].includes(mode.value)) {
         $q.loading.show({
           group: 'update',
@@ -294,6 +297,7 @@ export default {
           dataStorage.value,
           store.userData.user_id,
           store.userData.user_type,
+          userName,
         ).then((response) => {
           $q.loading.show({
             group: 'update',
@@ -319,6 +323,7 @@ export default {
         arrayOfId.value,
         store.userData.user_id,
         store.userData.user_type,
+        userName,
       ).then((response) => {
         $q.loading.show({
           group: 'update',

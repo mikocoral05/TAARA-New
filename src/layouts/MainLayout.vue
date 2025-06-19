@@ -320,6 +320,12 @@ export default defineComponent({
         nav: '/management/pet-transfer-request',
         showTab: true,
       },
+      {
+        title: 'Pet Adoption',
+        icon: 'real_estate_agent',
+        nav: '/management/pet-adoption-request',
+        showTab: true,
+      },
     ])
 
     const linksList3 = computed(() => [
@@ -355,6 +361,7 @@ export default defineComponent({
       '/management/analytic-report': 'Report',
       '/management/wishlist': 'Wishlist',
       '/management/pet-transfer-request': 'Pet Transfer',
+      '/management/pet-adoption-request': 'Pet Adoption',
       '/management/logs': 'Logs',
     }
 

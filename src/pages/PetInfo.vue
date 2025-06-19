@@ -725,7 +725,7 @@ export default {
     const tableConfig = ref({ title: '', columns: [] })
     const file = ref(null)
     const myFile = ref(null)
-
+    const userName = store.userData.first_name + ' ' + store.userData.last_name
     const triggerUpload = () => {
       myFile.value.pickFiles()
     }
@@ -792,47 +792,53 @@ export default {
           message: `${obj3[mode.value]}. Please wait...`,
         })
         dataStorage.value.health_status = Number(tab.value)
-        saveAnimalDetail(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
-          (response) => {
-            console.log(response)
-            setTimeout(() => {
-              showDialog.value = false
-              $q.loading.hide()
-              outputDialog.value = true
-              outputObj.value = {
-                icon: 'check_circle',
-                title: response.message,
-                subtext: 'New record has been added successfully.',
-              }
+        saveAnimalDetail(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+          userName,
+        ).then((response) => {
+          console.log(response)
+          setTimeout(() => {
+            showDialog.value = false
+            $q.loading.hide()
+            outputDialog.value = true
+            outputObj.value = {
+              icon: 'check_circle',
+              title: response.message,
+              subtext: 'New record has been added successfully.',
+            }
 
-              fetchFn()
-              $q.loading.hide()
-            }, 1000)
-          },
-        )
+            fetchFn()
+            $q.loading.hide()
+          }, 1000)
+        })
       } else if (mode.value == 'Edit') {
         $q.loading.show({
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
         dataStorage.value.toRemoveId = idToRemove.value
-        editAnimalInfo(dataStorage.value, store.userData.user_id, store.userData.user_type).then(
-          (response) => {
-            setTimeout(() => {
-              showDialog.value = false
-              $q.loading.hide()
-              outputDialog.value = true
-              outputObj.value = {
-                icon: 'check_circle',
-                title: response.message,
-                subtext: 'Changes have been saved successfully.',
-              }
+        editAnimalInfo(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+          userName,
+        ).then((response) => {
+          setTimeout(() => {
+            showDialog.value = false
+            $q.loading.hide()
+            outputDialog.value = true
+            outputObj.value = {
+              icon: 'check_circle',
+              title: response.message,
+              subtext: 'Changes have been saved successfully.',
+            }
 
-              fetchFn()
-              $q.loading.hide()
-            }, 1000)
-          },
-        )
+            fetchFn()
+            $q.loading.hide()
+          }, 1000)
+        })
       }
     }
 
@@ -841,22 +847,25 @@ export default {
         group: 'update',
         message: 'Deleting Pet info. Please wait...',
       })
-      softDeleteAnimal(arrayOfId.value, store.userData.user_id, store.userData.user_type).then(
-        (response) => {
-          $q.loading.show({
-            group: 'update',
-            message: response.message,
-          })
-          setTimeout(() => {
-            $q.loading.hide()
-            if (response.status == 'success') {
-              getAnimalList(tab.value).then((response) => {
-                rows.value = response
-              })
-            }
-          }, 2000)
-        },
-      )
+      softDeleteAnimal(
+        arrayOfId.value,
+        store.userData.user_id,
+        store.userData.user_type,
+        userName,
+      ).then((response) => {
+        $q.loading.show({
+          group: 'update',
+          message: response.message,
+        })
+        setTimeout(() => {
+          $q.loading.hide()
+          if (response.status == 'success') {
+            getAnimalList(tab.value).then((response) => {
+              rows.value = response
+            })
+          }
+        }, 2000)
+      })
     }
 
     const previewImage = ref([])
@@ -1034,6 +1043,7 @@ export default {
         data,
         store.userData.user_id,
         store.userData.user_type,
+        userName,
       )
       setTimeout(() => {
         showDialog.value = false

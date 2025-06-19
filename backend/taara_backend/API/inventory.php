@@ -129,6 +129,7 @@ class API
             $data = $payload['add_inventory_list']['obj'];
             $user_id = $payload['add_inventory_list']['user_id'];
             $user_type = $payload['add_inventory_list']['user_type'];
+            $user_name = $payload['add_inventory_list']['user_name'];
 
             // Required fields - adapt based on your table schema
             $insertData = [
@@ -148,11 +149,26 @@ class API
                 $logs = [
                     'user_id' => $user_id,
                     'user_type' => $user_type,
-                    'action' => 'Add New ' . ucfirst($data['category']) . 'Inventory List ' . $data['item_name'],
+                    'action' => 'Add New ' . ucfirst($data['category']) . ' Inventory List ' . $data['item_name'],
                     'module' => 'Inventory',
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Add New' . ucfirst($data['category']) . 'Inventory list.',
+                    'message'      => 'An Inventory list was added by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Inventory list successfully added',
@@ -169,6 +185,7 @@ class API
             $data = $payload['add_group_name']['obj'];
             $user_id = $payload['add_group_name']['user_id'];
             $user_type = $payload['add_group_name']['user_type'];
+            $user_name = $payload['add_group_name']['user_name'];
             // Required fields - adapt based on your table schema
             $insertData = [
                 'group_name'   => $data['group_name'] ?? null,
@@ -186,6 +203,21 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Add New' . ucfirst($data['category']) . 'Inventory list.',
+                    'message'      => 'An Inventory list was added by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Inventory list successfully added',
@@ -214,6 +246,7 @@ class API
             $table = $payload['table'];
             $user_id = $payload['user_id'];
             $user_type = $payload['user_type'];
+            $user_name = $payload['user_name'];
 
             $ids = is_array($id) ? $id : explode(',', $id);
 
@@ -245,6 +278,20 @@ class API
                 ];
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Archive ' . $Module . ' Inventory List',
+                    'message'      => 'An ' . $Module . ' Inventory List was archive by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode(['status' => 'success', 'message' => 'Records Archive successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to Archive records', 'method' => 'PUT']);
@@ -253,6 +300,7 @@ class API
             $data = $payload['edit_inventory_list']['obj'];
             $user_id = $payload['edit_inventory_list']['user_id'];
             $user_type = $payload['edit_inventory_list']['user_type'];
+            $user_name = $payload['edit_inventory_list']['user_name'];
             $id = $data['id'];
 
             // Sanitize and validate as needed
@@ -281,6 +329,20 @@ class API
 
 
                 $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // all management 
+                    'created_by'   => $user_id,
+                    'title'        => 'Update ' . ucfirst($data['category']) . ' Inventory List',
+                    'message'      => 'An ' . ucfirst($data['category']) . ' Inventory List was udpated by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]),
+                ];
+
+
+                $this->db->insert("tbl_notification", $notif);
+
                 echo json_encode([
                     'status' => 'success',
                     'message' => 'Inventory list successfully updated',

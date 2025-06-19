@@ -181,27 +181,27 @@
                 “I found my furry best friend through TAARA. The adoption process was smooth, and
                 the support provided was exceptional.”
               </p>
-              <p class="q-ma-none bottom-text">Samantha Peterson, Happy Adopter</p>
+              <p class="q-ma-none bottom-text">Jonel Malayo, Happy Adopter</p>
             </div>
           </div>
           <div class="column no-wrap feddback-container">
             <div class="head"></div>
             <div class="content column no-wrap justify-between items-center q-pa-md">
               <p class="q-ma-none q-px-lg q-pt-lg">
-                “I found my furry best friend through TAARA. The adoption process was smooth, and
-                the support provided was exceptional.”
+                “Thanks to TAARA, I found my perfect furry companion. The adoption was hassle-free,
+                and the team was incredibly supportive every step of the way.”
               </p>
-              <p class="q-ma-none bottom-text">Samantha Peterson, Happy Adopter</p>
+              <p class="q-ma-none bottom-text">Crisha Montero, Happy Adopter</p>
             </div>
           </div>
           <div class="column no-wrap feddback-container">
             <div class="head"></div>
             <div class="content column no-wrap justify-between items-center q-pa-md">
               <p class="q-ma-none q-px-lg q-pt-lg">
-                “I found my furry best friend through TAARA. The adoption process was smooth, and
-                the support provided was exceptional.”
+                “From application to homecoming, TAARA made adopting easy and heartwarming. I'm so
+                grateful to have found my new fur baby with their help.”
               </p>
-              <p class="q-ma-none bottom-text">Samantha Peterson, Happy Adopter</p>
+              <p class="q-ma-none bottom-text">John Michael, Happy Adopter</p>
             </div>
           </div>
         </div>

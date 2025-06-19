@@ -68,6 +68,7 @@ class API
             $table = $payload['upload_excel']['table'];
             $user_id = $payload['upload_excel']['user_id'];
             $user_type = $payload['upload_excel']['user_type'];
+            $user_name = $payload['upload_excel']['user_name'];
 
             $inserted = [];
             $failed = [];
@@ -117,6 +118,21 @@ class API
             ];
 
             $this->db->insert("tbl_logs", $logs);
+
+            $notif = [
+                'for_user'     => -2, // all management 
+                'created_by'   => $user_id,
+                'title'        => 'Add New Pet record',
+                'message'      => 'Add new pet record from excell count ' . count($inserted) . ' was added by ' . $user_name . '.',
+                'type'         => 2, // 1 = announcement, 2 = notification
+                'related_url'  => '',
+                'is_read'      => json_encode([]),
+            ];
+
+
+            $this->db->insert("tbl_notification", $notif);
+
+
             echo json_encode([
                 'status' => count($failed) === 0 ? 'success' : 'partial_success',
                 'message' => 'Animal data upload finished',

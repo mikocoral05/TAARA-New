@@ -606,13 +606,13 @@ import TaaraFooter from 'src/components/TaaraFooter'
 import { useRoute } from 'vue-router'
 import { useQuasar } from 'quasar'
 import {
-  submitAdoptionForm,
   viewSpecificAnimal,
   specificAnimal,
   getSubmitAdoptionForm,
 } from 'src/composable/taaraComposable'
 import { decodeAnimalId, getImageLink } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
+import { submitAdoptionForm } from 'src/composable/latestComposable'
 export default defineComponent({
   components: {
     TaaraFooter,
@@ -656,26 +656,27 @@ export default defineComponent({
         step.value = 2
       }
     }
-
-    let submitAdoption = () => {
+    const userName = store.userData.first_name + ' ' + store.userData.last_name
+    let submitAdoption = async () => {
       $q.loading.show({ group: 'sub', message: 'Submitting application. please wait...' })
-      submitAdoptionForm(adoptionDetails.value)
-        .then((response) => {
-          setTimeout(() => {
-            if (response == 'success') {
-              formToProgress.value = true
-              stepProgress.value = 2
-              step.value = 3
-            } else {
-              formToProgress.value = false
-              step.value = 2
-            }
-            $q.loading.hide()
-          }, 1500)
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+      const response = await submitAdoptionForm(
+        adoptionDetails.value,
+        store.userData.user_id,
+        store.userData.user_type,
+        userName,
+      )
+      $q.loading.show({ group: 'sub', message: response.message })
+      setTimeout(() => {
+        if (response == 'success') {
+          formToProgress.value = true
+          stepProgress.value = 2
+          step.value = 3
+        } else {
+          formToProgress.value = false
+          step.value = 2
+        }
+        $q.loading.hide()
+      }, 1500)
     }
 
     onMounted(async () => {

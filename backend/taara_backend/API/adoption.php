@@ -201,6 +201,58 @@ class API
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to updated records', 'method' => 'PUT']);
             }
+        } else if (array_key_exists('update_pet_adoption_received', $payload)) {
+            $data = $payload['update_pet_adoption_received']['obj'];
+            $user_id = $payload['update_pet_adoption_received']['user_id'];
+            $user_type = $payload['update_pet_adoption_received']['user_type'];
+            $user_name = $payload['update_pet_adoption_received']['user_name'];
+            $id = $data['id'];
+            $public_user_id = $data['user_id'];
+            $update = [
+                'adoption_status' => $data['adoption_status'],
+                'updated_at' => date('Y-m-d H:i:s'),
+            ];
+
+            $this->db->where('id', $id);
+            $updated = $this->db->update('tbl_adoption_form', $update);
+
+            if ($updated) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => $user_type,
+                    'action' =>  'Update Received Pet Adoption',
+                    'module' => 'Pet Adoption',
+                ];
+                $this->db->insert("tbl_logs", $logs);
+
+
+                $notif = [
+                    'for_user'     => $public_user_id, // Example: -1 = all public_user, -2 = all management
+                    'created_by'    => $user_id, // Assuming the one triggering the notification is the updater
+                    'title'        => 'Pet Adoption Received',
+                    'message'      => 'Your have received you pet.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]), // 0 = unread
+                ];
+                $this->db->insert("tbl_notification", $notif);
+
+
+                $notif = [
+                    'for_user'     => -2, // Example: -1 = all public_user, -2 = all management
+                    'created_by'    => $user_id, // Assuming the one triggering the notification is the updater
+                    'title'        => 'Pet Adoption Received',
+                    'message'      => 'A Pet Adoption request was updated by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]), // 0 = unread
+                ];
+                $this->db->insert("tbl_notification", $notif);
+
+                echo json_encode(['status' => 'success', 'message' => 'Records updated successfully', 'method' => 'PUT']);
+            } else {
+                echo json_encode(['status' => 'error', 'message' => 'Failed to updated records', 'method' => 'PUT']);
+            }
         } else   if (array_key_exists('delete_pet_adotpion', $payload)) {
             $id = $payload['delete_pet_adotpion']['arrayId'];
             $user_id = $payload['delete_pet_adotpion']['user_id'];

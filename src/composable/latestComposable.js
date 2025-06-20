@@ -320,6 +320,18 @@ export const updateExpense = async (obj, user_id, user_type) => {
   return response.data
 }
 
+export const submitAdoptionForm = async (obj, user_id, user_type, user_name) => {
+  const { valid_id, ...data } = obj
+  if (valid_id) {
+    const res = await uploadImages([valid_id])
+    data.new_image = res.data.images[0]
+  }
+  const response = await api.post('new_api.php', {
+    submit_adoption_form: { data, user_id, user_type, user_name },
+  })
+  return response.data
+}
+
 export const addBudgetAllocation = async (data, user_id, user_type, user_name) => {
   const response = await api.post('budget_expenses.php', {
     add_budget_allocation: { data, user_id, user_type, user_name },
@@ -1303,6 +1315,13 @@ export const updatePetAdoption = async (obj, user_id, user_type, user_name) => {
 }
 
 export const updatePetAdoptionReadyPickup = async (obj, user_id, user_type, user_name) => {
+  const response = await api.put('adoption.php', {
+    update_pet_adoption_received: { obj, user_id, user_type, user_name },
+  })
+  return response.data
+}
+
+export const updatePetAdoptionReceived = async (obj, user_id, user_type, user_name) => {
   const response = await api.put('adoption.php', {
     update_pet_adoption_ready_pickup: { obj, user_id, user_type, user_name },
   })

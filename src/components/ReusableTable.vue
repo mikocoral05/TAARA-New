@@ -80,6 +80,7 @@
                 flat
                 class="q-mr-md"
                 @click="tableActionFn(null, 'Add')"
+                v-if="showAddBtns"
               >
                 <q-tooltip v-model="showingAddTooltip">Add {{ title }}</q-tooltip>
               </q-btn>
@@ -139,6 +140,7 @@ export default {
     showUpload: { type: Boolean, default: false },
     showDownload: { type: Boolean, default: false },
     showBtns: { type: Boolean, default: true },
+    showAddBtns: { type: Boolean, default: true },
   },
   emits: ['update:modelValue', 'update:selected', 'update:status', 'update:confirm'],
 

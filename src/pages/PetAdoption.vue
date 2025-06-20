@@ -57,12 +57,23 @@
                 <q-item
                   clickable
                   v-close-popup
-                  v-if="row.status == 2"
+                  v-if="row.status == 2 && row.adoption_status == 2"
                   @click="tableAction(row, 'Ready')"
                 >
                   <q-item-section>Ready for Pickup</q-item-section>
                   <q-item-section side>
                     <q-icon name="sym_r_arrow_circle_right" color="positive" size="1.2rem" />
+                  </q-item-section>
+                </q-item>
+                <q-item
+                  clickable
+                  v-close-popup
+                  v-if="row.adoption_status == 3 && row.adoption_status != 4"
+                  @click="tableAction(row, 'Received')"
+                >
+                  <q-item-section>Received</q-item-section>
+                  <q-item-section side>
+                    <q-icon name="sym_r_multiple_stop" color="positive" size="1.2rem" />
                   </q-item-section>
                 </q-item>
                 <q-separator />
@@ -151,330 +162,441 @@
       </q-card>
     </q-dialog>
 
-    <q-dialog position="right" full-height maximized v-model="addDialog">
+    <q-dialog position="right" full-height maximized v-model="showForm">
       <q-card style="width: 50vw; height: 500px" class="text-black column justify-between no-wrap">
-        <q-form @submit="saveFn()">
-          <div class="column no-wrap">
-            <q-card-section class="q-py-md row no-wrap justify-between items-center">
-              <div class="text-body1">{{ mode }} Pet Transfer List</div>
-              <q-icon name="close" size="1.2rem" @click="addDialog = !addDialog" />
-            </q-card-section>
-            <q-separator />
-            <q-card-section>
-              <div class="text-grey-7" style="font-size: 12px">
-                <span class="text-negative">*</span>All fields are mandatory, except mentioned as
-                (optional).
-              </div>
-            </q-card-section>
-            <q-card-section>
-              <div class="row no-wrap q-mt-md">
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">
-                    Owner First name<span class="text-negative q-ml-sm"> *</span>
-                  </div>
-                  <q-input
-                    outlined
-                    v-model="dataStorage.owner_first_name"
-                    dense
-                    class="q-mt-sm"
-                    placeholder="First name"
-                    :rules="[(val) => !!val || 'First name is required!']"
-                    :readonly="mode == 'View'"
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">
-                    Middle name <span class="text-grey-7 text-caption q-ml-sm"> ( optional) </span>
-                  </div>
-                  <q-input
-                    outlined
-                    v-model="dataStorage.owner_middle_name"
-                    dense
-                    placeholder="Middle name"
-                    class="q-mt-sm"
-                    :readonly="mode == 'View'"
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">
-                    Last name <span class="text-negative q-ml-sm"> *</span>
-                  </div>
-                  <q-input
-                    outlined
-                    v-model="dataStorage.owner_last_name"
-                    dense
-                    class="q-mt-sm"
-                    placeholder="Last name"
-                    :rules="[(val) => !!val || 'Last name is required!']"
-                    :readonly="mode == 'View'"
-                  />
-                </div>
-              </div>
-              <div class="row no-wrap q-mt-sm">
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">
-                    Pet name <span class="text-negative q-ml-sm"> *</span>
-                  </div>
-                  <q-input
-                    outlined
-                    v-model="dataStorage.pet_name"
-                    dense
-                    class="q-mt-sm"
-                    placeholder="Last name"
-                    :rules="[(val) => !!val || 'Pet name is required!']"
-                    :readonly="mode == 'View'"
-                  />
-                </div>
-                <div class="column no-wrap">
-                  <div class="text-capitalize">
-                    Breed <span class="text-negative q-ml-sm"> *</span>
-                  </div>
-                  <q-input
-                    outlined
-                    v-model="dataStorage.pet_breed"
-                    dense
-                    placeholder="Pet Breed"
-                    class="q-mt-sm"
-                    style="width: 300px"
-                    :rules="[(val) => !!val || 'Pet breed is required!']"
-                    :readonly="mode == 'View'"
-                  />
-                </div>
-              </div>
-              <div class="row no-wrap q-mt-sm">
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">
-                    BirthDate<span class="text-negative q-ml-sm"> *</span>
-                  </div>
-                  <q-input
-                    dense
-                    outlined
-                    class="q-mt-sm"
-                    v-model="dataStorage.birth_date"
-                    mask="####-##-##"
-                    placeholder="####-##-##"
-                    :rules="[(val) => !!val || 'Birth Date is required!']"
-                    :readonly="mode == 'View'"
-                  >
-                    <template v-slot:append>
-                      <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="dataStorage.birth_date" mask="YYYY-MM-DD">
-                            <div class="row items-center justify-end">
-                              <q-btn v-close-popup label="Close" color="primary" flat />
-                            </div>
-                          </q-date>
-                        </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                  </q-input>
-                </div>
-
-                <div class="column no-wrap q-mr-md">
-                  <div class="text-capitalize">fur_color<span class="text-negative">*</span></div>
-                  <q-input
-                    outlined
-                    v-model="dataStorage.fur_color"
-                    placeholder="Fur Color"
-                    dense
-                    class="q-mt-sm"
-                    :rules="[(val) => !!val || 'Fur color is required!']"
-                    :readonly="mode == 'View'"
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md">
-                  <p class="q-ma-none q-mb-sm">
-                    Size <span class="text-negative q-ml-sm"> *</span>
-                  </p>
-                  <q-select
-                    v-model="dataStorage.size"
-                    outlined
-                    :options="petSizes"
-                    map-options
-                    dense
-                    :rules="[(val) => !!val || 'Size is required!']"
-                    :readonly="mode == 'View'"
-                    style="width: 200px"
-                    behaviour="menu"
-                    hint="To determine cage size"
-                  />
-                </div>
-              </div>
-
-              <div class="row">
-                <div class="column no-wrap q-mr-md q-mt-sm">
-                  <p class="q-ma-none q-mb-sm">Sex <span class="text-negative q-ml-sm"> *</span></p>
-                  <q-select
-                    v-model="dataStorage.sex"
-                    outlined
-                    :options="sexOption"
-                    map-options
-                    emit-value
-                    dense
-                    :rules="[(val) => !!val || 'Sex is required!']"
-                    style="width: 200px"
-                    behaviour="menu"
-                    :readonly="mode == 'View'"
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md q-mt-sm">
-                  <p class="q-ma-none q-mb-sm">
-                    Has Anti-rabbies? <span class="text-negative q-ml-sm"> *</span>
-                  </p>
-                  <q-select
-                    v-model="dataStorage.has_anti_rabies"
-                    outlined
-                    :options="[
-                      { label: 'Yes', value: 1 },
-                      { label: 'No', value: 2 },
-                    ]"
-                    map-options
-                    emit-value
-                    dense
-                    :rules="[(val) => !!val || 'This field is required!']"
-                    style="width: 200px"
-                    behaviour="menu"
-                    :readonly="mode == 'View'"
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md q-mt-sm">
-                  <p class="q-ma-none q-mb-sm">
-                    Has been Dewormed? <span class="text-negative q-ml-sm"> *</span>
-                  </p>
-                  <q-select
-                    v-model="dataStorage.has_been_dewormed"
-                    outlined
-                    :options="[
-                      { label: 'Yes', value: 1 },
-                      { label: 'No', value: 2 },
-                    ]"
-                    map-options
-                    emit-value
-                    dense
-                    :rules="[(val) => !!val || 'This field is required!']"
-                    style="width: 200px"
-                    behaviour="menu"
-                    :readonly="mode == 'View'"
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md q-mt-sm">
-                  <p class="q-ma-none q-mb-sm">
-                    Sleeping Place <span class="text-negative q-ml-sm"> *</span>
-                  </p>
-                  <q-select
-                    v-model="dataStorage.pet_sleeping_place"
-                    outlined
-                    :options="[
-                      { label: 'Indoor', value: 1 },
-                      { label: 'Outdoor', value: 2 },
-                    ]"
-                    emit-value
-                    map-options
-                    dense
-                    :rules="[(val) => !!val || 'This field is required!']"
-                    style="width: 200px"
-                    behaviour="menu"
-                    :readonly="mode == 'View'"
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md q-mt-sm">
-                  <p class="q-ma-none q-mb-sm">
-                    Status <span class="text-negative q-ml-sm"> *</span>
-                  </p>
-                  <q-select
-                    v-model="dataStorage.status"
-                    outlined
-                    :options="[
-                      { label: 'Pending', value: 1 },
-                      { label: 'Approved', value: 2 },
-                      { label: 'Disapproved', value: 2 },
-                    ]"
-                    emit-value
-                    map-options
-                    dense
-                    :rules="[(val) => !!val || 'This field is required!']"
-                    style="width: 200px"
-                    behaviour="menu"
-                    :readonly="mode == 'View'"
-                  />
-                </div>
-                <div class="column no-wrap q-mr-md q-mt-sm">
-                  <div class="text-capitalize">
-                    Date Transfer<span class="text-grey-7 q-ml-sm"> ( optional )</span>
-                  </div>
-                  <q-input
-                    dense
-                    outlined
-                    class="q-mt-sm"
-                    v-model="dataStorage.date_transfer"
-                    mask="####-##-##"
-                    placeholder="####-##-##"
-                    :readonly="mode == 'View'"
-                  >
-                    <template v-slot:append>
-                      <q-icon name="event" class="cursor-pointer">
-                        <q-popup-proxy cover transition-show="scale" transition-hide="scale">
-                          <q-date v-model="dataStorage.date_transfer" mask="YYYY-MM-DD">
-                            <div class="row items-center justify-end">
-                              <q-btn v-close-popup label="Close" color="primary" flat />
-                            </div>
-                          </q-date>
-                        </q-popup-proxy>
-                      </q-icon>
-                    </template>
-                  </q-input>
-                </div>
-              </div>
-              <div class="column no-wrap q-mt-sm">
-                <div class="text-capitalize">
-                  Reason for Transfer<span class="text-negative q-ml-sm"> *</span>
-                </div>
-                <q-input
-                  outlined
-                  type="textarea"
-                  v-model="dataStorage.reason_for_transfer"
-                  dense
-                  class="q-mt-sm"
-                  :rules="[(val) => !!val || 'Reason is required!']"
-                  :readonly="mode == 'View'"
-                />
-              </div>
-              <div class="column no-wrap q-mt-sm">
-                <div class="text-capitalize">
-                  Behaviour <span class="text-negative q-ml-sm"> *</span>
-                </div>
-                <q-input
-                  outlined
-                  type="textarea"
-                  v-model="dataStorage.behaviour"
-                  dense
-                  class="q-mt-sm"
-                  :rules="[(val) => !!val || 'Behaviour is required!']"
-                  :readonly="mode == 'View'"
-                />
-              </div>
-            </q-card-section>
+        <q-card-section class="q-py-md row no-wrap justify-between items-center">
+          <div class="text-body1">Viewing Adoption Form</div>
+          <q-icon name="close" size="1.2rem" @click="showForm = !showForm" />
+        </q-card-section>
+        <q-separator></q-separator>
+        <q-card-section>
+          <div class="flex row justify-between items-center">
+            <div class="q-ma-sm" style="width: 230px">
+              <p>Do you own any pets?*</p>
+            </div>
+            <div class="q-ma-sm row justify-center">
+              <q-radio
+                v-model="dataStorage.have_other_pet"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="Yes"
+                label="Yes"
+              />
+              <q-radio
+                v-model="dataStorage.have_other_pet"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="No"
+                label="No"
+              />
+            </div>
           </div>
-          <q-card-section>
-            <q-btn
-              outline
-              label="Cancel"
-              v-close-popup
-              color="primary"
-              no-caps
-              class="q-mr-md"
-              style="width: 180px"
+          <div
+            class="flex row justify-start items-center"
+            v-show="dataStorage.have_other_pet == 'Yes'"
+          >
+            <p class="q-ma-sm q-mr-md" style="width: 230px">How many pets do you own?</p>
+            <q-input
+              class="q-ma-sm q-mx-md"
+              :disable="dataStorage.have_other_pet == 'No' || dataStorage.have_other_pet == null"
+              outlined
+              :rules="[(val) => (!!val && dataStorage.have_other_pet == 'Yes') || '']"
+              hide-bottom-space
+              :value="
+                dataStorage.have_other_pet == 'No'
+                  ? (dataStorage.pet_number = null)
+                  : dataStorage.have_other_pet
+              "
+              v-model="dataStorage.pet_number"
+              dense
+              style="width: 300px"
+              type="number"
+              :style="
+                dataStorage.have_other_pet == 'Yes'
+                  ? dataStorage.pet_number == null
+                    ? {
+                        border: '1px solid #b157ae',
+                        borderRadius: '5px',
+                      }
+                    : { borderRadius: '10px' }
+                  : {}
+              "
             />
-            <q-btn
-              label="Confirm"
-              unelevated
-              color="primary"
-              no-caps
-              style="width: 180px"
-              type="submit"
+          </div>
+          <div
+            class="flex row justify-start items-center"
+            v-show="dataStorage.have_other_pet == 'Yes'"
+          >
+            <div class="q-ma-sm" style="width: 230px">
+              <p>Are your pets well behaved toward other pets? *</p>
+            </div>
+            <div class="q-ma-sm row justify-start">
+              <q-radio
+                v-model="dataStorage.behavior_other_animals"
+                :disable="dataStorage.have_other_pet == 'No' || dataStorage.have_other_pet == null"
+                :color="dataStorage.have_other_pet == 'Yes' ? 'accent' : 'gray'"
+                :keep-color="dataStorage.have_other_pet == 'Yes' ? true : false"
+                :value="
+                  dataStorage.have_other_pet == 'Yes'
+                    ? dataStorage.behavior_other_animals
+                    : (dataStorage.behavior_other_animals = '')
+                "
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="yes"
+                label="Yes"
+              />
+              <q-radio
+                v-model="dataStorage.behavior_other_animals"
+                :disable="dataStorage.have_other_pet == 'No' || dataStorage.have_other_pet == null"
+                :color="dataStorage.have_other_pet == 'Yes' ? 'accent' : 'gray'"
+                :keep-color="dataStorage.have_other_pet == 'Yes' ? true : false"
+                :value="
+                  dataStorage.have_other_pet == 'No'
+                    ? (dataStorage.behavior_other_animals = '')
+                    : dataStorage.behavior_other_animals
+                "
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="no"
+                label="No"
+              />
+            </div>
+          </div>
+          <div class="flex row justify-between items-center">
+            <div class="q-ma-sm" style="width: 230px">
+              <p>Do you have a veterinarian? *</p>
+            </div>
+            <div class="q-ma-sm row justify-start">
+              <q-radio
+                v-model="dataStorage.have_vet"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="Yes"
+                label="Yes"
+              />
+              <q-radio
+                v-model="dataStorage.have_vet"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="No"
+                label="No"
+              />
+            </div>
+          </div>
+          <div class="flex row justify-between items-center" v-show="dataStorage.have_vet == 'Yes'">
+            <p class="q-ma-sm q-mr-md" style="width: 230px">Phone Number</p>
+            <q-input
+              class="q-ma-sm q-mx-md"
+              outlined
+              v-model="dataStorage.vet_phone_number"
+              :style="
+                dataStorage.have_other_pet == 'Yes'
+                  ? dataStorage.vet_phone_number == null
+                    ? {
+                        border: '1px solid #b157ae',
+                        borderRadius: '5px',
+                      }
+                    : { borderRadius: '10px' }
+                  : {}
+              "
+              :color="
+                dataStorage.have_other_pet == 'Yes' && dataStorage.vet_phone_number == null
+                  ? 'accent'
+                  : 'gray'
+              "
+              :value="
+                dataStorage.have_other_pet == 'No'
+                  ? (dataStorage.vet_phone_number = null)
+                  : dataStorage.vet_phone_number
+              "
+              :rules="[
+                (val) => (!!val && dataStorage.have_other_pet == 'Yes' && val.length == 16) || '',
+                (val) => (val && val[1] === '9') || 'Phone number must start with 9',
+              ]"
+              hide-bottom-space
+              :disable="dataStorage.have_other_pet == 'No' || dataStorage.have_other_pet == null"
+              mask="phone"
+              prefix="+63"
+              dense
+              style="width: 300px"
             />
-          </q-card-section>
-        </q-form>
+          </div>
+          <div class="flex row justify-between items-center">
+            <div class="q-ma-sm" style="width: 230px">
+              <p>Do you own or rent your home?*</p>
+            </div>
+            <div class="q-ma-sm row justify-start">
+              <q-radio
+                v-model="dataStorage.own_or_rent"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                :val="1"
+                label="Own"
+              />
+              <q-radio
+                v-model="dataStorage.own_or_rent"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                :val="2"
+                label="Rent"
+              />
+            </div>
+          </div>
+          <div class="flex row justify-between items-center">
+            <div class="q-ma-sm" style="width: 230px">
+              <p>Do you have an adequate space for your pets? *</p>
+            </div>
+            <div class="q-ma-sm row justify-start">
+              <q-radio
+                v-model="dataStorage.have_enough_space"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="Yes"
+                label="Yes"
+              />
+              <q-radio
+                v-model="dataStorage.have_enough_space"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="No"
+                label="No"
+              />
+            </div>
+          </div>
+          <div class="flex row justify-between items-center">
+            <div class="q-ma-sm" style="width: 230px">
+              <p>Do you have any children at home?</p>
+            </div>
+            <div class="q-ma-sm row justify-start">
+              <q-radio
+                v-model="dataStorage.have_children"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="Yes"
+                label="Yes"
+              />
+              <q-radio
+                v-model="dataStorage.have_children"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="No"
+                label="No"
+              />
+            </div>
+          </div>
+          <div
+            class="flex row justify-start items-center"
+            v-show="dataStorage.have_children == 'Yes'"
+          >
+            <p class="q-ma-sm q-mr-md" style="width: 230px">If yes, number of children</p>
+            <q-input
+              class="q-ma-sm q-mx-md"
+              type="number"
+              :style="
+                dataStorage.have_children == 'Yes'
+                  ? dataStorage.number_of_children == null
+                    ? {
+                        border: '1px solid #b157ae',
+                        borderRadius: '5px',
+                      }
+                    : { borderRadius: '10px' }
+                  : {}
+              "
+              :rules="[(val) => (!!val && dataStorage.have_children == 'Yes') || '']"
+              hide-bottom-space
+              :value="
+                dataStorage.have_children == 'No'
+                  ? (dataStorage.number_of_children = '')
+                  : dataStorage.number_of_children
+              "
+              :disable="dataStorage.have_children == 'No' || dataStorage.have_children == null"
+              outlined
+              v-model="dataStorage.number_of_children"
+              dense
+              style="width: 300px"
+            />
+          </div>
+          <div class="flex row justify-between items-center">
+            <div class="q-ma-sm" style="width: 230px">
+              <p>Will there be someone to take care of your pets while you're away?</p>
+            </div>
+            <div class="q-ma-sm row justify-start">
+              <q-radio
+                v-model="dataStorage.someone_gonna_takecare_of_pet"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="Yes"
+                label="Yes"
+              />
+              <q-radio
+                v-model="dataStorage.someone_gonna_takecare_of_pet"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="No"
+                label="No"
+              />
+            </div>
+          </div>
+          <div
+            class="flex row justify-start items-center"
+            v-show="dataStorage.someone_gonna_takecare_of_pet == 'Yes'"
+          >
+            <p class="q-ma-sm q-mr-md" style="width: 230px">If yes,</p>
+            <q-select
+              class="q-ma-sm q-mx-md"
+              outlined
+              v-model="dataStorage.pet_caretaker"
+              :style="
+                dataStorage.someone_gonna_takecare_of_pet == 'Yes'
+                  ? dataStorage.pet_caretaker == ''
+                    ? {
+                        border: '1px solid #b157ae',
+                        borderRadius: '5px',
+                      }
+                    : { borderRadius: '10px' }
+                  : {}
+              "
+              :disable="
+                dataStorage.someone_gonna_takecare_of_pet == 'No' ||
+                dataStorage.someone_gonna_takecare_of_pet == null
+              "
+              :options="takeCareOptions"
+              dense
+              style="width: 300px"
+              :value="
+                dataStorage.someone_gonna_takecare_of_pet == 'No'
+                  ? (dataStorage.pet_caretaker = '')
+                  : dataStorage.pet_caretaker
+              "
+              :rules="[
+                (val) => (!!val && dataStorage.someone_gonna_takecare_of_pet == 'Yes') || '',
+              ]"
+              hide-bottom-space
+            />
+          </div>
+          <div
+            class="flex row justify-start items-center"
+            v-show="dataStorage.someone_gonna_takecare_of_pet == 'No'"
+          >
+            <p class="q-ma-sm q-mr-md" style="width: 230px">
+              If no, what are your plans in taking care of your pets while you're away?
+            </p>
+            <q-input
+              class="q-ma-sm q-mx-md"
+              :style="
+                dataStorage.someone_gonna_takecare_of_pet == 'No'
+                  ? dataStorage.plans_for_pet_when_away == null
+                    ? {
+                        border: '1px solid #b157ae',
+                        borderRadius: '5px',
+                      }
+                    : { borderRadius: '10px' }
+                  : {}
+              "
+              :disable="
+                dataStorage.someone_gonna_takecare_of_pet == 'Yes' ||
+                dataStorage.someone_gonna_takecare_of_pet == null
+              "
+              :value="
+                dataStorage.someone_gonna_takecare_of_pet == 'Yes'
+                  ? (dataStorage.plans_for_pet_when_away = null)
+                  : dataStorage.plans_for_pet_when_away
+              "
+              :rules="[(val) => (!!val && dataStorage.someone_gonna_takecare_of_pet == 'No') || '']"
+              hide-bottom-space
+              type="textarea"
+              outlined
+              v-model="dataStorage.plans_for_pet_when_away"
+              dense
+              style="width: 300px"
+            />
+          </div>
+          <div class="flex row justify-between items-center">
+            <div class="q-ma-sm" style="width: 230px">
+              <p>
+                Are you easily disturbed or triggered by loud noises (such as barking), or
+                unpleasant smell (such as animal poop)?
+              </p>
+            </div>
+            <div class="q-ma-sm row justify-start">
+              <q-radio
+                v-model="dataStorage.easily_trigger_by_pet_noise"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="Yes"
+                label="Yes"
+              />
+              <q-radio
+                v-model="dataStorage.easily_trigger_by_pet_noise"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="No"
+                label="No"
+              />
+            </div>
+          </div>
+          <div class="flex row justify-between items-center">
+            <div class="q-ma-sm" style="width: 230px">
+              <p>
+                Have you ever been convicted of an animal related crime, such as cruelty to animals,
+                animal theft, or animal abandonment?*
+              </p>
+            </div>
+            <div class="q-ma-sm row justify-start">
+              <q-radio
+                v-model="dataStorage.convicted_animal_crime"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="Yes"
+                label="Yes"
+              />
+              <q-radio
+                v-model="dataStorage.convicted_animal_crime"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="No"
+                label="No"
+              />
+            </div>
+          </div>
+          <div class="flex row justify-between items-center">
+            <p class="q-ma-sm q-mr-md" style="width: 230px">
+              Please provide valid ID’s for personal references:*
+            </p>
+            <div class="column no-wrap">
+              <q-file
+                v-model="dataStorage.valid_id"
+                label="Pick one file"
+                filled
+                dense
+                accept=".jpg, image/*"
+                style="max-width: 300px"
+              />
+            </div>
+          </div>
+          <div class="flex row justify-between items-center">
+            <div class="q-ma-sm" style="width: 230px">
+              <p>Pick up the pet or Deliver to your house?*</p>
+            </div>
+            <div class="q-ma-sm row justify-start">
+              <q-radio
+                v-model="dataStorage.pickup_or_delivery"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="Pickup"
+                label="Pick up"
+              />
+              <q-radio
+                v-model="dataStorage.pickup_or_delivery"
+                checked-icon="task_alt"
+                unchecked-icon="panorama_fish_eye"
+                val="Deliver"
+                label="Deliver"
+              />
+            </div>
+          </div>
+        </q-card-section>
       </q-card>
     </q-dialog>
     <NoAccessDialog v-model:showNoAccess="showNoAccess" />
@@ -510,6 +632,7 @@ import {
 } from 'src/composable/simpleComposable'
 import NoAccessDialog from 'src/components/NoAccessDialog.vue'
 import { globalStore } from 'src/stores/global-store'
+import { updatePetAdoptionReceived } from '../composable/latestComposable'
 export default {
   components: {
     ReusableTable,
@@ -525,7 +648,7 @@ export default {
     const rows = ref([])
     const confirm = ref(false)
     const search = ref(null)
-    const addDialog = ref(false)
+    const showForm = ref(true)
     const pages = ref([])
     const dataStorage = ref({})
     const elseSummary = ref({})
@@ -574,25 +697,17 @@ export default {
       4: 'Received',
     }
 
-    const tableAction = (row, modeParam, action) => {
+    const tableAction = (row, modeParam) => {
       if (!preventAction()) {
         return
       }
       mode.value = modeParam
       console.log(row)
 
-      if (['View', 'Edit', 'Add'].includes(modeParam)) {
-        if (modeParam == 'Add') {
-          addDialog.value = true
-          dataStorage.value = { status: 1 }
-        } else if (['Edit', 'View'].includes(modeParam)) {
-          addDialog.value = true
-          dataStorage.value = { ...row }
-          console.log(dataStorage.value)
-        } else {
-          dataStorage.value = { id: row, status: action == 'prio' ? 1 : 0 }
-          saveFn()
-        }
+      if (modeParam == 'View') {
+        showForm.value = true
+        dataStorage.value = { ...row }
+        console.log(dataStorage.value)
       } else if (['Disapprove', 'Approve'].includes(modeParam)) {
         const statusParam = modeParam == 'Disapprove' ? 3 : 2
         dataStorage.value = { ...row, status: statusParam }
@@ -618,7 +733,31 @@ export default {
           }, 500)
           setTimeout(() => {
             $q.loading.hide()
-            addDialog.value = false
+            showForm.value = false
+            fetchData()
+          }, 1000)
+        })
+      } else if (modeParam == 'Received') {
+        dataStorage.value = { ...row, adoption_status: 4 }
+        $q.loading.show({
+          group: 'update',
+          message: `Updating. Please wait...`,
+        })
+        updatePetAdoptionReceived(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+          username,
+        ).then((response) => {
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 500)
+          setTimeout(() => {
+            $q.loading.hide()
+            showForm.value = false
             fetchData()
           }, 1000)
         })
@@ -644,7 +783,7 @@ export default {
             }, 500)
             setTimeout(() => {
               $q.loading.hide()
-              addDialog.value = false
+              showForm.value = false
               fetchData()
             }, 1000)
           },
@@ -669,7 +808,7 @@ export default {
           }, 500)
           setTimeout(() => {
             $q.loading.hide()
-            addDialog.value = false
+            showForm.value = false
             fetchData()
           }, 1000)
         })
@@ -722,7 +861,7 @@ export default {
       showStatusFilter,
       statusOption,
       status,
-      addDialog,
+      showForm,
       groupNameOptions,
       arrayOfId,
       filterTab,

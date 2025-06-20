@@ -176,6 +176,7 @@
             </div>
             <div class="q-ma-sm row justify-center">
               <q-radio
+                disable
                 v-model="dataStorage.have_other_pet"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -183,6 +184,7 @@
                 label="Yes"
               />
               <q-radio
+                disable
                 v-model="dataStorage.have_other_pet"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -197,6 +199,7 @@
           >
             <p class="q-ma-sm q-mr-md" style="width: 230px">How many pets do you own?</p>
             <q-input
+              readonly
               class="q-ma-sm q-mx-md"
               :disable="dataStorage.have_other_pet == 'No' || dataStorage.have_other_pet == null"
               outlined
@@ -269,6 +272,7 @@
             </div>
             <div class="q-ma-sm row justify-start">
               <q-radio
+                disable
                 v-model="dataStorage.have_vet"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -276,6 +280,7 @@
                 label="Yes"
               />
               <q-radio
+                disable
                 v-model="dataStorage.have_vet"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -289,6 +294,7 @@
             <q-input
               class="q-ma-sm q-mx-md"
               outlined
+              readonly
               v-model="dataStorage.vet_phone_number"
               :style="
                 dataStorage.have_other_pet == 'Yes'
@@ -328,6 +334,7 @@
             </div>
             <div class="q-ma-sm row justify-start">
               <q-radio
+                disable
                 v-model="dataStorage.own_or_rent"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -335,6 +342,7 @@
                 label="Own"
               />
               <q-radio
+                disable
                 v-model="dataStorage.own_or_rent"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -349,6 +357,7 @@
             </div>
             <div class="q-ma-sm row justify-start">
               <q-radio
+                disable
                 v-model="dataStorage.have_enough_space"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -356,6 +365,7 @@
                 label="Yes"
               />
               <q-radio
+                disable
                 v-model="dataStorage.have_enough_space"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -370,6 +380,7 @@
             </div>
             <div class="q-ma-sm row justify-start">
               <q-radio
+                disable
                 v-model="dataStorage.have_children"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -377,6 +388,7 @@
                 label="Yes"
               />
               <q-radio
+                disable
                 v-model="dataStorage.have_children"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -391,6 +403,7 @@
           >
             <p class="q-ma-sm q-mr-md" style="width: 230px">If yes, number of children</p>
             <q-input
+              readonly
               class="q-ma-sm q-mx-md"
               type="number"
               :style="
@@ -423,6 +436,7 @@
             </div>
             <div class="q-ma-sm row justify-start">
               <q-radio
+                disable
                 v-model="dataStorage.someone_gonna_takecare_of_pet"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -430,6 +444,7 @@
                 label="Yes"
               />
               <q-radio
+                disable
                 v-model="dataStorage.someone_gonna_takecare_of_pet"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -521,6 +536,7 @@
             </div>
             <div class="q-ma-sm row justify-start">
               <q-radio
+                disable
                 v-model="dataStorage.easily_trigger_by_pet_noise"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -528,6 +544,7 @@
                 label="Yes"
               />
               <q-radio
+                disable
                 v-model="dataStorage.easily_trigger_by_pet_noise"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -545,6 +562,7 @@
             </div>
             <div class="q-ma-sm row justify-start">
               <q-radio
+                disable
                 v-model="dataStorage.convicted_animal_crime"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -552,6 +570,7 @@
                 label="Yes"
               />
               <q-radio
+                disable
                 v-model="dataStorage.convicted_animal_crime"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -565,14 +584,7 @@
               Please provide valid ID’s for personal references:*
             </p>
             <div class="column no-wrap">
-              <q-file
-                v-model="dataStorage.valid_id"
-                label="Pick one file"
-                filled
-                dense
-                accept=".jpg, image/*"
-                style="max-width: 300px"
-              />
+              <q-img :src="dataStorage.image_path" height="100px"></q-img>
             </div>
           </div>
           <div class="flex row justify-between items-center">
@@ -581,6 +593,7 @@
             </div>
             <div class="q-ma-sm row justify-start">
               <q-radio
+                disable
                 v-model="dataStorage.pickup_or_delivery"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -588,6 +601,7 @@
                 label="Pick up"
               />
               <q-radio
+                disable
                 v-model="dataStorage.pickup_or_delivery"
                 checked-icon="task_alt"
                 unchecked-icon="panorama_fish_eye"
@@ -648,7 +662,7 @@ export default {
     const rows = ref([])
     const confirm = ref(false)
     const search = ref(null)
-    const showForm = ref(true)
+    const showForm = ref(false)
     const pages = ref([])
     const dataStorage = ref({})
     const elseSummary = ref({})

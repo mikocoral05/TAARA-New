@@ -156,6 +156,33 @@ class API
                 'data' => $query,
                 'method' => 'GET'
             ]);
+        } else if (array_key_exists("get_phone_number", $payload)) {
+            $this->db->where('user_type', [2, 3], 'IN');
+            $query = $this->db->get('tbl_users', null, 'phone_number');
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => $query,
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists("expiration_date", $payload)) {
+            $this->db->where('is_deleted', 1);
+            $query = $this->db->get('tbl_inventory', null, 'expiration_date,item_name');
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => $query,
+                'method' => 'GET'
+            ]);
+        } else if (array_key_exists("schedule_animal", $payload)) {
+            $this->db->where('is_deleted', 0);
+            $query = $this->db->get('tbl_animal_schedule', null, 'schedule_name,dose_number,scheduled_date');
+
+            echo json_encode([
+                'status' => 'success',
+                'data' => $query,
+                'method' => 'GET'
+            ]);
         } else if (array_key_exists("get_favorites", $payload)) {
             $user_id = $payload['get_favorites'];
             $this->db->where('user_id', $user_id);
@@ -371,6 +398,18 @@ class API
                     'method' => 'POST'
                 ]);
             }
+        } else if (isset($payload['get_phone_number'])) {
+
+            $notif = [
+                'for_user'     => -2, // Example: -1 = all public_user, -2 = all management
+                'created_by'    => $user_id, // Assuming the one triggering the notification is the updater
+                'title'        => 'Pet Adoption Request',
+                'message'      => 'New Adoption Request has been submitted by ' . $user_name . '.',
+                'type'         => 2, // 1 = announcement, 2 = notification
+                'related_url'  => '',
+                'is_read'      => json_encode([]), // 0 = unread
+            ];
+            $this->db->insert("tbl_notification", $notif);
         } else {
             echo json_encode([
                 'status' => 'error',

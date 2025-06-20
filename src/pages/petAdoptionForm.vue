@@ -452,7 +452,7 @@
                     filled
                     dense
                     accept=".jpg, image/*"
-                    style="max-width: 300px"
+                    style="width: 300px"
                   />
                 </div>
               </div>
@@ -559,8 +559,21 @@
                 your information.
               </li>
             </ul>
+            <div class="column no-wrap">
+              <div
+                class="q-mt-md row no-wrap items-center justify-center radius-5 q-px-md"
+                :class="{
+                  'bg-orange text-white': status == 1,
+                  'bg-negative text-white': status == 3,
+                }"
+                style="width: 200px"
+              >
+                <q-icon name="sym_r_schedule" class="q-mr-sm" size="1rem" />{{
+                  status == 1 ? 'Pending' : 'Declined'
+                }}
+              </div>
+            </div>
           </q-step>
-
           <q-step :name="2" title="Qualified" icon="sports_handball" :done="stepProgress > 2">
             <ul>
               <li>
@@ -573,7 +586,12 @@
               </li>
             </ul>
           </q-step>
-          <q-step :name="3" title="Ready for Pickup" icon="local_shipping" :done="stepProgress > 3">
+          <q-step
+            :name="3"
+            title="Ready for Pickup or Deliver"
+            icon="local_shipping"
+            :done="stepProgress > 3"
+          >
             <ul>
               <li>
                 🚚 Step Description: Your pet is almost ready! We’re making arrangements for you to
@@ -629,7 +647,7 @@ export default defineComponent({
     })
     let step = ref(1)
     const images = ref()
-
+    const status = ref(1)
     let alert = ref(false)
     let nextInfo = (payload) => {
       let arrayKeys = [
@@ -667,7 +685,7 @@ export default defineComponent({
       )
       $q.loading.show({ group: 'sub', message: response.message })
       setTimeout(() => {
-        if (response == 'success') {
+        if (response.message == 'success') {
           formToProgress.value = true
           stepProgress.value = 2
           step.value = 3
@@ -687,6 +705,7 @@ export default defineComponent({
 
       if (Object.keys(store.userData).length > 0) {
         const response = await getSubmitAdoptionForm(store.userData.user_id)
+        console.log(response)
 
         let findMatchAdoptionReq = response.some(
           (obj) => obj.animal_id === decodeAnimalId(route.query.adopt),
@@ -696,13 +715,17 @@ export default defineComponent({
         const filterMatch = response.filter(
           (obj) => obj.animal_id === decodeAnimalId(route.query.adopt),
         )
+        console.log(filterMatch)
+
         const adoptionStatus =
           filterMatch.length > 0 ? filterMatch.map((obj) => obj.adoption_status) : 1
+        status.value = filterMatch.length > 0 ? filterMatch.map((obj) => obj.status) : 1
 
-        step.value = adoptionStatus
+        stepProgress.value = adoptionStatus?.[0]
       }
     })
     return {
+      status,
       getImageLink,
       formToProgress,
       stepProgress,

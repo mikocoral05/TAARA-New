@@ -19,23 +19,19 @@
         v-model:statusOption="statusOption"
         :tableAction="tableAction"
         :preventAction="preventAction"
+        :showAddBtns="false"
       >
         <template #cell-btn="{ row }">
           <q-btn icon="sym_r_more_vert" dense flat size=".7rem" :ripple="false">
             <q-menu anchor="bottom left" self="top right">
               <q-list dense style="min-width: 100px">
                 <q-item clickable v-close-popup @click="tableAction(row, 'View')">
-                  <q-item-section>View</q-item-section>
+                  <q-item-section>View Form</q-item-section>
                   <q-item-section side>
                     <q-icon name="sym_r_visibility" size="1.2rem" />
                   </q-item-section>
                 </q-item>
-                <q-item clickable v-close-popup @click="tableAction(row, 'Edit')">
-                  <q-item-section>Edit</q-item-section>
-                  <q-item-section side>
-                    <q-icon name="sym_r_edit" size="1.2rem" />
-                  </q-item-section>
-                </q-item>
+
                 <q-item
                   clickable
                   v-close-popup
@@ -56,6 +52,17 @@
                   <q-item-section>Dispprove</q-item-section>
                   <q-item-section side>
                     <q-icon name="sym_r_cancel" color="red" size="1.2rem" />
+                  </q-item-section>
+                </q-item>
+                <q-item
+                  clickable
+                  v-close-popup
+                  v-if="row.status == 2"
+                  @click="tableAction(row, 'Ready')"
+                >
+                  <q-item-section>Ready for Pickup</q-item-section>
+                  <q-item-section side>
+                    <q-icon name="sym_r_arrow_circle_right" color="positive" size="1.2rem" />
                   </q-item-section>
                 </q-item>
                 <q-separator />
@@ -93,9 +100,12 @@
               {{ row.status == 1 ? 'Pending' : row.status == 2 ? 'Approved' : 'Disapproved' }}
             </div>
           </div>
-          <div class="q-mt-sm">Date: {{ row.date_request }}</div>
         </template>
-
+        <template #cell-adoption_status="{ row }">
+          <div>
+            {{ adoptionProgressMap[row.adoption_status] }}
+          </div>
+        </template>
         <template #cell-phone_number="{ row }">
           <div>+63 {{ row.phone_number }}</div>
         </template>
@@ -110,7 +120,7 @@
         <q-card-section class="column items-center">
           <q-icon name="sym_r_inventory_2" color="primary" size="2.5rem" />
           <span class="q-ml-sm text-black text-body1 q-mt-md text-center">
-            Are you sure you want to Delete this Pet Transfer Request ?
+            Are you sure you want to Delete this Pet Adotpion Request ?
           </span>
           <span class="q-ml-sm text-caption text-grey-7 q-mt-sm">
             This action is irreversible.
@@ -479,10 +489,11 @@ import {
   sexOption,
 } from 'src/composable/optionsComposable'
 import {
-  updatePetTransfer,
-  deletePetTransfer,
+  updatePetAdoption,
   addPetListRequest,
   getPetAdoptionList,
+  deletePetAdotpion,
+  updatePetAdoptionReadyPickup,
 } from 'src/composable/latestComposable'
 import { ref, watchEffect } from 'vue'
 import { useQuasar } from 'quasar'
@@ -532,7 +543,7 @@ export default {
       { label: 'Approved', value: 2 },
       { label: 'Disapproved', value: 3 },
     ])
-
+    const username = store.userData.first_name + ' ' + store.userData.last_name
     const totalBalance = ref(null)
     const dailyExpenseTotal = ref([])
     const itemsCount = ref([])
@@ -555,6 +566,12 @@ export default {
       ]
       rows.value = response
       console.log(rows.value)
+    }
+    const adoptionProgressMap = {
+      1: 'Application Review',
+      2: 'Pet Being Prepared',
+      3: 'Ready for Pickup/Delivery',
+      4: 'Received',
     }
 
     const tableAction = (row, modeParam, action) => {
@@ -580,6 +597,31 @@ export default {
         const statusParam = modeParam == 'Disapprove' ? 3 : 2
         dataStorage.value = { ...row, status: statusParam }
         saveFn()
+      } else if (modeParam == 'Ready') {
+        dataStorage.value = { ...row, adoption_status: 3 }
+        $q.loading.show({
+          group: 'update',
+          message: `Updating. Please wait...`,
+        })
+
+        updatePetAdoptionReadyPickup(
+          dataStorage.value,
+          store.userData.user_id,
+          store.userData.user_type,
+          username,
+        ).then((response) => {
+          setTimeout(() => {
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
+          }, 500)
+          setTimeout(() => {
+            $q.loading.hide()
+            addDialog.value = false
+            fetchData()
+          }, 1000)
+        })
       } else {
         arrayOfId.value.push(row)
         confirm.value = !confirm.value
@@ -607,17 +649,17 @@ export default {
             }, 1000)
           },
         )
-      } else if (['Edit', 'Approve', 'Disapprove'].includes(mode.value)) {
+      } else if (['Approve', 'Disapprove'].includes(mode.value)) {
         $q.loading.show({
           group: 'update',
           message: `Updating. Please wait...`,
         })
 
-        updatePetTransfer(
+        updatePetAdoption(
           dataStorage.value,
           store.userData.user_id,
           store.userData.user_type,
-          mode.value,
+          username,
         ).then((response) => {
           setTimeout(() => {
             $q.loading.show({
@@ -639,25 +681,29 @@ export default {
         group: 'update',
         message: `Deleting Pet Transfer list. Please wait...`,
       })
-      deletePetTransfer(arrayOfId.value, store.userData.user_id, store.userData.user_type).then(
-        (response) => {
-          setTimeout(() => {
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-          }, 500)
-          setTimeout(() => {
-            $q.loading.hide()
-            fetchData()
-          }, 1000)
-        },
-      )
+      deletePetAdotpion(
+        arrayOfId.value,
+        store.userData.user_id,
+        store.userData.user_type,
+        username,
+      ).then((response) => {
+        $q.loading.show({
+          group: 'update',
+          message: response.message,
+        })
+        setTimeout(() => {
+          $q.loading.hide()
+          fetchData()
+        }, 1000)
+      })
     }
+
     const preventAction = () => {
       const userType = store.userData.user_type
       const userRole = store.userData.roles
-      const result = [1, 2, 3, 4].includes(userRole) && userType == 3
+      const official = [1, 2].includes(userRole) && userType == 3
+      const volunteer = [2, 3, 5].includes(userRole) && userType == 2
+      const result = userType == 3 ? official : volunteer
       if (!result) {
         showNoAccess.value = true
         return false
@@ -668,6 +714,7 @@ export default {
       fetchData()
     })
     return {
+      adoptionProgressMap,
       preventAction,
       showNoAccess,
       sexOption,

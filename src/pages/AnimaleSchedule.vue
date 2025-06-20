@@ -345,7 +345,7 @@ export default {
     const rows = ref([])
     const $q = useQuasar()
     const confirm = ref(false)
-    const showDialog = ref(true)
+    const showDialog = ref(false)
     const showInputInterval = ref(false)
     const dataStorage = ref({ file: [] })
     const mode = ref('')

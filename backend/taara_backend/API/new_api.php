@@ -320,6 +320,57 @@ class API
                     'method' => 'POST'
                 ]);
             }
+        } else if (isset($payload['submit_adoption_form'])) {
+            $data = $payload['submit_adoption_form']['data'];
+            $user_id = $payload['submit_adoption_form']['user_id'];
+            $new_image = $payload['submit_adoption_form']['new_image'] ?? '';
+            $user_name = $payload['submit_adoption_form']['user_name'] ?? '';
+            $valid_id = '';
+
+            if ($new_image) {
+                $this->db->insert('tbl_files', ['image_path' => $new_image]);
+                $valid_id = $this->db->getInsertId();
+                $$data['valid_id'] = $valid_id; // <-- inject valid_id to update data
+            }
+
+            unset($data['new_image']);
+
+            $query = $this->db->insert('tbl_adoption_form', $data);
+
+            if ($query) {
+                $logs = [
+                    'user_id' => $user_id,
+                    'user_type' => 1,
+                    'action' => 'User submit adoption request.',
+                    'module' => 'Adoption',
+                ];
+
+                $this->db->insert("tbl_logs", $logs);
+
+                $notif = [
+                    'for_user'     => -2, // Example: -1 = all public_user, -2 = all management
+                    'created_by'    => $user_id, // Assuming the one triggering the notification is the updater
+                    'title'        => 'Pet Adoption Request',
+                    'message'      => 'New Adoption Request has been submitted by ' . $user_name . '.',
+                    'type'         => 2, // 1 = announcement, 2 = notification
+                    'related_url'  => '',
+                    'is_read'      => json_encode([]), // 0 = unread
+                ];
+                $this->db->insert("tbl_notification", $notif);
+
+
+                echo json_encode([
+                    'status' => 'success',
+                    'message' => 'Adoption request submitted successfully',
+                    'method' => 'POST'
+                ]);
+            } else {
+                echo json_encode([
+                    'status' => 'failed',
+                    'message' => 'Failed to submit Adoption request',
+                    'method' => 'POST'
+                ]);
+            }
         } else {
             echo json_encode([
                 'status' => 'error',

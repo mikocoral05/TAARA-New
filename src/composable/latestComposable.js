@@ -1293,6 +1293,30 @@ export const getPetAdoptionList = async (status) => {
   return response.data.data
 }
 
+export const notifyManagement = async () => {
+  const response = await api.get('new_api.php', {
+    params: { get_phone_number: 'get_phone_number' },
+  })
+
+  return response.data.data
+}
+
+export const getScheduleExpirationDateInventory = async () => {
+  const response = await api.get('new_api.php', {
+    params: { expiration_date: 'expiration_date' },
+  })
+
+  return response.data.data
+}
+
+export const getScheduleAnimal = async () => {
+  const response = await api.get('new_api.php', {
+    params: { schedule_animal: 'schedule_animal' },
+  })
+
+  return response.data.data
+}
+
 export const updateWishlist = async (table, obj, user_id, user_type, user_name) => {
   const response = await api.put('wishlist_management.php', {
     update_wishlist: { table: table, data: obj, user_id, user_type, user_name },

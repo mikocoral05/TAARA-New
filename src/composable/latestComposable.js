@@ -1295,6 +1295,20 @@ export const updatePetTransfer = async (obj, user_id, user_type, mode) => {
   return response.data
 }
 
+export const updatePetAdoption = async (obj, user_id, user_type, user_name) => {
+  const response = await api.put('adoption.php', {
+    update_pet_adoption: { obj, user_id, user_type, user_name },
+  })
+  return response.data
+}
+
+export const updatePetAdoptionReadyPickup = async (obj, user_id, user_type, user_name) => {
+  const response = await api.put('adoption.php', {
+    update_pet_adoption_ready_pickup: { obj, user_id, user_type, user_name },
+  })
+  return response.data
+}
+
 export const deleteWishlist = async (table, arrayId, user_id, user_type, user_name) => {
   const response = await api.put('wishlist_management.php', {
     delete_wishlist: { table: table, id: arrayId, user_id, user_type, user_name },
@@ -1305,6 +1319,13 @@ export const deleteWishlist = async (table, arrayId, user_id, user_type, user_na
 export const deletePetTransfer = async (arrayId, user_id, user_type) => {
   const response = await api.put('pet_transfer.php', {
     delete_pet_transfer: { arrayId, user_id, user_type },
+  })
+  return response.data
+}
+
+export const deletePetAdotpion = async (arrayId, user_id, user_type, user_name) => {
+  const response = await api.put('adoption.php', {
+    delete_pet_adotpion: { arrayId, user_id, user_type, user_name },
   })
   return response.data
 }

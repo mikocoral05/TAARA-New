@@ -685,7 +685,7 @@ export default defineComponent({
       )
       $q.loading.show({ group: 'sub', message: response.message })
       setTimeout(() => {
-        if (response.message == 'success') {
+        if (response.status == 'success') {
           formToProgress.value = true
           stepProgress.value = 2
           step.value = 3

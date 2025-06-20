@@ -542,7 +542,7 @@ class API
     } else if (array_key_exists("adoption_form_details", $ref_id)) {
       $user_id = $ref_id['adoption_form_details'];
       $this->db->where('user_id', $user_id);
-      $query = $this->db->get("tbl_adoption_form ", null, 'adoption_status,animal_id');
+      $query = $this->db->get("tbl_adoption_form ", null, 'adoption_status,animal_id,status');
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("check_email", $ref_id)) {
       $cols = array('email_address', 'phone_number', 'first_name');

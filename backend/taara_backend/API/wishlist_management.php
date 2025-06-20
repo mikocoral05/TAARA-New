@@ -177,7 +177,7 @@ class API
 
                 $this->db->insert("tbl_notification", $notif);
 
-                echo json_encode(['status' => 'success', 'message' => 'Records delete successfully', 'method' => 'PUT']);
+                echo json_encode(['status' => 'success', 'message' => 'Record archive successfully', 'method' => 'PUT']);
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Failed to delete records', 'method' => 'PUT']);
             }

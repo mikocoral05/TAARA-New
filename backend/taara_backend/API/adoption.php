@@ -23,8 +23,9 @@ class API
 
             $this->db->where("f.is_deleted", 0);
             $this->db->join("tbl_users u", 'f.user_id = u.user_id', 'left');
+            $this->db->join("tbl_files ff", 'ff.id = f.valid_id', 'left');
             $this->db->join("tbl_animal_info a", 'a.animal_id = f.animal_id', 'left');
-            $query = $this->db->get('tbl_adoption_form f', null, 'f.*,a.name,a.animal_id,u.first_name,u.last_name,u.phone_number');
+            $query = $this->db->get('tbl_adoption_form f', null, 'f.*,a.name,a.animal_id,u.first_name,u.last_name,u.phone_number,ff.image_path');
 
             echo json_encode([
                 'status' => 'success',

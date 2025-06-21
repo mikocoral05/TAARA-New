@@ -1,174 +1,175 @@
 <?php
 
 
-  // Tells the browser to allow code from any origin to access
+// Tells the browser to allow code from any origin to access
 
-  header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Origin: *");
 
-  // Tells browsers whether to expose the response to the frontend JavaScript code when the request's credentials mode (Request.credentials) is include
+// Tells browsers whether to expose the response to the frontend JavaScript code when the request's credentials mode (Request.credentials) is include
 
-  header("Access-Control-Allow-Credentials: true");
+header("Access-Control-Allow-Credentials: true");
 
-  // Specifies one or more methods allowed when accessing a resource in response to a preflight request
+// Specifies one or more methods allowed when accessing a resource in response to a preflight request
 
-  header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE");
+header("Access-Control-Allow-Methods: POST, GET, PUT, DELETE");
 
-  // Used in response to a preflight request which includes the Access-Control-Request-Headers to indicate which HTTP headers can be used during the actual request
+// Used in response to a preflight request which includes the Access-Control-Request-Headers to indicate which HTTP headers can be used during the actual request
 
-  header("Access-Control-Allow-Headers: Content-Type");
-
-
-  require_once('../MysqliDb.php');
+header("Access-Control-Allow-Headers: Content-Type");
 
 
-  class API
+require_once('../MysqliDb.php');
+
+
+class API
+{
+  public function __construct()
   {
-      public function __construct()
-      {
-          $this->db = new MysqliDB('localhost', 'root', '', 'capstone');
+    $this->db = new MysqliDB('localhost', 'mike', 'mike123', 'capstone');
+  }
+
+  public function httpGet($payload)
+  {
+    if (isset($_GET['user_id'])) {
+      $this->db->where('user_id', $_GET['user_id']);
+      $user = $this->db->get('tbl_users_new');
+      unset($user[0]['password']);
+
+      echo json_encode(array(
+        'status' => 'success',
+        'data' => $user[0],
+        'method' => 'GET'
+      ));
+    } else if (isset($_GET['email_address'])) {
+      $this->db->where('email_address', $_GET['email_address']);
+      $email_check = $this->db->get('tbl_users_new');
+
+      if ($email_check === []) {
+        echo json_encode(array(
+          'status' => 'success',
+          'message' => 'Email is Available',
+          'method' => 'GET'
+        ));
+      } else {
+        echo json_encode(array(
+          'status' => 'fail',
+          'message' => 'Email is already taken',
+          'method' => 'GET'
+        ));
       }
+    }
+  }
+  public function httpPost($payload)
+  {
+    $payload = (array) $payload;
 
-      public function httpGet($payload)
-      {
-        if (isset($_GET['user_id'])) {
-          $this->db->where('user_id', $_GET['user_id']);
-          $user = $this->db->get('tbl_users_new');
-          unset($user[0]['password']);
+    //FOR SIGNUP
+    if (isset($payload['last_name'])) {
+      $payload['date_added'] = date('Y-m-d');
+      $password = password_hash($payload['password'], PASSWORD_DEFAULT);
+      $payload['password'] = $password;
+      $payload['user_id'] = $this->db->insert('tbl_users_new', $payload);
 
-          echo json_encode(array('status' => 'success',
-                                      'data' => $user[0],
-                                      'method' => 'GET'
-                                    ));
-        } else if (isset($_GET['email_address'])) {
-          $this->db->where('email_address', $_GET['email_address']);
-          $email_check = $this->db->get('tbl_users_new');
+      echo json_encode(array(
+        'status' => 'success',
+        'data' => $payload,
+        'method' => 'POST'
+      ));
 
-          if ($email_check === []) {
-            echo json_encode(array('status' => 'success',
-                                      'message' => 'Email is Available',
-                                      'method' => 'GET'
-                                    ));
-          } else {
-            echo json_encode(array('status' => 'fail',
-                                      'message' => 'Email is already taken',
-                                      'method' => 'GET'
-                                    ));
-          }
+      //FOR LOGIN
+    } else if (isset($payload['email_address'])) {
+      $this->db->where('email_address', $payload['email_address']);
+      $attempt = $this->db->get('tbl_users_new');
+
+
+      if ($attempt === []) {
+        echo json_encode(array(
+          'status' => 'fail',
+          'message' => 'Email address not found',
+          'method' => 'POST'
+        ));
+      } else {
+        if (password_verify($payload['password'], $attempt[0]['password'])) {
+          unset($attempt[0]['password']);
+          echo json_encode(array(
+            'status' => 'success',
+            'data' => $attempt[0],
+            'method' => 'POST'
+          ));
+        } else {
+          echo json_encode(array(
+            'status' => 'fail',
+            'message' => 'Incorrect password!',
+            'method' => 'POST'
+          ));
         }
-
       }
-      public function httpPost($payload)
-      {
-        $payload = (array) $payload;
+    }
+  }
 
-        //FOR SIGNUP
-        if (isset($payload['last_name'])) {
-          $payload['date_added'] = date('Y-m-d');
-          $password = password_hash($payload['password'], PASSWORD_DEFAULT);
-          $payload['password'] = $password;
-          $payload['user_id'] = $this->db->insert('tbl_users_new', $payload);
+  public function httpPut($payload)
+  {
+    $payload = (array) $payload;
 
-          echo json_encode(array('status' => 'success',
-                                      'data' => $payload,
-                                      'method' => 'POST'
-                                    ));
+    //UPDATE USER INFO
+    if (isset($payload['user_id'])) {
+      $this->db->where('user_id', $payload['user_id']);
 
-        //FOR LOGIN
-        } else if (isset($payload['email_address'])) {
-          $this->db->where('email_address', $payload['email_address']);
-          $attempt = $this->db->get('tbl_users_new');
-
-
-          if ($attempt === []) {
-            echo json_encode(array('status' => 'fail',
-                                    'message' => 'Email address not found',
-                                    'method' => 'POST'
-                                  ));
-          } else {
-            if (password_verify($payload['password'], $attempt[0]['password'])) {
-                unset($attempt[0]['password']);
-                echo json_encode(array('status' => 'success',
-                                    'data' => $attempt[0],
-                                    'method' => 'POST'
-                                  ));
-            } else {
-              echo json_encode(array('status' => 'fail',
-                                    'message' => 'Incorrect password!',
-                                    'method' => 'POST'
-                                  ));
-            }
-
-          }
-
-        }
-
+      if (isset($payload['password'])) {
+        $password = password_hash($payload['password'], PASSWORD_DEFAULT);
+        $payload['password'] = $password;
       }
 
-      public function httpPut($payload)
-      {
-        $payload = (array) $payload;
+      $user = $this->db->update('tbl_users_new', $payload);
 
-        //UPDATE USER INFO
-        if (isset($payload['user_id'])) {
-          $this->db->where('user_id', $payload['user_id']);
+      echo json_encode(array(
+        'status' => 'success',
+        'data' => $payload,
+        'method' => 'PUT'
+      ));
 
-          if (isset($payload['password'])) {
-            $password = password_hash($payload['password'], PASSWORD_DEFAULT);
-            $payload['password'] = $password;
-          }
+      //FORGOT PASSWORD
+    } else if (isset($payload['reset_password'])) {
 
-          $user = $this->db->update('tbl_users_new', $payload);
+      $password = password_hash($payload['reset_password'], PASSWORD_DEFAULT);
 
-          echo json_encode(array('status' => 'success',
-                                      'data' => $payload,
-                                      'method' => 'PUT'
-                                    ));
+      $this->db->where('email_address', $payload['email_address']);
+      $user = $this->db->update('tbl_users_new', array('password' => $password));
 
-         //FORGOT PASSWORD
-        } else if (isset($payload['reset_password'])) {
-
-          $password = password_hash($payload['reset_password'], PASSWORD_DEFAULT);
-
-          $this->db->where('email_address', $payload['email_address']);
-          $user = $this->db->update('tbl_users_new', array('password' => $password));
-
-          echo json_encode(array('status' => 'success',
-                                      'message' => 'Password has been reset',
-                                      'method' => 'POST'
-                                    ));
-        }
-
-      }
-
-      public function httpDelete($payload)
-      {
-
-      }
+      echo json_encode(array(
+        'status' => 'success',
+        'message' => 'Password has been reset',
+        'method' => 'POST'
+      ));
+    }
   }
 
-  /* END OF CLASS */
+  public function httpDelete($payload) {}
+}
+
+/* END OF CLASS */
 
 
-  $received_data = json_decode(file_get_contents('php://input'), true);
+$received_data = json_decode(file_get_contents('php://input'), true);
 
-  $request_method = $_SERVER['REQUEST_METHOD'];
-
-
-  $api = new API;
+$request_method = $_SERVER['REQUEST_METHOD'];
 
 
-  if ($request_method == 'GET') {
-      $api->httpGet($_GET);
-  }
+$api = new API;
 
-  if ($request_method == 'POST') {
-      $api->httpPost($received_data);
-  }
 
-  if ($request_method == 'PUT') {
-      $api->httpPut($received_data);
-  }
+if ($request_method == 'GET') {
+  $api->httpGet($_GET);
+}
 
-  if ($request_method == 'DELETE') {
-      $api->httpDelete($received_data);
-  }
+if ($request_method == 'POST') {
+  $api->httpPost($received_data);
+}
+
+if ($request_method == 'PUT') {
+  $api->httpPut($received_data);
+}
+
+if ($request_method == 'DELETE') {
+  $api->httpDelete($received_data);
+}

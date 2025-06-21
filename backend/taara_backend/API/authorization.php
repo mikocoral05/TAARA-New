@@ -44,7 +44,6 @@ class API
             if ($type == 3) {
                 $columns[] = 'tbl_official_position.position_title';
                 $columns[] = 'tbl_official_position.position_description';
-                $this->db->groupBy("tbl_users.roles");
                 $this->db->join('tbl_official_position', 'tbl_users.roles = tbl_official_position.id', 'left');
             }
             if ($type == 2) {

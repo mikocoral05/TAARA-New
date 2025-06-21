@@ -9,7 +9,7 @@ class API
 {
     public function __construct()
     {
-        $this->db = new MysqliDB('localhost', 'mike', 'mike123', 'capstone');
+        $this->db = new MysqliDB('localhost', 'root', '', 'capstone');
     }
 
     public function httpGet($payload)
@@ -175,12 +175,17 @@ class API
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_frequent_location', $payload)) {
+            // Fetch top 10 frequent rescue locations based on grouped lat/lng
             $topLocations = $this->db->rawQuery("
-            SELECT location, latitude, longitude, COUNT(*) AS total_reports
-            FROM tbl_rescue_report
-            GROUP BY latitude, longitude
-            ORDER BY total_reports DESC
-            LIMIT 10
+                SELECT 
+                    MAX(location) AS location, 
+                    latitude, 
+                    longitude, 
+                    COUNT(*) AS total_reports
+                FROM tbl_rescue_report
+                GROUP BY latitude, longitude
+                ORDER BY total_reports DESC
+                LIMIT 10
             ");
 
             echo json_encode([
@@ -251,10 +256,16 @@ class API
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_monthly_adopted', $payload)) {
-            $year = isset($payload['get_monthly_adopted']) ? intval($payload['get_monthly_adopted']) : date('Y');
+            $year = date('Y'); // default to current year
+
+            // Check if payload has year value inside an array
+            if (is_array($payload['get_monthly_adopted']) && isset($payload['get_monthly_adopted']['year'])) {
+                $year = intval($payload['get_monthly_adopted']['year']);
+            } elseif (is_numeric($payload['get_monthly_adopted'])) {
+                $year = intval($payload['get_monthly_adopted']);
+            }
 
             $this->db->where('adoption_status', 8);
-            $this->db->where('health_status', 4, '!=');
             $this->db->where('YEAR(updated_at)', $year);
             $this->db->groupBy('MONTH(updated_at)');
             $this->db->orderBy('MONTH(updated_at)', 'ASC');
@@ -264,21 +275,18 @@ class API
                 'MONTH(updated_at) as month'
             ]);
 
-            // Initialize array with 0 counts for each month
-            $monthlyCounts = array_fill(1, 12, 0);
+            $monthlyCounts = array_fill(1, 12, 0); // Jan to Dec (1-based index)
 
-            // Replace counts with actual data
             foreach ($query as $row) {
                 $monthlyCounts[intval($row['month'])] = intval($row['count']);
             }
 
-            // Reset array keys to 0-based index for JSON output
-            $monthlyCounts = array_values($monthlyCounts);
+            $monthlyCounts = array_values($monthlyCounts); // Reset to 0-based index
 
             echo json_encode([
                 'status' => 'success',
                 'year' => $year,
-                'data' => $monthlyCounts, // [2, 2, 2, 1, ...]
+                'data' => $monthlyCounts,
                 'method' => 'GET'
             ]);
         } else if (array_key_exists('get_monthly_deceased', $payload)) {

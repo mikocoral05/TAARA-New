@@ -49,7 +49,7 @@
         </div>
         <div class="image-layer fade-in-left-right row justify-end items-end">
           <q-img
-            src="http://77.37.74.195/images/public-image1.png"
+            src="https://vps.convertevue.com/images/public-image1.png"
             class="radius-100"
             width="500px"
             alt=""

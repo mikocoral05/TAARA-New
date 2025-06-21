@@ -9,7 +9,7 @@ class API
 {
   public function __construct()
   {
-    $this->db = new MysqliDB('localhost', 'mike', 'mike123', 'capstone');
+    $this->db = new MysqliDB('localhost', 'root', '', 'capstone');
   }
 
   public function httpGet($payload)

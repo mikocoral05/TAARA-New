@@ -9,7 +9,7 @@ class API
 {
     public function __construct()
     {
-        $this->db = new MysqliDB('localhost', 'mike', 'mike123', 'capstone');
+        $this->db = new MysqliDB('localhost', 'root', '', 'capstone');
     }
 
     public function httpGet($payload)
@@ -44,7 +44,6 @@ class API
             if ($type == 3) {
                 $columns[] = 'tbl_official_position.position_title';
                 $columns[] = 'tbl_official_position.position_description';
-                $columns[] = 'page_access';
                 $this->db->groupBy("tbl_users.roles");
                 $this->db->join('tbl_official_position', 'tbl_users.roles = tbl_official_position.id', 'left');
             }
@@ -53,7 +52,6 @@ class API
                 $columns[] = 'tbl_volunteer_position.position_description';
                 $columns[] = 'ff.application_status';
                 $columns[] = 'ff.id volunteer_id';
-                $columns[] = 'page_access';
                 $this->db->join('tbl_volunteer_position', 'tbl_users.roles = tbl_volunteer_position.id', 'left');
                 $this->db->join('tbl_volunteer_form ff', 'tbl_users.user_id = ff.user_id', 'left');
             }

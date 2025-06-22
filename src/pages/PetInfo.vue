@@ -12,28 +12,6 @@
         <q-tab name="3" icon="sym_r_monitor_heart" label="Under Medication" no-caps />
         <q-tab name="4" icon="sym_r_femur" label="Deceased" no-caps />
       </q-tabs>
-      <div class="row no-wrap justify-between items-center">
-        <div class="row no-wrap">
-          <div class="row no-wrap">
-            <q-icon
-              name="sym_r_check_box_outline_blank"
-              size="1rem"
-              color="warning"
-              class="bg-warning q-mr-sm radius-2"
-            />
-            <div class="text-grey-7 text-caption">Nearly expired</div>
-          </div>
-          <div class="row no-wrap q-ml-md">
-            <q-icon
-              name="sym_r_check_box_outline_blank"
-              size="1rem"
-              color="negative"
-              class="bg-negative q-mr-sm radius-2"
-            />
-            <div class="text-grey-7 text-caption">Expired</div>
-          </div>
-        </div>
-      </div>
     </div>
     <q-separator color="grey-3" class="q-mb-md" />
 
@@ -601,6 +579,11 @@
                         />
                       </q-td>
                     </template>
+                    <template v-slot:body-cell-type="props">
+                      <q-td :props="props" class="text-center">
+                        {{ getFileName(props.row.name) }}
+                      </q-td>
+                    </template>
 
                     <template v-slot:no-data>
                       <div class="row no-wrap items-center">
@@ -1043,6 +1026,11 @@ export default {
     watchEffect(() => {
       fetchFn()
     })
+    const getFileName = (link) => {
+      if (!link) return ''
+      const splitLink = link.split('/')
+      return splitLink.at(-1)
+    }
 
     const columnsImage = [
       {
@@ -1054,8 +1042,7 @@ export default {
         format: (val) => `${val}`,
         sortable: true,
       },
-      { name: 'size', align: 'center', label: 'File size', field: 'size', sortable: true },
-      { name: 'type', label: 'File type', field: 'type', sortable: true },
+      { name: 'type', label: 'File Name', align: 'center', field: 'type', sortable: true },
       { name: 'btn', label: 'Remove', align: 'center' },
     ]
 
@@ -1176,6 +1163,7 @@ export default {
       }, 1000)
     }
     return {
+      getFileName,
       outputObj,
       outputDialog,
       uploadObj,

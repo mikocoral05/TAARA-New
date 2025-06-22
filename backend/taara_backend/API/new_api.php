@@ -410,6 +410,19 @@ class API
                 'is_read'      => json_encode([]), // 0 = unread
             ];
             $this->db->insert("tbl_notification", $notif);
+        } else if (isset($payload['notify_management'])) {
+            $message = $payload['notify_management']['message'];
+            $title = $payload['notify_management']['title'];
+            $notif = [
+                'for_user'     => -2, // Example: -1 = all public_user, -2 = all management
+                'created_by'    => null, // Assuming the one triggering the notification is the updater
+                'title'        => $title,
+                'message'      => $message,
+                'type'         => 2, // 1 = announcement, 2 = notification
+                'related_url'  => '',
+                'is_read'      => json_encode([]), // 0 = unread
+            ];
+            $this->db->insert("tbl_notification", $notif);
         } else {
             echo json_encode([
                 'status' => 'error',

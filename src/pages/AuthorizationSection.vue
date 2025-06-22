@@ -1942,15 +1942,13 @@ export default {
       softDeleteUser(arrayOfId.value, store.userData.user_id, store.userData.type, userName).then(
         (response) => {
           if (response.status == 'success') {
-            setTimeout(() => {
-              $q.loading.show({
-                group: 'update',
-                message: response.message,
-              })
-            }, 1000)
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
             setTimeout(() => {
               $q.loading.hide()
-            }, 2000)
+            }, 1500)
             getUserByType(tab.value).then((response) => {
               userRows.value = response
             })

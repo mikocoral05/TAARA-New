@@ -9,7 +9,7 @@ class API
 {
     public function __construct()
     {
-        $this->db = new MysqliDB('localhost', 'root', '', 'capstone');
+        $this->db = new MysqliDB('localhost', 'mike', 'Mike1234!', 'capstone');
     }
 
     public function httpGet($payload)
@@ -59,6 +59,14 @@ class API
             $user_id = $payload['add_announcement']['user_id'];
             $user_type = $payload['add_announcement']['user_id'];
             $user_name = $payload['add_announcement']['user_name'];
+            $new_image = $data['new_image'] ?? '';
+
+            $image_id = '';
+
+            if ($new_image) {
+                $this->db->insert('tbl_files', ['image_path' => $new_image]);
+                $image_id = $this->db->getInsertId();
+            }
 
             $insertData = [
                 'title'               => $data['title'] ?? null,
@@ -66,6 +74,11 @@ class API
                 'is_pinned'              => $data['is_pinned'] ?? 0,
                 'created_by'              => $data['created_by'] ?? 84,
             ];
+
+            if ($image_id) {
+                $insertData['img_id'] = $image_id;
+            }
+
 
             $insert = $this->db->insert('tbl_announcements', $insertData);
             $id = $this->db->getInsertId();

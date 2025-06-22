@@ -1,9 +1,8 @@
-import { defineComponent, ref, onMounted, watch, onBeforeUnmount } from 'vue'
+import { defineComponent, ref, watch, onBeforeUnmount, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import loginModal from 'src/components/loginModal.vue'
 import reportAnnouncementDialog from 'src/components/reportAnnouncementDialog.vue'
 import {
-  notifCount,
   likesData,
   viewSpecificAnimal,
   lastObjectNotif,
@@ -15,11 +14,8 @@ import { useCounterStore } from 'src/stores/example-store'
 import { useQuasar } from 'quasar'
 import { globalStore } from 'src/stores/global-store'
 import { getFavorites } from 'src/composable/latestPublicComposable'
-import {
-  getNotif,
-  readNotif,
-  //  readNotif
-} from 'src/composable/latestComposable'
+import { getNotif, readNotif } from 'src/composable/latestComposable'
+import { computed } from 'vue'
 export default defineComponent({
   name: 'MainLayout',
 
@@ -30,8 +26,6 @@ export default defineComponent({
 
   setup() {
     const store = globalStore()
-    notifCount.value = JSON.parse(localStorage.getItem('count'))
-
     const counterStore = useCounterStore()
     const router = useRouter()
     const route = useRoute()
@@ -45,6 +39,7 @@ export default defineComponent({
     const drawerLeft = ref(false)
     const responsiveNav = ref(false)
     const responsiveNavAll = ref(false)
+    const notifCount = ref(0)
     const rightDrawerNotification = ref(false)
     let myFavorites
     let myNotification
@@ -100,29 +95,6 @@ export default defineComponent({
     const numberNotif = ref([])
     const notificationShow = () => {
       rightDrawerNotification.value = !rightDrawerNotification.value
-    }
-
-    const viewNotification = (payload, notif_id) => {
-      if (payload == 'rescue_report') {
-        if (route.path == '/rescue-reports') {
-          counterStore.changeReport(notif_id)
-        } else {
-          router.push('/rescue-reports')
-          counterStore.changeReport(notif_id)
-        }
-      } else if (payload == 'Announcement') {
-        if (route.path == '/announcementsPage') {
-          counterStore.changeAnnounce(notif_id)
-        } else {
-          router.push('/announcementsPage')
-          counterStore.changeAnnounce(notif_id)
-        }
-      } else if (payload == 'New Animal for Adoption') {
-        router.push('/view-specific-animal')
-        viewSpecificAnimal(notif_id)
-      } else if (payload == 'pEt-o-sHooT') {
-        router.push('/activitiesAndEventsViewEvent')
-      }
     }
 
     const updateViewNotifFn = async (notif) => {
@@ -222,11 +194,20 @@ export default defineComponent({
         console.log(favoriteList.value)
       }
     }
+    const countUnread = computed(() => {
+      return (
+        notifData.value.filter((item) => {
+          const readList = JSON.parse(item.is_read || '[]')
+          return !readList.includes(store.userData.user_id)
+        }).length || 0
+      )
+    })
+
     onMounted(async () => {
       if (Object.keys(store.userData).length !== 0) {
-        // logInDetails.value == null ? '' : getNotification(0)
+        notifData.value = await getNotif([store.userData.user_id, '-1', '-3'])
+        console.log(notifData.value)
       }
-      // window.addEventListener('resize', handleResize)
     })
     onBeforeUnmount(() => {
       window.removeEventListener('resize', handleResize)
@@ -235,6 +216,7 @@ export default defineComponent({
     })
 
     return {
+      countUnread,
       updateViewNotifFn,
       notifData,
       showNotifFn,
@@ -267,7 +249,6 @@ export default defineComponent({
       responsiveNav,
       numberNotif,
       // readNotif,
-      viewNotification,
       notifCount,
       counterStore,
       getNotification,

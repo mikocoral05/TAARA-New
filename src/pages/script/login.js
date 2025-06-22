@@ -1,6 +1,6 @@
 import { ref, onBeforeUnmount, watchEffect, watch } from 'vue'
 import { useRouter } from 'vue-router'
-import { QSpinnerGears, useQuasar, QSpinnerFacebook } from 'quasar'
+import { QSpinnerGears, useQuasar } from 'quasar'
 import {
   dateToday,
   timeNow,
@@ -13,7 +13,6 @@ import {
   changePass,
   logInDetails,
   wrongUserOrPass,
-  addUser,
   dearUserName,
   dearUserPhoneNumber,
 } from 'src/composable/taaraComposable'
@@ -385,57 +384,6 @@ export default {
       }
     }
 
-    let createAccount = (payload) => {
-      if (aggree.value == true) {
-        $q.loading.show({
-          spinner: QSpinnerFacebook,
-          spinnerColor: 'amber',
-          spinnerSize: 140,
-          backgroundColor: 'primary',
-          message: 'Some important process is in progress. Hang on...',
-          messageColor: 'white',
-        })
-
-        addUser(payload)
-          .then((response) => {
-            timer1 = setTimeout(() => {
-              $q.loading.hide()
-              $q.loading.show({
-                spinner: QSpinnerFacebook,
-                spinnerColor: 'amber',
-                spinnerSize: 140,
-                backgroundColor: 'primary',
-                message:
-                  response == 'success'
-                    ? 'Account Creation is Successful!'
-                    : 'Account Creation failed',
-                messageColor: 'white',
-              })
-              timer2 = setTimeout(() => {
-                $q.loading.hide()
-                fadeValue.value = response == 'success' ? false : true
-                let keysToKeep = [
-                  'account_identifier',
-                  'date_created',
-                  'time_created',
-                  'sex',
-                  'civil_status',
-                ]
-
-                Object.keys(registerInfo.value).forEach((obj) => {
-                  if (!keysToKeep.includes(obj)) {
-                    registerInfo.value[obj] = null
-                  }
-                })
-              }, 1500)
-            }, 2000)
-          })
-          .catch((error) => {
-            console.log(error)
-          })
-      }
-    }
-
     let resetRegisterInfo = () => {
       Object.keys(registerInfo.value).forEach((key) => {
         registerInfo.value[key] == null
@@ -560,7 +508,6 @@ export default {
       resetLogInInfo,
       resetRegisterInfo,
       finishUp,
-      createAccount,
       authenticationStep,
       miniStepCheck,
       countdownTime,

@@ -767,7 +767,7 @@ class API
 
             $this->db->where('id', $id);
             $update_values = [
-                "id_read" => json_encode($array_user_id)
+                "is_read" => json_encode($array_user_id)
             ];
 
             $update = $this->db->update('tbl_notification', $update_values);

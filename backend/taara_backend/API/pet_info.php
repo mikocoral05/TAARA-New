@@ -75,6 +75,16 @@ class API
             $user_type = $payload['save_animal_list']['user_type'];
             $user_name = $payload['save_animal_list']['user_name'];
 
+            $new_image = $data['new_image'] ?? [];
+            $image_ids = [];
+
+            if (!empty($new_image) && is_array($new_image)) {
+                foreach ($new_image as $img) {
+                    $this->db->insert('tbl_files', ['image_path' => $img]);
+                    $image_ids[] = $this->db->getInsertId();
+                }
+            }
+
             $insertData = [
                 'name'               => $data['name'] ?? null,
                 'species'            => $data['species'] ?? null,
@@ -94,6 +104,9 @@ class API
                 'vaccination_status' => $data['vaccination_status'] ?? null,
                 'rescue_status'      => $data['rescue_status'] ?? null,
                 'story_background'   => $data['story_background'] ?? null,
+                'primary_image' => $image_ids[0],
+                'image_gallery' => json_encode($image_ids),
+
             ];
 
             $insert = $this->db->insert('tbl_animal_info', $insertData);
@@ -198,6 +211,19 @@ class API
             $user_type = $payload['edit_animal_info']['user_type'];
             $user_name = $payload['edit_animal_info']['user_name'];
 
+            $new_image = $obj['new_image'] ?? [];
+            $existing_image_ids = is_array($obj['existing_image_gallery_id'] ?? null)
+                ? $obj['existing_image_gallery_id']
+                : [];
+            $image_ids = [];
+
+            if (!empty($new_image) && is_array($new_image)) {
+                foreach ($new_image as $img) {
+                    $this->db->insert('tbl_files', ['image_path' => $img]);
+                    $image_ids[] = $this->db->getInsertId();
+                }
+            }
+
             $update_values = [
                 'name' => $obj['name'] ?? null,
                 'species' => $obj['species'] ?? null,
@@ -222,7 +248,11 @@ class API
             ];
 
             $animal_id = $obj['animal_id'];
-
+            if (count($image_ids) > 0 || count($existing_image_ids) > 0) {
+                $merged_images = array_merge($image_ids, $existing_image_ids);
+                $update_values['image_gallery'] = json_encode(array_slice($merged_images, 0, 5));
+                $update_values['primary_image'] = $image_ids[0] ?? $existing_image_ids[0] ?? null;
+            }
             $this->db->where('animal_id', $animal_id);
             $updated = $this->db->update('tbl_animal_info', $update_values);
 

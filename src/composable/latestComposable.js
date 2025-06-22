@@ -697,26 +697,20 @@ export const uploadImages = async (fileArray) => {
   })
 }
 
-export const saveAnimalDetail = (obj, user_id, user_type, user_name) => {
+export const saveAnimalDetail = async (obj, user_id, user_type, user_name) => {
   const { file, ...animalData } = obj // separate the files
-  return new Promise((resolve, reject) => {
-    api
-      .post('pet_info.php', {
-        save_animal_list: { animalData, user_id, user_type, user_name },
-      })
-      .then(async (response) => {
-        if (response.data.status == 'success') {
-          const idToUpdate = response.data.id
-          const res = await uploadImages(file)
-          const status = await updateImage(res.data.images, idToUpdate)
-          console.log(status)
-          resolve({ status: status, message: response.data.message })
-        }
-      })
-      .catch((error) => {
-        reject(error)
-      })
+  console.log(file)
+
+  if (file) {
+    const res = await uploadImages(file)
+    animalData.new_image = res.data.images
+    console.log(res.data.images)
+  }
+  const response = await api.post('pet_info.php', {
+    save_animal_list: { animalData, user_id, user_type, user_name },
   })
+  console.log(response.data)
+  return response.data
 }
 
 const updateDonationFileId = async (array_link, id) => {
@@ -726,6 +720,9 @@ const updateDonationFileId = async (array_link, id) => {
 
 export const saveDonation = (obj, user_id, user_type, user_name) => {
   const { file, ...donationData } = obj // separate the files
+  console.log(file)
+  console.log(donationData)
+
   return new Promise((resolve, reject) => {
     api
       .post('donation.php', {
@@ -734,8 +731,11 @@ export const saveDonation = (obj, user_id, user_type, user_name) => {
       .then(async (response) => {
         if (response.data.status == 'success') {
           const idToUpdate = response.data.id
-          const res = await uploadImages([file])
-          const status = await updateDonationFileId(res.data.images, idToUpdate)
+          let status = null
+          if (file) {
+            const res = await uploadImages([file])
+            status = await updateDonationFileId(res.data.images, idToUpdate)
+          }
           console.log(status)
           resolve({ status: status, message: response.data.message })
         }
@@ -782,33 +782,23 @@ export const updateHealtStatus = async (obj, user_id, user_type, user_name) => {
   return response.data
 }
 
-export const editAnimalInfo = (obj, user_id, user_type, user_name) => {
+export const editAnimalInfo = async (obj, user_id, user_type, user_name) => {
   const { file, toRemoveId, ...animal_data } = obj
-  return new Promise((resolve, reject) => {
-    api
-      .put('pet_info.php', {
-        edit_animal_info: { animal_data, user_id, user_type, user_name },
-      })
-      .then(async (response) => {
-        if (response.data.status == 'success') {
-          if (toRemoveId?.length > 0) {
-            const getFileId = file.filter((obj) => obj.id != null).map((obj) => obj.id)
-            if (getFileId?.length > 0) {
-              const getNewFile = file.filter((obj) => obj.id == null)
-              const res = await uploadImages(getNewFile)
-              const status = await updateImage(res.data.images, obj.animal_id, getFileId)
-              console.log(status)
-              resolve({ status: status, message: response.data.message })
-              console.log(res)
-            }
-          }
-        }
-        resolve(response.data)
-      })
-      .catch((error) => {
-        reject(error)
-      })
+  console.log(file)
+
+  if (toRemoveId?.length > 0) {
+    if (file.length > 0) {
+      const res = await uploadImages(file)
+      animal_data.new_image = res.data.images
+      console.log(res.data.images)
+    }
+    const getFileId = file.filter((obj) => obj.id != null).map((obj) => obj.id)
+    animal_data.existing_image_gallery_id = getFileId ?? []
+  }
+  const response = await api.put('pet_info.php', {
+    edit_animal_info: { animal_data, user_id, user_type, user_name },
   })
+  return response.data
 }
 
 export const saveActivitiesAndEvents = async (obj, user_id, user_type, user_name) => {
@@ -831,25 +821,6 @@ export const uploadAnimalImages = (fileArray, animal_id) => {
   })
   formData.append('animal_id', animal_id) // 👈 include animal_id
   return api.post('image-upload.php', formData, {
-    headers: { 'Content-Type': 'multipart/form-data' },
-  })
-}
-
-const uploadFiles = (fileArray, record_id, table, id_column, column_name) => {
-  const formData = new FormData()
-
-  // Append files
-  fileArray.forEach((fileObj) => {
-    formData.append('files[]', fileObj) // 📌 The actual File
-  })
-
-  // Append necessary data for server processing
-  formData.append('record_id', record_id)
-  formData.append('table', table)
-  formData.append('id_column', id_column)
-  formData.append('column_to_update', column_name)
-
-  return api.post('file-upload.php', formData, {
     headers: { 'Content-Type': 'multipart/form-data' },
   })
 }
@@ -1015,55 +986,30 @@ export const addSchedule = (obj, user_id, user_type, user_name) => {
   })
 }
 
-export const addAnnouncement = (obj, user_id, user_type, user_name) => {
+export const addAnnouncement = async (obj, user_id, user_type, user_name) => {
   const { file, ...data } = obj
-  return new Promise((resolve, reject) => {
-    api
-      .post('announcement.php', {
-        add_announcement: { data, user_id, user_type, user_name },
-      })
-      .then((response) => {
-        if (response.data.status == 'success') {
-          if (file) {
-            uploadFiles([file], response.data.id, 'tbl_announcements', 'id', 'img_id').then(
-              (response) => {
-                console.log(response)
-              },
-            )
-          }
-          resolve(response.data)
-        }
-      })
-      .catch((error) => {
-        reject(error)
-      })
+  if (file) {
+    const res = await uploadImages([file])
+    data.new_image = res.data.images[0]
+  }
+  const response = await api.post('announcement.php', {
+    add_announcement: { data, user_id, user_type, user_name },
   })
+  return response.data
 }
 
-export const addRescueRerport = (obj, user_id, user_type, user_name) => {
+export const addRescueRerport = async (obj, user_id, user_type, user_name) => {
   const { file, ...data } = obj
-  return new Promise((resolve, reject) => {
-    api
-      .post('rescue_report.php', {
-        add_rescue_report: { data, user_id, user_type, user_name },
-      })
-      .then((response) => {
-        if (response.data.status == 'success') {
-          if (file) {
-            uploadFiles([file], response.data.id, 'tbl_rescue_report', 'id', 'img_id').then(
-              (response) => {
-                console.log(response)
-              },
-            )
-          }
-          getPendingRescueReport()
-          resolve(response.data)
-        }
-      })
-      .catch((error) => {
-        reject(error)
-      })
+  if (file) {
+    const res = await uploadImages([file])
+    data.new_image = res.data.images[0]
+  }
+  const response = await api.post('rescue_report.php', {
+    add_rescue_report: { data, user_id, user_type, user_name },
   })
+
+  getPendingRescueReport()
+  return response.data
 }
 
 export const editAnnouncement = async (obj, user_id, user_type, user_name) => {
@@ -1078,28 +1024,18 @@ export const editAnnouncement = async (obj, user_id, user_type, user_name) => {
   return response.data
 }
 
-export const editRescueReport = (obj, user_id, user_type, user_name) => {
+export const editRescueReport = async (obj, user_id, user_type, user_name) => {
   const { file, ...data } = obj
-  return new Promise((resolve, reject) => {
-    api
-      .put('rescue_report.php', {
-        edit_rescue_report: { data, user_id, user_type, user_name },
-      })
-      .then((response) => {
-        if (response.data.status == 'success') {
-          if (file) {
-            uploadFiles([file], data.id, 'tbl_rescue_report', 'id', 'img_id').then((response) => {
-              console.log(response)
-            })
-          }
-        }
-        getPendingRescueReport()
-        resolve(response.data)
-      })
-      .catch((error) => {
-        reject(error)
-      })
+  if (file) {
+    const res = await uploadImages([file])
+    data.new_image = res.data.images[0]
+  }
+  const response = await api.put('rescue_report.php', {
+    edit_rescue_report: { data, user_id, user_type, user_name },
   })
+
+  getPendingRescueReport()
+  return response.data
 }
 
 export const editActivitiesAndEvents = async (obj, user_id, user_type, user_name) => {

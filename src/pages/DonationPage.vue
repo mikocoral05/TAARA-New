@@ -640,6 +640,7 @@ export default {
           }, 500)
           setTimeout(() => {
             showDialog.value = false
+            fetchFn()
             $q.loading.hide()
           }, 1000)
         })
@@ -666,9 +667,7 @@ export default {
         }, 500)
         setTimeout(() => {
           $q.loading.hide()
-          if (response.status == 'success') {
-            fetchFn()
-          }
+          fetchFn()
         }, 1000)
       })
     }

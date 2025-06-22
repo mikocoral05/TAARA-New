@@ -82,6 +82,15 @@ class API
             $user_type = $payload['add_rescue_report']['user_type'];
             $user_name = $payload['add_rescue_report']['user_name'];
 
+            $new_image = $data['new_image'] ?? '';
+
+            $image_id = '';
+
+            if ($new_image) {
+                $this->db->insert('tbl_files', ['image_path' => $new_image]);
+                $image_id = $this->db->getInsertId();
+            }
+
             $insertData = [
                 'reporter_type'               => $data['reporter_type'] ?? 2,
                 'phone_number'            => $data['phone_number'] ?? null,
@@ -92,9 +101,13 @@ class API
                 'location'              => $data['location'] ?? '',
                 'latitude'              => $data['latitude'] ?? null,
                 'longitude'              => $data['longitude'] ?? null,
-                'status'              => $data['status'] ?? 'pending',
+                'status'              => $data['status'] ?? 1,
                 'rescue_status'              => $data['rescue_status'] ?? 1,
             ];
+
+            if ($image_id) {
+                $insertData['img_id'] = $image_id;
+            }
 
             $insert = $this->db->insert('tbl_rescue_report', $insertData);
             $id = $this->db->getInsertId();
@@ -199,6 +212,15 @@ class API
             $user_type = $payload['edit_rescue_report']['user_type'];
             $user_name = $payload['edit_rescue_report']['user_name'];
 
+            $new_image = $obj['new_image'] ?? '';
+
+            $image_id = '';
+
+            if ($new_image) {
+                $this->db->insert('tbl_files', ['image_path' => $new_image]);
+                $image_id = $this->db->getInsertId();
+            }
+
             $update_values = [
                 'phone_number'            => $obj['phone_number'] ?? null,
                 'name'              => $obj['name'] ?? '',
@@ -210,6 +232,11 @@ class API
                 'status'              => $obj['status'] ?? 'pending',
                 'rescue_status'              => $obj['rescue_status'] ?? 1,
             ];
+
+            if ($image_id) {
+                $update_values['img_id'] = $image_id;
+            }
+
 
             $id = $obj['id'];
 

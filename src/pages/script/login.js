@@ -1,4 +1,4 @@
-import { ref, onBeforeUnmount, watchEffect } from 'vue'
+import { ref, onBeforeUnmount, watchEffect, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { QSpinnerGears, useQuasar, QSpinnerFacebook } from 'quasar'
 import {
@@ -255,6 +255,8 @@ export default {
       startCountdown()
     }
 
+    const emailInput = ref(null)
+    const phoneNumberInput = ref(null)
     let logInTaara = async () => {
       if (tab.value == 'login') {
         $q.loading.show({
@@ -296,6 +298,7 @@ export default {
           loadingVar.value = false
           if (res.data > 0) {
             showPhoneError.value = true
+            phoneNumberInput.value.validate()
             return
           }
           showPhoneError.value = false
@@ -304,9 +307,12 @@ export default {
           const res1 = await checkEmail(userInfo.value.email_address)
           const res2 = await checkUsername(userInfo.value.username)
           loadingVar.value = false
+          console.log(res1)
+
           showEmailError.value = res1.data > 0
           showUsernameError.value = res2.data > 0
           if (showEmailError.value || showUsernameError.value) {
+            emailInput.value.validate()
             return
           }
           showEmailError.value = false
@@ -436,6 +442,24 @@ export default {
       })
     }
 
+    watch(
+      () => userInfo.value.email_address,
+      () => {
+        if (showEmailError.value) showEmailError.value = false
+      },
+    )
+    watch(
+      () => userInfo.value.username,
+      () => {
+        if (showUsernameError.value) showUsernameError.value = false
+      },
+    )
+    watch(
+      () => userInfo.value.phone_number,
+      () => {
+        showPhoneError.value = false
+      },
+    )
     const forgotFn = async () => {
       loadingVar.value = true
       const res = checkEmailOrPhone(forgotPasswordField.value)
@@ -508,6 +532,8 @@ export default {
       includeNumber.value = /\d/.test(userInfo.value.password)
     })
     return {
+      phoneNumberInput,
+      emailInput,
       showPasswordError,
       showEmailError,
       showUsernameError,

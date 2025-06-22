@@ -268,7 +268,7 @@ export default {
           previewImage.value = null
           dataStorage.value = { content: '' }
         } else {
-          dataStorage.value = data
+          dataStorage.value = { ...data }
           previewImage.value = data?.image_path ? getImageLink(data.image_path) : null
           console.log(dataStorage.value)
         }
@@ -300,7 +300,7 @@ export default {
             fetchFn()
             showDialog.value = false
             $q.loading.hide()
-          }, 1000)
+          }, 1500)
         })
       } else if (mode.value == 'Edit') {
         $q.loading.show({
@@ -322,7 +322,7 @@ export default {
             showDialog.value = false
             fetchFn()
             $q.loading.hide()
-          }, 1000)
+          }, 1500)
         })
       }
     }
@@ -375,7 +375,7 @@ export default {
           if (response.status == 'success') {
             fetchFn()
           }
-        }, 2000)
+        }, 1500)
       })
     }
 

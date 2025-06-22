@@ -210,10 +210,10 @@
                   v-model="dataStorage.group_name"
                   class="q-mt-sm"
                   :options="groupNameOptions"
-                  emit-value
-                  map-options
                   option-label="group_name"
                   option-value="id"
+                  emit-value
+                  map-options
                   dense
                   style="width: 250px"
                   behavior="menu"
@@ -436,7 +436,7 @@ export default {
         if (modeParam == 'Add') {
           dataStorage.value = {}
         } else {
-          dataStorage.value = data
+          dataStorage.value = { ...data }
         }
       } else {
         arrayOfId.value.push(data.id)
@@ -458,16 +458,14 @@ export default {
             store.userData.user_type,
             userName,
           ).then((response) => {
-            console.log(response)
+            $q.loading.show({
+              group: 'update',
+              message: response.message,
+            })
             setTimeout(() => {
-              $q.loading.show({
-                group: 'update',
-                message: response.message,
-              })
-            }, 1000)
-            setTimeout(() => {
+              fetchFn()
               $q.loading.hide()
-            }, 2000)
+            }, 1500)
           })
         } else {
           addGroupName(
@@ -476,7 +474,6 @@ export default {
             store.userData.user_type,
             userName,
           ).then((response) => {
-            console.log(response)
             setTimeout(() => {
               $q.loading.show({
                 group: 'update',
@@ -484,9 +481,10 @@ export default {
               })
             }, 1000)
             setTimeout(() => {
+              fetchFn()
               groupDialog.value = false
               $q.loading.hide()
-            }, 2000)
+            }, 1500)
           })
         }
       } else if (mode.value == 'Edit') {
@@ -494,20 +492,29 @@ export default {
           group: 'update',
           message: `${obj3[mode.value]}. Please wait...`,
         })
+        if (typeof dataStorage.value.group_name === 'string') {
+          const groupObj = groupNameOptions.value.find(
+            (item) => item.group_name === dataStorage.value.group_name,
+          )
+          if (groupObj) {
+            dataStorage.value.group_name = groupObj.id
+          }
+        }
+
         editInventoryList(
           dataStorage.value,
           store.userData.user_id,
           store.userData.user_type,
           userName,
         ).then((response) => {
-          console.log(response)
           $q.loading.show({
             group: 'update',
             message: response.message,
           })
           setTimeout(() => {
+            fetchFn()
             $q.loading.hide()
-          }, 2000)
+          }, 1500)
         })
       }
     }
@@ -533,7 +540,6 @@ export default {
           rows.value = response
           tableConfig.value.title = 'Group List'
           tableConfig.value.columns = ['id', 'group_name', 'count', 'btn']
-          console.log(tableConfig.value.columns)
         })
       } else if (filterNo == 3) {
         getInventoryExpiredList(obj[tab.value]).then((response) => {
@@ -563,14 +569,11 @@ export default {
       ).then((response) => {
         if (response == 'success') {
           filterInventory(filterTab.value)
-          getInventoryListSummary(obj[tab.value]).then((response) => {
-            elseSummary.value = response
-          })
+          fetchFn()
         }
       })
     }
-
-    watchEffect(() => {
+    const fetchFn = () => {
       getInventoryList(obj[tab.value]).then((response) => {
         tableConfig.value.title = `${capitalize(obj[tab.value])} List`
         tableConfig.value.columns = [
@@ -583,7 +586,6 @@ export default {
           'btn',
         ]
         rows.value = response
-        console.log(rows.value)
 
         itemsCount.value = rows.value.reduce((total, item) => {
           return total + item.quantity
@@ -592,6 +594,9 @@ export default {
       getInventoryListSummary(obj[tab.value]).then((response) => {
         elseSummary.value = response
       })
+    }
+    watchEffect(() => {
+      fetchFn()
     })
     const preventAction = () => {
       const userType = store.userData.user_type

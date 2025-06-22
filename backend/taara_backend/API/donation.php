@@ -29,10 +29,10 @@ class API
 
             $this->db->where("tbl1.donation_type", $type);
             $this->db->where("tbl1.is_deleted", 0);
-            // $this->db->where("tbl1.status", 2);
 
             // Specific columns you want to select
-            $columns = "tbl1.*, tbl2.*, tbl3.first_name as donor_name,tbl4.image_path";
+            $columns = "tbl1.*, tbl2.*, COALESCE(tbl3.first_name, tbl1.donor_name) as donor_name, tbl4.image_path";
+
             $data = $this->db->get("tbl_funds tbl1", null, $columns);
 
             echo json_encode([
@@ -57,7 +57,7 @@ class API
             $user_id = $payload['add_donation']['user_id'];
             $user_type = $payload['add_donation']['user_type'];
             $user_name = $payload['add_donation']['user_name'];
-            $new_image = $data['new_image'];
+            $new_image = $data['new_image'] ?? '';
 
             $image_id = '';
 

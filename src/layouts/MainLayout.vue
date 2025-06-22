@@ -11,17 +11,6 @@
             @click="toggleLeftDrawer"
             class="q-mr-xl"
           />
-          <q-input
-            borderless
-            style="width: 350px"
-            class="bg-default radius-10 q-px-md"
-            placeholder="Search"
-            dense
-          >
-            <template v-slot:prepend>
-              <q-icon name="search" />
-            </template>
-          </q-input>
         </div>
         <div class="row no-wrap items-center q-mr-xl">
           <q-btn
@@ -33,7 +22,7 @@
             dense
             @click="showNotifFn()"
           >
-            <q-badge color="red" floating>4</q-badge>
+            <q-badge color="red" v-if="countUnread" floating>{{ countUnread }}</q-badge>
           </q-btn>
 
           <div class="row no-wrap items-center q-mr-md">
@@ -165,8 +154,10 @@
             <q-item
               class="q-py-md"
               :class="{
-                'bg-grey-1': !JSON.parse(notif.is_read).includes(store.userData.user_id),
+                'bg-grey-2': !JSON.parse(notif.is_read).includes(store.userData.user_id),
               }"
+              @click="updateViewNotifFn(notif)"
+              clickable
             >
               <q-item-section avatar>
                 <q-avatar>
@@ -203,6 +194,7 @@ import { computed } from 'vue'
 import { useQuasar } from 'quasar'
 import { getImageLink, timeAgo } from 'src/composable/simpleComposable'
 import { getNotif } from 'src/composable/latestComposable'
+import { readNotif } from '../composable/latestComposable'
 
 export default defineComponent({
   name: 'MainLayout',
@@ -379,15 +371,38 @@ export default defineComponent({
       console.log(notifData.value)
     }
 
+    const updateViewNotifFn = async (notif) => {
+      const isRead = JSON.parse(notif.is_read)
+
+      if (!isRead.includes(store.userData.user_id)) {
+        isRead.push(store.userData.user_id)
+        await readNotif(notif.id, isRead)
+        notifData.value = await getNotif([store.userData.user_id, '-2', '-3'])
+      }
+    }
+
     watchEffect(() => {
       store.showLayout = !pathExclude.value.includes(route.path)
     })
-
-    onMounted(() => {
+    const countUnread = computed(() => {
+      return (
+        notifData.value.filter((item) => {
+          const readList = JSON.parse(item.is_read || '[]')
+          return !readList.includes(store.userData.user_id)
+        }).length || 0
+      )
+    })
+    onMounted(async () => {
       const savedPosition = parseFloat(sessionStorage.getItem('myScrollPos') || '0')
       myScrollArea.value?.setScrollPosition('vertical', savedPosition)
+      if (Object.keys(store.userData).length !== 0) {
+        notifData.value = await getNotif([store.userData.user_id, '-2', '-3'])
+        console.log(notifData.value)
+      }
     })
     return {
+      updateViewNotifFn,
+      countUnread,
       timeAgo,
       notifData,
       showNotifFn,

@@ -128,16 +128,13 @@
                     outlined
                     v-model="dataStorage.phone_number"
                     dense
-                    type="number"
                     class="q-mt-sm"
                     placeholder="920783562"
                     style="width: 300px"
                     :readonly="mode == 'View'"
                     prefix="+63"
-                    :rules="[
-                      (val) => !!val || 'Phone number is required',
-                      (val) => /^\d{10}$/.test(val) || 'Phone number must be exactly 10 digits',
-                    ]"
+                    mask="phone"
+                    :rules="[(val) => !!val || '']"
                   />
                 </div>
               </div>
@@ -376,19 +373,17 @@ export default {
           userName,
         ).then((response) => {
           console.log(response)
-          setTimeout(() => {
-            $q.loading.show({
-              group: 'update',
-              message: response.message,
-            })
-          }, 1000)
+          $q.loading.show({
+            group: 'update',
+            message: response.message,
+          })
           setTimeout(() => {
             getRescueReport().then((response) => {
               rows.value = response
             })
             showDialog.value = false
             $q.loading.hide()
-          }, 2000)
+          }, 1500)
         })
       } else if (mode.value == 'Edit') {
         $q.loading.show({
@@ -407,9 +402,12 @@ export default {
             message: response.message,
           })
           setTimeout(() => {
+            getRescueReport(status.value).then((response) => {
+              rows.value = response
+            })
             showDialog.value = false
             $q.loading.hide()
-          }, 2000)
+          }, 1500)
         })
       }
     }
@@ -513,12 +511,10 @@ export default {
         })
         setTimeout(() => {
           $q.loading.hide()
-          if (response.status == 'success') {
-            getRescueReport().then((response) => {
-              rows.value = response
-            })
-          }
-        }, 2000)
+          getRescueReport().then((response) => {
+            rows.value = response
+          })
+        }, 1500)
       })
     }
 

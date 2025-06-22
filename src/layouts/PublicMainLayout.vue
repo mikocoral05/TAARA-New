@@ -236,7 +236,7 @@
             class="q-ml-sm"
             @click="showNotifFn()"
           >
-            <q-badge color="red" floating>{{ countUnread }}</q-badge></q-btn
+            <q-badge color="red" v-if="countUnread" floating>{{ countUnread }}</q-badge></q-btn
           >
           <q-btn
             bordered

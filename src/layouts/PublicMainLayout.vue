@@ -235,7 +235,9 @@
             dense
             class="q-ml-sm"
             @click="showNotifFn()"
-          />
+          >
+            <q-badge color="red" floating>{{ countUnread }}</q-badge></q-btn
+          >
           <q-btn
             bordered
             icon="sym_r_heart_plus"
@@ -326,20 +328,13 @@
                 ></q-icon>
               </q-item-section>
             </q-item>
-            <q-item>
-              <q-item-section>
-                <q-item-label class="row no-wrap">
-                  <div class="q-mr-md">All</div>
-                  <div>Announcement</div>
-                </q-item-label>
-              </q-item-section>
-            </q-item>
+
             <q-separator horizontal class="shadow-1" size="md" />
             <div class="column no-wrap" v-for="(notif, index) in notifData" :key="index">
               <q-item
                 class="q-py-md"
                 :class="{
-                  'bg-grey-1': !JSON.parse(notif.is_read).includes(store.userData.user_id),
+                  'bg-grey-2': !JSON.parse(notif.is_read).includes(store.userData.user_id),
                 }"
                 clickable
                 @click="updateViewNotifFn(notif)"

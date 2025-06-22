@@ -129,18 +129,19 @@
                         Phone Number<span class="q-ml-sm text-negative"> *</span>
                       </p>
                       <q-input
+                        ref="phoneNumberInput"
                         outlined
                         placeholder="(947) 856 - 7856"
                         dense
                         v-model="userInfo.phone_number"
-                        :rules="[Phone, (val) => !!val || 'Phone number is required!']"
+                        :rules="[
+                          (val) => !!val || 'Phone number is required!',
+                          (val) => !showPhoneError || 'Number already registered!',
+                        ]"
                         prefix="+63"
                         mask="phone"
                         hint="We will send otp in this number"
-                        error-message="Number already registered!"
-                        :error="showPhoneError"
-                      >
-                      </q-input>
+                      />
                     </div>
                   </div>
                 </q-step>
@@ -220,6 +221,7 @@
                       Email Address<span class="text-negative q-ml-sm">*</span>
                     </p>
                     <q-input
+                      ref="emailInput"
                       outlined
                       placeholder="Email address"
                       dense
@@ -227,10 +229,9 @@
                       :rules="[
                         (val) => !!val || 'Email is required!',
                         (val) => /^[^@]+@[^@]+\.[^@]+$/.test(val) || 'Email is invalid!',
+                        (val) => !showEmailError || 'This email is already registered!',
                       ]"
                       hint="We will send confirmation to this email!"
-                      error-message="This email is already registered!"
-                      :error="showEmailError"
                     />
                   </div>
                   <div class="column no-wrap q-pt-md full-width">

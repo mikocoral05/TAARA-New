@@ -708,7 +708,6 @@ export default {
       }, 500)
       if (response.status == 'success') {
         const newData = await getUserInfo(userInfo.value.user_id)
-        console.log(newData.data)
         store.userData = newData.data
         sessionStorage.setItem('user_data', JSON.stringify(newData.data))
         userInfo.value = newData.data
@@ -721,7 +720,6 @@ export default {
     const previewImage = ref(null)
     const imageFnUpdate = () => {
       previewImage.value = URL.createObjectURL(userInfo.value.file)
-      console.log(previewImage.value)
     }
 
     const triggerUpload = () => {
@@ -730,7 +728,6 @@ export default {
 
     onMounted(() => {
       previewImage.value = store.userData.image_path
-      console.log(previewImage.value)
     })
 
     watch(
@@ -742,7 +739,6 @@ export default {
           $q.loading.show({ group: 'update', message: response.message })
           if (response.status == 'success') {
             const newData = await getUserInfo(userInfo.value.user_id)
-            console.log(newData)
             store.userData = newData.data
             sessionStorage.setItem('user_data', JSON.stringify(newData.data))
           }

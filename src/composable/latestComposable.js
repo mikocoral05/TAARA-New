@@ -66,13 +66,10 @@ export const uploadExcel = async (table, data, user_id, user_type, user_name) =>
   const response = await api.post('excel.php', {
     upload_excel: { table, processedPets, user_id, user_type, user_name },
   })
-  console.log(response.data)
   return response.data
 }
 
 export const readExcelFileToJson = async (file) => {
-  console.log('reach')
-
   return new Promise((resolve, reject) => {
     const reader = new FileReader()
 
@@ -294,7 +291,6 @@ export const activateOrDeactivate = async (actOrDac, rowUserId, user_id, user_ty
   const response = await api.put('authorization.php', {
     activate_or_deactivate: { val: actOrDac, rowUserId, user_id, user_type, user_name },
   })
-  console.log(response)
   return response.data
 }
 
@@ -677,7 +673,6 @@ export const getAnimalOption = () => {
 
 export const uploadImages = async (fileArray) => {
   const formData = new FormData()
-  console.log('Uploading files:', fileArray)
 
   fileArray.forEach((metaFile) => {
     // Check if `file` is a File instance
@@ -699,17 +694,14 @@ export const uploadImages = async (fileArray) => {
 
 export const saveAnimalDetail = async (obj, user_id, user_type, user_name) => {
   const { file, ...animalData } = obj // separate the files
-  console.log(file)
 
   if (file) {
     const res = await uploadImages(file)
     animalData.new_image = res.data.images
-    console.log(res.data.images)
   }
   const response = await api.post('pet_info.php', {
     save_animal_list: { animalData, user_id, user_type, user_name },
   })
-  console.log(response.data)
   return response.data
 }
 
@@ -720,8 +712,6 @@ const updateDonationFileId = async (array_link, id) => {
 
 export const saveDonation = (obj, user_id, user_type, user_name) => {
   const { file, ...donationData } = obj // separate the files
-  console.log(file)
-  console.log(donationData)
 
   return new Promise((resolve, reject) => {
     api
@@ -736,7 +726,6 @@ export const saveDonation = (obj, user_id, user_type, user_name) => {
             const res = await uploadImages([file])
             status = await updateDonationFileId(res.data.images, idToUpdate)
           }
-          console.log(status)
           resolve({ status: status, message: response.data.message })
         }
       })
@@ -748,7 +737,6 @@ export const saveDonation = (obj, user_id, user_type, user_name) => {
 
 export const editDonation = async (obj, user_id, user_type, user_name) => {
   const { file, ...donation_data } = obj
-  console.log(donation_data)
   if (file) {
     const res = await uploadImages([file])
     donation_data.new_image = res.data.images[0]
@@ -784,13 +772,11 @@ export const updateHealtStatus = async (obj, user_id, user_type, user_name) => {
 
 export const editAnimalInfo = async (obj, user_id, user_type, user_name) => {
   const { file, toRemoveId, ...animal_data } = obj
-  console.log(file)
 
   if (toRemoveId?.length > 0) {
     if (file.length > 0) {
       const res = await uploadImages(file)
       animal_data.new_image = res.data.images
-      console.log(res.data.images)
     }
     const getFileId = file.filter((obj) => obj.id != null).map((obj) => obj.id)
     animal_data.existing_image_gallery_id = getFileId ?? []
@@ -1081,8 +1067,6 @@ export const softDeleteRescueReport = (arrayId, user_id, user_type, user_name) =
 }
 
 export const addGroupName = (obj, user_id, user_type, user_name) => {
-  console.log(obj)
-
   return new Promise((resolve, reject) => {
     api
       .post('inventory.php', {
@@ -1328,7 +1312,6 @@ export const sendEmailActiviationOtp = async (email, otp) => {
     email,
     otp,
   })
-  console.log(reponse.data)
 
   return reponse.data
 }
@@ -1338,7 +1321,6 @@ export const sendChangePasswordOtp = async (email, otp) => {
     email,
     otp,
   })
-  console.log(reponse.data)
 
   return reponse.data
 }
@@ -1348,7 +1330,6 @@ export const sendChangeEmail = async (email, otp) => {
     email,
     otp,
   })
-  console.log(reponse.data)
 
   return reponse.data
 }

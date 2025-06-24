@@ -105,13 +105,11 @@ export default {
       getMonthDonationCash().then((response) => {
         countThisMonthDonation.value = response
       })
-      console.log(route.query.wish)
       if (route.query.wish) {
         VueScrollTo.scrollTo(targetWishlist.value, 500, { offset: Number(route.query.wish) })
       }
       getLatestDonators().then((response) => {
         randomDonor.value = response
-        console.log(randomDonor.value)
       })
     })
     return {

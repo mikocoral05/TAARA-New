@@ -499,7 +499,6 @@ export default {
       mode.value = 'View'
       dataStorage.value = data
       previewImage.value = data?.image_path ? getImageLink(data.image_path) : null
-      console.log(dataStorage.value)
     }
 
     const onClickWorkweek = (data) => {
@@ -522,7 +521,6 @@ export default {
         return
       }
       mode.value = modeParam
-      console.log(data)
 
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         showDialog.value = !showDialog.value
@@ -532,7 +530,6 @@ export default {
         } else {
           dataStorage.value = data
           previewImage.value = data?.image_path ? getImageLink(data.image_path) : null
-          console.log(dataStorage.value)
         }
       } else if (modeParam == 'Summary') {
         showSummaryDialog.value = !showSummaryDialog.value
@@ -580,7 +577,6 @@ export default {
           store.userData.user_type,
           userName,
         ).then((response) => {
-          console.log(response)
           setTimeout(() => {
             $q.loading.show({
               group: 'update',

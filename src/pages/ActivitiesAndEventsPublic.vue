@@ -92,7 +92,6 @@ export default {
     onMounted(async () => {
       handleWindowResize()
       activitiesAndEventsData.value = await getActivitiesAndEvents()
-      console.log(activitiesAndEventsData.value)
 
       setTimeout(() => {
         scrollToElement()

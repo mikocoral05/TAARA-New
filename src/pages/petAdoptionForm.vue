@@ -663,7 +663,6 @@ export default defineComponent({
       ]
       let isNullFound = arrayKeys.some((key) => {
         if (payload[key] === null) {
-          console.log(`The key "${key}" is null.`)
           return true
         }
       })
@@ -705,7 +704,6 @@ export default defineComponent({
 
       if (Object.keys(store.userData).length > 0) {
         const response = await getSubmitAdoptionForm(store.userData.user_id)
-        console.log(response)
 
         let findMatchAdoptionReq = response.some(
           (obj) => obj.animal_id === decodeAnimalId(route.query.adopt),
@@ -715,7 +713,6 @@ export default defineComponent({
         const filterMatch = response.filter(
           (obj) => obj.animal_id === decodeAnimalId(route.query.adopt),
         )
-        console.log(filterMatch)
 
         const adoptionStatus =
           filterMatch.length > 0 ? filterMatch.map((obj) => obj.adoption_status) : 1

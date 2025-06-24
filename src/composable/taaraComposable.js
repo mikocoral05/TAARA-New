@@ -72,7 +72,6 @@ const getFeaturedAnimals = () => {
         for (var i = 0; i < response.data.data.length; i++) {
           featuredData.value.push(response.data.data[i])
         }
-        console.log(featuredData.value)
       })
       .catch((error) => {
         reject(error)
@@ -84,7 +83,6 @@ const getAllAnimals = (health_status) => {
     api
       .get('api.php', { params: { all_animals: health_status } })
       .then((response) => {
-        console.log(response.data.data)
         resolve(response.data.data)
       })
       .catch((error) => {
@@ -122,7 +120,6 @@ const getAllAnimalsManagement = () => {
       .then((response) => {
         allAnimalManagementBackUp.value = response.data.data
         allAnimalDataManagement.value = response.data.data
-        console.log(allAnimalDataManagement.value)
       })
       .catch((error) => {
         reject(error)
@@ -131,7 +128,6 @@ const getAllAnimalsManagement = () => {
 }
 let allUsersData = ref([])
 const allUsers = (date) => {
-  console.log(date)
   return new Promise((resolve, reject) => {
     api
       .get('api.php', {

@@ -33,7 +33,6 @@ export const getMonthlyDonationByYear = async (date) => {
       get_monthly_donation_by_year: { year: date },
     },
   })
-  console.log(response.data)
 
   return response.data.data
 }
@@ -70,7 +69,6 @@ export const udpateUserInfo = async (obj) => {
   //   new_data.new_image = res.data.images[0]
   // }
   const response = await api.put('new_api.php', { update_public_user_details: cleanedObj })
-  console.log(response)
   return response.data
 }
 
@@ -106,7 +104,6 @@ export const submitPetTransfer = async (obj, user_id, user_type) => {
   const response = await api.post('new_api.php', {
     submit_pet_transfer: { data, user_id, user_type },
   })
-  console.log(response)
   return response.data
 }
 

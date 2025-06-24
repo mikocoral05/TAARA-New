@@ -168,10 +168,8 @@ export default {
           console.log(response)
         })
         const response = await getLikes(store.userData.user_id)
-        console.log(response)
         if (response) {
           likesData.value = response?.animal_id ? JSON.parse(response.animal_id) : []
-          console.log(likesData.value)
         }
       }
       moreAnimalForAdoption()

@@ -11,15 +11,15 @@ import axios from 'axios'
 const api = axios.create({
   baseURL: 'http://localhost/TAARA-Capstone/backend/taara_backend/API/',
 })
+
 // const api = axios.create({
 //   baseURL: 'https://vps.convertevue.com/taara_backend/API/',
 // })
-const expressServer = axios.create({
-  baseURL: 'http://localhost:3000/',
-})
+
 const imageUrl = axios.create({
   baseURL: 'http://77.37.74.195/upload',
 })
+
 const onlineEndpoint = axios.create({
   baseURL: 'https://vps.nutrivue.org/',
 })
@@ -36,4 +36,4 @@ export default defineBoot(({ app }) => {
   //       so you can easily perform requests against your app's API
 })
 
-export { onlineEndpoint, api, expressServer, imageUrl }
+export { onlineEndpoint, api, imageUrl }

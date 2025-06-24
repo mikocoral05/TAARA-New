@@ -68,7 +68,6 @@ export default {
 
     let numberOfDays = ref()
     let getDays = () => {
-      console.log(day.value)
       let month = months.indexOf(filteFundsExpenses.value.month.value) + 1
       numberOfDays.value = new Date(filteFundsExpenses.value.year, month, 0).getDate()
       let formatted_month = ('0' + filteFundsExpenses.value.month.value).slice(-2)
@@ -100,10 +99,8 @@ export default {
       let fullDate = payloadDate.year + '-' + formatted_month + '-' + day.value
       getDailyFundsAndExpenses(fullDate)
     }
-    const updateItem = (props) => {
+    const updateItem = () => {
       actionDialog.value = true
-      updateRecordHolder.value = { ...props }
-      addOrUpdate.value = false
     }
 
     const columns = [

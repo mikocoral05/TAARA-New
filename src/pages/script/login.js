@@ -186,14 +186,12 @@ export default {
         if (response.status == 'success') {
           otpSent.value = true
         }
-        console.log(response)
         loadingVar.value = false
       } else {
         const response = await sendTelerivetSms(userInfo.value.phone_number, registerMessageSms())
         if (response.status == 'success') {
           otpSent.value = true
         }
-        console.log(response)
         loadingVar.value = false
       }
     }
@@ -224,14 +222,8 @@ export default {
     }
 
     let changePassBtn = (email, pass) => {
-      // $q.notify({
-      //   spinner: QSpinnerGears,
-      //   message: "Working...",
-      //   timeout: 0,
-      // });
       changePass(pass, email)
         .then((response) => {
-          console.log(response)
           if (response == 'success') {
             // const dismiss = $q.notify({});
             // dismiss();
@@ -266,7 +258,6 @@ export default {
             if (response.status == 'success') {
               showPasswordError.value = false
               store.userData = response.data
-              console.log(store.userData)
 
               sessionStorage.setItem('user_data', JSON.stringify(response.data))
               if (response.data.user_type == 1) {
@@ -306,7 +297,6 @@ export default {
           const res1 = await checkEmail(userInfo.value.email_address)
           const res2 = await checkUsername(userInfo.value.username)
           loadingVar.value = false
-          console.log(res1)
 
           showEmailError.value = res1.data > 0
           showUsernameError.value = res2.data > 0
@@ -416,14 +406,12 @@ export default {
         if (response.status == 'success') {
           forgotPasswordStep.value = 2
         }
-        console.log(response)
         loadingVar.value = false
       } else {
         const response = await sendTelerivetSms(res.value, registerMessageSms())
         if (response.status == 'success') {
           forgotPasswordStep.value = 2
         }
-        console.log(response)
         loadingVar.value = false
       }
     }

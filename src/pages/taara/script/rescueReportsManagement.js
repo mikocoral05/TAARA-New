@@ -78,7 +78,6 @@ export default {
     }
     let removeImage = (payload) => {
       images.value.splice(payload, 1)
-      console.log(images.value)
     }
     const pickFile = () => {
       document.getElementById('fileInput').click()
@@ -111,7 +110,6 @@ export default {
       }
     }
     let removeValue = () => {
-      console.log(reportDetails.value)
       let excludeKeys = ['time', 'date', 'report_status']
       Object.keys(reportDetails.value).forEach((key) => {
         if (!excludeKeys.includes(key)) {
@@ -119,8 +117,6 @@ export default {
         }
       })
       images.value = []
-      // reportDetails.value.user_id = logInDetails.value.id;
-      // reportDetails.value.phone_number = logInDetails.value.phone_number;
       addAnnouncement.value = true
       editOrAdd.value = false
       addImage.value = false

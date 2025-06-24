@@ -67,7 +67,6 @@ export default {
     watch(
       () => counterStore.scrollToDiv,
       (newValue, oldValue) => {
-        console.log(newValue)
         if (newValue != oldValue) {
           VueScrollTo.scrollTo(footerDiv.value, 4000, { offset: -130 })
         }

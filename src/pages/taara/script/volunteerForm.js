@@ -168,7 +168,6 @@ export default defineComponent({
       } else {
         warning.value = false
         valueMove.value = 4
-        console.log(volunteer_form.value.field_or_virtual_committee_position)
       }
     }
 
@@ -201,7 +200,6 @@ export default defineComponent({
       $q.loading.show({ group: 'register', message: 'Registering as volunteer. Please wait...' })
 
       addVolunteerRequest(volunteer_form.value, userVolunteerData.value).then((response) => {
-        console.log(response)
         $q.loading.show({ group: 'register', message: response.message })
         setTimeout(() => {
           $q.loading.hide()
@@ -223,7 +221,6 @@ export default defineComponent({
       if (store.userData?.user_id) {
         checkIfVolunteer(store.userData?.user_id).then((response) => {
           if (response.length > 0) {
-            console.log(response)
             registrationStatus.value = response[0]['application_status']
 
             if (registrationStatus.value == 3) {

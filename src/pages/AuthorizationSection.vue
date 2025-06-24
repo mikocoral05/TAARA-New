@@ -1828,7 +1828,6 @@ export default {
       editTab.value = '1'
       mode.value = modeParam
       userData.value = { ...data }
-      console.log(userData.value)
 
       previewImage.value = data.image_path
       if (['Edit', 'View'].includes(modeParam)) {
@@ -1898,7 +1897,6 @@ export default {
         volunteerData.value = await getSpecificVolunteer(data.volunteer_id)
         group.value = [volunteerData.value.most_available_day]
         chooseWork.value = [volunteerData.value.field_or_virtual_committee_position]
-        console.log(volunteerData.value)
       } else {
         arrayOfId.value.push(data.user_id)
         confirm.value = !confirm.value
@@ -1967,7 +1965,6 @@ export default {
       }
       getUserByType(tab.value).then((response) => {
         userRows.value = response
-        console.log(userRows.value)
       })
     }
 

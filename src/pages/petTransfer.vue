@@ -401,7 +401,6 @@ export default {
         store.userData.user_type,
       )
       $q.loading.show({ group: 'post', message: response.message })
-      console.log(response)
       if (response.status == 'success') {
         step.value = 3
       }
@@ -418,7 +417,6 @@ export default {
     onMounted(async () => {
       if (store.userData?.user_id) {
         transferTransaction.value = await getPetTransferRequest(store.userData.user_id)
-        console.log(transferTransaction.value)
         step.value = transferTransaction.value?.status
           ? 3
           : !transferTransaction.value

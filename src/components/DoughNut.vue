@@ -7,69 +7,62 @@
 </template>
 
 <script>
-import { defineComponent, ref, Utils } from "vue";
-import { onMounted } from "vue";
-import {
-  budgetAllocationData,
-  getBudgetAllocation,
-} from "src/composable/taaraComposable";
-import {
-  monthNames,
-  monthToday,
-  yearToday,
-} from "src/composable/simpleComposable";
-import Chart from "chart.js/auto";
+import { defineComponent, ref } from 'vue'
+import { onMounted } from 'vue'
+import { getBudgetAllocation } from 'src/composable/taaraComposable'
+import { monthNames, monthToday, yearToday } from 'src/composable/simpleComposable'
+import Chart from 'chart.js/auto'
 export default defineComponent({
-  name: "DoughNut",
+  name: 'DoughNut',
   setup() {
     let filteredDate = ref({
       month: monthNames[monthToday],
       year: yearToday,
-    });
-    let acquisitions = ref();
+    })
+    let acquisitions = ref()
     // (async function () {
     // const DATA_COUNT = 5;
     // const NUMBER_CFG = { count: DATA_COUNT, min: 0, max: 100 };
 
     onMounted(() => {
-      getBudgetAllocation(filteredDate.value, "funds_expenses")
+      getBudgetAllocation(filteredDate.value, 'funds_expenses')
         .then((response) => {
           let filterPercentage = response.map((obj) => {
-            return obj.percentage;
-          });
-          console.log(filterPercentage);
+            return obj.percentage
+          })
+          console.log(filterPercentage)
           const data = {
             datasets: [
               {
-                label: "Percentage Distribution",
+                label: 'Percentage Distribution',
                 data: filterPercentage,
               },
             ],
-          };
+          }
           new Chart(acquisitions.value, {
-            type: "doughnut",
+            type: 'doughnut',
             data: data,
             options: {
               responsive: true,
               plugins: {
                 legend: {
-                  position: "top",
+                  position: 'top',
                 },
               },
-              cutout: "80%",
+              cutout: '80%',
             },
-          });
+          })
         })
         .catch((error) => {
-          console.log(error);
-        });
-    });
+          console.log(error)
+        })
+    })
     // })();
     return {
       acquisitions,
-    };
+    }
   },
-});
+})
 </script>
 
 <style lang="scss" scope>

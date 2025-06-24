@@ -97,7 +97,6 @@ export default {
         nameDisplay.value =
           volunteerDetails.value.first_name + ' ' + volunteerDetails.value.last_name
         selectedDays.value = volunteerDetails.value.most_available_day.split(',')
-        console.log(selectedDays.value)
       } else if (pending.value == 'In kind donation') {
         inKindDetails.value = pendingInKindDonations.value[index]
         inKindDetails.value.like_to_donate =

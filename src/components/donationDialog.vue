@@ -224,8 +224,6 @@ export default defineComponent({
             controlSpinner.value = false
           }
         }
-
-        console.log(donatorsInfo.value)
       },
     )
 

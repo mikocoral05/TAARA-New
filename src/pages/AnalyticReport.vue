@@ -668,7 +668,6 @@ export default {
       monthlyPetAdopted.value = await getMonthlyAdopted(selectedYear.value)
       monthlyDeceased.value = await getMonthlyDeceased(selectedYear.value)
       monthlyBalance.value = await getMonthlyBalance(selectedYear.value)
-      console.log(monthlyBalance.value)
 
       window.onafterprint = () => {
         store.showLayout = true

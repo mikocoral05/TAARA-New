@@ -18,7 +18,6 @@ export default {
 
     changer.value = JSON.parse(localStorage.getItem('changer'))
     let logInDataCopy = { ...logInDetails.value[0] }
-    console.log(logInDetails.value[0])
     let userdata = ref({
       first_name: null,
       middle_name: null,
@@ -57,8 +56,7 @@ export default {
             if (param == 'profileImage') {
               userdata.value.image = dataUrl
             } else {
-              userdata.value.valid_id = dataUrl
-              console.log(fileName)
+              userdata.value.valid_id = dataUrl(fileName)
               userdata.value.valid_id_name = fileName
             }
           })

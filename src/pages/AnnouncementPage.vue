@@ -270,7 +270,6 @@ export default {
         } else {
           dataStorage.value = { ...data }
           previewImage.value = data?.image_path ? getImageLink(data.image_path) : null
-          console.log(dataStorage.value)
         }
       } else {
         arrayOfId.value.push(data.id)
@@ -291,7 +290,6 @@ export default {
           store.userData.user_type,
           userName,
         ).then((response) => {
-          console.log(response)
           $q.loading.show({
             group: 'update',
             message: response.message,
@@ -313,7 +311,6 @@ export default {
           store.userData.user_type,
           userName,
         ).then((response) => {
-          console.log(response)
           $q.loading.show({
             group: 'update',
             message: response.message,
@@ -339,7 +336,6 @@ export default {
     watchEffect(() => {
       let dateVar = dataStorage.value.start_date // format: "YYYY-MM-DD"
       let interVar = dataStorage.value.next_due_interval // number of days (e.g. 365)
-      console.log(dataStorage.value.next_due_interval)
 
       if (dateVar && interVar) {
         const startDate = new Date(dateVar)
@@ -348,7 +344,6 @@ export default {
 
         // Format to YYYY-MM-DD if needed
         const formatted = nextDueDate.toISOString().split('T')[0]
-        console.log('Next due date:', formatted)
 
         // Optional: store it back
         dataStorage.value.next_due_date = formatted

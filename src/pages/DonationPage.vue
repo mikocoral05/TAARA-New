@@ -575,7 +575,6 @@ export default {
         return
       }
       mode.value = modeParam
-      console.log(data)
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         if (filterTab.value !== 2) showDialog.value = !showDialog.value
 
@@ -584,8 +583,6 @@ export default {
         } else {
           dataStorage.value = { ...data }
           previewImage.value = data?.image_path
-          // dataStorage.value.file = data?.image_path
-          console.log(dataStorage.value)
         }
       } else {
         arrayOfId.value.push(data.fund_id)
@@ -607,7 +604,6 @@ export default {
           store.userData.user_type,
           userName,
         ).then((response) => {
-          console.log(response)
           setTimeout(() => {
             $q.loading.show({
               group: 'update',
@@ -631,7 +627,6 @@ export default {
           store.userData.user_type,
           userName,
         ).then((response) => {
-          console.log(response)
           setTimeout(() => {
             $q.loading.show({
               group: 'update',
@@ -675,7 +670,6 @@ export default {
     const previewImage = ref(null)
     const imageFnUpdate = () => {
       previewImage.value = URL.createObjectURL(dataStorage.value.file)
-      console.log(previewImage.value)
     }
 
     const fetchFn = () => {
@@ -715,7 +709,6 @@ export default {
           ]
         }
         rows.value = response
-        console.log(rows.value)
       })
     }
 
@@ -723,7 +716,6 @@ export default {
       () => dataStorage.value.file,
       async (newValue) => {
         if (tab.value != 1 || !newValue) return
-        console.log(newValue)
 
         // When newValue is a File object (from q-file)
         const isFileObject = typeof newValue === 'object' && newValue instanceof File
@@ -732,7 +724,6 @@ export default {
         if (isFileObject) {
           showSpinner.value = true
           const response = await parseDonationFromImage(newValue)
-          console.log('Extracted text:', response)
 
           dataStorage.value.amount = dataStorage.value?.amount || response.donation_amount
           dataStorage.value.reference_code = dataStorage.value?.reference_code || response.reference

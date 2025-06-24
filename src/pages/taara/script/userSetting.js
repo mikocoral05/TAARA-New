@@ -31,7 +31,6 @@ export default {
     changer.value = JSON.parse(localStorage.getItem('changer'))
 
     var val = Math.floor(1000 + Math.random() * 9000)
-    console.log(val)
     const body =
       'Hello, <br><br>Thank you for being part of our community! Please use the following code to change your email address:<br><br><b>' +
       val +
@@ -105,9 +104,6 @@ export default {
     }
     let pop = ref(false)
     let NewPassword = (pay1, pay2, em) => {
-      console.log(pay1)
-      console.log(pay2)
-      console.log(em)
       if (pay1 != pay2) {
         pop.value = true
       } else {
@@ -137,7 +133,6 @@ export default {
     let newPass = ref(null)
     let readPass = ref(true)
     let clickUpdatePassword = (payload) => {
-      console.log(logInDetails.value)
       if (currentPassword.value == null) {
         wrongPassword.value = 'Password field cannot be left blank'
       } else {

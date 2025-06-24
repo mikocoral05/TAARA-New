@@ -106,7 +106,6 @@ export default {
       addImages.value = []
       if (isActive.value != 0) {
         animalDetails.value.current_state = isActive.value
-        console.log(animalDetails.value.current_state)
       }
       Object.keys(animalDetails.value).forEach((key) => {
         if (isActive.value != 0 && key != 'current_state') {
@@ -179,7 +178,6 @@ export default {
           console.log(error)
         })
       animalDetails.value = { ...data }
-      console.log(animalDetails.value)
     }
     const pickFile = () => {
       document.getElementById('file').click()
@@ -196,7 +194,6 @@ export default {
     }
     let mobileShowMedSched = () => {
       if (window.innerWidth <= 501) {
-        viewVetSched.value = true
         followUpOrMedication.value = true
       } else {
         followUpOrMedication.value = true
@@ -206,7 +203,6 @@ export default {
       if (window.innerWidth <= 501) {
         followUpOrMedication.value = false
         scheduleDetails.value.medication_or_check_up = 2
-        viewVetSched.value = true
       } else {
         scheduleDetails.value.medication_or_check_up = 2
         followUpOrMedication.value = false
@@ -232,7 +228,6 @@ export default {
         reader.onload = () => {
           resizeImage(file, 500, 500)
             .then(({ dataUrl, fileName }) => {
-              console.log(imageId)
               if (base == 'changeImage') {
                 images.value.map((obj) => {
                   if (obj.id == imageId) {
@@ -242,7 +237,6 @@ export default {
               } else if (base == 'addImage') {
                 if (addImages.value.length <= 4) {
                   addImages.value.push(dataUrl)
-                  console.log(addImages.value.length <= 4)
                 }
               }
             })

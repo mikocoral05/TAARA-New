@@ -111,7 +111,6 @@ export default {
     const submitReport = async () => {
       $q.loading.show({ message: 'Submitting report. please wait ...' })
       const response = await addRescueRerport(reportDetails.value)
-      console.log(response)
       setTimeout(() => {
         $q.loading.hide()
         outputDialog.value = true
@@ -130,7 +129,6 @@ export default {
         async (position) => {
           const lat = position.coords.latitude
           const lng = position.coords.longitude
-          console.log(`Latitude: ${lat}, Longitude: ${lng}`)
 
           // Now use reverse geocoding to get the address
           const address = await getAddressFromCoords(lat, lng)

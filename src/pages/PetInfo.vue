@@ -805,7 +805,6 @@ export default {
         return
       }
       mode.value = modeParam
-      console.log(data)
 
       if (['Add', 'Edit', 'View'].includes(modeParam)) {
         step.value = 1
@@ -816,7 +815,6 @@ export default {
           dataStorage.value = {}
         } else {
           dataStorage.value = { ...data }
-          console.log(dataStorage.value)
           previewImage.value = []
           if (dataStorage.value?.file.length > 0) {
             dataStorage.value?.file.forEach((element) => {
@@ -897,7 +895,6 @@ export default {
           store.userData.user_type,
           userName,
         ).then((response) => {
-          console.log(response)
           setTimeout(() => {
             showDialog.value = false
             $q.loading.hide()
@@ -994,8 +991,6 @@ export default {
 
       // Replace the array with normalized and clean data
       dataStorage.value.file = updatedFiles
-      console.log(dataStorage.value.file)
-      console.log(idToRemove.value)
     }
 
     const idToRemove = ref([])
@@ -1021,7 +1016,6 @@ export default {
           'btn',
         ]
         rows.value = response
-        console.log(rows.value)
       })
     }
 
@@ -1110,7 +1104,6 @@ export default {
         $q.loading.show({ group: 'read', message: 'Reading excell. please wait...' })
         try {
           const data = await readExcelFileToJson(file)
-          console.log('Parsed Excel data:', data)
           uploadObj.value = {
             title: `Upload a total of ${data.length} pet record(s)?`,
             subtext: `The file has been successfully read. You can now proceed to upload the pet records.`,

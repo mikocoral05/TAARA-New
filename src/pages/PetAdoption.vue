@@ -702,7 +702,6 @@ export default {
         'btn',
       ]
       rows.value = response
-      console.log(rows.value)
     }
     const adoptionProgressMap = {
       1: 'Application Review',
@@ -716,12 +715,10 @@ export default {
         return
       }
       mode.value = modeParam
-      console.log(row)
 
       if (modeParam == 'View') {
         showForm.value = true
         dataStorage.value = { ...row }
-        console.log(dataStorage.value)
       } else if (['Disapprove', 'Approve'].includes(modeParam)) {
         const statusParam = modeParam == 'Disapprove' ? 3 : 2
         dataStorage.value = { ...row, status: statusParam }

@@ -628,7 +628,6 @@ export default {
         return
       }
       mode.value = modeParam
-      console.log(row)
 
       if (['View', 'Edit', 'Add'].includes(modeParam)) {
         if (modeParam == 'Add') {
@@ -637,7 +636,6 @@ export default {
         } else if (['Edit', 'View'].includes(modeParam)) {
           addDialog.value = true
           dataStorage.value = { ...row }
-          console.log(dataStorage.value)
         } else {
           dataStorage.value = { id: row, status: action == 'prio' ? 1 : 0 }
           saveFn()

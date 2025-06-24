@@ -364,13 +364,11 @@ export default {
         if (modeParam == 'Add') {
           getAnimalOption().then((response) => {
             animalOption.value = response
-            console.log(animalOption.value)
           })
 
           dataStorage.value = {}
         } else {
           dataStorage.value = data
-          console.log(dataStorage.value)
         }
       } else {
         arrayOfId.value.push(data.id)
@@ -386,7 +384,6 @@ export default {
         })
         dataStorage.value.added_by = store.userData?.user_id ?? 84
         addSchedule(dataStorage.value).then((response) => {
-          console.log(response)
           setTimeout(() => {
             $q.loading.show({
               group: 'update',
@@ -407,7 +404,6 @@ export default {
           message: `Updating Schedule. Please wait...`,
         })
         // editAnimalInfo(dataStorage.value).then((response) => {
-        //   console.log(response)
         //   $q.loading.show({
         //     group: 'update',
         //     message: response.message,
@@ -430,7 +426,6 @@ export default {
     watchEffect(() => {
       let dateVar = dataStorage.value.scheduled_date // format: "YYYY-MM-DD"
       let interVar = dataStorage.value.next_due_interval // number of days (e.g. 365)
-      console.log(dataStorage.value.next_due_interval)
 
       if (dateVar && interVar) {
         const startDate = new Date(dateVar)
@@ -439,7 +434,6 @@ export default {
 
         // Format to YYYY-MM-DD if needed
         const formatted = nextDueDate.toISOString().split('T')[0]
-        console.log('Next due date:', formatted)
 
         // Optional: store it back
         dataStorage.value.next_due_date = formatted

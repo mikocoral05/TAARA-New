@@ -251,7 +251,6 @@ export default {
         tableConfig.value.title = `${capitalize(obj2[tab.value])} Wishlist`
         tableConfig.value.columns = ['id', 'name', 'is_priority', 'btn']
         rows.value = response
-        console.log(rows.value)
       })
     }
 
@@ -267,7 +266,6 @@ export default {
         } else if (modeParam == 'EditP') {
           addDialog.value = true
           dataStorage.value = { ...id } //actually pass data not id
-          console.log(dataStorage.value)
         } else {
           dataStorage.value = { id: id, status: action == 'prio' ? 1 : 0 }
           saveFn()

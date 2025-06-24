@@ -67,29 +67,20 @@ export default {
           canvas.height = height
           ctx.drawImage(img, 0, 0, width, height)
           images.value.push(canvas.toDataURL(file.type))
-          console.log(images.value)
-          // uploadImage(images.value,logInDetails.value[0].user_id);
         }
       }
       reader.readAsDataURL(file)
-      // console.log(reader.result);
     }
     const handleFileUpload = (event) => {
       const files = event.target.files
-      console.log(files)
       for (let i = 0; i < files.length; i++) {
         const file = files[i]
-        console.log(file.name)
         const reader = new FileReader()
         reader.readAsDataURL(file)
         reader.onload = () => {
           resizeImage(file, 500, 500) // call the resizeImage function here
-          // console.log(reader.result);
-          // images.value.push(reader.result);
         }
       }
-      // console.log(logInDetails);
-      // console.log(logInDetails.value[0].user_id);
     }
 
     const fileInput = ref(null)

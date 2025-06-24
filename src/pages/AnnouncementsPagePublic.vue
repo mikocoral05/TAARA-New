@@ -95,7 +95,6 @@ export default {
     onMounted(async () => {
       handleWindowResize()
       annoucementData.value = await getAllAnnouncement()
-      console.log(annoucementData.value)
 
       setTimeout(() => {
         scrollToElement()

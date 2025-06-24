@@ -91,8 +91,6 @@ export default {
         let startDate = new Date(currentDate).toISOString().split('T')[0] // format as YYYY-MM-DD
         currentDate.setDate(currentDate.getDate() + totalDays - 1)
         let endDate = currentDate.toISOString().split('T')[0] // format as YYYY-MM-DD
-        console.log(startDate)
-        console.log(endDate)
         petFoodDetails.value.food_range = { from: startDate, to: endDate }
         FoodWillLast.value = totalDays
       }
@@ -115,15 +113,11 @@ export default {
     }
 
     const updateItem = (props) => {
-      // showUpdateItem.value = true;
       petFoodDetails.value = { ...props }
-      // addOrUpdate.value = true;
       showAdd.value = true
       addOrUpdate.value = false
-      console.log(props)
     }
     const resetUpdateRecord = () => {
-      // showUpdateItem.value = true;
       addOrUpdate.value = true
       showAdd.value = true
       let excludedKeys = ['bought_date']
@@ -263,6 +257,8 @@ export default {
         if (
           newValues.every((value, index) => {
             // Check if value is a number
+            console.log(index)
+
             if (typeof value === 'number') {
               return value !== null && value > 0
             }

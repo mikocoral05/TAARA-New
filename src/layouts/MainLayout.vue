@@ -368,7 +368,6 @@ export default defineComponent({
     const showNotifFn = async () => {
       notificationDrawer.value = !notificationDrawer.value
       notifData.value = await getNotif([store.userData.user_id, '-2', '-3'])
-      console.log(notifData.value)
     }
 
     const updateViewNotifFn = async (notif) => {
@@ -397,7 +396,6 @@ export default defineComponent({
       myScrollArea.value?.setScrollPosition('vertical', savedPosition)
       if (Object.keys(store.userData).length !== 0) {
         notifData.value = await getNotif([store.userData.user_id, '-2', '-3'])
-        console.log(notifData.value)
       }
     })
     return {

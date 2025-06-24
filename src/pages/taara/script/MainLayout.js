@@ -81,9 +81,7 @@ export default defineComponent({
     }
 
     const likeShow = () => {
-      // logInDetails.value == null ? '' : getLikes(logInDetails.value[0].user_id)
       rightDrawerFavorites.value = !rightDrawerFavorites.value
-      console.log(rightDrawerFavorites.value)
       rightDrawerNotification.value = false
     }
     const showLikeAnimal = (payload) => {
@@ -154,7 +152,6 @@ export default defineComponent({
     const showNotifFn = async () => {
       rightDrawerNotification.value = !rightDrawerNotification.value
       notifData.value = await getNotif([store.userData.user_id, '-1', '-3'])
-      console.log(notifData.value)
     }
 
     watch(
@@ -191,7 +188,6 @@ export default defineComponent({
       if (Object.keys(store.userData).length !== 0) {
         rightDrawerFavorites.value = !rightDrawerFavorites.value
         favoriteList.value = (await getFavorites(store.userData.user_id)) ?? []
-        console.log(favoriteList.value)
       }
     }
     const countUnread = computed(() => {
@@ -206,7 +202,6 @@ export default defineComponent({
     onMounted(async () => {
       if (Object.keys(store.userData).length !== 0) {
         notifData.value = await getNotif([store.userData.user_id, '-1', '-3'])
-        console.log(notifData.value)
       }
     })
     onBeforeUnmount(() => {

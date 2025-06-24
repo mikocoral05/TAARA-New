@@ -49,7 +49,6 @@ export default {
     onMounted(async () => {
       const response = await getLogs()
       rows.value = response.data
-      console.log(response.data)
     })
 
     return {

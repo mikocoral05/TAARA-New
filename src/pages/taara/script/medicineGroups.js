@@ -89,7 +89,6 @@ export default {
     }
     let mobileGetInfo = (index) => {
       mobileViewDetails.value = true
-      console.log(groupNameMedicine.value[index])
       updateRecordHolder.value = { ...groupNameMedicine.value[index] }
     }
     onMounted(() => {

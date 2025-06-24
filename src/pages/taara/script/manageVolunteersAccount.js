@@ -125,11 +125,7 @@ export default {
           .then(({ dataUrl, fileName }) => {
             if (param == 'profileImage') {
               profileDetailsHolder.value.image = dataUrl
-              console.log(dataUrl)
             }
-            //  else {
-            //   userInfo.value.valid_id = dataUrl;
-            // }
           })
           .catch((error) => {
             console.error(error)
@@ -138,7 +134,6 @@ export default {
     }
     const viewDetails = (accountData) => {
       profileDetailsHolder.value = accountData
-      console.log(profileDetailsHolder.value)
       viewAccount.value = true
       viewOrAdd.value = false
       getSystemActivity(accountData.id)

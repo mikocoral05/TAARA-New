@@ -537,8 +537,6 @@ export default {
             expenseData.value = {}
             allocationDialog.value = true
           } else {
-            console.log(formattedString)
-
             expenseData.value = { expense_date: formattedString }
             if (categoryOptions.value.length == 0) {
               getBudgetAllocation().then((response) => {
@@ -550,7 +548,6 @@ export default {
           //
         } else if (modeParam == 'Edit') {
           expenseData.value = { ...data }
-          console.log(expenseData.value)
 
           previewImage.value = expenseData.value?.image_path
 
@@ -694,10 +691,8 @@ export default {
     const updateBudgetAllocationSum = () => {
       getBudgetAllocation().then(async (response) => {
         rows.value = response
-        console.log(rows.value)
         categoryOptions.value = response
         expenseList.value = await getExpensesList(selectedMonth.value, selectedYear.value)
-        console.log(expenseList.value)
         const addedObj = {
           id: null,
           name: 'Others',
@@ -715,12 +710,10 @@ export default {
       getExpensesSummary({ month: selectedMonth.value, year: selectedYear.value }).then(
         (response) => {
           totalExpense.value = response?.total
-          console.log(response)
         },
       )
       getTotalBalance({ month: selectedMonth.value, year: selectedYear.value }).then((response) => {
         totalBalance.value = response?.balance
-        console.log(response)
       })
     }
 
@@ -740,7 +733,6 @@ export default {
     const previewImage = ref(null)
     const imageFnUpdate = () => {
       previewImage.value = URL.createObjectURL(expenseData.value.file)
-      console.log(previewImage.value)
     }
 
     const fetchFn = () => {
@@ -753,7 +745,6 @@ export default {
         }
         getExpenses({ ...obj, day: selectedDay.value }).then((response) => {
           rows.value = response
-          console.log(rows.value)
         })
         getMonthlyFundAndExpenses(obj).then((response) => {
           dailyExpenseTotal.value = response?.dailyTotal

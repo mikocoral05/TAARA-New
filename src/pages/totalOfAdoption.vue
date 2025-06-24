@@ -77,7 +77,6 @@ export default {
     onMounted(() => {
       getAnimalsAdopted(filteredDate.value)
         .then((totalOfAdopted) => {
-          console.log(totalOfAdopted)
           let count = weekCount(filteredDate.value.year, filteredDate.value.month.value)
           const weeklySummary = {}
           let allAdopted = 0
@@ -101,7 +100,6 @@ export default {
             }
           }
           objectsWeeklyRescue.value = weeklySummary
-          console.log(objectsWeeklyRescue.value)
           totalAdopted.value = allAdopted
         })
         .catch((error) => {

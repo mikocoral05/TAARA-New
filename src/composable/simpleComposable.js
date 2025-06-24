@@ -145,7 +145,6 @@ export const resizeImage = (file, maxWidth, maxHeight) => {
         canvas.width = width
         canvas.height = height
         ctx.drawImage(img, 0, 0, width, height)
-        console.log(file.name)
         resolve({ dataUrl: canvas.toDataURL(file.type), fileName: file.name })
       }
     }
@@ -337,8 +336,6 @@ export const sendTelerivetSms = async (to, message) => {
     to: cleanedTo,
     message,
   })
-
-  console.log(response.data)
 
   return response.data
 }

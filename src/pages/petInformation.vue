@@ -569,7 +569,6 @@ export default {
     }
 
     const sortByDateRescued = (array) => {
-      console.log(array)
       categorizeByYearRescued.value = !categorizeByYearRescued.value
       return array.sort((a, b) => {
         let dateA = new Date(a.care_start_date)
@@ -599,7 +598,6 @@ export default {
     watchEffect(() => {
       getAllAnimals(sorted.value).then((response) => {
         allAnimalData.value = response
-        console.log(allAnimalData.value)
       })
     })
     onMounted(() => {

@@ -94,13 +94,11 @@ export default {
     let calLastMnthExpense = () => {
       let monthDonationPromise = getMonthlyDonation(filteredDate.value, 'budget_allocation').then(
         (response) => {
-          console.log(response)
           return response
         },
       )
       let monthExpensePromise = getAllMonthlyExpenses(filteredDate.value, 'budget_allocation').then(
         (response) => {
-          console.log(response)
           return response
         },
       )
@@ -189,7 +187,6 @@ export default {
       resetAddItem,
       month,
       result,
-      month,
       availableBudget,
       formatNumber,
       yearArray,

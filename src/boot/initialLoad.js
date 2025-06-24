@@ -7,8 +7,6 @@ export default defineBoot(() => {
     store.pendingRescueReport = response
   })
   getPendingVolunteer().then((response) => {
-    console.log(response)
-
     store.pendingVolunteer = response
   })
   const raw = sessionStorage.getItem('user_data')

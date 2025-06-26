@@ -1,13 +1,43 @@
+require('dotenv').config()
 const axios = require('axios')
 const cron = require('node-cron')
 const express = require('express')
-
+const nodemailer = require('nodemailer')
 const app = express()
+const multer = require('multer')
+const path = require('path')
 app.use(express.json())
 
-const TELERIVET_PROJECT_ID = 'PJef3fb9be8be70aa4'
-const TELERIVET_API_KEY = 'Zz5xo_zavayVyp5cEfgowtdl4PWsP4Tt2NY3'
+const cors = require('cors')
+app.use(cors())
 
+// The base URL used when responding with image paths
+const BASE_URL = 'http://77.37.74.195/images/'
+
+// Storage config
+const storage = multer.diskStorage({
+  destination: '/var/www/html/images/', // This is your correct path
+  filename: (req, file, cb) => {
+    // Rename files to something unique if needed
+    const uniqueName = `${file.fieldname}_${Date.now()}_${Math.round(Math.random() * 1e9)}${path.extname(file.originalname)}`
+    cb(null, uniqueName)
+  },
+})
+
+const upload = multer({ storage })
+
+// Accept multiple files, even if it's just one
+app.post('/upload', upload.array('images'), (req, res) => {
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ error: 'No files uploaded.' })
+  }
+
+  const imageUrls = req.files.map((file) => `${BASE_URL}${file.filename}`)
+  res.status(200).json({ images: imageUrls })
+})
+
+const TELERIVET_API_KEY = process.env.TELERIVET_API_KEY
+const TELERIVET_PROJECT_ID = process.env.PROJECT_ID
 const sendSMS = async (to, message) => {
   try {
     const res = await axios.post(
@@ -27,6 +57,124 @@ const sendSMS = async (to, message) => {
     console.error(`Failed to send SMS to ${to}:`, err.response?.data || err.message)
   }
 }
+//node mailer send email to user
+const transporter = nodemailer.createTransport({
+  host: process.env.SMTP_HOST,
+  port: 465,
+  secure: true,
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASSWORD,
+  },
+})
+
+app.post('/send-activation-code', (req, res) => {
+  const { email, otp } = req.body
+
+  const mailOptions = {
+    from: `"TAARA Team" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: 'Activate Your TAARA Account',
+    text: `Hello,\n\nThank you for registering with Tabaco Animal Rescue and Adoption (TAARA). To activate your account, please use the following verification code: ${otp}\n\nIf you did not create an account, please ignore this message.`,
+    html: `<p>Hello,</p><p>Thank you for registering with <strong>Tabaco Animal Rescue and Adoption (TAARA)</strong>. To activate your account, please use the following verification code:</p><h2>${otp}</h2><p>If you did not create an account, please ignore this message.</p>`,
+  }
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.log(error)
+      return res.send({
+        status: 'failed',
+        message: 'Error sending activation email',
+      })
+    }
+
+    console.log('Activation email sent: %s', info.messageId)
+    return res.send({
+      status: 'success',
+      message: 'Activation email sent successfully',
+    })
+  })
+})
+
+app.post('/send-sms', async (req, res) => {
+  const { to, message } = req.body
+  try {
+    const response = await axios.post(
+      `https://api.telerivet.com/v1/projects/${TELERIVET_PROJECT_ID}/messages/send`,
+      {
+        to_number: to,
+        content: message,
+      },
+      {
+        auth: { username: TELERIVET_API_KEY, password: '' },
+      },
+    )
+    res.json({ status: 'success', data: response.data })
+  } catch (error) {
+    res.status(500).json({ status: 'error', message: error.response?.data || error.message })
+  }
+})
+
+app.post('/send-change-email-code', (req, res) => {
+  const { email, otp } = req.body
+
+  const mailOptions = {
+    from: `"TAARA Team" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: 'Confirm Your New Email Address',
+    text: `Hello,\n\nWe received a request to change the email address associated with your TAARA account. To confirm this change, please use the verification code below:\n\nVerification Code: ${otp}\n\nIf you did not request this change, please ignore this message or contact support.`,
+    html: `<p>Hello,</p><p>We received a request to change the email address associated with your <strong>TAARA</strong> account. To confirm this change, please use the verification code below:</p><h2>${otp}</h2><p>If you did not request this change, please ignore this message or <a href="mailto:support@example.com">contact support</a>.</p>`,
+  }
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Error sending change-email email:', error)
+      return res.send({
+        status: 'failed',
+        message: 'Error sending change email verification',
+      })
+    }
+
+    console.log('Change email verification sent: %s', info.messageId)
+    return res.send({
+      status: 'success',
+      message: 'Change email verification sent successfully',
+    })
+  })
+})
+
+app.post('/send-change-password-code', (req, res) => {
+  const { email, otp } = req.body
+
+  const mailOptions = {
+    from: `"TAARA Team" <${process.env.SMTP_USER}>`,
+    to: email,
+    subject: 'Reset Your TAARA Account Password',
+    text: `Hello,\n\nWe received a request to reset the password for your TAARA account. Please use the verification code below to proceed:\n\nVerification Code: ${otp}\n\nIf you did not request a password reset, please ignore this message or contact support.`,
+    html: `
+      <p>Hello,</p>
+      <p>We received a request to reset the password for your <strong>TAARA</strong> account. Please use the verification code below to proceed:</p>
+      <h2>${otp}</h2>
+      <p>If you did not request a password reset, please ignore this message or <a href="mailto:support@example.com">contact support</a>.</p>
+    `,
+  }
+
+  transporter.sendMail(mailOptions, (error, info) => {
+    if (error) {
+      console.error('Error sending change-password email:', error)
+      return res.send({
+        status: 'failed',
+        message: 'Error sending password reset verification',
+      })
+    }
+
+    console.log('Password reset verification sent: %s', info.messageId)
+    return res.send({
+      status: 'success',
+      message: 'Password reset verification sent successfully',
+    })
+  })
+})
 
 const notifyManagement = async (title, message) => {
   try {
@@ -128,7 +276,7 @@ cron.schedule(
   { timezone: 'Asia/Manila' },
 )
 
-const port = 3007
+const port = 3000
 app.listen(port, () => {
   console.log(`🚀 Server is running on port ${port}`)
 })

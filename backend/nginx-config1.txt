@@ -1,0 +1,43 @@
+
+server {
+        listen 80 default_server;
+        listen [::]:80 default_server;
+        client_max_body_size 50M;
+
+        root /var/www/html;
+
+        # Add index.php to the list if you are using PHP
+        index index.html index.htm index.nginx-debian.html;
+
+        server_name _;
+
+
+  # Serve static files from /var/www/html/images/
+    location /images/ {
+        alias /var/www/html/images/;
+        expires 1y;
+        add_header Cache-Control "public, max-age=31536000, immutable";
+    }
+
+  # Proxy all other requests to Express
+    location / {
+        proxy_pass http://localhost:3000;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+  location ~ ^/taara_backend/API/(.+\.php)$ {
+    alias /home/taara_backend/API/$1;
+    fastcgi_pass unix:/var/run/php/php8.2-fpm.sock;
+    fastcgi_index index.php;
+    include fastcgi_params;
+    fastcgi_param SCRIPT_FILENAME /home/taara_backend/API/$1;
+}
+
+
+
+}
+
+

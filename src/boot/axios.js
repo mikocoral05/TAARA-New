@@ -1,13 +1,6 @@
 import { defineBoot } from '#q-app/wrappers'
 import axios from 'axios'
 
-// Be careful when using SSR for cross-request state pollution
-// due to creating a Singleton instance here;
-// If any client changes this (global) instance, it might be a
-// good idea to move this instance creation inside of the
-// "export default () => {}" function below (which runs individually
-// for each client)
-
 const api = axios.create({
   baseURL: 'http://localhost/TAARA-Capstone/backend/taara_backend/API/',
 })
@@ -16,10 +9,12 @@ const api = axios.create({
 //   baseURL: 'https://vps.convertevue.com/taara_backend/API/',
 // })
 
+// chagne this imaegUrl to you domain usually subdomain
 const imageUrl = axios.create({
   baseURL: 'http://77.37.74.195/upload',
 })
 
+// ignore this code below but dont delete
 const onlineEndpoint = axios.create({
   baseURL: 'https://vps.nutrivue.org/',
 })

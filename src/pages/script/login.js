@@ -16,7 +16,6 @@ import {
   dearUserName,
   dearUserPhoneNumber,
 } from 'src/composable/taaraComposable'
-import BubbleChart from 'src/components/BubbleChart.vue'
 import {
   changePassword,
   checkEmail,
@@ -30,7 +29,6 @@ import {
 import { globalStore } from 'src/stores/global-store'
 import { civilStatusOption } from 'src/composable/optionsComposable'
 export default {
-  components: { BubbleChart },
   setup() {
     const $q = useQuasar()
     const store = globalStore()

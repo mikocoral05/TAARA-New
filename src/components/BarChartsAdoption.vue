@@ -1,22 +1,23 @@
 <template>
   <div class="canvased">
-    <!-- <canvas id="acquisitions" width="800" height="400"></canvas> -->
     <canvas ref="acquisitions" class="text"></canvas>
   </div>
 </template>
+
 <script>
-import { defineComponent, ref, onUnmounted } from 'vue'
-import { onMounted } from 'vue'
-import { getMonthlyAdoption } from 'src/composable/taaraComposable'
-import { yearToday, threeWordsAbbMonth, twoWordsAbbMonth } from 'src/composable/simpleComposable'
+import { defineComponent, ref, onMounted, onUnmounted } from 'vue'
 import Chart from 'chart.js/auto'
+import { getMonthlyAdopted } from 'src/composable/latestComposable'
+import { yearToday, threeWordsAbbMonth, twoWordsAbbMonth } from 'src/composable/simpleComposable'
+
 export default defineComponent({
   name: 'BarChartsRescue',
   setup() {
-    let acquisitions = ref()
+    const acquisitions = ref()
+    const monthlyAdoption = ref([]) // ✅ Use an empty array, not 0
     let dataShow = null
-    const monthlyAdoption = ref(0)
     let chart = null
+    let resizeTimeout = null
 
     function createChart() {
       if (chart) {
@@ -26,16 +27,17 @@ export default defineComponent({
       chart = new Chart(acquisitions.value, {
         type: 'bar',
         data: {
-          labels: dataShow.map((row) => row.month),
+          labels: dataShow.map((row) => row.month), // ✅ Uses responsive month labels
           datasets: [
             {
-              label: 'Rescued Animal by Month ',
-              data: monthlyAdoption.value.map((row) => row.Number_of_Adoption),
+              label: 'Adopted Animals by Month',
+              data: monthlyAdoption.value,
               backgroundColor: '#B157AE',
             },
           ],
         },
         options: {
+          responsive: true,
           plugins: {
             legend: {
               display: false,
@@ -45,37 +47,30 @@ export default defineComponent({
       })
     }
 
-    let resizeTimeout = null
-
     function onWindowResize() {
       clearTimeout(resizeTimeout)
       resizeTimeout = setTimeout(() => {
         if (window.innerWidth >= 365 && window.innerWidth <= 420) {
           dataShow = twoWordsAbbMonth
         } else if (window.innerWidth <= 364) {
-          let newData = threeWordsAbbMonth.map((item) => {
+          dataShow = threeWordsAbbMonth.map((item) => {
             return { month: item.month.charAt(0) }
           })
-          dataShow = newData
         } else {
           dataShow = threeWordsAbbMonth
         }
-        createChart()
+        createChart() // ✅ Now this only runs after data is loaded
       }, 250)
     }
 
-    onMounted(() => {
+    onMounted(async () => {
       window.addEventListener('resize', onWindowResize)
-      onWindowResize()
-      getMonthlyAdoption(yearToday)
-        .then((response) => {
-          monthlyAdoption.value = response
-          createChart()
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+      monthlyAdoption.value = await getMonthlyAdopted(yearToday) // ✅ Data fetched first
+      console.log(monthlyAdoption.value)
+
+      onWindowResize() // ✅ Then render chart
     })
+
     onUnmounted(() => {
       window.removeEventListener('resize', onWindowResize)
     })
@@ -86,6 +81,7 @@ export default defineComponent({
   },
 })
 </script>
+
 <style scoped lang="scss">
 .canvased {
   max-width: 90%;

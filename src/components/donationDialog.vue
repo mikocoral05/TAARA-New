@@ -230,15 +230,17 @@ export default defineComponent({
     watch(
       () => counterStore.donationDialog,
       () => {
-        donatorsInfo.value = {
-          donor_id: store.userData.user_id,
-          donation_type: 'cash',
-          anonymous: 'no',
-          amount: 0,
-          allocated_for: route.query.allocated || '',
-          notes: '',
-          method: 'online',
-        }
+        setTimeout(() => {
+          donatorsInfo.value = {
+            donor_id: store.userData.user_id,
+            donation_type: 'cash',
+            anonymous: 'no',
+            amount: 0,
+            allocated_for: route.query.allocated || '',
+            notes: '',
+            method: 'online',
+          }
+        }, 200)
         donationImage.value = null
       },
     )

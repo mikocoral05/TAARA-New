@@ -7,7 +7,7 @@ const routes = [
     children: [
       {
         path: '',
-        component: () => import('src/pages/UserLogin.vue'),
+        redirect: '/public/home',
       },
       {
         name: 'user-login',

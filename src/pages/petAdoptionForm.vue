@@ -271,7 +271,7 @@
                   type="number"
                   :style="
                     adoptionDetails.have_children == 'Yes'
-                      ? adoptionDetails.number_of_children == null
+                      ? adoptionDetails.number_of_children == 0
                         ? {
                             border: '1px solid #b157ae',
                             borderRadius: '5px',
@@ -283,7 +283,7 @@
                   hide-bottom-space
                   :value="
                     adoptionDetails.have_children == 'No'
-                      ? (adoptionDetails.number_of_children = '')
+                      ? (adoptionDetails.number_of_children = 0)
                       : adoptionDetails.number_of_children
                   "
                   :disable="

@@ -121,5 +121,66 @@
     <TaaraFooter class="footer full-width"></TaaraFooter>
   </q-page>
 </template>
-<script src="pages/taara/script/taaraCharts.js"></script>
+<script>
+import { ref, onMounted, computed } from 'vue'
+import TaaraFooter from 'src/components/TaaraFooter.vue'
+import { formatNumber } from 'src/composable/simpleComposable'
+import { allRescuedAnimal, animalsAdopted } from 'src/composable/taaraComposable'
+import { date } from 'quasar'
+import {
+  getMonthlyDonation,
+  getTotalAdoption,
+  getTotalRescue,
+} from 'src/composable/latestPublicComposable'
+
+export default {
+  components: {
+    TaaraFooter,
+  },
+  setup() {
+    const dateP = new Date()
+    const month = dateP.getMonth() + 1
+    const year = dateP.getFullYear()
+    const formattedString = date.formatDate(Date.now(), 'MMMM YYYY')
+    const totalRescue = ref(0)
+    const totalAdopted = ref(0)
+    const thisMonthDonation = ref(0)
+
+    const amountGoal = ref(50000)
+    const percentage = computed(() => {
+      const goal = amountGoal.value
+      const donation = thisMonthDonation.value
+
+      if (goal === 0) return 0 // Prevent division by zero
+      const result = (donation / goal) * 100
+      return result > 100 ? 100 : result
+    })
+
+    onMounted(() => {
+      getMonthlyDonation(month, year).then((response) => {
+        thisMonthDonation.value = response.data
+      })
+      getTotalRescue(month, year).then((response) => {
+        totalRescue.value = response.data
+      })
+      getTotalAdoption(month, year).then((response) => {
+        totalAdopted.value = response.data
+      })
+    })
+    return {
+      formattedString,
+      thisMonthDonation,
+      animalsAdopted,
+      totalAdopted,
+      allRescuedAnimal,
+      totalRescue,
+      month,
+      percentage,
+      amountGoal,
+      formatNumber,
+      TaaraFooter,
+    }
+  },
+}
+</script>
 <style lang="scss" scoped src="pages/taara/style/taaraCharts.scss"></style>

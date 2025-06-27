@@ -3,37 +3,65 @@
     <canvas ref="acquisitions" class="text"></canvas>
   </div>
 </template>
+
 <script>
 import { onMounted, defineComponent, ref, onUnmounted } from 'vue'
-import { getMonthlyRescuedAnimal } from 'src/composable/taaraComposable'
 import { yearToday, threeWordsAbbMonth, twoWordsAbbMonth } from 'src/composable/simpleComposable'
 import Chart from 'chart.js/auto'
+import { getMonthlyRescue } from 'src/composable/latestComposable'
+
 export default defineComponent({
   name: 'BarChartsRescue',
   setup() {
-    let acquisitions = ref()
-    let dataShow = null
+    const acquisitions = ref()
     const monthlyRescuedAnimal = ref([])
-    let chart = null
+    const chartInstance = ref(null)
 
-    function createChart() {
-      if (chart) {
-        chart.destroy()
+    // Static full month names
+    const fullMonths = [
+      'January',
+      'February',
+      'March',
+      'April',
+      'May',
+      'June',
+      'July',
+      'August',
+      'September',
+      'October',
+      'November',
+      'December',
+    ]
+
+    const formatMonthLabels = () => {
+      if (window.innerWidth <= 364) {
+        return fullMonths.map((m) => m.charAt(0)) // First letter
+      } else if (window.innerWidth <= 420) {
+        return twoWordsAbbMonth.map((m) => m.month) // Like "Ja", "Fe"
+      } else {
+        return threeWordsAbbMonth.map((m) => m.month) // Like "Jan", "Feb"
+      }
+    }
+
+    const createChart = (labels) => {
+      if (chartInstance.value) {
+        chartInstance.value.destroy()
       }
 
-      chart = new Chart(acquisitions.value, {
+      chartInstance.value = new Chart(acquisitions.value, {
         type: 'bar',
         data: {
-          labels: dataShow.map((row) => row.month),
+          labels,
           datasets: [
             {
-              label: 'Rescued Animal by Month ',
-              data: monthlyRescuedAnimal.value.map((row) => row.Number_of_Rescues),
+              label: `Rescued Animal by Month (${yearToday})`,
+              data: monthlyRescuedAnimal.value,
               backgroundColor: '#B157AE',
             },
           ],
         },
         options: {
+          responsive: true,
           plugins: {
             legend: {
               display: false,
@@ -43,39 +71,30 @@ export default defineComponent({
       })
     }
 
-    let resizeTimeout = null
-
-    function onWindowResize() {
-      clearTimeout(resizeTimeout)
-      resizeTimeout = setTimeout(() => {
-        if (window.innerWidth >= 365 && window.innerWidth <= 420) {
-          dataShow = twoWordsAbbMonth
-        } else if (window.innerWidth <= 364) {
-          let newData = threeWordsAbbMonth.map((item) => {
-            return { month: item.month.charAt(0) }
-          })
-          dataShow = newData
-        } else {
-          dataShow = threeWordsAbbMonth
-        }
-        createChart()
-      }, 250)
+    const handleResize = () => {
+      const labels = formatMonthLabels()
+      createChart(labels)
     }
 
-    onMounted(() => {
+    let resizeTimeout = null
+    const onWindowResize = () => {
+      clearTimeout(resizeTimeout)
+      resizeTimeout = setTimeout(handleResize, 200)
+    }
+
+    onMounted(async () => {
       window.addEventListener('resize', onWindowResize)
-      onWindowResize()
-      getMonthlyRescuedAnimal(yearToday)
-        .then((response) => {
-          monthlyRescuedAnimal.value = response
-          createChart()
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+
+      // Get animal count per month (expected: length 12)
+      monthlyRescuedAnimal.value = await getMonthlyRescue(yearToday)
+
+      // Initial chart
+      handleResize()
     })
+
     onUnmounted(() => {
       window.removeEventListener('resize', onWindowResize)
+      if (chartInstance.value) chartInstance.value.destroy()
     })
 
     return {
@@ -84,6 +103,7 @@ export default defineComponent({
   },
 })
 </script>
+
 <style scoped lang="scss">
 .canvased {
   max-width: 90%;

@@ -15,7 +15,6 @@ import {
   viewSpecificAnimal,
   adoptedAnimalOnProgress,
   getSubmitAdoptionForm,
-  moreAnimalForAdoption,
   submitPublicDonation,
   getRandomAnimal,
 } from 'src/composable/taaraComposable'
@@ -172,7 +171,6 @@ export default {
           likesData.value = response?.animal_id ? JSON.parse(response.animal_id) : []
         }
       }
-      moreAnimalForAdoption()
     })
 
     return {

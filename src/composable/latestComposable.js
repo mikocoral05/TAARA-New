@@ -317,6 +317,9 @@ export const updateExpense = async (obj, user_id, user_type) => {
 }
 
 export const submitAdoptionForm = async (obj, user_id, user_type, user_name) => {
+  if (!obj.behavior_other_animals) {
+    obj.behavior_other_animals = 'Yes'
+  }
   const { valid_id, ...data } = obj
   if (valid_id) {
     const res = await uploadImages([valid_id])

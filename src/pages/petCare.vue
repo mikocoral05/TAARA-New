@@ -73,23 +73,23 @@
         </div>
         <div class="column no-wrap justify-center items-center details-container">
           <q-icon name="pets" size="xl" />
-          <h3 class="q-ma-none text-center q-mb-xl">Dogs</h3>
+          <h3 class="q-ma-none text-center q-mb-xl">Cats</h3>
           <h6 class="text-body1">
-            Dogs have basic needs that must be met to keep them happy and healthy. These needs
+            Cats have basic needs that must be met to keep them happy and healthy. These needs
             include:
           </h6>
           <p class="text-body1">
-            1. Food and Water: Dogs need a balanced diet that includes protein, carbohydrates, and
+            1. Food and Water: Cats need a balanced diet that includes protein, carbohydrates, and
             fats. The amount of food your dog needs depends on its breed, size, age, and activity
             level. Make sure your dog always has access to clean, fresh water.
           </p>
           <p class="text-body1">
-            2. Exercise: Dogs need exercise to maintain a healthy weight, strengthen their muscles,
+            2. Exercise: Cats need exercise to maintain a healthy weight, strengthen their muscles,
             and improve their mental health. The amount of exercise your dog needs depends on its
             breed, size, age, and energy level. Take your dog for a walk or play fetch reqularly.
           </p>
           <p class="text-body1">
-            3. Shelter: Dogs need a safe and comfortable place to rest and sleep. Provide your dog
+            3. Shelter: Cats need a safe and comfortable place to rest and sleep. Provide your dog
             with a warm and dry place to sleep, aways from any drafts. Make sure your dog's living
             place is clean and well-ventilated
           </p>
@@ -100,7 +100,7 @@
           </h6>
           <p class="text-body1">
             1. Bathing: Bathe your dog regularly using a dog-specific shampoo. The frequency of
-            baths depends on your dog's breed, size, and activity level. Some dogs may require more
+            baths depends on your dog's breed, size, and activity level. Some Cats may require more
             frequent baths than others.
           </p>
           <p class="text-body1">

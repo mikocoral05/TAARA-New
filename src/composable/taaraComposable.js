@@ -175,63 +175,7 @@ const moreAnimalForAdoption = () => {
       })
   })
 }
-// const SearchAnimalByName = (payload, search) => {
-//   allAnimalData.value = allAnimalBackUp.value;
-//   let SearchValue = Object.fromEntries(
-//     Object.entries(search._value).filter(
-//       ([_, v]) => v != null && v != "Any" && v != ""
-//     )
-//   );
-//   allAnimalData.value.forEach((animal) => {
-//     var today = new Date();
-//     var birthDate = new Date(animal.age);
-//     var age = today.getFullYear() - birthDate.getFullYear();
-//     var m = today.getMonth() - birthDate.getMonth();
-//     if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
-//       age--;
-//     }
-//     if (age < 2) {
-//       return (animal.age = "young");
-//     } else if (age >= 2 && age <= 10) {
-//       return (animal.age = "adult");
-//     } else if (age >= 11) {
-//       return (animal.age = "senior");
-//     }
-//     // animal.age = "";
-//   });
 
-//   if (payload ? true : false && Object.keys(SearchValue).length >= 2) {
-//     console.log("first");
-//     delete SearchValue.animal_name;
-//     allAnimalData.value = allAnimalData.value
-//       .filter((obj) => {
-//         return Object.keys(SearchValue).every((key) => {
-//           return obj[key].toLowerCase() === SearchValue[key].toLowerCase();
-//         });
-//       })
-//       .filter((obj) =>
-//         obj.animal_name.toLowerCase().includes(payload.toLowerCase())
-//       );
-//   } else if (payload ? true : false) {
-//     console.log("second");
-//     let filteredAnimals = computed(() => {
-//       return allAnimalData.value.filter((animal) => {
-//         return animal.animal_name.toLowerCase().includes(payload.toLowerCase());
-//       });
-//     });
-//     console.log(filteredAnimals.value);
-//     allAnimalData.value = filteredAnimals.value;
-//   } else {
-//     console.log("third");
-//     console.log(SearchValue);
-
-//     allAnimalData.value = allAnimalData.value.filter((obj) => {
-//       return Object.keys(SearchValue).every((key) => {
-//         return obj[key] === SearchValue[key];
-//       });
-//     });
-//   }
-// };
 const SearchAnimalByName = (searchValue) => {
   // Filter the array based on the user's input
   let notEqual = ['animal_image', 'animal_id']

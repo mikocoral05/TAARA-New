@@ -20,7 +20,7 @@ class API
     if (array_key_exists("featured", $ref_id)) {
       $answer = $ref_id["featured"];
 
-      $query = $this->db->rawQuery("SELECT * FROM tbl_animals_info WHERE  featured = '$answer' ");
+      $query = $this->db->rawQuery("SELECT * FROM tbl_animal_info WHERE  featured = '$answer' ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("year_donation_cash", $ref_id)) {
       $this->db->where("YEAR(f.created_at)", date('Y'));
@@ -74,7 +74,7 @@ class API
       ]);
     } else if (array_key_exists("get_user_by_type", $ref_id)) {
       $cols = array('animal_id', 'animal_name', 'animal_type', 'age', 'breed', 'eye_color', 'fur_color', 'weight', 'height', 'length', 'sex', 'size', 'animal_image', 'favorite_food', 'care_start_date', 'current_state');
-      $query = $this->db->get("tbl_animals_info", null, $cols);
+      $query = $this->db->get("tbl_animal_info", null, $cols);
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("all_users", $ref_id)) {
       $month = $ref_id['month'];
@@ -93,17 +93,17 @@ class API
     } else if (array_key_exists("all_animals_management", $ref_id)) {
       // $animal_state = $ref_id["all_animals_management"];
       // WHERE current_state = '$animal_state'
-      $query = $this->db->rawQuery("SELECT animal_id,animal_name,animal_type,animal_image,fur_color,breed,behaviour,good_with,age,sex,size,weight,height,length,favorite_meats,favorite_fruits,favorite_vegetables,favorite_treats_snacks ,health,current_state,story FROM tbl_animals_info ");
+      $query = $this->db->rawQuery("SELECT animal_id,animal_name,animal_type,animal_image,fur_color,breed,behaviour,good_with,age,sex,size,weight,height,length,favorite_meats,favorite_fruits,favorite_vegetables,favorite_treats_snacks ,health,current_state,story FROM tbl_animal_info ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("animal_public_display", $ref_id)) {
-      $query = $this->db->rawQuery("SELECT * FROM tbl_animals_info ORDER BY RAND() LIMIT 12");
+      $query = $this->db->rawQuery("SELECT * FROM tbl_animal_info ORDER BY RAND() LIMIT 12");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("more_animal_for_adoption", $ref_id)) {
-      $query = $this->db->rawQuery("SELECT * FROM tbl_animals_info ORDER BY RAND() LIMIT 6");
+      $query = $this->db->rawQuery("SELECT * FROM tbl_animal_info ORDER BY RAND() LIMIT 6");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("SearchAnimalByName", $ref_id)) {
       $animal_name = $ref_id['SearchAnimalByName'];
-      $query = $this->db->rawQuery("SELECT * FROM tbl_animals_info WHERE animal_name LIKE '$animal_name%' ");
+      $query = $this->db->rawQuery("SELECT * FROM tbl_animal_info WHERE animal_name LIKE '$animal_name%' ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("system_activity", $ref_id)) {
       $system_activity = $ref_id['system_activity'];
@@ -111,7 +111,7 @@ class API
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("get_all_animals_not_adopted", $ref_id)) {
       $query = $this->db->rawQuery("SELECT tb1.animal_id, tb1.animal_name, tb1.animal_image
-      FROM tbl_animals_info tb1
+      FROM tbl_animal_info tb1
       WHERE NOT EXISTS (SELECT 1 FROM tbl_adopted_animals tb2 WHERE tb1.animal_id = tb2.animal_id);
       ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
@@ -128,7 +128,7 @@ class API
       $query = $this->db->rawQuery("SELECT tb1.id,tb1.adopter_id,  tb2.animal_id,tb2.animal_name,tb2.animal_image,
       COALESCE(tb3.first_name, tb1.adopter_name) AS adopter_name, COALESCE(tb3.city_municipality, tb1.adopter_city_municipality) AS adopter_city_municipality, COALESCE(tb3.birth_date, tb1.adopter_birth_date) AS adopter_birth_date,COALESCE(tb3.sex, tb1.adopter_sex) AS adopter_sex,COALESCE(tb3.phone_number, tb1.adopter_phone_number) AS adopter_phone_number,tb1.date_adopted,tb1.time_adopted
       FROM tbl_adopted_animals tb1
-      LEFT JOIN tbl_animals_info tb2 ON tb1.animal_id = tb2.animal_id
+      LEFT JOIN tbl_animal_info tb2 ON tb1.animal_id = tb2.animal_id
       LEFT JOIN tbl_users tb3 ON tb1.adopter_id = tb3.user_id;
       ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
@@ -139,7 +139,7 @@ class API
       $query = $this->db->rawQuery("SELECT tb1.id,tb1.adopter_id,  tb2.animal_id,tb2.animal_name,tb2.animal_image,
       COALESCE(tb3.first_name, tb1.adopter_name) AS adopter_name, COALESCE(tb3.city_municipality, tb1.adopter_city_municipality) AS adopter_city_municipality, COALESCE(tb3.birth_date, tb1.adopter_birth_date) AS adopter_birth_date,COALESCE(tb3.sex, tb1.adopter_sex) AS adopter_sex,COALESCE(tb3.phone_number, tb1.adopter_phone_number) AS adopter_phone_number,tb1.date_adopted,tb1.time_adopted
       FROM tbl_adopted_animals tb1
-      LEFT JOIN tbl_animals_info tb2 ON tb1.animal_id = tb2.animal_id
+      LEFT JOIN tbl_animal_info tb2 ON tb1.animal_id = tb2.animal_id
       LEFT JOIN tbl_users tb3 ON tb1.adopter_id = tb3.user_id WHERE YEAR(date_adopted) = $year AND MONTH(date_adopted) = $month;
       ");
 
@@ -198,7 +198,7 @@ class API
       $query = $this->db->rawQuery("SELECT tb1.id,tb1.reporter_id,  tb2.animal_id,tb2.animal_name,tb2.animal_image,
       COALESCE(tb3.first_name, tb1.reporter_name) AS reporter_name, COALESCE(tb3.city_municipality, tb1.reporter_municipality) AS reporter_municipality, COALESCE(tb3.birth_date, tb1.reporter_birth_date) AS reporter_birth_date,COALESCE(tb3.sex, tb1.reporter_sex) AS reporter_sex,COALESCE(tb3.phone_number, tb1.reporter_phone_number) AS reporter_phone_number,tb1.rescue_date,tb1.rescue_time
       FROM tbl_rescued_animals tb1
-      LEFT JOIN tbl_animals_info tb2 ON tb1.animal_id = tb2.animal_id
+      LEFT JOIN tbl_animal_info tb2 ON tb1.animal_id = tb2.animal_id
       LEFT JOIN tbl_users tb3 ON tb1.reporter_id = tb3.user_id;");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("get_rescued_animal", $ref_id)) {
@@ -208,7 +208,7 @@ class API
       $this->db->where('state_upon_rescue', 0, '!=');
       $this->db->where('MONTH(care_start_date)', $month);
       $this->db->where('YEAR(care_start_date)', $year);
-      $query = $this->db->get("tbl_animals_info");
+      $query = $this->db->get("tbl_animal_info");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("get_monthly_rescued_animal", $ref_id)) {
       $year = $ref_id['get_monthly_rescued_animal'];
@@ -260,12 +260,12 @@ class API
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("get_all_animal_not_stray", $ref_id)) {
       $query = $this->db->rawQuery("SELECT tb1.animal_id, tb1.animal_name, tb1.animal_image
-      FROM tbl_animals_info tb1
+      FROM tbl_animal_info tb1
       WHERE NOT EXISTS (SELECT 1 FROM tbl_rescued_animals tb2 WHERE tb1.animal_id = tb2.animal_id)");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("export_specific_animal", $ref_id)) {
       $animal_id = $ref_id["export_specific_animal"];
-      $query = $this->db->rawQuery("SELECT animal_id,animal_name,animal_type,fur_color,breed,behaviour,good_with,age,sex,size,weight,height,length,favorite_meats,favorite_fruits,favorite_vegetables,favorite_treats_snacks ,health,current_state,story FROM tbl_animals_info WHERE animal_id = $animal_id ");
+      $query = $this->db->rawQuery("SELECT animal_id,animal_name,animal_type,fur_color,breed,behaviour,good_with,age,sex,size,weight,height,length,favorite_meats,favorite_fruits,favorite_vegetables,favorite_treats_snacks ,health,current_state,story FROM tbl_animal_info WHERE animal_id = $animal_id ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("export_rehomed_pets", $ref_id)) {
       $query = $this->db->rawQuery("SELECT tb1.id,  tb2.animal_id,tb2.animal_name,
@@ -281,7 +281,7 @@ class API
       tb1.date_adopted,
       tb1.time_adopted
     FROM tbl_adopted_animals tb1
-    LEFT JOIN tbl_animals_info tb2 ON tb1.animal_id = tb2.animal_id
+    LEFT JOIN tbl_animal_info tb2 ON tb1.animal_id = tb2.animal_id
     LEFT JOIN tbl_users tb3 ON tb1.adopter_id = tb3.user_id;
     ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
@@ -320,14 +320,14 @@ class API
       $query = $this->db->rawQuery("SELECT tb1.id,tb2.animal_name,
       COALESCE(tb3.first_name, tb1.reporter_name) AS reporter_name, COALESCE(tb3.city_municipality, tb1.reporter_municipality) AS reporter_municipality, COALESCE(tb3.birth_date, tb1.reporter_birth_date) AS reporter_birth_date,COALESCE(tb3.sex, tb1.reporter_sex) AS reporter_sex,COALESCE(tb3.phone_number, tb1.reporter_phone_number) AS reporter_phone_number,tb1.rescue_date,tb1.rescue_time
       FROM tbl_rescued_animals tb1
-      LEFT JOIN tbl_animals_info tb2 ON tb1.animal_id = tb2.animal_id
+      LEFT JOIN tbl_animal_info tb2 ON tb1.animal_id = tb2.animal_id
       LEFT JOIN tbl_users tb3 ON tb1.reporter_id = tb3.user_id");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("export_surrendered_animals", $ref_id)) {
       $query = $this->db->rawQuery("SELECT tb1.id,tb2.animal_name,
       COALESCE(tb3.first_name, tb1.surrenderer_name) AS surrenderer_name, COALESCE(tb3.city_municipality, tb1.surrenderer_city_municipality) AS surrenderer_city_municipality, COALESCE(tb3.birth_date, tb1.surrenderer_birth_date) AS surrenderer_birth_date,COALESCE(tb3.sex, tb1.surrenderer_sex) AS surrenderer_sex,COALESCE(tb3.phone_number, tb1.surrenderer_phone_number) AS surrenderer_phone_number,tb1.surrender_date,tb1.surrender_time
       FROM tbl_surrender_animals tb1
-      LEFT JOIN tbl_animals_info tb2 ON tb1.animal_id = tb2.animal_id
+      LEFT JOIN tbl_animal_info tb2 ON tb1.animal_id = tb2.animal_id
       LEFT JOIN tbl_users tb3 ON tb1.surrenderer_id = tb3.user_id;
       ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
@@ -356,7 +356,7 @@ class API
     } else if (array_key_exists("export_deceased_animals", $ref_id)) {
 
       $query = $this->db->rawQuery("SELECT tb2.id, tb1.animal_name, tb1.breed,tb1.age,tb1.size,tb1.sex,tb1.fur_color ,tb2.deceased_date,tb2.deceased_time
-      FROM tbl_animals_info tb1
+      FROM tbl_animal_info tb1
       LEFT JOIN tbl_deceased_animals tb2
       ON tb1.animal_id = tb2.animal_id
       WHERE tb1.animal_id = tb2.animal_id
@@ -490,7 +490,7 @@ class API
     } else if (array_key_exists("get_adoption_request", $ref_id)) {
       $query = $this->db->rawQuery("SELECT tb1.id,tb3.image,tb3.first_name,tb3.last_name,tb2.animal_name,tb1.pickup_or_delivery,tb1.have_other_pet,tb1.pet_number,tb1.behavior_other_animals,tb1.have_vet,tb1.vet_phone_number,tb1.own_or_rent,tb1.have_enough_space,tb1.have_children,tb1.number_of_children,tb1.someone_gonna_takecare_of_pet,tb1.pet_caretaker,tb1.plans_for_pet_when_away,tb1.easily_trigger_by_pet_noise,tb1.convicted_animal_crime,tb1.date,tb1.time
       ,tb1.review_form FROM tbl_form_adoption tb1
-      INNER JOIN tbl_animals_info tb2 ON tb1.animal_id = tb2.animal_id
+      INNER JOIN tbl_animal_info tb2 ON tb1.animal_id = tb2.animal_id
       INNER JOIN tbl_users tb3 ON tb3.user_id = tb1.user_id WHERE tb1.adoption_status = 1
        ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
@@ -660,7 +660,7 @@ class API
     } else if (array_key_exists("get_all_animals_deceased", $ref_id)) {
 
       $query = $this->db->rawQuery("SELECT tb2.id,tb2.animal_id, tb1.animal_name,tb1.animal_image, tb1.breed,tb1.age,tb1.size,tb1.sex,tb1.fur_color, tb2.deceased_date, tb2.deceased_time
-      FROM tbl_animals_info tb1
+      FROM tbl_animal_info tb1
       LEFT JOIN tbl_deceased_animals tb2
       ON tb1.animal_id = tb2.animal_id
       WHERE tb1.animal_id = tb2.animal_id
@@ -672,20 +672,20 @@ class API
       }
     } else if (array_key_exists("get_all_animals_not_deceased", $ref_id)) {
       $query = $this->db->rawQuery("SELECT tb1.animal_id, tb1.animal_name, tb1.animal_image
-      FROM tbl_animals_info tb1
+      FROM tbl_animal_info tb1
       WHERE NOT EXISTS (SELECT 1 FROM tbl_deceased_animals tb2 WHERE tb1.animal_id = tb2.animal_id);");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("getAllSurrenderedAnimals", $ref_id)) {
       $query = $this->db->rawQuery("SELECT tb1.id,tb1.surrenderer_id,  tb2.animal_id,tb2.animal_name,tb2.animal_image,
       COALESCE(tb3.first_name, tb1.surrenderer_name) AS surrenderer_name, COALESCE(tb3.city_municipality, tb1.surrenderer_city_municipality) AS surrenderer_city_municipality, COALESCE(tb3.birth_date, tb1.surrenderer_birth_date) AS surrenderer_birth_date,COALESCE(tb3.sex, tb1.surrenderer_sex) AS surrenderer_sex,COALESCE(tb3.phone_number, tb1.surrenderer_phone_number) AS surrenderer_phone_number,tb1.surrender_date,tb1.surrender_time
       FROM tbl_surrender_animals tb1
-      LEFT JOIN tbl_animals_info tb2 ON tb1.animal_id = tb2.animal_id
+      LEFT JOIN tbl_animal_info tb2 ON tb1.animal_id = tb2.animal_id
       LEFT JOIN tbl_users tb3 ON tb1.surrenderer_id = tb3.user_id;
       ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
     } else if (array_key_exists("getAllNotSurrenderedAnimals", $ref_id)) {
       $query = $this->db->rawQuery("SELECT tb1.animal_id, tb1.animal_name, tb1.animal_image
-      FROM tbl_animals_info tb1
+      FROM tbl_animal_info tb1
       WHERE NOT EXISTS (SELECT 1 FROM tbl_surrender_animals tb2 WHERE tb1.animal_id = tb2.animal_id);
       ");
       echo json_encode(array('status' => 'success', 'data' => $query, 'method' => 'GET'));
@@ -800,7 +800,7 @@ class API
       FROM tbl_donations tb1
       LEFT JOIN tbl_users tb2 ON tb1.donators_id = tb2.user_id
       LEFT JOIN tbl_walk_in_donations tb3 ON tb1.walk_in_id = tb3.id
-      LEFT JOIN tbl_animals_info tb4 ON tb1.animal_id = tb4.animal_id
+      LEFT JOIN tbl_animal_info tb4 ON tb1.animal_id = tb4.animal_id
       WHERE tb1.donation_status = 1
       ORDER BY tb1.donation_id DESC
 ");
@@ -857,8 +857,8 @@ class API
       }
     } else if (array_key_exists("addRescuedStrayAnimals", $arr)) {
       $name = $arr['addRescuedStrayAnimals']['animal_name'];
-      $this->db->insert('tbl_animals_info', $arr["addRescuedStrayAnimals"]);
-      $insert = $this->db->rawQuery("SELECT * FROM tbl_animals_info WHERE animal_name = '$name'");
+      $this->db->insert('tbl_animal_info', $arr["addRescuedStrayAnimals"]);
+      $insert = $this->db->rawQuery("SELECT * FROM tbl_animal_info WHERE animal_name = '$name'");
 
 
       if (array_key_exists("report_rescue", $arr)) {
@@ -1039,7 +1039,7 @@ class API
         $data = $this->db->rawQuery("SELECT tb1.id,tb1.surrenderer_id,  tb2.animal_id,tb2.animal_name,tb2.animal_image,
         COALESCE(tb3.first_name, tb1.surrenderer_name) AS surrenderer_name, COALESCE(tb3.city_municipality, tb1.surrenderer_city_municipality) AS surrenderer_city_municipality, COALESCE(tb3.birth_date, tb1.surrenderer_birth_date) AS surrenderer_birth_date,COALESCE(tb3.sex, tb1.surrenderer_sex) AS surrenderer_sex,COALESCE(tb3.phone_number, tb1.surrenderer_phone_number) AS surrenderer_phone_number,tb1.surrender_date,tb1.surrender_time
         FROM tbl_surrender_animals tb1
-        LEFT JOIN tbl_animals_info tb2 ON tb1.animal_id = tb2.animal_id
+        LEFT JOIN tbl_animal_info tb2 ON tb1.animal_id = tb2.animal_id
         LEFT JOIN tbl_users tb3 ON tb1.surrenderer_id = tb3.user_id WHERE tb1.id = $latest_id;");
 
         // $notif_array = array(
@@ -1145,7 +1145,7 @@ class API
         echo json_encode(array('status' => 'failed', 'method' => 'POST'));
       }
     } else if (array_key_exists("add_new_animal", $arr)) {
-      $add_new_animal = $this->db->insert('tbl_animals_info', $arr['animal_details']);
+      $add_new_animal = $this->db->insert('tbl_animal_info', $arr['animal_details']);
       if ($add_new_animal) {
         $new_animal_id = $this->db->getInsertId();
         for ($i = 0; $i < count($arr['animal_image']); $i++) {
@@ -1154,7 +1154,7 @@ class API
           $new_animal_image = $this->db->insert('tbl_animal_image', $arr['animal_image'][$i]);
         }
         if ($new_animal_image) {
-          $data = $this->db->rawQuery("SELECT animal_id,animal_name,animal_type,animal_image,fur_color,breed,behaviour,good_with,age,sex,size,weight,height,length,favorite_meats,favorite_fruits,favorite_vegetables,favorite_treats_snacks ,health,current_state,story FROM tbl_animals_info  WHERE animal_id = '$new_animal_id'
+          $data = $this->db->rawQuery("SELECT animal_id,animal_name,animal_type,animal_image,fur_color,breed,behaviour,good_with,age,sex,size,weight,height,length,favorite_meats,favorite_fruits,favorite_vegetables,favorite_treats_snacks ,health,current_state,story FROM tbl_animal_info  WHERE animal_id = '$new_animal_id'
           ");
           echo json_encode(array('status' => 'success', 'data' => $data, 'method' => 'POST'));
         } else {
@@ -1236,7 +1236,7 @@ class API
       $insert = $this->db->insert('tbl_deceased_animals', $array);
       if ($insert) {
         $query = $this->db->rawQuery("SELECT tb2.id,tb2.animal_id, tb1.animal_name,tb1.animal_image, tb1.breed,tb1.age,tb1.size,tb1.sex,tb1.fur_color,tb2.deceased_date,tb2.deceased_time
-        FROM tbl_animals_info tb1
+        FROM tbl_animal_info tb1
         LEFT JOIN tbl_deceased_animals tb2
         ON tb1.animal_id = tb2.animal_id
         WHERE tb1.animal_id = $animal_id");
@@ -1275,7 +1275,7 @@ class API
         $query = $this->db->rawQuery("SELECT tb1.id,tb1.reporter_id,  tb2.animal_id,tb2.animal_name,
         COALESCE(tb3.first_name, tb1.reporter_name) AS reporter_name, COALESCE(tb3.city_municipality, tb1.reporter_municipality) AS reporter_municipality, COALESCE(tb3.birth_date, tb1.reporter_birth_date) AS reporter_birth_date,COALESCE(tb3.sex, tb1.reporter_sex) AS reporter_sex,COALESCE(tb3.phone_number, tb1.reporter_phone_number) AS reporter_phone_number,tb1.rescue_date,tb1.rescue_time
         FROM tbl_rescued_animals tb1
-        LEFT JOIN tbl_animals_info tb2 ON tb1.animal_id = tb2.animal_id
+        LEFT JOIN tbl_animal_info tb2 ON tb1.animal_id = tb2.animal_id
         LEFT JOIN tbl_users tb3 ON tb1.reporter_id = tb3.user_id WHERE tb1.id = $latest_rescue_id;");
         // $notif_array = array(
         //   'date' => $arr["add_rescued_stray_animals"]["care_start_date"],
@@ -1794,8 +1794,8 @@ class API
     } else if (array_key_exists('updateRescuedStrayAnimals', $arr)) {
       $user_id = $arr['updateRescuedStrayAnimals']['animal_id'];
       $this->db->where('animal_id', $user_id);
-      $this->db->update('tbl_animals_info', $arr['updateRescuedStrayAnimals']);
-      $insert = $this->db->rawQuery("SELECT * FROM tbl_animals_info where animal_id = '$user_id'");
+      $this->db->update('tbl_animal_info', $arr['updateRescuedStrayAnimals']);
+      $insert = $this->db->rawQuery("SELECT * FROM tbl_animal_info where animal_id = '$user_id'");
       // echo json_encode(array('status'=> 'success', 'data'=>$insert, 'method' => 'PUT'));
 
 
@@ -1826,7 +1826,7 @@ class API
         $query = $this->db->rawQuery("SELECT tb1.id,  tb2.animal_id,tb2.animal_name,
       COALESCE(tb3.first_name, tb1.adopter_name) AS adopter_name, COALESCE(tb3.city_municipality, tb1.adopter_city_municipality) AS adopter_city_municipality, COALESCE(tb3.birth_date, tb1.adopter_birth_date) AS adopter_birth_date,COALESCE(tb3.sex, tb1.adopter_sex) AS adopter_sex,COALESCE(tb3.phone_number, tb1.adopter_phone_number) AS adopter_phone_number,tb1.date_adopted,tb1.time_adopted
       FROM tbl_adopted_animals tb1
-      LEFT JOIN tbl_animals_info tb2 ON tb1.animal_id = tb2.animal_id
+      LEFT JOIN tbl_animal_info tb2 ON tb1.animal_id = tb2.animal_id
       LEFT JOIN tbl_users tb3 ON tb1.adopter_id = tb3.user_id WHERE tb1.id = $latest_rehomed_pet_id;
       ");
         // $notif_array = array(
@@ -1897,7 +1897,7 @@ class API
     } else if (array_key_exists('update_specific_animal', $arr)) {
       $animal_id = $arr['animal_details']['animal_id'];
       $this->db->where('animal_id', $animal_id);
-      $update_animal_details = $this->db->update('tbl_animals_info', $arr['animal_details']);
+      $update_animal_details = $this->db->update('tbl_animal_info', $arr['animal_details']);
       if ($update_animal_details) {
         $all_updates_successful = true;
         foreach ($arr['animal_image'] as $image) {
@@ -2035,7 +2035,7 @@ class API
     } else
     if (array_key_exists('deleteItem', $arr)) {
       $id = $arr['deleteItem'];
-      $this->db->rawQuery("UPDATE tbl_animals_info SET deleted_at='$del' WHERE animal_id = '$id' ");
+      $this->db->rawQuery("UPDATE tbl_animal_info SET deleted_at='$del' WHERE animal_id = '$id' ");
 
       // $length = sizeof($arr['deleteItem']['animal_id']);
       // for ($x = 0; $x < $length; $x++) {
@@ -2087,7 +2087,7 @@ class API
 
       foreach ($array as $id) {
         $this->db->where('animal_id', $id);
-        $delete = $this->db->delete("tbl_animals_info");
+        $delete = $this->db->delete("tbl_animal_info");
 
         if ($delete) {
           $this->db->where('id', $id);

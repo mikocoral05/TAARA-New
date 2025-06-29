@@ -107,10 +107,15 @@ export default {
     const outputObj = ref({})
     const showSpinner = ref(false)
     const reportForm = ref(false)
-
+    const userName = store.userData?.first_name + ' ' + store.userData?.last_name
     const submitReport = async () => {
       $q.loading.show({ message: 'Submitting report. please wait ...' })
-      const response = await addRescueRerport(reportDetails.value)
+      const response = await addRescueRerport(
+        reportDetails.value,
+        store.userData?.user_id || null,
+        store.userData?.user_type || null,
+        userName || '',
+      )
       setTimeout(() => {
         $q.loading.hide()
         outputDialog.value = true

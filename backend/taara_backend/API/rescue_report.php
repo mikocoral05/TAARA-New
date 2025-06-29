@@ -78,8 +78,8 @@ class API
     {
         if (isset($payload['add_rescue_report'])) {
             $data = $payload['add_rescue_report']['data'];
-            $user_id = $payload['add_rescue_report']['user_id'];
-            $user_type = $payload['add_rescue_report']['user_type'];
+            $user_id = $payload['add_rescue_report']['user_id'] ?? null;
+            $user_type = $payload['add_rescue_report']['user_type'] ?? null;
             $user_name = $payload['add_rescue_report']['user_name'];
 
             $new_image = $data['new_image'] ?? '';

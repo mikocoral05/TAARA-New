@@ -134,7 +134,7 @@ export const readNotif = async (id, user_ids) => {
 export const getPendingRescueReport = () => {
   return new Promise((resolve, reject) => {
     api
-      .get('rescue_report.php', {
+      .get('rescue_report', {
         params: { get_pending_rescue_report: 'get_pending_rescue_report' },
       })
       .then((response) => {

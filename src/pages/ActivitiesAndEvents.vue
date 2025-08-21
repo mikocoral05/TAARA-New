@@ -390,8 +390,6 @@ import {
 } from '@quasar/quasar-ui-qcalendar'
 import '@quasar/quasar-ui-qcalendar/index.css'
 import { date, useQuasar } from 'quasar'
-import ImageViewer from 'src/components/ImageViewer.vue'
-import ReusableTable from 'src/components/ReusableTable.vue'
 import {
   editActivitiesAndEvents,
   getActivitiesAndEvents,
@@ -402,6 +400,8 @@ import { getImageLink } from 'src/composable/simpleComposable'
 import { globalStore } from 'src/stores/global-store'
 import { ref, reactive, computed, onMounted } from 'vue'
 
+import ImageViewer from 'src/components/ImageViewer.vue'
+import ReusableTable from 'src/components/ReusableTable.vue'
 export default {
   components: {
     QCalendarMonth,

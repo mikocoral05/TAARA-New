@@ -96,7 +96,7 @@ export const readExcelFileToJson = async (file) => {
 export const getUserByType = (type) => {
   return new Promise((resolve, reject) => {
     api
-      .get('authorization.php', {
+      .get('volunteer', {
         params: { get_user_by_type: type },
       })
       .then((response) => {
@@ -118,7 +118,7 @@ export const approveDisapproveVolunteer = async (
   user_type,
   user_name,
 ) => {
-  const response = await api.put('authorization.php', {
+  const response = await api.put('volunteer', {
     approve_disapprove_volunteer: { val, val_user_id, volunteer_id, user_id, user_type, user_name },
   })
   return response.data
@@ -134,8 +134,8 @@ export const readNotif = async (id, user_ids) => {
 export const getPendingRescueReport = () => {
   return new Promise((resolve, reject) => {
     api
-      .get('rescue_report', {
-        params: { get_pending_rescue_report: 'get_pending_rescue_report' },
+      .get('rescue-reports', {
+        params: { status: 1 },
       })
       .then((response) => {
         if (response.data.status == 'success') {
@@ -152,8 +152,8 @@ export const getPendingRescueReport = () => {
 export const getPendingVolunteer = () => {
   return new Promise((resolve, reject) => {
     api
-      .get('authorization.php', {
-        params: { get_pending_volunteer: 'get_pending_volunteer' },
+      .get('volunteer', {
+        params: { get_pending_volunteer: 1 },
       })
       .then((response) => {
         if (response.data.status == 'success') {
@@ -254,7 +254,7 @@ export const getAnnouncement = () => {
 export const getRescueReport = (status) => {
   return new Promise((resolve, reject) => {
     api
-      .get('rescue_report.php', {
+      .get('rescue-reports', {
         params: { get_rescue_report: status },
       })
       .then((response) => {
@@ -273,7 +273,7 @@ export const updateUser = (data, user_id, user_type, user_name) => {
   delete clone.image_path
   return new Promise((resolve, reject) => {
     api
-      .put('authorization.php', {
+      .put('volunteer', {
         updateUser: { clone, user_id, user_type, user_name },
       })
       .then((response) => {
@@ -288,7 +288,7 @@ export const updateUser = (data, user_id, user_type, user_name) => {
 }
 
 export const activateOrDeactivate = async (actOrDac, rowUserId, user_id, user_type, user_name) => {
-  const response = await api.put('authorization.php', {
+  const response = await api.put('volunteer', {
     activate_or_deactivate: { val: actOrDac, rowUserId, user_id, user_type, user_name },
   })
   return response.data
@@ -365,7 +365,7 @@ export const softDeleteBudgetAndExpenses = async (
 export const getPageAccess = () => {
   return new Promise((resolve, reject) => {
     api
-      .get('authorization.php', {
+      .get('volunteer', {
         params: { get_page_access: 'get_page_access' },
       })
       .then((response) => {
@@ -917,7 +917,7 @@ export const softDeleteSchedule = (arrayId, user_id, user_type, user_name) => {
 export const softDeleteUser = (arrayId, user_id, user_type, user_name) => {
   return new Promise((resolve, reject) => {
     api
-      .put('authorization.php', {
+      .put('volunteer', {
         soft_delete_user: { arrayId, user_id, user_type, user_name },
       })
       .then((response) => {
@@ -993,7 +993,7 @@ export const addRescueRerport = async (obj, user_id, user_type, user_name) => {
     const res = await uploadImages([file])
     data.new_image = res.data.images[0]
   }
-  const response = await api.post('rescue_report.php', {
+  const response = await api.post('rescue-reports', {
     add_rescue_report: { data, user_id, user_type, user_name },
   })
 
@@ -1019,7 +1019,7 @@ export const editRescueReport = async (obj, user_id, user_type, user_name) => {
     const res = await uploadImages([file])
     data.new_image = res.data.images[0]
   }
-  const response = await api.put('rescue_report.php', {
+  const response = await api.put('rescue-reports', {
     edit_rescue_report: { data, user_id, user_type, user_name },
   })
 
@@ -1057,7 +1057,7 @@ export const softDeleteAnnouncement = (arrayId, user_id, user_type, user_name) =
 export const softDeleteRescueReport = (arrayId, user_id, user_type, user_name) => {
   return new Promise((resolve, reject) => {
     api
-      .put('rescue_report.php', {
+      .put('rescue-reports', {
         soft_delete_rescue_report: { arrayId, user_id, user_type, user_name },
       })
       .then((response) => {

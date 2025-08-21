@@ -54,7 +54,7 @@ class API
             ]);
         } else if (array_key_exists('get_pending_rescue_report', $payload)) {
             $this->db->where("is_deleted", 0);
-            $this->db->where("status", 'pending');
+            $this->db->where("status", 1);
 
             $result = $this->db->get('tbl_rescue_report');
             $count = count($result); // 👈 Count the number of records

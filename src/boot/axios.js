@@ -2,14 +2,14 @@ import { defineBoot } from '#q-app/wrappers'
 import axios from 'axios'
 
 //ThingEngineer
-// const api = axios.create({
-//   baseURL: 'http://localhost/TAARA-Capstone-backend/backend/taara_backend/API/',
-// })
+const api = axios.create({
+  baseURL: 'http://localhost/TAARA-Capstone/backend/taara_backend/API/',
+})
 
 //Laravel
-const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/api/', // if your route is in api.php
-})
+// const api = axios.create({
+//   baseURL: 'http://127.0.0.1:8000/api/', // if your route is in api.php
+// })
 
 // const api = axios.create({
 //   baseURL: 'https://vps.convertevue.com/taara_backend/API/',
